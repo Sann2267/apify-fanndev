@@ -1,0 +1,18 @@
+{
+    "actorSpecification": 1,
+    "name": "psa-card-cert-lookup-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "PSA Card Cert Lookup - Grade, Population & Sales",
+    "description": "Look up PSA graded cards by certification number: item details and grade, the population at that grade, how many copies grade higher, PSA's own value estimate, and recent comparable sales with prices, dates and marketplaces. No account needed.",
+    "categories": [
+        "ECOMMERCE",
+        "OTHER"
+    ],
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

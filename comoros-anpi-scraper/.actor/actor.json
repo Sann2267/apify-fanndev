@@ -1,0 +1,14 @@
+{
+    "actorSpecification": 1,
+    "name": "comoros-anpi-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Comoros ANPI Business Registry Scraper",
+    "description": "Search or browse Comoros' official public business directory, run by ANPI (Agence Nationale pour la Promotion des Investissements) at investcomoros.net -- filter by company name, island, year, city, sector, or RCCM number. No account or API key needed.",
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

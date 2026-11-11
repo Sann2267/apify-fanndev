@@ -1,0 +1,71 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Event / calendar record",
+        "description": "Raw-passthrough dataset envelope on top of Luma's own internal API JSON shape. Every record carries _input/_source/_scrapedAt (and _error/_errorDetail on failures). \"event\" mode records carry the full upstream event object verbatim (event, calendar, hosts, ticket_info, geo_address_info, etc). \"calendar\" mode emits one CALENDAR_PROFILE record plus one CALENDAR_EVENT record per event (recordType discriminates). \"discover\" mode records carry the upstream discover-feed entry verbatim.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The URL/slug that produced this record (or a geo descriptor / \"discover\" for discover mode)."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which extraction strategy emitted this record (S1-api, or none on failure)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed extractions (e.g. not_found, kind_mismatch, auth_required)."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "recordType": {
+                "title": "Record type",
+                "description": "\"calendar\" mode only -- CALENDAR_PROFILE (the organizer's own profile) or CALENDAR_EVENT (one of their events)."
+            },
+            "api_id": { "title": "API ID", "description": "Upstream event/calendar ID, e.g. \"evt-...\" or \"cal-...\"." },
+            "event": { "title": "Event", "description": "Event mode -- name, start_at/end_at, timezone, location_type, geo_address_info, cover_url, passed through as-is." },
+            "calendar": { "title": "Calendar", "description": "Organizer profile -- name, slug, social handles, verified_at, passed through as-is." },
+            "hosts": { "title": "Hosts", "description": "Event mode -- list of host user objects, passed through as-is." },
+            "ticket_info": { "title": "Ticket info", "description": "Event mode -- price, is_free, spots_remaining, require_approval, passed through as-is." },
+            "guest_count": { "title": "Guest count", "description": "Event mode." },
+            "featured_items": { "title": "Featured items", "description": "CALENDAR_PROFILE record -- upcoming events the organizer has featured on their calendar page." },
+            "has_more": { "title": "Has more", "description": "Discover/calendar pagination internals -- not normally present on emitted records (consumed internally to drive pagination)." }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across event / calendar / discover records.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "_source",
+                    "recordType",
+                    "_scrapedAt",
+                    "api_id",
+                    "event",
+                    "calendar",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

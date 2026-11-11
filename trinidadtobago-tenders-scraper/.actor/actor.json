@@ -1,0 +1,14 @@
+{
+    "actorSpecification": 1,
+    "name": "trinidadtobago-tenders-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Trinidad and Tobago Government Tenders Scraper (ProcureTT)",
+    "description": "Pull government tenders, contract awards, pre-qualification notices, disposal notices, and annual procurement schedules from ProcureTT, Trinidad and Tobago's official public procurement notice board run by the Office of Procurement Regulation. No account or API key needed.",
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

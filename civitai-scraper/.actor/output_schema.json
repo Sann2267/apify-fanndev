@@ -1,0 +1,76 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Model / image / creator / tag record",
+        "description": "Raw-passthrough dataset envelope on top of Civitai's own official API JSON shape. Every record carries _input/_source/_scrapedAt (and _error/_errorDetail on failures). \"models\"/\"model-detail\" records carry the full upstream model object verbatim (id, name, type, stats, creator, tags, and a nested modelVersions array with files/download URLs/images). \"images\" records carry the upstream image object verbatim (meta is always null on the public API -- see CRAWLING_METHOD.md). \"creators\"/\"tags\" records carry the upstream listing object verbatim.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The search query, model ID, or descriptor that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which extraction strategy emitted this record (S1-api, or none on failure)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed extractions (e.g. model_not_found, invalid_request)."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "id": { "title": "ID", "description": "Upstream numeric ID -- a model, image, or post ID depending on mode." },
+            "name": { "title": "Name", "description": "Models mode -- the model's name." },
+            "type": { "title": "Type", "description": "Models mode -- Checkpoint / LORA / TextualInversion / etc." },
+            "stats": { "title": "Stats", "description": "Models/images mode -- download/like/comment counts, nested object, passed through as-is." },
+            "creator": { "title": "Creator", "description": "Models mode -- {username, image}, passed through as-is." },
+            "tags": { "title": "Tags", "description": "Models mode -- list of tag name strings." },
+            "modelVersions": { "title": "Model versions", "description": "Models/model-detail mode -- full nested array of every version, each with files (download URLs, hashes, virus-scan results) and sample images, passed through as-is." },
+            "url": { "title": "Image URL", "description": "Images mode -- the CDN URL of the image." },
+            "width": { "title": "Width", "description": "Images mode." },
+            "height": { "title": "Height", "description": "Images mode." },
+            "nsfwLevel": { "title": "NSFW level", "description": "Models/images mode." },
+            "meta": { "title": "Generation metadata", "description": "Images mode -- always null on the public API regardless of the image's own hasMeta flag; this is Civitai's own privacy restriction, not a bug. See CRAWLING_METHOD.md." },
+            "username": { "title": "Username", "description": "Images/creators mode." },
+            "modelCount": { "title": "Model count", "description": "Creators mode -- how many models this user has published." },
+            "link": { "title": "API link", "description": "Creators/tags mode -- a ready-to-use /models?... filter link for this creator or tag." }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across model / image / creator / tag records.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "_source",
+                    "_scrapedAt",
+                    "id",
+                    "name",
+                    "type",
+                    "username",
+                    "url",
+                    "modelCount",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

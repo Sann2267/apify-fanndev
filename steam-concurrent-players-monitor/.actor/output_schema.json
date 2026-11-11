@@ -1,0 +1,108 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Steam player-count record",
+        "description": "recordType is TOP_CONCURRENT, TOP_DAILY_PEAK, APP_CURRENT, APP_HISTORY, STEAMCHARTS_TOP, STEAM_ONLINE or ERROR. Steam API fields are passed through verbatim (concurrent_in_game, peak_in_game, last_week_rank, player_count, item), so extra fields may appear. Fields without a value are null.",
+        "additionalProperties": true,
+        "properties": {
+            "_input": {"type": "string", "title": "Input", "description": "The input value (game id/URL/name, or the mode name for charts) that produced this record."},
+            "_source": {"type": "string", "title": "Source", "description": "Endpoint that produced the record (S1-steam-api-concurrent, S1-steam-api-mostplayed, S1-steam-api-current, S1-steamcharts-app, S1-steamcharts-top, S1-steam-store-stats) or 'none' for errors."},
+            "_scrapedAt": {"type": "string", "title": "Scraped at", "description": "UTC ISO 8601 time the record was produced."},
+            "recordType": {"type": "string", "title": "Record type", "description": "TOP_CONCURRENT, TOP_DAILY_PEAK, APP_CURRENT, APP_HISTORY, STEAMCHARTS_TOP, STEAM_ONLINE or ERROR."},
+            "_error": {"title": "Error", "description": "Only on ERROR records: invalid_input, not_found, not_tracked, search_failed, blocked or unexpected_shape."},
+            "_errorDetail": {"title": "Error detail", "description": "Only on ERROR records: what went wrong."},
+            "rank": {"title": "Rank", "description": "Position in the chart (TOP_*, STEAMCHARTS_TOP)."},
+            "appid": {"title": "App ID", "description": "Steam application id."},
+            "name": {"title": "Game", "description": "Game name."},
+            "concurrent_in_game": {"title": "Players now", "description": "TOP_CONCURRENT: players in-game at lastUpdate."},
+            "peak_in_game": {"title": "Peak players", "description": "TOP_CONCURRENT: today's peak. TOP_DAILY_PEAK: the peak of the rollup day."},
+            "last_week_rank": {"title": "Last week rank", "description": "TOP_DAILY_PEAK: rank one week earlier."},
+            "rankChangeVsLastWeek": {"title": "Rank change vs last week", "description": "TOP_DAILY_PEAK: positive = climbed."},
+            "player_count": {"title": "Players now", "description": "APP_CURRENT: live players from the official Steam API."},
+            "currentPlayers": {"title": "Current players (SteamCharts)", "description": "APP_HISTORY / STEAMCHARTS_TOP: SteamCharts' latest reading, refreshed about hourly."},
+            "currentPlayersAt": {"title": "SteamCharts reading time", "description": "APP_HISTORY: when SteamCharts took the current reading."},
+            "peak24h": {"title": "24h peak", "description": "Peak players in the last 24 hours (SteamCharts)."},
+            "allTimePeak": {"title": "All-time peak", "description": "All-time peak players (SteamCharts)."},
+            "avgPlayersLast30Days": {"title": "Avg players, last 30 days", "description": "APP_CURRENT with SteamCharts stats on."},
+            "peakPlayers30d": {"title": "Peak, last 30 days", "description": "STEAMCHARTS_TOP: highest player count in the last 30 days."},
+            "hoursPlayed30d": {"title": "Hours played, last 30 days", "description": "STEAMCHARTS_TOP: total player-hours in the last 30 days."},
+            "months": {"title": "Monthly history", "description": "APP_HISTORY: [{month, avgPlayers, gain, gainPct, peakPlayers}], newest first; first row is 'Last 30 Days'."},
+            "series": {"title": "Time series", "description": "APP_HISTORY: [{timestamp, players, resolution}]. STEAM_ONLINE: [{timestamp, users}]."},
+            "seriesPoints": {"title": "Series points", "description": "Number of points in series."},
+            "label": {"title": "Series", "description": "STEAM_ONLINE: series label from Steam."},
+            "usersOnline": {"title": "Steam users online", "description": "STEAM_ONLINE: latest total users logged in to Steam."},
+            "usersOnlineAt": {"title": "Users online at", "description": "STEAM_ONLINE: time of the latest reading."},
+            "peak48h": {"title": "48h peak", "description": "STEAM_ONLINE: highest users online in the last 48 hours."},
+            "low48h": {"title": "48h low", "description": "STEAM_ONLINE: lowest users online in the last 48 hours."},
+            "storeUrl": {"title": "Store URL", "description": "Steam store page."},
+            "steamchartsUrl": {"title": "SteamCharts URL", "description": "SteamCharts page for the game."},
+            "isFree": {"title": "Free to play", "description": "Whether the game is free."},
+            "developers": {"title": "Developers", "description": "Developer names."},
+            "publishers": {"title": "Publishers", "description": "Publisher names."},
+            "releaseDate": {"title": "Release date", "description": "UTC ISO 8601 Steam release date."},
+            "item": {"title": "Raw store item", "description": "Steam IStoreBrowseService item, verbatim."},
+            "lastUpdate": {"title": "Chart updated", "description": "TOP_CONCURRENT: when Steam last refreshed the live chart."},
+            "rollupDate": {"title": "Rollup day", "description": "TOP_DAILY_PEAK: the day the peaks belong to."},
+            "checkedAt": {"title": "Checked at", "description": "APP_CURRENT: when the live count was read."},
+            "steamchartsError": {"title": "SteamCharts note", "description": "APP_CURRENT: why SteamCharts stats are missing (e.g. game not tracked)."},
+            "previousPlayers": {"title": "Previous players", "description": "Monitoring: the same metric in the previous run."},
+            "playersChange": {"title": "Change", "description": "Monitoring: players now minus previousPlayers."},
+            "playersChangePct": {"title": "Change %", "description": "Monitoring: playersChange as a percentage of previousPlayers."},
+            "previousRank": {"title": "Previous rank", "description": "Monitoring: rank in the previous run."},
+            "rankChange": {"title": "Rank change", "description": "Monitoring: positive = climbed since the previous run."},
+            "previousSnapshotAt": {"title": "Previous run at", "description": "Monitoring: when the previous value was recorded."},
+            "isNewEntry": {"title": "New entry", "description": "Monitoring: true when the game was not in the previous snapshot."},
+            "sameUpstreamSnapshot": {"title": "Same upstream data", "description": "Monitoring: true when Steam had not refreshed its chart since the previous run, so a 0 change means 'no new data' rather than 'no movement'."},
+            "alert": {"title": "Alert", "description": "Monitoring: true when |playersChangePct| >= alertChangePct."}
+        }
+    },
+    "views": {
+        "charts": {
+            "title": "Charts & live counts",
+            "transformation": {
+                "fields": ["recordType", "rank", "appid", "name", "concurrent_in_game", "peak_in_game", "player_count", "currentPlayers", "peakPlayers30d", "last_week_rank", "playersChange", "playersChangePct", "rankChange", "alert", "_error"]
+            },
+            "display": {
+                "component": "table",
+                "properties": {
+                    "recordType": {"label": "Type", "format": "text"},
+                    "rank": {"label": "Rank", "format": "number"},
+                    "appid": {"label": "App ID", "format": "number"},
+                    "name": {"label": "Game", "format": "text"},
+                    "concurrent_in_game": {"label": "Players now", "format": "number"},
+                    "peak_in_game": {"label": "Peak", "format": "number"},
+                    "player_count": {"label": "Live players", "format": "number"},
+                    "currentPlayers": {"label": "SteamCharts current", "format": "number"},
+                    "peakPlayers30d": {"label": "30d peak", "format": "number"},
+                    "last_week_rank": {"label": "Last week rank", "format": "number"},
+                    "playersChange": {"label": "Change", "format": "number"},
+                    "playersChangePct": {"label": "Change %", "format": "number"},
+                    "rankChange": {"label": "Rank change", "format": "number"},
+                    "alert": {"label": "Alert", "format": "boolean"},
+                    "_error": {"label": "Error", "format": "text"}
+                }
+            }
+        },
+        "history": {
+            "title": "Per-game history",
+            "transformation": {
+                "fields": ["appid", "name", "currentPlayers", "peak24h", "allTimePeak", "seriesPoints", "steamchartsUrl", "_error"]
+            },
+            "display": {
+                "component": "table",
+                "properties": {
+                    "appid": {"label": "App ID", "format": "number"},
+                    "name": {"label": "Game", "format": "text"},
+                    "currentPlayers": {"label": "Current", "format": "number"},
+                    "peak24h": {"label": "24h peak", "format": "number"},
+                    "allTimePeak": {"label": "All-time peak", "format": "number"},
+                    "seriesPoints": {"label": "Points", "format": "number"},
+                    "steamchartsUrl": {"label": "SteamCharts", "format": "link"},
+                    "_error": {"label": "Error", "format": "text"}
+                }
+            }
+        }
+    }
+}

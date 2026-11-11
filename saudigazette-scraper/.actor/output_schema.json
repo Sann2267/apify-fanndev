@@ -1,0 +1,114 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Article / latest-headline record",
+        "description": "Every record carries _input/_source/_scrapedAt (and _error/_errorDetail on failures). Article-mode records (S1-jsonld+html) combine fields from the page's NewsArticle JSON-LD block with the full article text parsed from HTML. Latest-mode records (S2-sitemap) carry title/link-style fields from the Google News sitemap.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The exact input value (URL, or 'latest') that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which extraction strategy emitted this record (S1-jsonld+html or S2-sitemap)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed extractions -- the error kind."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "headline": {
+                "title": "Headline",
+                "description": "Article headline, from ld+json (HTML-unescaped) (article-mode)."
+            },
+            "description": {
+                "title": "Description",
+                "description": "Short article description/dek, from ld+json (HTML-unescaped) (article-mode)."
+            },
+            "articleBody": {
+                "title": "Article body",
+                "description": "Full article text, parsed from the page's div.body-div HTML (article-mode)."
+            },
+            "category": {
+                "title": "Category",
+                "description": "Section/category, from the page's breadcrumb link (not present in ld+json) (article-mode)."
+            },
+            "author": {
+                "title": "Author",
+                "description": "Byline name from ld+json -- 'Saudi Gazette' (staff), 'Agencies' (wire), or 'By <Name>*' (opinion columns, kept verbatim) (article-mode)."
+            },
+            "publisher": {
+                "title": "Publisher",
+                "description": "Publisher name from ld+json, always 'Saudi Gazette' on sampled articles (article-mode)."
+            },
+            "datePublished": {
+                "title": "Date published",
+                "description": "ISO 8601 publish date, from ld+json (article-mode)."
+            },
+            "dateModified": {
+                "title": "Date modified",
+                "description": "ISO 8601 last-modified date, from ld+json (article-mode)."
+            },
+            "image": {
+                "title": "Image URL",
+                "description": "Lead image URL, flattened from the ld+json image object (article-mode)."
+            },
+            "keywords": {
+                "title": "Keywords",
+                "description": "Keywords -- comma-separated string from ld+json (article-mode) or a list split from news:keywords (latest-mode). Sometimes CMS-auto-generated filler rather than curated tags."
+            },
+            "title": {
+                "title": "Title",
+                "description": "Headline from the Google News sitemap (latest-mode)."
+            },
+            "link": {
+                "title": "Link",
+                "description": "Article URL (latest-mode)."
+            },
+            "publicationDate": {
+                "title": "Publication date",
+                "description": "news:publication_date from the sitemap (latest-mode)."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across both article and latest-headline records.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "_source",
+                    "_scrapedAt",
+                    "headline",
+                    "title",
+                    "link",
+                    "datePublished",
+                    "publicationDate",
+                    "author",
+                    "category",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

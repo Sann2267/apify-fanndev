@@ -1,0 +1,12 @@
+{
+    "actorOutputSchemaVersion": 1,
+    "title": "Shopee Seller Performance Results",
+    "properties": {
+        "results": {
+            "type": "string",
+            "title": "Dataset results",
+            "template": "{{links.apiDefaultDatasetUrl}}/items",
+            "description": "Every seller, not-found, gated and error record from this run."
+        }
+    }
+}

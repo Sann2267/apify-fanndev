@@ -1,0 +1,17 @@
+{
+    "actorSpecification": 1,
+    "name": "traveloka-ground-transport-monitor",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Traveloka Ground Transport (Bus & Shuttle) Monitor",
+    "description": "Monitor Indonesian intercity bus and shuttle routes on Traveloka: operator, fare and promo price, departure and arrival times, duration, seats left, pickup and drop-off points with coordinates, and facilities.",
+    "categories": [
+        "TRAVEL"
+    ],
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

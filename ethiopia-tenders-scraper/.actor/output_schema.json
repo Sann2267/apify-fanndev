@@ -1,0 +1,123 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Ethiopia eGP procurement record",
+        "description": "Raw-passthrough dataset envelope. Record shape depends on 'mode': 'latest'/'list' rows come from the eGP portal's Publication Plan Lots register (list-level fields plus the full raw upstream object); 'detail' rows are item-level detail (quantities, price, specs, milestones) for one lot. Every record carries _input/_source/_scrapedAt (and _error/_errorDetail on failures).",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "'latest' / 'list' for those modes, or the exact lot ID requested in 'detail' mode."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which extraction strategy emitted this record (S1-cms-publication-lots-api, S1-cms-publication-lot-detail-api, or 'none' on failure)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed/degraded records: http_<code>, unexpected_shape, blocked_or_transient, or invalid_input."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "id": {
+                "title": "Lot ID",
+                "description": "(latest/list mode) The portal's internal ID for this procurement lot -- pass this into 'detail' mode's lotIds for full item-level data."
+            },
+            "title": {
+                "title": "Title",
+                "description": "(latest/list mode) English lot name, falling back to its description if no name is set."
+            },
+            "description": {
+                "title": "Description",
+                "description": "(latest/list mode) Bilingual {am, en} description object, as returned by the portal."
+            },
+            "organization": {
+                "title": "Organization",
+                "description": "(latest/list mode) English name of the procuring federal agency/institution."
+            },
+            "fiscalYear": {
+                "title": "Fiscal year",
+                "description": "(latest/list mode) Ethiopian fiscal year label, e.g. 'ET-FY-2019' (runs July 8 - July 7 on the Gregorian calendar)."
+            },
+            "procurementCategory": {
+                "title": "Procurement category",
+                "description": "(latest/list mode) e.g. 'Goods', 'Works', 'NonConsultancyServices'."
+            },
+            "procurementMethod": {
+                "title": "Procurement method",
+                "description": "(latest/list mode) e.g. 'Open' (open/national competitive bidding)."
+            },
+            "referenceNumber": {
+                "title": "Reference number",
+                "description": "(latest/list mode) The procuring entity's own tender/bid reference number, e.g. 'MOR-NCB -G-0012-2019/Bid'."
+            },
+            "status": {
+                "title": "Status",
+                "description": "(latest/list mode) Lot status, e.g. 'done'."
+            },
+            "timestamp": {
+                "title": "Last updated",
+                "description": "(latest/list mode) Upstream last-modified timestamp for this lot -- the field this actor sorts 'latest' mode by."
+            },
+            "organizationName": {
+                "title": "Organization (raw)",
+                "description": "(latest/list mode) Bilingual {am, en} organization name object, as returned by the portal."
+            },
+            "publicationPlan": {
+                "title": "Parent plan",
+                "description": "(latest/list mode) Full raw object for the annual procurement plan this lot belongs to (plan name, organization, fiscal year, status, dates)."
+            },
+            "lotId": {
+                "title": "Lot ID",
+                "description": "(detail mode) The lot ID requested."
+            },
+            "items": {
+                "title": "Line items",
+                "description": "(detail mode) Every item in this lot -- name/description, commodity classification, quantity, estimated unit price and currency, technical specifications."
+            },
+            "milestones": {
+                "title": "Delivery milestones",
+                "description": "(detail mode) Scheduled milestones for this lot (type, lead time, due date)."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across latest/list/detail records.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "id",
+                    "title",
+                    "organization",
+                    "referenceNumber",
+                    "fiscalYear",
+                    "procurementCategory",
+                    "procurementMethod",
+                    "status",
+                    "timestamp",
+                    "lotId",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

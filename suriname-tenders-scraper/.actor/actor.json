@@ -1,0 +1,14 @@
+{
+    "actorSpecification": 1,
+    "name": "suriname-tenders-scraper",
+    "version": "0.1",
+    "buildTag": "latest",
+    "title": "Suriname Government Tenders Scraper (gov.sr)",
+    "description": "Scrapes Suriname's official government website (gov.sr) for public procurement notices: routine ministry-level tenders across every government sector, and larger internationally/donor-financed solicitations with full bid details. No account or login needed.",
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

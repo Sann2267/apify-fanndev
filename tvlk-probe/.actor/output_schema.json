@@ -1,0 +1,83 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Traveloka surface probe result",
+        "description": "One record per proxy round: WAF-token minting status, session bootstrap status, and per-endpoint reachability checks. A round where session bootstrap itself failed short-circuits to just round/exitIp/error.",
+        "properties": {
+            "round": {
+                "type": "integer",
+                "title": "Round",
+                "description": "Probe round number, starting at 1."
+            },
+            "proxyMode": {
+                "type": ["string", "null"],
+                "title": "Proxy mode",
+                "description": "residential-id, residential-sg, or none."
+            },
+            "exitIp": {
+                "type": ["string", "null"],
+                "title": "Exit IP",
+                "description": "Public IP address used for this round's requests."
+            },
+            "error": {
+                "type": ["string", "null"],
+                "title": "Bootstrap error",
+                "description": "Present only when session bootstrap failed before any endpoint checks ran."
+            },
+            "bootStatus": {
+                "type": ["integer", "null"],
+                "title": "Boot status",
+                "description": "HTTP status of the /api/v2/user/context/web bootstrap call."
+            },
+            "wafTokenMinted": {
+                "type": ["boolean", "null"],
+                "title": "WAF token minted",
+                "description": "Whether an aws-waf-token was successfully minted for this round."
+            },
+            "wafTokenLength": {
+                "type": ["integer", "null"],
+                "title": "WAF token length",
+                "description": "Character length of the minted token, 0 if none was minted."
+            },
+            "mintError": {
+                "type": ["string", "null"],
+                "title": "Mint error",
+                "description": "Error message from the token-minting subprocess, if it failed."
+            },
+            "datadomeHotelPage": {
+                "type": ["object", "null"],
+                "title": "Hotel page probe",
+                "description": "Result of fetching /en-id/hotel: status code, byte count, and whether a captcha-delivery page was served; or an error string."
+            },
+            "checks": {
+                "type": ["object", "null"],
+                "title": "Endpoint checks",
+                "description": "Per-endpoint probe results keyed by check name (hotel-searchList, hotel-staticSearch, xperience-searchV2, xperience-detail, hotel-autocomplete, pps-multileg, ugc-getReviews, flight-price-table). Each value carries status, wafAction, bytes and a response snippet, or an error."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns for scanning probe rounds.",
+            "transformation": {
+                "fields": [
+                    "round",
+                    "proxyMode",
+                    "exitIp",
+                    "bootStatus",
+                    "wafTokenMinted",
+                    "wafTokenLength",
+                    "mintError",
+                    "error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

@@ -1,0 +1,93 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "BCCAR registry search-result record",
+        "description": "Raw-passthrough dataset envelope. Every record carries _input/_source/_scrapedAt (and _error/_errorDetail on failures). Each successful record is one matched business entity from BCCAR's public search, with upstream's own field names passed through verbatim.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The query label (name, registration number, certificate number, or entity type) that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "S1-public-business-search (a matched entity), or none (error record)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed searches -- not_found (search matched nothing) or blocked_or_transient (network issue)."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "reg_number": {
+                "title": "Registration number",
+                "description": "BCCAR's official public registration number for the entity."
+            },
+            "name": {
+                "title": "Name",
+                "description": "Registered business or company name."
+            },
+            "foreign_name": {
+                "title": "Foreign character name",
+                "description": "Name in a non-Latin script, where on file (empty on nearly every record)."
+            },
+            "business_entity_type_str": {
+                "title": "Entity type",
+                "description": "e.g. \"Company\", \"Business Name\", \"LLP\", \"LLC\", \"Foundation\"."
+            },
+            "business_entity_subtype": {
+                "title": "Entity sub-type / category",
+                "description": "e.g. \"Private Company\", \"Individual\", \"Corporation\", \"Limited Liability Partnership\"."
+            },
+            "state": {
+                "title": "Status",
+                "description": "Current register status, e.g. \"Active\", \"Struck off\", \"Dissolved\", \"Pending Strike off\"."
+            },
+            "reg_address": {
+                "title": "Registered address",
+                "description": "Registered office/business address on file."
+            },
+            "reg_date": {
+                "title": "Registration date",
+                "description": "Date the entity was registered."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns for matched entities and error rows.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "_source",
+                    "_scrapedAt",
+                    "reg_number",
+                    "name",
+                    "business_entity_type_str",
+                    "business_entity_subtype",
+                    "state",
+                    "reg_date",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

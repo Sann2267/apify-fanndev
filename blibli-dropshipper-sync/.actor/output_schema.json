@@ -1,0 +1,177 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Product sync record",
+        "description": "One row per SKU in your catalogue, carrying the current price, availability and (in detailed mode) stock quantity and description, plus what changed since the last run. Sync your own store on `hasChanged` and read `changes` for the exact before/after values. Every type is nullable because which fields are populated depends on the mode and on whether the product still exists.",
+        "properties": {
+            "_input": {
+                "type": ["string", "null"],
+                "title": "Input",
+                "description": "The SKU this record belongs to."
+            },
+            "_source": {
+                "type": ["string", "null"],
+                "title": "Source strategy",
+                "description": "S1-bulk (bulk endpoint), S2-product-page (page fallback or detailed mode), or none."
+            },
+            "_scrapedAt": {
+                "type": ["string", "null"],
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was fetched."
+            },
+            "_error": {
+                "type": ["string", "null"],
+                "title": "Error",
+                "description": "Present only on failure rows (NOT_FOUND, INVALID_INPUT, BLOCKED_AFTER_RETRIES, UPSTREAM_SHAPE_CHANGED, EMPTY_RESULT)."
+            },
+            "_errorDetail": {
+                "type": ["string", "null"],
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "sku": {
+                "type": ["string", "null"],
+                "title": "SKU",
+                "description": "Blibli product SKU - the key to join against your own catalogue."
+            },
+            "syncStatus": {
+                "type": ["string", "null"],
+                "title": "Sync status",
+                "description": "OK when the product resolved. NOT_FOUND when neither the bulk endpoint nor the product page returned it, meaning the listing appears removed - consider unpublishing it in your store."
+            },
+            "name": {
+                "type": ["string", "null"],
+                "title": "Product name",
+                "description": "Current product title on Blibli."
+            },
+            "brand": {
+                "type": ["string", "null"],
+                "title": "Brand",
+                "description": "Brand name."
+            },
+            "merchantCode": {
+                "type": ["string", "null"],
+                "title": "Seller code",
+                "description": "Blibli merchant code of the seller."
+            },
+            "merchantName": {
+                "type": ["string", "null"],
+                "title": "Seller",
+                "description": "Store selling the product."
+            },
+            "price": {
+                "type": ["number", "null"],
+                "title": "Current price (IDR)",
+                "description": "The price being charged now - the number to base your resale price on."
+            },
+            "listPrice": {
+                "type": ["number", "null"],
+                "title": "List price (IDR)",
+                "description": "Pre-discount price in rupiah."
+            },
+            "salePrice": {
+                "type": ["number", "null"],
+                "title": "Sale price (IDR)",
+                "description": "Sale price as Blibli reports it."
+            },
+            "discountPercent": {
+                "type": ["number", "null"],
+                "title": "Discount %",
+                "description": "Current discount off list price."
+            },
+            "currency": {
+                "type": ["string", "null"],
+                "title": "Currency",
+                "description": "Always IDR."
+            },
+            "inStock": {
+                "type": ["boolean", "null"],
+                "title": "In stock",
+                "description": "Whether the product is currently buyable. Available in both modes."
+            },
+            "stockQuantity": {
+                "type": ["number", "null"],
+                "title": "Stock quantity",
+                "description": "Exact units available. Only populated in detailed mode - the bulk endpoint exposes availability as a boolean only."
+            },
+            "stockLimitedThreshold": {
+                "type": ["number", "null"],
+                "title": "Low-stock threshold",
+                "description": "The level at which Blibli starts showing a low-stock warning. Detailed mode only."
+            },
+            "isPreOrder": {
+                "type": ["boolean", "null"],
+                "title": "Pre-order",
+                "description": "Whether the item ships as a pre-order, which changes your fulfilment promise. Detailed mode only."
+            },
+            "rating": {
+                "type": ["number", "null"],
+                "title": "Rating",
+                "description": "Current product star rating."
+            },
+            "reviewCount": {
+                "type": ["number", "null"],
+                "title": "Review count",
+                "description": "Number of reviews."
+            },
+            "description": {
+                "type": ["string", "null"],
+                "title": "Description",
+                "description": "Product selling points with Blibli's \\n<br> markup stripped, ready to paste into your own listing. Detailed mode only."
+            },
+            "warrantyText": {
+                "type": ["string", "null"],
+                "title": "Warranty",
+                "description": "Warranty statement, e.g. 'Garansi resmi 2 tahun'. Detailed mode only."
+            },
+            "warrantyType": {
+                "type": ["string", "null"],
+                "title": "Warranty type",
+                "description": "Warranty class, e.g. RESMI. Detailed mode only."
+            },
+            "categories": {
+                "type": ["array", "null"],
+                "title": "Categories",
+                "description": "Category path for the product. Detailed mode only."
+            },
+            "imageUrl": {
+                "type": ["string", "null"],
+                "title": "Primary image",
+                "description": "Main product image URL."
+            },
+            "images": {
+                "type": ["array", "null"],
+                "title": "Images",
+                "description": "All product images. Detailed mode only."
+            },
+            "productUrl": {
+                "type": ["string", "null"],
+                "title": "Product URL",
+                "description": "Canonical Blibli product URL."
+            },
+            "hasVariants": {
+                "type": ["boolean", "null"],
+                "title": "Has variants",
+                "description": "Whether the listing has multiple variants, which may each carry their own price and stock."
+            },
+            "changeType": {
+                "type": ["array", "null"],
+                "title": "Change type",
+                "description": "What moved since the last run: NEW, UNCHANGED, PRICE_INCREASED, PRICE_DECREASED, OUT_OF_STOCK, BACK_IN_STOCK, NAME_CHANGED, BECAME_UNAVAILABLE, BECAME_AVAILABLE. Several can apply at once."
+            },
+            "changes": {
+                "type": ["object", "null"],
+                "title": "Changes",
+                "description": "Per-field before/after values, e.g. {\"price\": {\"from\": 255000, \"to\": 239000, \"deltaPercent\": -6.27}}. This is what you push into your own store."
+            },
+            "hasChanged": {
+                "type": ["boolean", "null"],
+                "title": "Has changed",
+                "description": "True when anything moved since the last run. Filter on this to sync only what needs updating."
+            }
+        }
+    }
+}

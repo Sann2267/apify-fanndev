@@ -1,0 +1,563 @@
+{
+    "title": "Movie & TV Data Extractor",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "mode": {
+            "title": "Mode",
+            "type": "string",
+            "description": "Which extraction to run. All nine read TMDB's official API with your own free key - no scraping, no browser, no login beyond that key. Start with 'titleDetails' if you have films or shows in hand (TMDB URLs, IMDb tt-ids or just their names all work), 'discoverTitles' to build a list from filters, or 'charts' for the ready-made Popular / Top Rated / Trending lists.",
+            "editor": "select",
+            "default": "titleDetails",
+            "enum": [
+                "titleDetails",
+                "personDetails",
+                "seasonEpisodes",
+                "titleReviews",
+                "discoverTitles",
+                "searchByName",
+                "charts",
+                "collectionTitles",
+                "companyProfile"
+            ],
+            "enumTitles": [
+                "Title Details - one full record per film or series: cast, crew, budget, revenue, certification, where to watch",
+                "Person Details - one actor, director or creator: biography, full filmography, official social handles",
+                "Seasons & Episodes - every episode of a series with its OWN rating, air date, synopsis and guest stars",
+                "Reviews - user reviews with the reviewer's own 0-10 score, cleaned for sentiment analysis",
+                "Discover (advanced search) - build a list from filters: genre, year range, minimum rating, streaming service, runtime",
+                "Search by Name - resolve names to records across films, series, people, collections and companies",
+                "Charts - Popular, Top Rated, Now Playing, Upcoming, On The Air and Trending, for films, series and people",
+                "Collections - a whole franchise in release order, from any film in it or the collection's name",
+                "Companies & Networks - a studio or network profile, optionally with its whole catalogue"
+            ]
+        },
+        "tmdbApiKey": {
+            "title": "TMDB API key (free)",
+            "type": "string",
+            "description": "Your own key from The Movie Database. It is free and takes about a minute: sign up at https://www.themoviedb.org/signup, then open https://www.themoviedb.org/settings/api. Paste EITHER the short 'API Key' (32 characters) OR the long 'API Read Access Token' - this actor detects which one you gave it. The key is never written to the dataset or the log; it is stripped out of every URL before it is published. It can also be set once as a TMDB_API_KEY environment variable on the actor instead of per run.",
+            "editor": "textfield",
+            "isSecret": true
+        },
+        "titleTargets": {
+            "title": "Films & TV shows",
+            "type": "array",
+            "description": "Targets for titleDetails and titleReviews. Paste whatever you have: an IMDb link or bare id (https://www.imdb.com/title/tt1375666/ or tt1375666), a TMDB link (https://www.themoviedb.org/movie/27205-inception), an explicit id (movie:27205, tv:1399), or just the name (Inception). IMDb ids are resolved through TMDB's official /find endpoint, which also tells the actor whether the id is a film or a series - so mixed lists are fine.",
+            "editor": "stringList",
+            "sectionCaption": "What to extract",
+            "prefill": [
+                "tt1375666",
+                "https://www.themoviedb.org/tv/1399",
+                "The Grand Budapest Hotel"
+            ]
+        },
+        "personTargets": {
+            "title": "People",
+            "type": "array",
+            "description": "Targets for personDetails. Accepts an IMDb person id or link (nm0000138), a TMDB link or id (person:6193), or a name (Christopher Nolan). Each record carries the full filmography sorted by popularity, plus the person's own IMDb, Instagram, X and TikTok handles where TMDB holds them.",
+            "editor": "stringList",
+            "prefill": [
+                "nm0000138",
+                "Greta Gerwig"
+            ]
+        },
+        "tvTargets": {
+            "title": "TV series (for episodes)",
+            "type": "array",
+            "description": "Series for seasonEpisodes. Same formats as the film list. Every season is pulled unless you name specific ones below. One request per season returns all of that season's episodes, so a 62-episode show costs 5 requests, not 62.",
+            "editor": "stringList",
+            "prefill": [
+                "tt0903747"
+            ]
+        },
+        "seasons": {
+            "title": "Seasons to pull",
+            "type": "array",
+            "description": "Which season numbers to read, for seasonEpisodes. Leave empty for every season. Season 0 is TMDB's 'Specials' bucket and is skipped unless you ask for it by number.",
+            "editor": "stringList",
+            "prefill": []
+        },
+        "searchQueries": {
+            "title": "Search queries",
+            "type": "array",
+            "description": "Free-text queries for searchByName. Use this to turn a column of names into TMDB ids that every other mode accepts.",
+            "editor": "stringList",
+            "prefill": [
+                "blade runner"
+            ]
+        },
+        "collectionTargets": {
+            "title": "Collections / franchises",
+            "type": "array",
+            "description": "Targets for collectionTitles. Give a collection name ('The Lord of the Rings Collection'), a collection id or URL (collection:119), or ANY film in the franchise (movie:27205) - the actor reads the franchise off the film. Parts come back in release order.",
+            "editor": "stringList",
+            "prefill": [
+                "The Dark Knight Collection"
+            ]
+        },
+        "companyTargets": {
+            "title": "Companies / networks",
+            "type": "array",
+            "description": "Targets for companyProfile. A studio name ('A24'), a company id or URL (company:41077), or a TV network as network:49. Each profile carries the company's own homepage and headquarters - the route to a real contact for anyone pitching a production, since neither TMDB nor any other public source publishes private contact details.",
+            "editor": "stringList",
+            "prefill": [
+                "A24"
+            ]
+        },
+        "chartNames": {
+            "title": "Charts",
+            "type": "array",
+            "description": "Which built-in lists to pull, for the charts mode. Valid names: popularMovies, topRatedMovies, nowPlayingMovies, upcomingMovies, popularTv, topRatedTv, onTheAirTv, airingTodayTv, popularPeople, trendingAllDay, trendingAllWeek, trendingMoviesDay, trendingMoviesWeek, trendingTvDay, trendingTvWeek, trendingPeopleWeek. Each page is 20 rows and rank continues across pages, so row 21 of Top Rated really is rank 21.",
+            "editor": "stringList",
+            "prefill": [
+                "topRatedMovies"
+            ]
+        },
+        "targets": {
+            "title": "Targets (generic)",
+            "type": "array",
+            "description": "A single list that is routed into whichever field the chosen mode needs. Useful when chaining this actor after another one, where you have exactly one array and do not want to rename it per mode.",
+            "editor": "stringList"
+        },
+        "discoverMediaType": {
+            "title": "Discover: films or series",
+            "type": "string",
+            "description": "Which catalogue discoverTitles walks. This also decides which genre list and which date field apply - TMDB filters films on release date and series on first-air date, and sending the wrong one is silently ignored rather than rejected.",
+            "editor": "select",
+            "default": "movie",
+            "enum": [
+                "movie",
+                "tv"
+            ],
+            "enumTitles": [
+                "Movies",
+                "TV series"
+            ],
+            "sectionCaption": "Discover filters (advanced search)"
+        },
+        "genres": {
+            "title": "Genres",
+            "type": "array",
+            "description": "Genre names or TMDB genre ids. Film genres: Action, Adventure, Animation, Comedy, Crime, Documentary, Drama, Family, Fantasy, History, Horror, Music, Mystery, Romance, Science Fiction, TV Movie, Thriller, War, Western. Series genres differ: Action & Adventure, Sci-Fi & Fantasy, Kids, News, Reality, Soap, Talk, War & Politics plus the shared ones. An unknown name is reported in the log rather than silently dropped.",
+            "editor": "stringList",
+            "prefill": []
+        },
+        "genreMatch": {
+            "title": "Genre matching",
+            "type": "string",
+            "description": "'any' returns titles in at least one of the genres; 'all' returns only titles carrying every one of them. 'all' with three genres returns very little - that is TMDB being literal, not a broken filter.",
+            "editor": "select",
+            "default": "any",
+            "enum": [
+                "any",
+                "all"
+            ],
+            "enumTitles": [
+                "Any of these genres",
+                "All of these genres"
+            ]
+        },
+        "yearFrom": {
+            "title": "Year from",
+            "type": "integer",
+            "description": "Earliest release year (films) or first-air year (series), inclusive.",
+            "editor": "number",
+            "minimum": 1870,
+            "maximum": 2100
+        },
+        "yearTo": {
+            "title": "Year to",
+            "type": "integer",
+            "description": "Latest release year (films) or first-air year (series), inclusive.",
+            "editor": "number",
+            "minimum": 1870,
+            "maximum": 2100
+        },
+        "minRating": {
+            "title": "Minimum rating",
+            "type": "integer",
+            "description": "Minimum TMDB user score out of 10. Almost always worth pairing with a minimum vote count: without one, the highest-rated results are obscure titles with a single 10/10 vote.",
+            "editor": "number",
+            "minimum": 0,
+            "maximum": 10
+        },
+        "maxRating": {
+            "title": "Maximum rating",
+            "type": "integer",
+            "description": "Maximum TMDB user score out of 10. Useful for finding the badly-reviewed end of a catalogue.",
+            "editor": "number",
+            "minimum": 0,
+            "maximum": 10
+        },
+        "minVotes": {
+            "title": "Minimum vote count",
+            "type": "integer",
+            "description": "Minimum number of user votes. This is the single most useful quality filter in the whole discover mode: 300 is a reasonable floor for a mainstream film, 50 for a series.",
+            "editor": "number",
+            "minimum": 0
+        },
+        "minRuntime": {
+            "title": "Minimum runtime (minutes)",
+            "type": "integer",
+            "editor": "number",
+            "minimum": 0,
+            "description": "Shortest runtime to include, in minutes. Useful for excluding shorts from a film discover walk."
+        },
+        "maxRuntime": {
+            "title": "Maximum runtime (minutes)",
+            "type": "integer",
+            "editor": "number",
+            "minimum": 0,
+            "description": "Longest runtime to include, in minutes."
+        },
+        "sortBy": {
+            "title": "Sort by",
+            "type": "string",
+            "description": "How TMDB orders the discover results. vote_average.desc is the closest equivalent of an IMDb Top-250 ordering, but only behaves sensibly with a minimum vote count set.",
+            "editor": "select",
+            "default": "popularity.desc",
+            "enum": [
+                "popularity.desc",
+                "popularity.asc",
+                "vote_average.desc",
+                "vote_average.asc",
+                "vote_count.desc",
+                "primary_release_date.desc",
+                "primary_release_date.asc",
+                "revenue.desc",
+                "revenue.asc",
+                "title.asc"
+            ],
+            "enumTitles": [
+                "Most popular first",
+                "Least popular first",
+                "Highest rated first",
+                "Lowest rated first",
+                "Most voted first",
+                "Newest first",
+                "Oldest first",
+                "Highest grossing first",
+                "Lowest grossing first",
+                "Title A-Z"
+            ]
+        },
+        "withOriginalLanguage": {
+            "title": "Original language",
+            "type": "string",
+            "description": "ISO 639-1 code of the language the title was made in, e.g. ko for Korean, ja for Japanese, id for Indonesian. This filters the production, unlike the 'Language' field below which only translates the output.",
+            "editor": "textfield"
+        },
+        "withWatchProviders": {
+            "title": "Streaming services",
+            "type": "array",
+            "description": "TMDB watch-provider ids, e.g. 8 Netflix, 9 Amazon Prime Video, 337 Disney Plus, 15 Hulu, 350 Apple TV Plus, 1899 Max. Requires a watch region; the Region field below is used when you do not set one.",
+            "editor": "stringList",
+            "prefill": []
+        },
+        "watchRegion": {
+            "title": "Watch region",
+            "type": "string",
+            "description": "Two-letter country code the streaming filter applies to, e.g. US, GB, ID. Availability is per country, so this is not optional once you filter by service.",
+            "editor": "textfield"
+        },
+        "withCompanies": {
+            "title": "Production company ids",
+            "type": "array",
+            "description": "TMDB company ids, e.g. 41077 for A24. Use the companyProfile or searchByName mode to find an id from a name.",
+            "editor": "stringList",
+            "prefill": []
+        },
+        "withNetworks": {
+            "title": "Network ids (series only)",
+            "type": "array",
+            "description": "TMDB network ids, e.g. 213 Netflix, 49 HBO, 2739 Disney+. Applies to TV discover only.",
+            "editor": "stringList",
+            "prefill": []
+        },
+        "withPeople": {
+            "title": "Person ids (films only)",
+            "type": "array",
+            "description": "TMDB person ids. Returns films this person worked on in any role. Applies to movie discover only.",
+            "editor": "stringList",
+            "prefill": []
+        },
+        "withKeywords": {
+            "title": "Keyword ids",
+            "type": "array",
+            "description": "TMDB keyword ids. Keywords are how TMDB expresses themes that are not genres - 'time loop', 'heist', 'based on a true story'. The keyword ids of any title are returned by titleDetails when 'Include keywords' is on.",
+            "editor": "stringList",
+            "prefill": []
+        },
+        "extraQueryParams": {
+            "title": "Extra TMDB parameters",
+            "type": "object",
+            "description": "An escape hatch: any additional discover parameter, passed through verbatim, e.g. {\"with_release_type\": \"3|2\", \"region\": \"GB\"}. Everything TMDB's /discover documentation lists is available here even if it has no field of its own above.",
+            "editor": "json"
+        },
+        "searchMediaType": {
+            "title": "Search: what to look for",
+            "type": "string",
+            "description": "Which index searchByName queries. 'multi' ranks films, series and people together and is the right default for a mixed list of names.",
+            "editor": "select",
+            "default": "multi",
+            "enum": [
+                "multi",
+                "movie",
+                "tv",
+                "person",
+                "collection",
+                "company"
+            ],
+            "enumTitles": [
+                "Everything (films, series and people)",
+                "Films only",
+                "TV series only",
+                "People only",
+                "Collections only",
+                "Companies only"
+            ],
+            "sectionCaption": "Search & chart options"
+        },
+        "fetchFullDetails": {
+            "title": "Expand every result into a full record",
+            "type": "boolean",
+            "description": "Turns any list mode (discover, search, charts, collections, company catalogues) into a bulk extractor: each thin 15-field row becomes the same full record titleDetails would produce, with cast, crew, budget and the rest. It costs ONE extra TMDB request per row, so 100 discovered films means 101 requests instead of 5. Leave it off for a cheap list-only run.",
+            "default": false,
+            "groupCaption": "Depth and cost",
+            "groupDescription": "These decide how much TMDB is asked for, and therefore how long the run takes."
+        },
+        "includeCredits": {
+            "title": "Include cast & crew",
+            "type": "boolean",
+            "description": "Cast and crew, in the SAME request as the title itself - TMDB appends up to 20 sub-resources per call for the price of one, so this costs nothing extra. For a series this returns the aggregate cast with per-actor episode counts, not just the last season's crew.",
+            "default": true,
+            "groupCaption": "What to include in each record",
+            "groupDescription": "Every one of these travels in the same request as the record it belongs to. Switching them all on costs the same number of TMDB requests as switching them all off - it only changes how large each record is."
+        },
+        "includeExternalIds": {
+            "title": "Include IMDb id & social handles",
+            "type": "boolean",
+            "description": "The subject's IMDb id and page URL, Wikidata id, and official Instagram, X, Facebook, TikTok and YouTube handles as ready-made URLs. This is how a TMDB-based dataset joins back to IMDb-keyed data you already have.",
+            "default": true
+        },
+        "includeWatchProviders": {
+            "title": "Include streaming availability",
+            "type": "boolean",
+            "description": "Where the title can be streamed, rented or bought, flattened to the region you set below plus the list of every country it is available in. Provider data is licensed from JustWatch and is not available in every country.",
+            "default": true
+        },
+        "includeReleaseDates": {
+            "title": "Include age rating & release dates",
+            "type": "boolean",
+            "description": "Certification (PG-13, 15, R) per country, plus theatrical release dates per country for films and content ratings for series.",
+            "default": true
+        },
+        "includeKeywords": {
+            "title": "Include keywords",
+            "type": "boolean",
+            "description": "TMDB's thematic tags - 'dream', 'heist', 'dystopia'. These are what discover's keyword filter matches on.",
+            "default": true
+        },
+        "includeVideos": {
+            "title": "Include trailers",
+            "type": "boolean",
+            "description": "Trailers and clips, with the official YouTube trailer lifted to its own trailerUrl field.",
+            "default": false
+        },
+        "includeImages": {
+            "title": "Include image galleries",
+            "type": "boolean",
+            "description": "Up to ten poster, backdrop and logo URLs per title, highest-rated first, at the size chosen below. Every record already carries one poster and one backdrop without this.",
+            "default": false
+        },
+        "includeReviews": {
+            "title": "Include review count",
+            "type": "boolean",
+            "description": "Adds the number of user reviews TMDB holds for the title. Use the titleReviews mode to read the reviews themselves.",
+            "default": false
+        },
+        "includeSimilar": {
+            "title": "Include similar & recommended titles",
+            "type": "boolean",
+            "description": "Up to twenty recommended and twenty similar titles, as id/title/year stubs that the titleDetails mode accepts directly as input.",
+            "default": false
+        },
+        "includeAlternativeTitles": {
+            "title": "Include alternative titles",
+            "type": "boolean",
+            "description": "Per-country alternative and release titles. For series this also returns TMDB's episode groups (alternative episode orderings, e.g. chronological vs broadcast).",
+            "default": false
+        },
+        "includeFullCrew": {
+            "title": "Include the full crew list",
+            "type": "boolean",
+            "description": "Every crew member rather than only the directors, writers, producers, composers, cinematographers and editors that are always lifted out by name. A blockbuster's full crew can be several hundred rows.",
+            "default": false
+        },
+        "includeCompanyTitles": {
+            "title": "Include a company's whole catalogue",
+            "type": "boolean",
+            "description": "For companyProfile: also walk everything the studio produced or the network aired, as separate rows.",
+            "default": false
+        },
+        "includeCollectionParts": {
+            "title": "Include each film in a collection",
+            "type": "boolean",
+            "description": "For collectionTitles: emit one row per film in the franchise, in release order, alongside the collection record itself.",
+            "default": true
+        },
+        "includeSeasonRecords": {
+            "title": "Include one row per season",
+            "type": "boolean",
+            "description": "For seasonEpisodes: emit a season-level summary row alongside the episode rows.",
+            "default": true
+        },
+        "maxCastMembers": {
+            "title": "Cast members per title",
+            "type": "integer",
+            "description": "How many cast members to keep per record, in billing order. 0 keeps everyone. The full count is always published as castCount, so a trimmed list never hides how big the real one was.",
+            "editor": "number",
+            "default": 25,
+            "minimum": 0,
+            "sectionCaption": "Limits and output"
+        },
+        "maxCreditsPerPerson": {
+            "title": "Filmography entries per person",
+            "type": "integer",
+            "description": "How many credits to keep per person, sorted by popularity so the roles they are known for come first. 0 keeps everything - which for a working character actor can be 400 rows.",
+            "editor": "number",
+            "default": 50,
+            "minimum": 0
+        },
+        "maxPagesPerTarget": {
+            "title": "Pages per target",
+            "type": "integer",
+            "description": "How many pages of a list to read, for the paged modes (discover, search, charts, reviews, company catalogues). TMDB serves exactly 20 rows per page and refuses page numbers above 500, so 5 pages is 100 rows.",
+            "editor": "number",
+            "default": 5,
+            "minimum": 1,
+            "maximum": 500
+        },
+        "maxItems": {
+            "title": "Maximum records",
+            "type": "integer",
+            "description": "A hard ceiling on dataset rows for the whole run, across every target. 0 means no limit.",
+            "editor": "number",
+            "default": 0,
+            "minimum": 0
+        },
+        "outputFormat": {
+            "title": "Output format",
+            "type": "string",
+            "description": "'JSON' publishes the structured record. 'Markdown' replaces it with a clean, self-contained document per record - title, facts, overview, cast, box office - ready to embed in a RAG index or paste into a prompt with no HTML, no null fields and no pre-cleaning. 'Both' publishes the structured record with the document attached as a markdown field. Diagnostic rows always stay structured, so an error never lands in your corpus as prose.",
+            "editor": "select",
+            "default": "json",
+            "enum": [
+                "json",
+                "markdown",
+                "both"
+            ],
+            "enumTitles": [
+                "JSON - structured fields",
+                "Markdown - one clean document per record (RAG / LLM ready)",
+                "Both - structured fields plus the document"
+            ]
+        },
+        "language": {
+            "title": "Language",
+            "type": "string",
+            "description": "Which language TMDB translates overviews, titles and taglines into, as language-COUNTRY, e.g. en-US, es-ES, id-ID, ja-JP. A title with no translation in that language falls back to its original. This does not filter which titles come back - use 'Original language' for that.",
+            "editor": "textfield",
+            "default": "en-US"
+        },
+        "region": {
+            "title": "Region",
+            "type": "string",
+            "description": "Two-letter country code deciding which country's certification, theatrical release dates and streaming availability are lifted to the top of each record, e.g. US, GB, ID, DE. Defaults to US where a record needs one.",
+            "editor": "textfield",
+            "default": "US"
+        },
+        "imageSize": {
+            "title": "Image size",
+            "type": "string",
+            "description": "Which size poster and backdrop URLs point at. 'original' is full resolution; w500 is a good thumbnail; w780 and w1280 sit between. Every image URL in the run uses this.",
+            "editor": "select",
+            "default": "original",
+            "enum": [
+                "original",
+                "w1280",
+                "w780",
+                "w500",
+                "w342",
+                "w185"
+            ],
+            "enumTitles": [
+                "original - full resolution",
+                "w1280 - large",
+                "w780 - medium-large",
+                "w500 - medium",
+                "w342 - small",
+                "w185 - thumbnail"
+            ]
+        },
+        "includeAdult": {
+            "title": "Include adult titles",
+            "type": "boolean",
+            "description": "Whether TMDB's adult-flagged titles appear in search and discover results.",
+            "default": false
+        },
+        "defaultMediaType": {
+            "title": "Assume bare ids are",
+            "type": "string",
+            "description": "What a bare number like 27205 means when nothing else says. IMDb ids, TMDB URLs and movie:/tv: prefixes are never ambiguous and ignore this.",
+            "editor": "select",
+            "default": "movie",
+            "enum": [
+                "movie",
+                "tv"
+            ],
+            "enumTitles": [
+                "A film",
+                "A TV series"
+            ]
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "description": "OPTIONAL and off by default. TMDB is a keyed API with no IP gate - it serves a datacentre address exactly as it serves a residential one, and its rate limit follows the key, not the address. The only reason to switch this on is to make requests leave from a specific country when you care about region-sensitive fields such as streaming availability.",
+            "editor": "proxy",
+            "default": {
+                "useApifyProxy": false
+            },
+            "sectionCaption": "Network"
+        },
+        "requestDelaySecs": {
+            "title": "Delay between requests (seconds)",
+            "type": "integer",
+            "description": "Pacing between TMDB calls. The default is 0, because TMDB allows roughly 50 requests per second per key and this actor issues them one at a time - network latency alone keeps a run an order of magnitude inside that. Raise it only if you see rate-limit warnings in the log, which normally means the same key is being used by several runs at once.",
+            "editor": "number",
+            "default": 0,
+            "minimum": 0,
+            "maximum": 60
+        },
+        "maxRetries": {
+            "title": "Max retries per request",
+            "type": "integer",
+            "description": "How many attempts a single request gets before it becomes a diagnostic row. A rejected API key is never retried - it cannot come right, and retrying it four times per request across a large run only wastes your compute.",
+            "editor": "number",
+            "default": 4,
+            "minimum": 1,
+            "maximum": 10
+        },
+        "requestTimeoutSecs": {
+            "title": "Request timeout (seconds)",
+            "type": "integer",
+            "editor": "number",
+            "default": 45,
+            "minimum": 5,
+            "maximum": 300,
+            "description": "How long a single TMDB request may take before it is retried."
+        }
+    },
+    "required": []
+}

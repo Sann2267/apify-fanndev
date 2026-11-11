@@ -1,0 +1,18 @@
+{
+    "actorSpecification": 1,
+    "name": "google-hotels-rate-comparison-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Google Hotels Rate Comparison Scraper",
+    "description": "Compare what every booking site charges for the same hotel room-night: 17-25 OTA quotes per hotel with provider, price, taxes, cancellation terms and deep links, plus Google's own price, rating, star class and deal flag. No login.",
+    "categories": [
+        "TRAVEL",
+        "ECOMMERCE"
+    ],
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

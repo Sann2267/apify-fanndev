@@ -1,0 +1,14 @@
+{
+    "actorSpecification": 1,
+    "name": "dailypost-ng-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Daily Post Nigeria Scraper",
+    "description": "Extract full article text or the newest headlines from Daily Post Nigeria (dailypost.ng), a major Nigerian daily newspaper. No account or API key needed.",
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

@@ -1,0 +1,181 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Honduras tender record",
+        "description": "Raw-passthrough dataset envelope. Every record carries _input/_source/_scrapedAt (and _error/_errorDetail on failures). 'list' mode records use the register's own list-grid fields (camelCase); 'detail' mode records (and 'list' mode with fetchDetail on) also carry the register's own Spanish detail-page labels verbatim, plus a few split-out conveniences (contactoEmail, and the productos/documentos/participantes/adjudicadoA line-item arrays).",
+        "properties": {
+            "_input": {
+                "type": "object",
+                "title": "Input",
+                "description": "The filters used to produce this record ('list' mode) or the detail URL fetched ('detail' mode)."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "S1-aspnet-gridview (a list-search result row), S1-aspnet-detail (a fetched detail page), or none (error record)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed extractions -- not_found (search matched nothing), blocked_or_transient (network/server issue after retries)."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "_detailError": {
+                "type": "string",
+                "title": "Detail fetch error",
+                "description": "Present only on a 'list' mode record with fetchDetail=true, when the detail-page fetch for this specific tender failed -- the list-grid fields are still present."
+            },
+            "expediente": {
+                "title": "Record number",
+                "description": "The tender's official record/file number (\"Expediente\"), exactly as shown on the register."
+            },
+            "entidad": {
+                "title": "Institution",
+                "description": "The government institution running this procurement."
+            },
+            "unidadCompra": {
+                "title": "Purchasing unit",
+                "description": "The specific department/unit within the institution handling this process."
+            },
+            "objetoCompra": {
+                "title": "Object of purchase",
+                "description": "Short description of what is being procured, as shown on the results list (may be truncated with '...' -- fetch the detail page for the full text)."
+            },
+            "etapa": {
+                "title": "Stage",
+                "description": "Current process stage, e.g. \"Elaboración\" (in preparation), \"Recepción de Ofertas\" (receiving offers), \"Adjudicado\" (awarded), \"Fracasados\" (failed)."
+            },
+            "modalidad": {
+                "title": "Modality",
+                "description": "Procurement modality, e.g. \"Licitación pública nacional\", \"Compra Menor\"."
+            },
+            "fechaInicio": {
+                "title": "Start date",
+                "description": "Process start/publication date as shown on the register (dd/mm/yyyy)."
+            },
+            "fechaCierre": {
+                "title": "Closing date",
+                "description": "Offer/bid closing date as shown on the register (dd/mm/yyyy)."
+            },
+            "detailUrl": {
+                "title": "Detail page URL",
+                "description": "Link to the full ProcesoHistorico.aspx detail page for this tender -- feed this into 'detail' mode's 'url'/'urls' input for full information."
+            },
+            "Expediente": {
+                "title": "Record number (detail)",
+                "description": "Detail-page label/value table field, present on 'detail' mode records (and 'list' mode with fetchDetail=true)."
+            },
+            "Entidad": {
+                "title": "Institution (detail)",
+                "description": "Full institution name, from the detail page."
+            },
+            "Unidad de Compra": {
+                "title": "Purchasing unit (detail)"
+            },
+            "Objeto": {
+                "title": "Object of purchase (detail)",
+                "description": "Untruncated object-of-purchase text from the detail page."
+            },
+            "Fecha de Inicio": {
+                "title": "Start date/time (detail)",
+                "description": "Includes time of day, e.g. \"22/12/2026 02:16:00 p.m.\"."
+            },
+            "Fecha Recepción Ofertas": {
+                "title": "Offer-receipt deadline (detail)"
+            },
+            "Fecha Cierre Aclaratorias": {
+                "title": "Clarifications closing date/time (detail)"
+            },
+            "Tipo Fuente": {
+                "title": "Funding source type (detail)"
+            },
+            "Fuente": {
+                "title": "Funding source (detail)",
+                "description": "e.g. \"Entidad\" (institution's own funds), \"Banco Mundial\", \"BID\", or a specific donor country."
+            },
+            "Modalidad": {
+                "title": "Modality (detail)"
+            },
+            "Etapa": {
+                "title": "Stage (detail)"
+            },
+            "Tipo Adquisición": {
+                "title": "Acquisition type (detail)",
+                "description": "\"Suministro de Bienes y/o Servicios\", \"Obras\", or \"Consultoria\"."
+            },
+            "Lugar Recepción Ofertas": {
+                "title": "Offer delivery location (detail)"
+            },
+            "Valor Pliegos": {
+                "title": "Bidding-document fee (detail)",
+                "description": "Document fee amount, currency prefix \"Lps.\" (Honduran lempiras)."
+            },
+            "Contacto": {
+                "title": "Contact (detail, combined text)",
+                "description": "Contact person's name and phone number as one combined text field, exactly as the register displays them (the email is split out separately as contactoEmail)."
+            },
+            "contactoEmail": {
+                "title": "Contact email",
+                "description": "The buyer contact's email address, parsed out of the detail page's mailto link."
+            },
+            "productos": {
+                "type": "array",
+                "title": "Line items",
+                "description": "\"Productos y/o Servicios Solicitados\" tab -- one entry per requested item/service, with UNSPSC code, Spanish description, full specification text, and requested quantity. Empty array if the tender has none listed yet."
+            },
+            "documentos": {
+                "type": "array",
+                "title": "Documents",
+                "description": "\"Documentos\" tab -- attached document names/files. Empty array if none are attached yet."
+            },
+            "participantes": {
+                "type": "array",
+                "title": "Bidders",
+                "description": "\"Participantes\" tab -- bidders who submitted offers. Empty array until offers have been received."
+            },
+            "adjudicadoA": {
+                "type": "array",
+                "title": "Award",
+                "description": "\"Adjudicado a\" tab -- award details (winning supplier, price) once the process has concluded. Empty array until awarded."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns for every record.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "_source",
+                    "_scrapedAt",
+                    "expediente",
+                    "entidad",
+                    "objetoCompra",
+                    "etapa",
+                    "modalidad",
+                    "fechaInicio",
+                    "fechaCierre",
+                    "detailUrl",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

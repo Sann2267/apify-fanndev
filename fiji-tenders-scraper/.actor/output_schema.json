@@ -1,0 +1,83 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Fiji TenderLink tender/award record",
+        "description": "One record per row. Shape is identical for recordType CURRENT_TENDER (listType=current) and TENDER_AWARD (listType=awards) except awardedTo, which is only ever populated for awards. A single _error record is emitted instead of payload fields when a request fails or is unreachable.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "Which list this record came from: 'list:current' or 'list:awards'."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which extraction strategy emitted this record, or 'none' on error."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on a failed run (blocked_or_transient)."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "recordType": {
+                "type": "string",
+                "title": "Record type",
+                "description": "CURRENT_TENDER or TENDER_AWARD."
+            },
+            "referenceNumber": {
+                "type": ["string", "null"],
+                "title": "Reference number",
+                "description": "TenderLink's own notice code for this tender."
+            },
+            "summary": {
+                "type": ["string", "null"],
+                "title": "Summary",
+                "description": "What is being procured, usually including the RFT number and sometimes the procuring entity's name."
+            },
+            "awardedTo": {
+                "type": ["string", "null"],
+                "title": "Awarded to",
+                "description": "TENDER_AWARD only -- the winning company's name, parsed out of the upstream Summary text where published (not every awarded tender has this published)."
+            },
+            "dateTime": {
+                "type": ["string", "null"],
+                "title": "Date/time",
+                "description": "Upstream free-text close date/time (CURRENT_TENDER) or closed date/time (TENDER_AWARD), in Fiji local time (FJT)."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across both record types -- rows missing a given column render blank.",
+            "transformation": {
+                "fields": [
+                    "recordType",
+                    "referenceNumber",
+                    "summary",
+                    "awardedTo",
+                    "dateTime",
+                    "_error",
+                    "_scrapedAt"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

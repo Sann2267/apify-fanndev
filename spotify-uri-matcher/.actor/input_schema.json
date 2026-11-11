@@ -1,0 +1,72 @@
+{
+    "title": "Spotify Bulk Text-to-URI Matcher",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "queriesText": {
+            "title": "Tracks, one per line",
+            "type": "string",
+            "description": "Paste your list straight in. 'Title - Artist', 'Artist - Title', 'Title by Artist', 'Title / Artist' and tab-separated columns all work, and a leading track number such as '12. ' is ignored. A line that is already a Spotify link or URI is passed straight through without a search.",
+            "editor": "textarea",
+            "prefill": "Bohemian Rhapsody - Queen\nBlinding Lights - The Weeknd\nEspresso - Sabrina Carpenter"
+        },
+        "queries": {
+            "title": "Tracks as a list",
+            "type": "array",
+            "description": "The same thing as an array, for callers that already hold a list rather than a blob of text.",
+            "editor": "stringList"
+        },
+        "tracks": {
+            "title": "Structured tracks",
+            "type": "array",
+            "description": "Objects with title and artist kept apart, which removes the guesswork about which side of the separator is which. Optional album and durationMs sharpen the match further - a duration within two seconds of a candidate raises its score, and one more than thirty seconds out lowers it.",
+            "editor": "json",
+            "prefill": [
+                { "title": "Never Gonna Give You Up", "artist": "Rick Astley", "durationMs": 213573 }
+            ]
+        },
+        "minimumMatchScore": {
+            "title": "Minimum match score",
+            "type": "string",
+            "description": "Between 0 and 1. Anything scoring below this is reported as unmatched, with its best guess attached so you can review it. Raise it towards 0.85 when a wrong URI is worse than a missing one; lower it towards 0.55 when you would rather review near-misses by hand. Spotify returns a result for literally any text, so this threshold is what stops nonsense turning into a confident answer.",
+            "editor": "textfield",
+            "default": "0.70"
+        },
+        "emitUnmatched": {
+            "title": "Include unmatched rows",
+            "type": "boolean",
+            "description": "Keep a row for every input line that did not clear the threshold, carrying its best guess and why it was rejected. Turn this off for a clean matched-only output - but then a dropped line leaves no trace.",
+            "default": true
+        },
+        "maxQueries": {
+            "title": "Maximum lines",
+            "type": "integer",
+            "description": "Ceiling on how many lines a single run processes, so an oversized paste cannot run away. Each line costs one request.",
+            "default": 1000,
+            "minimum": 1,
+            "maximum": 20000,
+            "unit": "lines"
+        },
+        "exportFormats": {
+            "title": "Extra export files",
+            "type": "array",
+            "description": "Besides the dataset, write ready-made files into this run's key-value store. A plain matched-uris.txt is always written regardless of this setting.",
+            "editor": "select",
+            "items": {
+                "type": "string",
+                "enum": ["json", "ndjson", "csv", "excel"],
+                "enumTitles": ["JSON", "NDJSON", "CSV", "Excel (XLSX)"]
+            },
+            "default": []
+        },
+        "proxyConfiguration": {
+            "title": "Proxy",
+            "type": "object",
+            "description": "Off by default and genuinely optional. This actor searches through Spotify's web player gateway, which has shown no request ceiling - unlike Spotify's public Web API search, which bans by IP for around twenty hours once tripped. That is exactly why the gateway is used here.",
+            "editor": "proxy",
+            "default": {
+                "useApifyProxy": false
+            }
+        }
+    }
+}

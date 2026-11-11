@@ -1,0 +1,14 @@
+{
+    "actorSpecification": 1,
+    "name": "barbados-caipo-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Barbados CAIPO Business Registry Scraper",
+    "description": "Search Barbados's official company/business registry (CAIPO -- Corporate Affairs and Intellectual Property Office, \"Business Barbados\") by name, registration number, or register category. No account or API key needed.",
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

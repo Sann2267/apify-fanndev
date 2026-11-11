@@ -1,0 +1,142 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Article / latest-headline record",
+        "description": "Raw-passthrough dataset envelope. Every record carries _input/_source/_scrapedAt (and _error/_errorDetail on failures). Article-mode records carry headline/articleBody-style fields (S1-jsonld -- full articleBody inline in the NewsArticle ld+json node, most sections; S2-html -- HTML-scraped body from div.story-body, evewoman section only); latest-mode records (S2-sitemap, Google News sitemap at /sitemaps/googlenews.php) carry title/link-style fields.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The exact input value (URL, or 'latest') that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which extraction strategy emitted this record: S1-jsonld, S2-html, or S2-sitemap."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed extractions -- the error kind (e.g. \"not_found\", \"http_500\", \"blocked_or_transient\")."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "articleId": {
+                "title": "Article ID",
+                "description": "Internal numeric article ID, taken from the /article/<id>/ URL path segment."
+            },
+            "headline": {
+                "title": "Headline",
+                "description": "Article headline, from the NewsArticle ld+json node."
+            },
+            "description": {
+                "title": "Description",
+                "description": "Short article summary, from the NewsArticle ld+json node (present on some sections, e.g. evewoman; absent on others)."
+            },
+            "articleBody": {
+                "title": "Article body",
+                "description": "Full article text. On S1-jsonld records this is the ld+json articleBody, double html-entity-unescaped (see CRAWLING_METHOD.md). On S2-html records (evewoman section only) this is reconstructed from <p> tags inside div.story-body with ads/scripts stripped."
+            },
+            "articleSection": {
+                "title": "Article section (raw)",
+                "description": "Raw articleSection list from ld+json, e.g. [\"Crime and Justice\"]."
+            },
+            "category": {
+                "title": "Category",
+                "description": "First entry of articleSection, as a plain string convenience field."
+            },
+            "author": {
+                "title": "Author",
+                "description": "Raw author value from ld+json -- a list of Person objects on most sections, a single Person object on evewoman. Passed through as-is."
+            },
+            "datePublished": {
+                "title": "Date published",
+                "description": "ISO 8601 publish date from ld+json."
+            },
+            "dateModified": {
+                "title": "Date modified",
+                "description": "ISO 8601 last-modified date from ld+json."
+            },
+            "image": {
+                "title": "Image",
+                "description": "Raw image value from ld+json -- a list of image URL strings on most sections, a single ImageObject on evewoman. Passed through as-is."
+            },
+            "isAccessibleForFree": {
+                "title": "Is accessible for free",
+                "description": "Piano-style paywall metadata flag from ld+json. Observed both true and false across sampled articles, but articleBody was NOT truncated in either case -- see CRAWLING_METHOD.md paywall verdict. Absent on some sections (e.g. evewoman)."
+            },
+            "canonicalUrl": {
+                "title": "Canonical URL",
+                "description": "mainEntityOfPage (or @id) from ld+json -- sometimes differs from the input URL (e.g. evewoman article URLs canonicalize to include an extra subsection path segment)."
+            },
+            "title": {
+                "title": "Title",
+                "description": "Headline text of a latest-mode sitemap item."
+            },
+            "link": {
+                "title": "Link",
+                "description": "Article URL from the sitemap item."
+            },
+            "section": {
+                "title": "Section",
+                "description": "First URL path segment (e.g. \"national\", \"opinion\", \"crime-and-justice\") -- latest mode only, derived from the article URL since the sitemap item itself carries no explicit category field."
+            },
+            "publicationDate": {
+                "title": "Publication date",
+                "description": "ISO 8601 publish date from the news:publication_date sitemap field -- latest mode only."
+            },
+            "language": {
+                "title": "Language",
+                "description": "ISO language code from the news:language sitemap field -- latest mode only."
+            },
+            "lastmod": {
+                "title": "Last modified",
+                "description": "Date from the sitemap item's lastmod field -- latest mode only."
+            },
+            "imageUrl": {
+                "title": "Image URL",
+                "description": "Lead image URL from the sitemap item's image:loc field -- latest mode only."
+            },
+            "imageCaption": {
+                "title": "Image caption",
+                "description": "Lead image caption from the sitemap item's image:caption field -- latest mode only."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across both article and latest-headline records.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "_source",
+                    "_scrapedAt",
+                    "headline",
+                    "title",
+                    "link",
+                    "datePublished",
+                    "publicationDate",
+                    "category",
+                    "section",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

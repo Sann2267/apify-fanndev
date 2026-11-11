@@ -1,0 +1,69 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Discord record",
+        "description": "Every record shares one envelope - item_type, id, data, metadata - so a single dataset can hold directory hits, server profiles, invites, widgets, games, bots and diagnostics and still be joined on id. For every server-shaped record, id is the guild ID. The shape of data depends on item_type: discovery_result (a server from the Discovery directory), server_profile (its full public profile page), invite (an invite resolved to live counts), widget (who is online right now), server_snapshot (one comparable row per server per run, for growth tracking), trending_game, game_profile, bot_profile, or error. Discord ships changes without notice, so unlisted fields pass through rather than failing the run.",
+        "additionalProperties": true,
+        "properties": {
+            "item_type": {
+                "type": "string",
+                "title": "Item type",
+                "description": "discovery_result, server_profile, invite, widget, server_snapshot, trending_game, game_profile, bot_profile or error."
+            },
+            "id": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "ID",
+                "description": "The guild (server) ID for every server-shaped record, the application ID for bots and games, and weekDate:applicationId for trending chart rows. NULL on error rows, which is why this field is nullable - a run that hits a dead invite or a widget-disabled server still writes a diagnostic row, and the dataset schema has to accept it or the whole push fails."
+            },
+            "data": {
+                "type": "object",
+                "title": "Data",
+                "description": "The record body, keyed by item_type. Common to every server-shaped record: guildId, name, description, memberCount, onlineCount, engagementRatePct (online as a percentage of members - the single most useful number here, since a 150,000-member server with 400 online is a shell and a 9,000-member server with 2,000 online is worth an email), boostCount, vanityUrlCode, inviteUrl, features plus named booleans (isPartnered, isVerified, isDiscoverable, isCommunity, hasVanityUrl, hasWelcomeScreen, hasMemberVerificationGate, hasAutoModeration, isMonetizationEnabled, hasServerShop), iconUrl/splashUrl/bannerUrl as ready CDN URLs, and createdAt (published on profile pages, otherwise decoded from the guild ID's own timestamp bits). discovery_result adds primaryCategoryId/Name, categories, keywords, preferredLocale, isNsfw, discoveryUrl. server_profile adds about (the long description), socialLinks (the community's own GitHub/X/Patreon/YouTube URLs - the lead-generation field), website, reasonsToJoin, announcementChannels. invite adds inviteCode, isVanityInvite, expiresAt (null means never - that is not a missing value), boostTier, verificationLevel, nsfwLevel, serverTag, landingChannelId/Name, inviterId/Username, and scheduledEvent fields when the invite points at an event. widget adds onlineCount, membersReturned, memberListTruncated (Discord caps the list at 100 however many are online), membersInVoice, statusBreakdown, voiceChannels, instantInvite, and members[] - where positionInResponse replaces the user ID because DISCORD itself anonymises widget members, so these rows cannot be joined across runs. server_snapshot adds snapshotAt, sources (which of invite/discovery/widget answered), inDiscovery, widgetEnabled, and keeps discoveryMemberCount/discoveryOnlineCount beside the invite's counts because the two are computed on different schedules. trending_game adds rank, weekDate, totalPlayersPctChange, streamingActivity7dDeltaPct, weekTrendingStreak, categories, and the game's official guild with its own counts. game_profile adds genres, platforms, publishers, developers, releaseDate, last30DayRank, links and media. bot_profile adds tags, isVerified, isMonetized, isBotPublic, installScopes, installPermissions, inviteUrl and the policy URLs. error: _error (not_found, not_in_discovery, widget_disabled, unsupported_input, unsupported_category, unresolvable_target, no_open_surface, week_not_published, fetch_failed, parse_failed, no_results, run_failed), _errorDetail, _input."
+            },
+            "metadata": {
+                "type": "object",
+                "title": "Metadata",
+                "description": "scrapedAt (UTC ISO 8601), sourceUrl (the exact page or endpoint the record came from), mode, query (the keyword that surfaced this row, when there was one), rank (position within the whole target, continuing across pages), offset (the directory offset the row came from), parentId, and weekDate/publishedAt/gameCategory on trending chart rows."
+            }
+        }
+    },
+    "views": {
+        "overview": {
+            "title": "All records",
+            "transformation": {
+                "fields": [
+                    "item_type",
+                    "id",
+                    "data",
+                    "metadata"
+                ]
+            },
+            "display": {
+                "component": "table",
+                "properties": {
+                    "item_type": {
+                        "label": "Type",
+                        "format": "text"
+                    },
+                    "id": {
+                        "label": "Guild / App ID",
+                        "format": "text"
+                    },
+                    "data": {
+                        "label": "Data",
+                        "format": "object"
+                    },
+                    "metadata": {
+                        "label": "Metadata",
+                        "format": "object"
+                    }
+                }
+            }
+        }
+    }
+}

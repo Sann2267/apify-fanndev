@@ -1,0 +1,117 @@
+{
+    "title": "Blibli Flash Sale / Promo Extractor",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "mode": {
+            "title": "Mode",
+            "type": "string",
+            "description": "What to extract. 'flashSale' = products in Blibli's live Flash Sale sessions (with discount % and how much of the flash-sale quota is already claimed). 'promoCampaigns' = the catalogue of every running promo campaign with its start/end window. 'discountedProducts' = products matching a minimum discount and/or a promo tag, searched by keyword or category.",
+            "editor": "select",
+            "enum": ["flashSale", "promoCampaigns", "discountedProducts"],
+            "enumTitles": [
+                "Flash Sale products",
+                "Promo campaign catalogue",
+                "Discounted products (by keyword/category)"
+            ],
+            "default": "flashSale"
+        },
+        "scheduleScope": {
+            "title": "Flash sale schedule scope",
+            "type": "string",
+            "description": "Flash Sale mode only. 'current' scrapes just the session running right now; 'all' scrapes every session Blibli advertises (usually today's plus the next one).",
+            "editor": "select",
+            "enum": ["current", "all"],
+            "enumTitles": ["Current session only", "All advertised sessions"],
+            "default": "current"
+        },
+        "flashSaleSort": {
+            "title": "Flash sale sort order",
+            "type": "string",
+            "description": "Flash Sale mode only. Order Blibli returns products in. 'biggestDiscount' surfaces the most aggressive price cuts first.",
+            "editor": "select",
+            "enum": [
+                "biggestDiscount",
+                "almostSoldOut",
+                "mostStockLeft",
+                "cheapest",
+                "mostExpensive",
+                "mostSearched",
+                "relevance"
+            ],
+            "enumTitles": [
+                "Biggest discount",
+                "Almost sold out",
+                "Most stock left",
+                "Cheapest",
+                "Most expensive",
+                "Most searched",
+                "Relevance"
+            ],
+            "default": "biggestDiscount"
+        },
+        "promoSort": {
+            "title": "Promo campaign sort order",
+            "type": "string",
+            "description": "Promo campaign mode only. 'ending_soon' is the most useful for catching promos before they expire.",
+            "editor": "select",
+            "enum": ["ending_soon", "newest", "popularity", "relevance"],
+            "enumTitles": ["Ending soon", "Newest", "Most popular", "Relevance"],
+            "default": "ending_soon"
+        },
+        "searchTerms": {
+            "title": "Search terms",
+            "type": "array",
+            "description": "Discounted-products mode. Keywords to sweep, e.g. [\"laptop gaming\", \"skincare\"]. Each term is paged to Blibli's server-side limit of 800 products.",
+            "editor": "stringList",
+            "default": []
+        },
+        "categories": {
+            "title": "Categories",
+            "type": "array",
+            "description": "Category codes or full Blibli category URLs, e.g. [\"FA-1000099\"] or [\"https://www.blibli.com/c3/memory-card/ME-1000006\"]. Used as a filter in Flash Sale mode and as a query in discounted-products mode.",
+            "editor": "stringList",
+            "default": []
+        },
+        "minDiscountPercent": {
+            "title": "Minimum discount %",
+            "type": "integer",
+            "description": "Keep only products discounted by at least this much. 0 disables the filter. In discounted-products mode this is also pushed to Blibli's own discount facet (buckets of 10/25/50/75) so pagination is not wasted on cheap deals.",
+            "editor": "number",
+            "minimum": 0,
+            "maximum": 99,
+            "default": 0
+        },
+        "promoFilter": {
+            "title": "Promo tag filter",
+            "type": "string",
+            "description": "Discounted-products mode. Restrict to a Blibli promo programme, e.g. 'extraPromo', 'FREE_GIFT', 'COMBO', 'WHOLESALE', 'merchantVoucher', or a specific campaign like 'campaign_CAMP-03285_5407119_FLASHSALE'. Leave empty for no promo restriction.",
+            "editor": "textfield"
+        },
+        "searchSort": {
+            "title": "Search sort order",
+            "type": "string",
+            "description": "Discounted-products mode. Order Blibli returns search results in.",
+            "editor": "select",
+            "enum": ["relevance", "bestSelling", "cheapest", "mostExpensive", "newest"],
+            "enumTitles": ["Relevance", "Best selling", "Cheapest", "Most expensive", "Newest"],
+            "default": "relevance"
+        },
+        "maxItems": {
+            "title": "Max items",
+            "type": "integer",
+            "description": "Stop after this many records (per query in discounted-products mode). 0 means no limit -- scrape until the source is exhausted.",
+            "editor": "number",
+            "minimum": 0,
+            "default": 0
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "description": "Blibli is behind Cloudflare. Apify Residential proxy with country 'ID' is recommended for long runs; short runs usually succeed without a proxy.",
+            "editor": "proxy",
+            "default": { "useApifyProxy": true, "apifyProxyGroups": ["RESIDENTIAL"] }
+        }
+    },
+    "required": ["mode"]
+}

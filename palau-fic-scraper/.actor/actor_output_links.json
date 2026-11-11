@@ -1,0 +1,12 @@
+{
+    "actorOutputSchemaVersion": 1,
+    "title": "Palau Business Registry Scraper Results",
+    "properties": {
+        "results": {
+            "type": "string",
+            "title": "Dataset results",
+            "template": "{{links.apiDefaultDatasetUrl}}/items",
+            "description": "All scraped entity search / profile records produced by this run."
+        }
+    }
+}

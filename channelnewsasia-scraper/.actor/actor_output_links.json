@@ -1,0 +1,18 @@
+{
+    "actorOutputSchemaVersion": 1,
+    "title": "Channel NewsAsia (CNA) Scraper Results",
+    "properties": {
+        "results": {
+            "type": "string",
+            "title": "Dataset results",
+            "template": "{{links.apiDefaultDatasetUrl}}/items",
+            "description": "All scraped article / latest-headline records produced by this run."
+        },
+        "failures": {
+            "type": "string",
+            "title": "Failed URLs",
+            "template": "{{links.apiDefaultKeyValueStoreUrl}}/records/ERRORS",
+            "description": "URLs that could not be extracted, with the reason for each. Absent when every URL succeeded."
+        }
+    }
+}

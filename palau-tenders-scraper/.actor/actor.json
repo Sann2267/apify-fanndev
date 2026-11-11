@@ -1,0 +1,14 @@
+{
+    "actorSpecification": 1,
+    "name": "palau-tenders-scraper",
+    "version": "0.1",
+    "buildTag": "latest",
+    "title": "Palau Government Tenders Scraper (ROP Procurement)",
+    "description": "Scrapes the Republic of Palau's ROP Procurement page for open government tenders and RFPs across all agencies: ministry/department, description, reference number, direct PDF notice link, opening and closing dates. No account or login needed.",
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

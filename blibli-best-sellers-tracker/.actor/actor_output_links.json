@@ -1,0 +1,18 @@
+{
+    "actorOutputSchemaVersion": 1,
+    "title": "Hasil Blibli Best Sellers Tracker",
+    "properties": {
+        "results": {
+            "type": "string",
+            "title": "Dataset hasil",
+            "template": "{{links.apiDefaultDatasetUrl}}/items",
+            "description": "Daftar \"Paling Laris\" per kategori beserta status pergerakan tiap produk dibanding run sebelumnya."
+        },
+        "runSummary": {
+            "type": "string",
+            "title": "Ringkasan run",
+            "template": "{{links.apiDefaultKeyValueStoreUrl}}/records/RUN_SUMMARY",
+            "description": "Rekap per kategori: isi daftar, peringkat tertinggi, nomor peringkat yang bolong, jumlah kandidat dipindai, serta berapa produk masuk dan keluar."
+        }
+    }
+}

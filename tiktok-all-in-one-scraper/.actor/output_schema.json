@@ -1,0 +1,185 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "TikTok public record",
+        "description": "One row per scraped entity. The five modes share this envelope, so every field is nullable and only the fields relevant to a row's `_mode` are populated. Read `_mode` first, then `_warning`, which records surface ceilings rather than failures - a hashtag or music page ships a single non-paginable page, and its rows carry `playCount` but no like/comment/share counters. Rows that failed carry `_error` instead of data: every input produces at least one row.",
+        "properties": {
+            "_mode": {
+                "type": ["string", "null"],
+                "title": "Mode",
+                "description": "Which surface produced this row: video, profile, hashtag, music or oembed."
+            },
+            "_input": {
+                "type": ["string", "null"],
+                "title": "Input",
+                "description": "The target this row belongs to, as resolved from your input entry. For a short link resolved to a canonical url, this keeps the short link you supplied."
+            },
+            "_source": {
+                "type": ["string", "null"],
+                "title": "Source",
+                "description": "embed-frontity-state when the row was parsed out of an embed page's server-rendered state, oembed-api when it came from TikTok's oEmbed endpoint, or none on a failure row."
+            },
+            "_scrapedAt": {
+                "type": ["string", "null"],
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp of the scrape."
+            },
+            "_index": {
+                "type": ["number", "null"],
+                "title": "Index",
+                "description": "Position of this video within a hashtag or music page listing, starting at 1. Null for the single-row modes."
+            },
+            "_warning": {
+                "type": ["string", "null"],
+                "title": "Warning",
+                "description": "Non-fatal ceiling affecting this row. Values: single_page_surface_embed_playlist_is_not_paginable (the hashtag/music embed ships one page and its loader API is signature-gated), playlist_rows_carry_play_count_only_no_digg_or_comment_counts, profile_embed_does_not_publish_a_video_list, play_count_rounded_by_tiktok (TikTok serves 11000, not 11043). Multiple values are joined with a semicolon."
+            },
+            "_error": {
+                "type": ["string", "null"],
+                "title": "Error",
+                "description": "INVALID_INPUT (the entry could not be parsed for this mode), NOT_FOUND (the username, video, hashtag or sound does not resolve publicly), PRIVATE_ACCOUNT, EMPTY_RESULT (the entity exists but its embed shipped no videos), BLOCKED_AFTER_RETRIES (every retry and TLS profile was exhausted - add or rotate a proxy), UPSTREAM_SHAPE_CHANGED (TikTok moved the payload; the parser needs updating)."
+            },
+            "_errorDetail": {
+                "type": ["string", "null"],
+                "title": "Error detail",
+                "description": "Human-readable explanation of `_error`, including the HTTP status or payload keys observed."
+            },
+
+            "videoId": {
+                "type": ["string", "null"],
+                "title": "Video id",
+                "description": "TikTok's numeric video id, as a string to survive JSON number precision."
+            },
+            "videoUrl": {
+                "type": ["string", "null"],
+                "title": "Video URL",
+                "description": "Canonical watch url, rebuilt from the author handle and video id."
+            },
+            "description": {
+                "type": ["string", "null"],
+                "title": "Description",
+                "description": "The video caption, including its inline hashtags as the author typed them."
+            },
+            "createTime": {
+                "type": ["number", "null"],
+                "title": "Created (unix)",
+                "description": "Upload time as a unix timestamp. Video mode only."
+            },
+            "createTimeIso": {
+                "type": ["string", "null"],
+                "format": "date-time",
+                "title": "Created (ISO)",
+                "description": "Upload time as a UTC ISO 8601 string. Video mode only."
+            },
+            "playCount": {
+                "type": ["number", "null"],
+                "title": "Views",
+                "description": "Play count as TikTok publishes it - rounded at scale (11000 rather than 11043). The only counter available in hashtag and music rows."
+            },
+            "diggCount": {
+                "type": ["number", "null"],
+                "title": "Likes",
+                "description": "Like count. Video mode only."
+            },
+            "commentCount": {
+                "type": ["number", "null"],
+                "title": "Comments",
+                "description": "Comment count. The comments themselves are not available: TikTok's comment API is signature-gated. Video mode only."
+            },
+            "shareCount": {
+                "type": ["number", "null"],
+                "title": "Shares",
+                "description": "Share count. Video mode only."
+            },
+            "videoWidth": { "type": ["number", "null"], "title": "Width", "description": "Video width in pixels." },
+            "videoHeight": { "type": ["number", "null"], "title": "Height", "description": "Video height in pixels." },
+            "videoDuration": {
+                "type": ["number", "null"],
+                "title": "Duration",
+                "description": "Duration in seconds. TikTok serves the placeholder 99 on some videos; reported as served rather than corrected."
+            },
+            "videoRatio": { "type": ["string", "null"], "title": "Ratio", "description": "Quality label such as 720p. Hashtag and music rows." },
+            "coverUrl": { "type": ["string", "null"], "title": "Cover URL", "description": "Static thumbnail on TikTok's CDN. The url carries a signed expiry." },
+            "originCoverUrl": { "type": ["string", "null"], "title": "Original cover URL", "description": "Uncropped thumbnail. Hashtag and music rows." },
+            "dynamicCoverUrl": { "type": ["string", "null"], "title": "Animated cover URL", "description": "Animated thumbnail." },
+            "playAddr": { "type": ["string", "null"], "title": "Play address", "description": "Direct media url as served to the embed player. Signed and short-lived. Hashtag and music rows." },
+            "isPhotoPost": { "type": ["boolean", "null"], "title": "Photo post", "description": "True when the post is an image carousel rather than a video." },
+            "isPrivateItem": { "type": ["boolean", "null"], "title": "Private item", "description": "True when the listing marks the video private. Hashtag and music rows." },
+            "isAd": { "type": ["boolean", "null"], "title": "Is ad", "description": "True when TikTok flags the video as an ad." },
+            "isOriginal": { "type": ["boolean", "null"], "title": "Original sound", "description": "True when the video uses the author's original audio." },
+            "isOfficial": { "type": ["boolean", "null"], "title": "Official", "description": "TikTok's official-content flag." },
+            "isEcommerceVideo": { "type": ["boolean", "null"], "title": "Shop video", "description": "True when the video is tagged as TikTok Shop content." },
+            "brandOrganicType": { "type": ["string", "null"], "title": "Branded content type", "description": "TikTok's branded-content disclosure type, empty on ordinary posts." },
+            "locationCreated": { "type": ["string", "null"], "title": "Country created", "description": "Two-letter country code TikTok attributes the upload to." },
+            "hashtags": {
+                "type": ["array", "null"],
+                "title": "Hashtags",
+                "description": "Hashtag names attached to the video as structured challenges. Often empty even when the caption contains tags, because TikTok only links some of them.",
+                "items": { "type": "string" }
+            },
+
+            "userId": { "type": ["string", "null"], "title": "User id", "description": "Numeric account id as a string. Profile mode." },
+            "uniqueId": { "type": ["string", "null"], "title": "Username", "description": "The @handle without the @. Profile mode." },
+            "nickname": { "type": ["string", "null"], "title": "Display name", "description": "Account display name. Profile mode." },
+            "signature": { "type": ["string", "null"], "title": "Bio", "description": "Account bio text. Profile mode." },
+            "verified": { "type": ["boolean", "null"], "title": "Verified", "description": "Blue-tick status. Profile mode." },
+            "privateAccount": { "type": ["boolean", "null"], "title": "Private account", "description": "True for a private account; the row also carries _error=PRIVATE_ACCOUNT. Profile mode." },
+            "followerCount": { "type": ["number", "null"], "title": "Followers", "description": "Follower count, rounded by TikTok at scale. Profile mode." },
+            "followingCount": { "type": ["number", "null"], "title": "Following", "description": "Accounts this account follows. Profile mode." },
+            "heartCount": { "type": ["number", "null"], "title": "Total likes", "description": "Lifetime likes across the account's videos. Profile mode." },
+            "avatarUrl": { "type": ["string", "null"], "title": "Avatar URL", "description": "Profile picture on TikTok's CDN. Profile mode." },
+            "profileUrl": { "type": ["string", "null"], "title": "Profile URL", "description": "Canonical profile url. Profile mode." },
+
+            "authorUserId": { "type": ["string", "null"], "title": "Author user id", "description": "Uploader's numeric id. Video mode." },
+            "authorSecUid": { "type": ["string", "null"], "title": "Author secUid", "description": "Uploader's opaque secondary id, the key TikTok's own APIs use for an account." },
+            "authorUniqueId": { "type": ["string", "null"], "title": "Author username", "description": "Uploader's @handle without the @." },
+            "authorNickname": { "type": ["string", "null"], "title": "Author display name", "description": "Uploader's display name." },
+            "authorSignature": { "type": ["string", "null"], "title": "Author bio", "description": "Uploader's bio. Video mode." },
+            "authorVerified": { "type": ["boolean", "null"], "title": "Author verified", "description": "Uploader's blue-tick status." },
+            "authorAvatarUrl": { "type": ["string", "null"], "title": "Author avatar URL", "description": "Uploader's profile picture." },
+            "authorFollowerCount": { "type": ["number", "null"], "title": "Author followers", "description": "Uploader's follower count, delivered alongside the video - so one video request also yields the account's audience size." },
+            "authorFollowingCount": { "type": ["number", "null"], "title": "Author following", "description": "Accounts the uploader follows." },
+            "authorHeartCount": { "type": ["number", "null"], "title": "Author total likes", "description": "Uploader's lifetime likes." },
+            "authorVideoCount": { "type": ["number", "null"], "title": "Author video count", "description": "How many videos the uploader has posted." },
+
+            "musicId": { "type": ["string", "null"], "title": "Sound id", "description": "Numeric sound id as a string. Feed it back in through music mode to see other videos using it." },
+            "musicName": { "type": ["string", "null"], "title": "Sound name", "description": "Sound title. Video mode." },
+            "musicAuthorName": { "type": ["string", "null"], "title": "Sound artist", "description": "Artist credited for the sound. Video mode." },
+            "musicPlayUrl": { "type": ["string", "null"], "title": "Sound URL", "description": "Direct audio url, signed and short-lived. Video mode." },
+
+            "playlistType": { "type": ["string", "null"], "title": "Listing type", "description": "hashtag or music, as TikTok labels the embed playlist." },
+            "entityId": { "type": ["string", "null"], "title": "Listing entity id", "description": "Id of the hashtag or sound the listing belongs to." },
+            "musicArtist": { "type": ["string", "null"], "title": "Listing artist", "description": "Artist of the sound behind a music listing." },
+            "entityVideoCount": { "type": ["number", "null"], "title": "Listing total videos", "description": "How many videos TikTok says use this sound or tag in total - far more than the page ships, and the reason the single-page ceiling is worth knowing." },
+            "entityCoverUrl": { "type": ["string", "null"], "title": "Listing cover URL", "description": "Cover image of the sound or tag." },
+
+            "title": { "type": ["string", "null"], "title": "oEmbed title", "description": "Video caption as TikTok's oEmbed endpoint reports it. oembed mode." },
+            "authorProfileUrl": { "type": ["string", "null"], "title": "Author profile URL", "description": "Uploader's profile url. oembed mode." },
+            "thumbnailUrl": { "type": ["string", "null"], "title": "Thumbnail URL", "description": "Thumbnail image. oembed mode." },
+            "thumbnailWidth": { "type": ["number", "null"], "title": "Thumbnail width", "description": "oembed mode." },
+            "thumbnailHeight": { "type": ["number", "null"], "title": "Thumbnail height", "description": "oembed mode." },
+            "embedWidth": { "type": ["number", "null"], "title": "Embed width", "description": "Suggested iframe width. oembed mode." },
+            "embedHeight": { "type": ["number", "null"], "title": "Embed height", "description": "Suggested iframe height. oembed mode." },
+            "embedType": { "type": ["string", "null"], "title": "Embed type", "description": "oEmbed product type, e.g. video. oembed mode." },
+            "providerName": { "type": ["string", "null"], "title": "Provider", "description": "Always TikTok. oembed mode." }
+        }
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "transformation": {
+                "fields": [
+                    "_mode", "_input", "_error", "_warning",
+                    "videoId", "description", "playCount", "diggCount", "commentCount", "shareCount",
+                    "authorUniqueId", "authorFollowerCount",
+                    "uniqueId", "nickname", "followerCount", "heartCount",
+                    "playlistType", "entityVideoCount", "videoUrl"
+                ]
+            },
+            "display": { "component": "table" }
+        }
+    }
+}

@@ -1,0 +1,14 @@
+{
+    "actorSpecification": 1,
+    "name": "tvlk-probe",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Traveloka Surface Probe",
+    "description": "Internal throwaway probe: measures which Traveloka internal API endpoints are reachable from Apify with residential Indonesian proxies, and whether the AWS WAF gate answers challenge or captcha.",
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

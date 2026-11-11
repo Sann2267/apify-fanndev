@@ -1,0 +1,14 @@
+{
+    "actorSpecification": 1,
+    "name": "elsalvador-tenders-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "El Salvador Government Tenders Scraper",
+    "description": "Search El Salvador's official COMPRASAL public procurement system for currently open tenders (licitaciones) or the historical awarded-contract ledger, including supplier and declared beneficial-owner info. No account or login needed.",
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

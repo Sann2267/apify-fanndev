@@ -1,0 +1,97 @@
+{
+    "title": "H1B Visa Sponsor & Salary Database Scraper",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "mode": {
+            "title": "Mode",
+            "type": "string",
+            "editor": "select",
+            "description": "\"search\" queries the H1B LCA filing database by employer / job title / city / year. \"caseDetail\" fetches the full case record (wage, worksite, attorney, employer contact) for specific case ID(s) directly.",
+            "enum": ["search", "caseDetail"],
+            "enumTitles": ["Search filings", "Case detail (by case ID)"],
+            "default": "search",
+            "prefill": "search"
+        },
+        "employer": {
+            "title": "Employer name",
+            "type": "string",
+            "editor": "textfield",
+            "description": "\"search\" mode -- partial or full sponsor company name, e.g. \"Stripe\" or \"Tata Consultancy\". Case-insensitive substring match. At least one of employer / jobTitle / city is required. Note: h1bdata.info currently withholds results for some of the largest sponsors (e.g. Google, Meta, Amazon, Apple) -- those queries come back empty from the site itself.",
+            "prefill": "Stripe"
+        },
+        "jobTitle": {
+            "title": "Job title",
+            "type": "string",
+            "editor": "textfield",
+            "description": "\"search\" mode -- partial or full job title as filed on the LCA, e.g. \"Data Scientist\". Note: filed job titles are often auto-generated and lightly mangled (spaces stripped, an internal code appended) -- a short, common substring works best.",
+            "prefill": ""
+        },
+        "city": {
+            "title": "Worksite city",
+            "type": "string",
+            "editor": "textfield",
+            "description": "\"search\" mode -- worksite city, e.g. \"Mountain View\".",
+            "prefill": ""
+        },
+        "year": {
+            "title": "Fiscal year",
+            "type": "string",
+            "editor": "select",
+            "description": "\"search\" mode -- LCA fiscal year to search, or \"All Years\" for the full 2012-present history (returns more rows, slower for large employers).",
+            "enum": ["All Years", "2026", "2025", "2024", "2023", "2022", "2021", "2020", "2019", "2018", "2017", "2016", "2015", "2014", "2013", "2012"],
+            "default": "All Years",
+            "prefill": "2024"
+        },
+        "maxResults": {
+            "title": "Max results",
+            "type": "integer",
+            "editor": "number",
+            "description": "\"search\" mode -- maximum number of filing rows to return. h1bdata.info renders every matching row on one page (no pagination) -- large employers across \"All Years\" can match tens of thousands of rows, so this caps both the output size and (indirectly) how much HTML gets parsed.",
+            "default": 200,
+            "minimum": 1,
+            "maximum": 20000,
+            "prefill": 200
+        },
+        "fetchCaseDetails": {
+            "title": "Enrich with full case detail",
+            "type": "boolean",
+            "editor": "checkbox",
+            "description": "\"search\" mode -- when true, each matched filing is additionally fetched for its full case record (prevailing wage, wage level, worksite address, employer point-of-contact name/email, sponsoring attorney/law-firm name/email). When false (default), only the lightweight search-result row (employer, job title, base salary, location, submit/start date) is returned -- much faster for large result sets.",
+            "default": false,
+            "prefill": false
+        },
+        "caseIds": {
+            "title": "Case IDs",
+            "type": "array",
+            "editor": "stringList",
+            "description": "\"caseDetail\" mode -- LCA case numbers to fetch full detail for directly, e.g. \"I-200-21027-037298\" (the case ID shown in the Base Salary column link of search results, or in a previous run's \"caseId\" field).",
+            "prefill": ["I-200-21027-037298"]
+        },
+        "maxConcurrency": {
+            "title": "Max concurrent workers",
+            "type": "integer",
+            "editor": "number",
+            "description": "How many case-detail pages to fetch in parallel (\"search\" mode's enrichment pass, or \"caseDetail\" mode's case ID list).",
+            "default": 4,
+            "minimum": 1,
+            "maximum": 16,
+            "prefill": 4
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "editor": "proxy",
+            "description": "Apify Proxy configuration. Residential is on by default.",
+            "default": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            },
+            "prefill": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            }
+        }
+    },
+    "required": ["mode"]
+}

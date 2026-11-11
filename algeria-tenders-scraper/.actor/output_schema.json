@@ -1,0 +1,93 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "MDN Algeria tender notice record",
+        "description": "One record per notice (one PDF attachment) published under one calendar day's accordion section. A single _error record is emitted instead of payload fields when the page fails or is unreachable.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "Which mode this record came from: 'mode:latest' or 'mode:archived'."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which extraction strategy emitted this record (S1-mdn-accordion-current, S1-mdn-accordion-archive, or 'none' on error)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on a failed run (blocked_or_transient)."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "recordType": {
+                "type": "string",
+                "title": "Record type",
+                "description": "Always TENDER_NOTICE."
+            },
+            "date": {
+                "type": "string",
+                "title": "Publication date",
+                "description": "ISO 8601 date (YYYY-MM-DD) the notice was published under, parsed from the French accordion header. Null if the date text didn't match the expected 'DD Month YYYY' pattern."
+            },
+            "dateRaw": {
+                "type": "string",
+                "title": "Publication date (raw)",
+                "description": "The original French accordion header text, e.g. '24 Août 2026'."
+            },
+            "noticeType": {
+                "type": "string",
+                "title": "Notice type",
+                "description": "Best-effort classification from keywords in the notice text: TENDER_NOTICE, DEADLINE_EXTENSION_NOTICE, AWARD_NOTICE, PROVISIONAL_AWARD_NOTICE, UNSUCCESSFUL_TENDER_NOTICE, CANCELLATION_NOTICE, CORRIGENDUM_NOTICE, DEFAULT_NOTICE (mise en demeure -- formal notice against a contractor in breach), CONSULTATION_NOTICE, or OTHER."
+            },
+            "reference": {
+                "type": "string",
+                "title": "Reference number",
+                "description": "Best-effort extraction of the tender/notice reference number following 'N°' in the text, e.g. '158/2026/D4/T/5°RM'. Null if no 'N°' pattern was found."
+            },
+            "description": {
+                "type": "string",
+                "title": "Full notice text",
+                "description": "The complete notice text as published (French), HTML-unescaped and whitespace-normalized. This is the authoritative field; noticeType/reference are best-effort conveniences derived from it."
+            },
+            "pdfUrl": {
+                "type": "string",
+                "title": "PDF URL",
+                "description": "Absolute URL to the official notice/attachment PDF hosted on mdn.dz."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns for browsing notices.",
+            "transformation": {
+                "fields": [
+                    "date",
+                    "noticeType",
+                    "reference",
+                    "description",
+                    "pdfUrl",
+                    "_error",
+                    "_scrapedAt"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

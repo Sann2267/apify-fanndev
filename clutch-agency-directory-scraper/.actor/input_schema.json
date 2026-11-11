@@ -1,0 +1,133 @@
+{
+    "title": "Clutch.co Agency Directory Scraper input",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "mode": {
+            "title": "Mode",
+            "type": "string",
+            "description": "directory = one record per agency from a category listing, with min project size, hourly rate, headcount, location, service mix, rating and website. profile = one agency in full, from the profile page. reviews = one record per client review, with the four sub-ratings, project size and project length. categories = the list of valid directory URLs, taken from the sitemap, so you can find inputs instead of guessing slugs. reference = check the source is live and report what it returns today.",
+            "editor": "select",
+            "default": "directory",
+            "enum": [
+                "directory",
+                "profile",
+                "reviews",
+                "categories",
+                "reference"
+            ],
+            "enumTitles": [
+                "directory - agencies in a category, with lead attributes",
+                "profile - one agency in full",
+                "reviews - client reviews with sub-ratings",
+                "categories - list the directory URLs from the sitemap",
+                "reference - is the source live, what does it return"
+            ]
+        },
+        "categories": {
+            "title": "Categories",
+            "type": "array",
+            "description": "Directory slugs or full clutch.co URLs. A slug such as 'web-developers' or 'seo-firms' is the global ranking; 'id/web-developers' is the Indonesian cut and 'web-designers/lagos' the city cut. Run mode=categories to list what exists (roughly 70,000 directory URLs). Used by directory and reference modes.",
+            "editor": "stringList",
+            "default": [
+                "web-developers"
+            ],
+            "prefill": [
+                "web-developers"
+            ]
+        },
+        "maxPages": {
+            "title": "Max pages per category",
+            "type": "integer",
+            "description": "Pages of the listing to walk. A page carries about 50 ranked agencies; /web-developers alone has 1,933 pages. Page 1 is the bare URL - the site's own ?page=1 returns page 2, and this Actor works around that.",
+            "editor": "number",
+            "default": 3,
+            "minimum": 1,
+            "maximum": 2000,
+            "prefill": 3
+        },
+        "includePinnedRows": {
+            "title": "Include pinned blocks (Leaders Matrix and featured)",
+            "type": "boolean",
+            "description": "Off by default. A category page repeats a 30-row Leaders Matrix and a 14-row featured block on EVERY page - the same agencies, identical markup. They are deduplicated anyway, so turning this on adds those rows once per category rather than once per page.",
+            "editor": "checkbox",
+            "default": false
+        },
+        "includePaidPlacements": {
+            "title": "Include paid placements (sponsors)",
+            "type": "boolean",
+            "description": "On by default. Sponsor rows are 43 of the 86 rows on page 1 of a busy category. They are kept but labelled with isPaidPlacement=true, so you can tell a bought slot from an earned rank.",
+            "editor": "checkbox",
+            "default": true
+        },
+        "profileUrls": {
+            "title": "Profiles",
+            "type": "array",
+            "description": "Profile slugs or full URLs, e.g. 'imaginovation' or 'https://clutch.co/profile/imaginovation'. Required by the profile and reviews modes.",
+            "editor": "stringList",
+            "prefill": [
+                "imaginovation"
+            ]
+        },
+        "maxReviewPages": {
+            "title": "Max review pages per profile",
+            "type": "integer",
+            "description": "Reviews mode only. A profile page shows about 10 reviews per page. The run stops early once a page carries no new review.",
+            "editor": "number",
+            "default": 3,
+            "minimum": 1,
+            "maximum": 200,
+            "prefill": 3
+        },
+        "categoryFilter": {
+            "title": "Category filter",
+            "type": "string",
+            "description": "Categories mode only. Keep only URLs containing this text, e.g. 'seo' or '/id/'. Leave empty for everything in the shard.",
+            "editor": "textfield",
+            "prefill": ""
+        },
+        "maxSitemapShards": {
+            "title": "Max sitemap shards",
+            "type": "integer",
+            "description": "Categories mode only. The sitemap is split into 7 shards of 10,000 URLs each. One shard is usually plenty.",
+            "editor": "number",
+            "default": 1,
+            "minimum": 1,
+            "maximum": 7,
+            "prefill": 1
+        },
+        "maxItems": {
+            "title": "Max items",
+            "type": "integer",
+            "description": "Hard cap on records pushed for the whole run. 0 means no cap beyond the page limits above.",
+            "editor": "number",
+            "default": 0,
+            "minimum": 0,
+            "prefill": 0
+        },
+        "tlsProfile": {
+            "title": "Connection profile override",
+            "type": "string",
+            "description": "Leave empty. The actor tries several connection profiles and remembers the one the source accepts, which differs between your own network and Apify's. Set this only to force one while debugging.",
+            "editor": "textfield",
+            "prefill": ""
+        },
+        "proxyConfiguration": {
+            "title": "Proxy",
+            "type": "object",
+            "description": "Residential by default. Clutch's Cloudflare challenges direct connections from Apify's datacenter IPs, while residential IPs pass on the first request. Switching it off will make cloud runs fail.",
+            "editor": "proxy",
+            "prefill": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            },
+            "default": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            }
+        }
+    },
+    "required": [
+        "mode"
+    ]
+}

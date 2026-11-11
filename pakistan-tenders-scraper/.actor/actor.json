@@ -1,0 +1,14 @@
+{
+    "actorSpecification": 1,
+    "name": "pakistan-tenders-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Pakistan Government Tenders Scraper (PPRA-EPMS)",
+    "description": "Scrapes Pakistan's official PPRA e-Publish & Monitoring System (epms.ppra.gov.pk) for active/historical tender notices, filtered search by keyword/category/sector/dates, plus full per-tender detail pages. No login needed to browse.",
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

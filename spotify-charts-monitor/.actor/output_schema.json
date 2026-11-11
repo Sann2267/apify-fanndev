@@ -1,0 +1,296 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Spotify chart record",
+        "description": "Dataset envelope (_input / _source / _scrapedAt / recordType) on top of Spotify's chart data, plus rank movement computed against the previous run. One CHART_ENTRY row per ranked item, CHART_EXIT rows for tracks that fell off, one CHART_SUMMARY row per chart, ERROR rows on failure. Spotify adds and removes fields without notice, so unlisted fields pass through rather than failing the run.",
+        "additionalProperties": true,
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The chart this record came from."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "pathfinder-fetchPlaylist for country charts, charts-public-v0 for the tokenless global weekly charts, or none on failure rows."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was emitted."
+            },
+            "recordType": {
+                "type": "string",
+                "title": "Record type",
+                "description": "CHART_ENTRY, CHART_EXIT, CHART_SUMMARY or ERROR."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Failure rows only: chart_not_found, unparsable_input or fetch_failed."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic accompanying _error. Retired charts such as the Viral 50 are named explicitly here."
+            },
+            "rank": {
+                "title": "Rank",
+                "description": "Current chart position, 1 being the top."
+            },
+            "previousRank": {
+                "title": "Previous rank",
+                "description": "Position in the previous reading. For country charts this comes from the previous run; for the public global charts it is Spotify's own figure."
+            },
+            "rankChange": {
+                "title": "Rank change",
+                "description": "Positions gained since the previous reading. Positive means it climbed."
+            },
+            "entryStatus": {
+                "title": "Entry status",
+                "description": "MOVED_UP, MOVED_DOWN, NO_CHANGE, NEW_ENTRY, DROPPED_OUT, or BASELINE on the very first run when there was nothing to compare against."
+            },
+            "chartName": {
+                "title": "Chart",
+                "description": "Chart title as Spotify publishes it, for example Top 50 - Indonesia."
+            },
+            "country": {
+                "title": "Country",
+                "description": "Two-letter country code, GLOBAL, or CUSTOM for a playlist supplied by URL."
+            },
+            "recurrence": {
+                "title": "Recurrence",
+                "description": "daily or weekly."
+            },
+            "chartId": {
+                "title": "Chart id",
+                "description": "Spotify playlist id behind the chart."
+            },
+            "chartUrl": {
+                "title": "Chart URL",
+                "description": "open.spotify.com link to the chart."
+            },
+            "chartAlias": {
+                "title": "Chart alias",
+                "description": "Public charts service only: Spotify's own identifier, for example REGIONAL_GLOBAL_WEEKLY."
+            },
+            "chartDate": {
+                "title": "Chart date",
+                "description": "Public charts service only: the date the chart covers."
+            },
+            "chartLastUpdated": {
+                "title": "Last recalculated",
+                "description": "When Spotify last recalculated this chart."
+            },
+            "rankType": {
+                "title": "Ranking basis",
+                "description": "What the ranking counts, for example plays."
+            },
+            "chartEntityType": {
+                "title": "Chart entity type",
+                "description": "What is being ranked: track, album or artist."
+            },
+            "trackName": {
+                "title": "Track",
+                "description": "Song title. Country charts rank tracks."
+            },
+            "artistName": {
+                "title": "Artist",
+                "description": "First credited artist."
+            },
+            "artistNames": {
+                "title": "All artists",
+                "description": "Every credited artist, in Spotify's own order."
+            },
+            "artistUrl": {
+                "title": "Artist URL",
+                "description": "open.spotify.com link to the main artist."
+            },
+            "albumName": {
+                "title": "Album",
+                "description": "Release the charting recording belongs to."
+            },
+            "playcount": {
+                "title": "Play count",
+                "description": "Lifetime streams for the charting recording. Spotify's official API never publishes this."
+            },
+            "trackId": {
+                "title": "Track id",
+                "description": "Spotify track id."
+            },
+            "trackUri": {
+                "title": "Track URI",
+                "description": "spotify:track: URI, and the key rank movement is matched on between runs."
+            },
+            "trackUrl": {
+                "title": "Track URL",
+                "description": "open.spotify.com link to the track."
+            },
+            "durationMs": {
+                "title": "Duration (ms)",
+                "description": "Track length in milliseconds."
+            },
+            "explicit": {
+                "title": "Explicit",
+                "description": "True when Spotify labels the recording explicit."
+            },
+            "coverArt": {
+                "title": "Cover art",
+                "description": "Largest cover image Spotify offers for the entry."
+            },
+            "entityType": {
+                "title": "Entity type",
+                "description": "Public charts service only: TRACK, ALBUM or ARTIST."
+            },
+            "entityName": {
+                "title": "Entity name",
+                "description": "Public charts service only: the name of the ranked track, album or artist."
+            },
+            "entityUrl": {
+                "title": "Entity URL",
+                "description": "Public charts service only: open.spotify.com link to the ranked item."
+            },
+            "peakRank": {
+                "title": "Peak rank",
+                "description": "Public charts service only: best position ever reached, when Spotify publishes it."
+            },
+            "appearancesOnChart": {
+                "title": "Weeks on chart",
+                "description": "Public charts service only: total appearances, when Spotify publishes it."
+            },
+            "consecutiveAppearances": {
+                "title": "Consecutive weeks",
+                "description": "Public charts service only: unbroken run on the chart, when Spotify publishes it."
+            },
+            "labels": {
+                "title": "Labels",
+                "description": "Public charts service only: record labels credited, when published."
+            },
+            "songwriters": {
+                "title": "Songwriters",
+                "description": "Public charts service only: songwriter credits, when published."
+            },
+            "producers": {
+                "title": "Producers",
+                "description": "Public charts service only: producer credits, when published."
+            },
+            "followers": {
+                "title": "Chart followers",
+                "description": "CHART_SUMMARY rows: accounts following the chart playlist."
+            },
+            "entryCount": {
+                "title": "Entries",
+                "description": "CHART_SUMMARY rows: how many items the chart holds."
+            },
+            "entriesCompared": {
+                "title": "Entries compared",
+                "description": "CHART_SUMMARY rows: how many entries had a previous position to compare against."
+            },
+            "newEntries": {
+                "title": "New entries",
+                "description": "CHART_SUMMARY rows: entries that were not on the chart in the previous reading."
+            },
+            "newEntriesReported": {
+                "title": "New entries (Spotify's count)",
+                "description": "CHART_SUMMARY rows: Spotify's own new-entry total from the chart attributes. It names no tracks, which is why the actor computes its own."
+            },
+            "climbers": {
+                "title": "Climbers",
+                "description": "CHART_SUMMARY rows: entries that gained positions."
+            },
+            "fallers": {
+                "title": "Fallers",
+                "description": "CHART_SUMMARY rows: entries that lost positions."
+            },
+            "biggestClimbName": {
+                "title": "Biggest climber",
+                "description": "CHART_SUMMARY rows: the entry that gained the most positions."
+            },
+            "biggestClimbPositions": {
+                "title": "Biggest climb",
+                "description": "CHART_SUMMARY rows: how many positions it gained."
+            },
+            "newEntryNames": {
+                "title": "New entry names",
+                "description": "CHART_SUMMARY rows: up to ten of the new entries, by name."
+            },
+            "description": {
+                "title": "Chart description",
+                "description": "CHART_SUMMARY rows: Spotify's description of the chart."
+            }
+        }
+    },
+    "views": {
+        "overview": {
+            "title": "Chart entries",
+            "transformation": {
+                "fields": [
+                    "chartName",
+                    "country",
+                    "rank",
+                    "previousRank",
+                    "rankChange",
+                    "entryStatus",
+                    "trackName",
+                    "entityName",
+                    "artistName",
+                    "playcount",
+                    "trackUrl"
+                ]
+            },
+            "display": {
+                "component": "table",
+                "properties": {
+                    "chartName": { "label": "Chart" },
+                    "country": { "label": "Country" },
+                    "rank": { "label": "#" },
+                    "previousRank": { "label": "Prev" },
+                    "rankChange": { "label": "Move" },
+                    "entryStatus": { "label": "Status" },
+                    "trackName": { "label": "Track" },
+                    "entityName": { "label": "Entity" },
+                    "artistName": { "label": "Artist" },
+                    "playcount": { "label": "Plays" },
+                    "trackUrl": { "label": "Link" }
+                }
+            }
+        },
+        "movement": {
+            "title": "Chart summaries",
+            "transformation": {
+                "fields": [
+                    "chartName",
+                    "country",
+                    "recurrence",
+                    "chartLastUpdated",
+                    "entryCount",
+                    "newEntries",
+                    "climbers",
+                    "fallers",
+                    "biggestClimbName",
+                    "biggestClimbPositions",
+                    "followers"
+                ]
+            },
+            "display": {
+                "component": "table",
+                "properties": {
+                    "chartName": { "label": "Chart" },
+                    "country": { "label": "Country" },
+                    "recurrence": { "label": "Cadence" },
+                    "chartLastUpdated": { "label": "Updated" },
+                    "entryCount": { "label": "Entries" },
+                    "newEntries": { "label": "New" },
+                    "climbers": { "label": "Up" },
+                    "fallers": { "label": "Down" },
+                    "biggestClimbName": { "label": "Biggest climber" },
+                    "biggestClimbPositions": { "label": "By" },
+                    "followers": { "label": "Followers" }
+                }
+            }
+        }
+    }
+}

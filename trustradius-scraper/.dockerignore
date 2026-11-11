@@ -1,0 +1,10 @@
+__pycache__
+*.pyc
+.venv
+storage
+apify_storage
+.git
+.gitignore
+test_local.py
+output
+run_modes.py

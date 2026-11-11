@@ -1,0 +1,54 @@
+{
+    "title": "Blibli Drop-shipper Data Sync",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "productUrls": {
+            "title": "Products you resell",
+            "type": "array",
+            "description": "The Blibli products in your catalogue, as full product URLs (https://www.blibli.com/p/<name>/ps--COP-60023-00933) or bare SKUs (COP-60023-00933). Resolved in bulk - 50 SKUs per request - so a large catalogue stays cheap to sync.",
+            "editor": "stringList",
+            "prefill": ["BLL-70058-00122", "COP-60023-00933"],
+            "default": []
+        },
+        "detailedMode": {
+            "title": "Detailed mode (exact stock + description)",
+            "type": "boolean",
+            "description": "Open each product page instead of using the bulk endpoint. Adds exact stock QUANTITY, the cleaned product description, warranty text, categories and all images - but costs one request per SKU instead of one per 50. Use fast mode for frequent price/availability syncs and detailed mode when you also need copy and stock levels.",
+            "default": false
+        },
+        "verifyMissing": {
+            "title": "Verify missing SKUs against the product page",
+            "type": "boolean",
+            "description": "STRONGLY RECOMMENDED. Blibli's bulk endpoint silently omits some products that are actually live and buyable, so an omission alone does not mean the listing is gone. With this on, every missing SKU is re-checked on its product page before being reported as NOT_FOUND. Turning it off makes runs faster but risks telling you to unpublish products that are still on sale.",
+            "default": true
+        },
+        "trackChanges": {
+            "title": "Track changes between runs",
+            "type": "boolean",
+            "description": "Compare this run against the previous one and label each product with what moved: PRICE_INCREASED, PRICE_DECREASED, OUT_OF_STOCK, BACK_IN_STOCK, NAME_CHANGED, BECAME_UNAVAILABLE, NEW or UNCHANGED. The snapshot is kept in a named key-value store so it survives between scheduled runs.",
+            "default": true
+        },
+        "onlyChangedItems": {
+            "title": "Only output changed products",
+            "type": "boolean",
+            "description": "Emit only products that actually changed since the last run - the smallest possible feed to push into your own store. Requires change tracking. On the first run everything counts as NEW.",
+            "default": false
+        },
+        "stateStoreName": {
+            "title": "State store name",
+            "type": "string",
+            "description": "Named key-value store holding the previous snapshot. Use a different name per catalogue if you sync several stores independently.",
+            "editor": "textfield",
+            "default": "blibli-sync-state"
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "description": "Blibli is behind Cloudflare and throttles sustained traffic from one IP. Apify Residential proxy with country 'ID' is recommended for scheduled syncs.",
+            "editor": "proxy",
+            "default": { "useApifyProxy": true, "apifyProxyGroups": ["RESIDENTIAL"] }
+        }
+    },
+    "required": ["productUrls"]
+}

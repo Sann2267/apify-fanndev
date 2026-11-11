@@ -1,0 +1,258 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Google Maps lead record",
+        "description": "Dataset envelope (_input / _source / _scrapedAt / recordType) on top of Google's place data plus website enrichment. One LEAD row per business; ERROR rows carry _error instead of a payload. Split a run by recordType. Google adds and removes fields without notice, so unlisted fields pass through rather than failing the run.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The query or identifier that produced this lead."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "S1-tbm-map-search, S2-preview-place, or none on failure rows."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was emitted."
+            },
+            "recordType": {
+                "type": "string",
+                "title": "Record type",
+                "description": "LEAD or ERROR."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Failure rows only: search_failed, unresolvable_input, detail_failed or no_place_data."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic accompanying _error."
+            },
+            "_searchQuery": {
+                "title": "Search query",
+                "description": "The query this lead came from; null for directly supplied places."
+            },
+            "name": {
+                "title": "Business name",
+                "description": "Business name as shown on Google Maps."
+            },
+            "primaryCategory": {
+                "title": "Primary category",
+                "description": "First category Google assigns, e.g. 'Dental clinic'."
+            },
+            "categories": {
+                "title": "Categories",
+                "description": "All categories Google assigns to the business."
+            },
+            "phone": {
+                "title": "Phone",
+                "description": "Phone number in Google's display format."
+            },
+            "phoneE164": {
+                "title": "Phone (E.164)",
+                "description": "Dial-ready international form, e.g. +61282967351."
+            },
+            "phoneLocal": {
+                "title": "Phone (local)",
+                "description": "Local dialling format where Google supplies one."
+            },
+            "website": {
+                "title": "Website",
+                "description": "Business website URL as listed on Google."
+            },
+            "websiteDomain": {
+                "title": "Website domain",
+                "description": "Bare domain of the website."
+            },
+            "emails": {
+                "title": "Emails",
+                "description": "Email addresses found on the business website. Requires enrichment."
+            },
+            "socialProfiles": {
+                "title": "Social profiles",
+                "description": "Handles found on the website, keyed by network: instagram, facebook, twitter, linkedin, youtube, tiktok, whatsapp, telegram."
+            },
+            "websitePhones": {
+                "title": "Website phones",
+                "description": "Phone numbers found in tel: links on the website."
+            },
+            "enrichmentStatus": {
+                "title": "Enrichment status",
+                "description": "ok, ok_contact_page, not_attempted, http_<code>, or fetch_failed:<reason>."
+            },
+            "enrichmentPagesFetched": {
+                "title": "Enrichment pages fetched",
+                "description": "How many pages of the website were read (0-2)."
+            },
+            "enrichmentFinalUrl": {
+                "title": "Enrichment final URL",
+                "description": "URL actually fetched after redirects."
+            },
+            "address": {
+                "title": "Address",
+                "description": "Single-line formatted address."
+            },
+            "addressParts": {
+                "title": "Address parts",
+                "description": "Address split into components as Google returns them."
+            },
+            "addressWithName": {
+                "title": "Address with name",
+                "description": "Business name plus full address in one string."
+            },
+            "region": {
+                "title": "Region",
+                "description": "Region/city label, e.g. 'Sydney NSW, Australia'."
+            },
+            "latitude": {
+                "title": "Latitude",
+                "description": "Real GPS latitude of the business."
+            },
+            "longitude": {
+                "title": "Longitude",
+                "description": "Real GPS longitude of the business."
+            },
+            "plusCode": {
+                "title": "Plus code",
+                "description": "Google Plus Code when available."
+            },
+            "timezone": {
+                "title": "Timezone",
+                "description": "IANA timezone of the business, e.g. Asia/Jakarta."
+            },
+            "openingHours": {
+                "title": "Opening hours",
+                "description": "Weekly schedule: a list of {day, hours} entries."
+            },
+            "openNow": {
+                "title": "Open now",
+                "description": "Google's open/closed status line at scrape time, when present."
+            },
+            "rating": {
+                "title": "Rating",
+                "description": "Average star rating, 1-5."
+            },
+            "reviewsCount": {
+                "title": "Reviews count",
+                "description": "Total number of Google reviews."
+            },
+            "reviewsUrl": {
+                "title": "Reviews URL",
+                "description": "Link to the business's Google reviews."
+            },
+            "description": {
+                "title": "Description",
+                "description": "Business description when Google supplies one."
+            },
+            "thumbnailUrl": {
+                "title": "Thumbnail",
+                "description": "Business photo thumbnail URL."
+            },
+            "placeId": {
+                "title": "Place ID",
+                "description": "Google Place ID (ChIJ...)."
+            },
+            "featureId": {
+                "title": "Feature ID",
+                "description": "Google internal feature id, 0x...:0x..."
+            },
+            "googleSlug": {
+                "title": "Google slug",
+                "description": "Google entity slug, e.g. /g/11c..."
+            },
+            "googleMapsUrl": {
+                "title": "Google Maps URL",
+                "description": "Canonical Maps link rebuilt from the feature id."
+            },
+            "language": {
+                "title": "Language",
+                "description": "Language code of the returned content."
+            },
+            "openingHoursComplete": {
+                "title": "Opening hours complete",
+                "description": "True when the full 7-day schedule was captured. Google sometimes serves a reduced record carrying only today's hours; enable fetchPlaceDetails to fill those in."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns for scanning a lead list.",
+            "transformation": {
+                "fields": [
+                    "name",
+                    "primaryCategory",
+                    "phone",
+                    "emails",
+                    "website",
+                    "address",
+                    "rating",
+                    "reviewsCount",
+                    "recordType",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        },
+        "outreach": {
+            "title": "Outreach list",
+            "description": "Everything needed to contact the business, in the order you would work it.",
+            "transformation": {
+                "fields": [
+                    "name",
+                    "primaryCategory",
+                    "phone",
+                    "phoneE164",
+                    "emails",
+                    "socialProfiles",
+                    "website",
+                    "websiteDomain",
+                    "address",
+                    "region",
+                    "rating",
+                    "reviewsCount",
+                    "enrichmentStatus",
+                    "googleMapsUrl"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        },
+        "locations": {
+            "title": "Locations & hours",
+            "description": "Geographic and scheduling view: coordinates, timezone and opening hours.",
+            "transformation": {
+                "fields": [
+                    "name",
+                    "latitude",
+                    "longitude",
+                    "address",
+                    "addressParts",
+                    "region",
+                    "timezone",
+                    "openingHours",
+                    "openingHoursComplete",
+                    "openNow",
+                    "plusCode",
+                    "placeId",
+                    "featureId"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

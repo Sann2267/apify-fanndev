@@ -1,0 +1,44 @@
+{
+  "page": 1,
+  "results": [
+    {
+      "adult": false,
+      "backdrop_path": "/nDxJJyA5giRhXx96q1sWbOUjMBI.jpg",
+      "genre_ids": [
+        878,
+        12
+      ],
+      "id": 693134,
+      "original_language": "en",
+      "original_title": "Dune: Part Two",
+      "overview": "Follow the mythic journey of Paul Atreides as he unites with Chani and the Fremen.",
+      "popularity": 320.5,
+      "poster_path": "/1pdfLvkbY9ohJlCjQH2CZjjYVvJ.jpg",
+      "release_date": "2024-02-27",
+      "title": "Dune: Part Two",
+      "video": false,
+      "vote_average": 8.1,
+      "vote_count": 5200
+    },
+    {
+      "adult": false,
+      "backdrop_path": null,
+      "genre_ids": [
+        878
+      ],
+      "id": 335984,
+      "original_language": "en",
+      "original_title": "Blade Runner 2049",
+      "overview": "Thirty years after the events of the first film.",
+      "popularity": 95.2,
+      "poster_path": "/gajva2L0rPYHZQzxKgxFF8sK5Ok.jpg",
+      "release_date": "2017-10-04",
+      "title": "Blade Runner 2049",
+      "video": false,
+      "vote_average": 7.6,
+      "vote_count": 12400
+    }
+  ],
+  "total_pages": 43,
+  "total_results": 851
+}

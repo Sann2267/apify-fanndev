@@ -1,0 +1,102 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Keyword suggestion record",
+        "description": "One row per unique keyword harvested from Blibli's search box. IMPORTANT: Blibli publishes no search volume - every volume-shaped field in its autocomplete payload is null - so this actor reports no volume figure. `competingProducts` (how many products Blibli returns for the keyword) and `suggestPosition` (rank in Blibli's own suggestion ordering) are the measured signals provided instead. Every type is nullable because which fields are populated depends on the source and on whether competition measurement was enabled.",
+        "properties": {
+            "_input": {
+                "type": ["string", "null"],
+                "title": "Input",
+                "description": "The seed keyword that produced this row; empty for trending and curated rows."
+            },
+            "_source": {
+                "type": ["string", "null"],
+                "title": "Source strategy",
+                "description": "autocomplete, autocomplete-expansion, related-search, trending, curated, or none on failure."
+            },
+            "_scrapedAt": {
+                "type": ["string", "null"],
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this keyword was harvested."
+            },
+            "_error": {
+                "type": ["string", "null"],
+                "title": "Error",
+                "description": "Present only on failure rows (INVALID_INPUT, BLOCKED_AFTER_RETRIES, UPSTREAM_SHAPE_CHANGED, EMPTY_RESULT)."
+            },
+            "_errorDetail": {
+                "type": ["string", "null"],
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "keyword": {
+                "type": ["string", "null"],
+                "title": "Keyword",
+                "description": "The suggestion exactly as Blibli's search box offers it - what shoppers actually type."
+            },
+            "seedKeyword": {
+                "type": ["string", "null"],
+                "title": "Seed",
+                "description": "The seed this keyword was expanded from."
+            },
+            "source": {
+                "type": ["string", "null"],
+                "title": "Source",
+                "description": "Where the keyword came from: autocomplete (bare seed), autocomplete-expansion (seed + a suffix), related-search, trending or curated."
+            },
+            "sourcePrefix": {
+                "type": ["string", "null"],
+                "title": "Source prefix",
+                "description": "The exact prefix typed to surface this keyword, e.g. 'laptop g'. Null when it came from the bare seed."
+            },
+            "suggestPosition": {
+                "type": ["number", "null"],
+                "title": "Suggestion rank",
+                "description": "1-based position within Blibli's own autocomplete ordering for that prefix, produced by their relevance model. An ordinal popularity signal - NOT a search volume, which Blibli does not publish."
+            },
+            "competingProducts": {
+                "type": ["number", "null"],
+                "title": "Competing products",
+                "description": "How many products Blibli actually returns for this keyword - measured, not estimated. The practical difficulty signal: 'laptop' returns 58,744 while 'laptop gaming' returns 6,639. Null when competition measurement is disabled."
+            },
+            "competitionLevel": {
+                "type": ["string", "null"],
+                "title": "Competition level",
+                "description": "Readability band over competingProducts: LOW (<1k), MEDIUM (<10k), HIGH (<50k), VERY_HIGH. A convenience label from this actor, not a Blibli metric - the raw count is always alongside."
+            },
+            "wordCount": {
+                "type": ["number", "null"],
+                "title": "Word count",
+                "description": "Words in the keyword."
+            },
+            "characterCount": {
+                "type": ["number", "null"],
+                "title": "Character count",
+                "description": "Length of the keyword, useful when fitting terms into a product title."
+            },
+            "isLongTail": {
+                "type": ["boolean", "null"],
+                "title": "Long tail",
+                "description": "True for keywords of 3+ words - typically easier to rank for and higher-converting."
+            },
+            "containsSeed": {
+                "type": ["boolean", "null"],
+                "title": "Contains seed",
+                "description": "Whether the keyword literally contains the seed. False rows are lateral discoveries, e.g. 'tas laptop jinjing' from the seed 'laptop'."
+            },
+            "searchUrl": {
+                "type": ["string", "null"],
+                "title": "Search URL",
+                "description": "Blibli search results page for this keyword."
+            },
+            "promoUrl": {
+                "type": ["string", "null"],
+                "title": "Promo URL",
+                "description": "Curated rows only. The promo page the curated keyword links to."
+            }
+        }
+    }
+}

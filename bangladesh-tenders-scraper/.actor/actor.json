@@ -1,0 +1,14 @@
+{
+    "actorSpecification": 1,
+    "name": "bangladesh-tenders-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Bangladesh Government Tenders Scraper (CPTU/BPPA e-GP)",
+    "description": "Scrapes Bangladesh's official national e-Government Procurement portal (eprocure.gov.bd, CPTU/BPPA) for live tender notices, awarded contracts (Notice of Award, with supplier name and value), and full per-tender detail pages with lot breakdown and document links. No login needed to browse.",
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

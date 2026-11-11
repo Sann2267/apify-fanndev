@@ -1,0 +1,14 @@
+{
+    "actorSpecification": 1,
+    "name": "zambia-pacra-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Zambia PACRA Business Registry Scraper",
+    "description": "Search Zambia's official company registry (PACRA) by business name. Returns registration number, status, incorporation date, business type, industry classification, and compliance standing (annual returns, nominal capital, beneficial ownership). No account or API key needed.",
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

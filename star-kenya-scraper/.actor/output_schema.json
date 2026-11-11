@@ -1,0 +1,126 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Article / latest-headline record",
+        "description": "Raw-passthrough dataset envelope. Every record carries _input/_source/_scrapedAt (and _error/_errorDetail on failures). Article-mode records (S1-flight+html) carry headline/articleBody-style fields, combining a JSON-LD NewsArticle node extracted from a Next.js React-Server-Components flight payload with the article body scraped from the rendered HTML (this CMS's JSON-LD never carries articleBody itself); latest-mode records (S2-sitemap, /articles/sitemap/1.xml) carry title/link-style fields.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The exact input value (URL, or 'latest') that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which extraction strategy emitted this record: S1-flight+html or S2-sitemap."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed extractions -- the error kind (e.g. \"not_found\", \"http_500\", \"blocked_or_transient\")."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "headline": {
+                "title": "Headline",
+                "description": "Article headline, from the flight-payload NewsArticle JSON-LD node."
+            },
+            "description": {
+                "title": "Description",
+                "description": "Short article summary from the JSON-LD node. Observed null on every sampled article -- this CMS does not appear to populate it."
+            },
+            "articleBody": {
+                "title": "Article body",
+                "description": "Full article text, reconstructed from <p> tags inside the last div.story-content element in the HTML (JSON-LD never carries the body on this site). Can legitimately be an empty string for image-only content types (e.g. editorial cartoons under /opinion/cartoon/) that have no narrative text."
+            },
+            "section": {
+                "title": "Section",
+                "description": "First URL path segment, e.g. \"news\", \"business\", \"sports\", \"opinion\", \"sasa\", \"counties\", \"in-pictures\"."
+            },
+            "subsection": {
+                "title": "Subsection",
+                "description": "Remaining URL path segment(s) between the section and the date-slug segment, e.g. \"world\", \"africa\", \"cartoon\", \"football\". Null when the article URL has no subsection."
+            },
+            "slug": {
+                "title": "Slug",
+                "description": "The article's URL slug (date prefix stripped)."
+            },
+            "author": {
+                "title": "Author",
+                "description": "Raw author value from the JSON-LD node -- a single Person object with a @type/name pair. Passed through as-is."
+            },
+            "datePublished": {
+                "title": "Date published",
+                "description": "ISO 8601 publish date from the JSON-LD node."
+            },
+            "image": {
+                "title": "Image",
+                "description": "Raw image value from the JSON-LD node -- a list of ImageObject entries. Passed through as-is."
+            },
+            "isAccessibleForFree": {
+                "title": "Is accessible for free",
+                "description": "Paywall-metadata flag from the JSON-LD node. Only present (true/false) on premium-gated articles; absent (null) on ordinary free articles. articleBody is NOT truncated when false -- see CRAWLING_METHOD.md paywall verdict."
+            },
+            "paywallSelector": {
+                "title": "Paywall CSS selector",
+                "description": "The hasPart.cssSelector value from the JSON-LD node (e.g. \".premium-content\") on premium-gated articles -- the CSS selector the site's own frontend uses to visually blur/gate the content. Null on free articles."
+            },
+            "canonicalUrl": {
+                "title": "Canonical URL",
+                "description": "mainEntityOfPage from the JSON-LD node."
+            },
+            "title": {
+                "title": "Title",
+                "description": "Headline text of a latest-mode sitemap item, derived from the URL slug (hyphens -> spaces, title-cased) since the plain sitemap carries no title field -- cosmetic only, not a substitute for the real headline from article mode."
+            },
+            "link": {
+                "title": "Link",
+                "description": "Article URL from the sitemap item."
+            },
+            "date": {
+                "title": "Date",
+                "description": "Publish date parsed from the URL's own YYYY-MM-DD slug prefix -- latest mode only."
+            },
+            "lastmod": {
+                "title": "Last modified",
+                "description": "Date from the sitemap item's lastmod field -- latest mode only. Entries are sorted by this field, descending, since the sitemap file itself is not reliably ordered."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across both article and latest-headline records.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "_source",
+                    "_scrapedAt",
+                    "headline",
+                    "title",
+                    "link",
+                    "datePublished",
+                    "lastmod",
+                    "section",
+                    "subsection",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

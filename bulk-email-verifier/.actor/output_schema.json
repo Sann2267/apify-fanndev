@@ -1,0 +1,241 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Email verification record",
+        "description": "Dataset envelope (_input / _source / _scrapedAt / recordType) on top of one verdict per address. One EMAIL row per address, one RUN_SUMMARY per run. Unlisted fields pass through rather than failing the run.",
+        "additionalProperties": true,
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The address exactly as supplied, before normalisation."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source",
+                "description": "mx+smtp when the mail server was asked about this mailbox, mx-only when it was not."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "title": "Checked at",
+                "description": "UTC ISO 8601 timestamp when this record was emitted."
+            },
+            "recordType": {
+                "type": "string",
+                "title": "Record type",
+                "description": "EMAIL or RUN_SUMMARY."
+            },
+            "email": {
+                "title": "Email",
+                "description": "The address after trimming and unwrapping any display-name form."
+            },
+            "normalizedEmail": {
+                "title": "Normalised email",
+                "description": "Canonical mailbox: lowercased, plus-aliases stripped and Gmail dots removed. Two rows sharing this value are one mailbox."
+            },
+            "localPart": {
+                "title": "Local part",
+                "description": "Everything before the @."
+            },
+            "domain": {
+                "title": "Domain",
+                "description": "Everything after the @, lowercased."
+            },
+            "status": {
+                "title": "Status",
+                "description": "deliverable, undeliverable, risky or unknown. The four are exclusive and unknown is never folded into the others."
+            },
+            "subStatus": {
+                "title": "Reason code",
+                "description": "Machine-readable reason: mailbox_exists, mailbox_not_found, nxdomain, no_mx_record, disposable, catch_all, role_account, domain_typo, mx_only, dns_unavailable or a syntax error code."
+            },
+            "score": {
+                "title": "Score",
+                "description": "0-100 confidence that sending here is safe. 98 = the server accepted it, 0 = it will bounce."
+            },
+            "safeToSend": {
+                "title": "Safe to send",
+                "description": "True only for confirmed deliverable addresses. Risky and unknown both answer false on purpose."
+            },
+            "reason": {
+                "title": "Reason",
+                "description": "One sentence explaining the verdict in the terms a sender cares about."
+            },
+            "syntaxValid": {
+                "title": "Syntax valid",
+                "description": "Whether the address parses as a real mailbox at all."
+            },
+            "syntaxError": {
+                "title": "Syntax error",
+                "description": "Which rule it broke: missing_or_multiple_at, consecutive_dots, contains_space, domain_has_no_tld, local_part_too_long, too_long, invalid_characters."
+            },
+            "domainStatus": {
+                "title": "Domain status",
+                "description": "ok, no_mx, nxdomain, dns_timeout or dns_error."
+            },
+            "mxHost": {
+                "title": "MX host",
+                "description": "Lowest-preference mail exchanger, the host that was probed."
+            },
+            "mxRecords": {
+                "title": "MX records",
+                "description": "Full MX list with preferences, lowest first."
+            },
+            "implicitMx": {
+                "title": "Implicit MX",
+                "description": "True when the domain publishes no MX and the A record is being used as the implicit exchanger, per RFC 5321."
+            },
+            "dnsError": {
+                "title": "DNS error",
+                "description": "Why the lookup failed, when it did."
+            },
+            "smtpChecked": {
+                "title": "SMTP checked",
+                "description": "Whether an SMTP conversation actually happened for this address."
+            },
+            "smtpCode": {
+                "title": "SMTP code",
+                "description": "Reply code to RCPT TO. 250/251 accept, 550/551/553/554 reject, 421/450/451/452 defer."
+            },
+            "smtpMessage": {
+                "title": "SMTP message",
+                "description": "The server's own words, kept verbatim so a surprising verdict can be audited."
+            },
+            "smtpDeliverable": {
+                "title": "SMTP deliverable",
+                "description": "True accepted, false rejected, null no usable answer. Greylisting and throttling land on null, never on false."
+            },
+            "smtpStage": {
+                "title": "SMTP stage",
+                "description": "Where the conversation ended: rcpt_to, banner, ehlo, mail_from, timeout, connect_failed, skipped_port_blocked, skipped_no_mx or skipped_disabled."
+            },
+            "isCatchAll": {
+                "title": "Catch-all domain",
+                "description": "True when the domain accepted a random address too, so acceptance proves nothing about this mailbox."
+            },
+            "isRoleAccount": {
+                "title": "Role mailbox",
+                "description": "info@, sales@, support@ and the like - a function, not a person."
+            },
+            "isFreeProvider": {
+                "title": "Free provider",
+                "description": "Consumer mailbox provider such as Gmail or Outlook."
+            },
+            "isDisposable": {
+                "title": "Disposable",
+                "description": "Throwaway provider, matched by domain or by the MX host behind it."
+            },
+            "isAlias": {
+                "title": "Alias",
+                "description": "The address uses plus-addressing or Gmail dots, so it is a variant of normalizedEmail."
+            },
+            "hasTypo": {
+                "title": "Typo suspected",
+                "description": "The domain is within two edits of a major provider without being one."
+            },
+            "suggestedEmail": {
+                "title": "Suggested correction",
+                "description": "The repaired address when a typo is suspected."
+            },
+            "checkDurationMs": {
+                "title": "Check duration (ms)",
+                "description": "Wall-clock time spent on this address."
+            },
+            "emailsChecked": {
+                "title": "Emails checked",
+                "description": "RUN_SUMMARY: how many addresses were verified after de-duplication."
+            },
+            "deliverableRate": {
+                "title": "Deliverable rate",
+                "description": "RUN_SUMMARY: share of the list confirmed deliverable."
+            },
+            "smtpRoute": {
+                "title": "SMTP route",
+                "description": "RUN_SUMMARY: direct, proxy-connect or none - how the run tried to reach port 25."
+            },
+            "smtpPortReachable": {
+                "title": "SMTP port reachable",
+                "description": "RUN_SUMMARY: whether outbound port 25 worked from this run. False means every unknown above is an infrastructure limit, not a property of the address."
+            },
+            "smtpEgressDetail": {
+                "title": "SMTP egress detail",
+                "description": "RUN_SUMMARY: the banner received, or the error that proved port 25 is blocked."
+            },
+            "statusBreakdown": {
+                "title": "Status breakdown",
+                "description": "RUN_SUMMARY: counts per status, largest first."
+            },
+            "reasonBreakdown": {
+                "title": "Reason breakdown",
+                "description": "RUN_SUMMARY: counts per reason code, largest first."
+            },
+            "duplicatesRemoved": {
+                "title": "Duplicates removed",
+                "description": "RUN_SUMMARY: addresses dropped before verification because they repeated."
+            }
+        }
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "The verdict per address - the columns you sort and delete on.",
+            "transformation": {
+                "fields": [
+                    "email",
+                    "status",
+                    "subStatus",
+                    "score",
+                    "safeToSend",
+                    "reason",
+                    "recordType"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        },
+        "cleaning": {
+            "title": "List cleaning",
+            "description": "Normalisation, duplicates and typo repair.",
+            "transformation": {
+                "fields": [
+                    "email",
+                    "normalizedEmail",
+                    "status",
+                    "isAlias",
+                    "hasTypo",
+                    "suggestedEmail",
+                    "isRoleAccount",
+                    "isFreeProvider",
+                    "isDisposable"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        },
+        "evidence": {
+            "title": "Evidence",
+            "description": "What the DNS and the mail server actually said.",
+            "transformation": {
+                "fields": [
+                    "email",
+                    "domainStatus",
+                    "mxHost",
+                    "smtpChecked",
+                    "smtpCode",
+                    "smtpDeliverable",
+                    "smtpStage",
+                    "isCatchAll",
+                    "smtpMessage",
+                    "checkDurationMs"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

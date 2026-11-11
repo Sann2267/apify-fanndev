@@ -1,0 +1,126 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Article / latest-headline record",
+        "description": "Raw-passthrough dataset envelope. Every record carries _input/_source/_scrapedAt (and _error/_errorDetail on failures). Article-mode records (S1-jsonld+html) resolve a Yoast SEO @graph JSON-LD block for metadata plus the HTML article body, so extra fields beyond those listed here may appear. Latest-mode records (S2-sitemap) carry title/link-style fields from ThePrint's Google News sitemap.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The exact input value (URL, or 'latest') that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which extraction strategy emitted this record (S1-jsonld+html or S2-sitemap)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed extractions -- the error kind (not_found, not_article, http_<code>, or blocked_or_transient)."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "headline": {
+                "title": "Headline",
+                "description": "Article headline, from the JSON-LD Article node (article mode only)."
+            },
+            "description": {
+                "title": "Description",
+                "description": "Short article summary/dek, from the page's meta description (article mode only)."
+            },
+            "articleBody": {
+                "title": "Article body",
+                "description": "Full plain-text article content, reconstructed from the HTML article-body container (article mode only)."
+            },
+            "author": {
+                "title": "Author",
+                "description": "Byline name(s), comma-joined if multiple authors (article mode only)."
+            },
+            "publisher": {
+                "title": "Publisher",
+                "description": "Publisher/organization name, \"ThePrint\" (article mode only)."
+            },
+            "articleSection": {
+                "title": "Section",
+                "description": "Article section/category, as emitted upstream (article mode only)."
+            },
+            "keywords": {
+                "title": "Keywords",
+                "description": "Keyword tags, as emitted upstream -- e.g. \"reuters wire\" or \"PTI wire\" on wire-sourced pieces (article mode only)."
+            },
+            "datePublished": {
+                "title": "Date published",
+                "description": "ISO 8601 publish date (article mode only)."
+            },
+            "dateModified": {
+                "title": "Date modified",
+                "description": "ISO 8601 last-modified date (article mode only)."
+            },
+            "thumbnailUrl": {
+                "title": "Thumbnail URL",
+                "description": "Lead image URL (article mode only)."
+            },
+            "wordCount": {
+                "title": "Word count",
+                "description": "Upstream-computed word count as of scrape time (article mode only)."
+            },
+            "commentCount": {
+                "title": "Comment count",
+                "description": "Upstream comment count as of scrape time (article mode only)."
+            },
+            "title": {
+                "title": "Title",
+                "description": "Headline, from the Google News sitemap (latest mode only)."
+            },
+            "link": {
+                "title": "Link",
+                "description": "Article URL (latest mode only)."
+            },
+            "pubDate": {
+                "title": "Publish date",
+                "description": "ISO 8601 publish timestamp from the news sitemap (latest mode only)."
+            },
+            "image": {
+                "title": "Image",
+                "description": "Lead image URL, from the news sitemap (latest mode only)."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across both article and latest-headline records.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "_source",
+                    "_scrapedAt",
+                    "headline",
+                    "title",
+                    "link",
+                    "datePublished",
+                    "pubDate",
+                    "author",
+                    "keywords",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

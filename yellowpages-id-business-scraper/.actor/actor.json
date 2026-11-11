@@ -1,0 +1,18 @@
+{
+    "actorSpecification": 1,
+    "name": "yellowpages-id-business-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Yellow Pages Indonesia Business & Lead Scraper",
+    "description": "Extract Indonesian business listings from Yellow Pages ID: name, phone, email, website, full address and GPS coordinates. Six modes - keyword search, category listing, company profiles, B2B products, market-density insights per province, and a province/city directory. No API key, no login.",
+    "categories": [
+        "BUSINESS",
+        "LEAD_GENERATION"
+    ],
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

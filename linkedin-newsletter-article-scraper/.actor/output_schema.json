@@ -1,0 +1,66 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "LinkedIn article record",
+        "description": "Dataset envelope (_input / _source / _scrapedAt / recordType) on top of LinkedIn's public long-form article data. One ARTICLE row per article, an optional SUMMARY row for the run, NOTICE rows for surfaces LinkedIn closes to logged-out visitors, and ERROR rows on failure. LinkedIn changes its markup without notice, so unlisted fields pass through rather than failing the run.",
+        "additionalProperties": true,
+        "properties": {
+            "_input": { "type": "string", "title": "Input", "description": "The article URL or author profile that produced this record." },
+            "_source": { "type": "string", "title": "Source surface", "description": "guest-pulse-article, guest-profile-page, or none on NOTICE and ERROR rows." },
+            "_scrapedAt": { "type": "string", "title": "Scraped at", "description": "UTC ISO 8601 timestamp when this record was emitted." },
+            "recordType": { "type": "string", "title": "Record type", "description": "ARTICLE, SUMMARY, NOTICE or ERROR." },
+            "_error": { "type": "string", "title": "Error", "description": "Failure rows only: fetch_failed, auth_required or discovery_failed." },
+            "_errorDetail": { "type": "string", "title": "Error detail", "description": "Free-form diagnostic accompanying _error." },
+            "_notice": { "type": "string", "title": "Notice", "description": "newsletter_series_closed when a /newsletters/ URL was passed, not_an_article when a URL resolved to something else." },
+            "_noticeDetail": { "type": "string", "title": "Notice detail", "description": "What the notice means and what to change." },
+            "articleTitle": { "title": "Title", "description": "The article's title. Note LinkedIn stores this in the JSON-LD 'name' field while 'headline' holds the opening excerpt - the opposite of what those names suggest." },
+            "articleUrl": { "title": "Article URL", "description": "Canonical /pulse/ link with tracking parameters stripped." },
+            "articleSlug": { "title": "Article slug", "description": "The slug out of the URL - a stable key to join on." },
+            "excerpt": { "title": "Excerpt", "description": "The opening lines LinkedIn uses as the article preview." },
+            "articleText": { "title": "Full text", "description": "The complete article body as plain text, with LinkedIn's title, byline and 'Report this article' chrome trimmed off. Omitted when you turn full text off." },
+            "wordCount": { "title": "Word count", "description": "Words in the body - the input to reading time, and a useful axis when asking whether long or short pieces perform better for an author." },
+            "readingTimeMinutes": { "title": "Reading time", "description": "Estimated minutes at 225 words per minute." },
+            "publishedAt": { "title": "Published at", "description": "ISO 8601 publish timestamp." },
+            "modifiedAt": { "title": "Last edited", "description": "ISO 8601 last-edit timestamp, when the author revised the piece after publishing." },
+            "authorName": { "title": "Author", "description": "Who wrote it." },
+            "authorUrl": { "title": "Author profile", "description": "Their LinkedIn profile, tracking parameters stripped." },
+            "authorSlug": { "title": "Author slug", "description": "Their handle - the key to group an author's articles on." },
+            "authorFollowers": { "title": "Author followers", "description": "Follower count at scrape time - the denominator behind engagementPerThousand." },
+            "reactions": { "title": "Reactions", "description": "Total reactions on the article." },
+            "comments": { "title": "Comments", "description": "Total comments on the article." },
+            "engagementPerThousand": { "title": "Reactions per 1,000 followers", "description": "Reactions divided by the author's followers, times a thousand. The figure that makes articles by authors of very different sizes comparable - raw reaction counts only tell you who has the bigger list." },
+            "hashtags": { "title": "Hashtags", "description": "Hashtags used in the body, lowercased." },
+            "externalLinks": { "title": "External links", "description": "URLs linked from the body - useful for seeing who an author cites or promotes." },
+            "coverImage": { "title": "Cover image", "description": "The article's cover image URL." },
+            "isAccessibleForFree": { "title": "Free to read", "description": "LinkedIn's own flag for whether the piece is gated." },
+            "commentSample": { "title": "Comment sample", "description": "When comment sampling is on: the commenters LinkedIn renders on the public page - roughly the first 8 - with name, profile link and comment text. Arrives in the same page load, so it costs no extra request." },
+            "commentSampleSize": { "title": "Comments sampled", "description": "How many comments were captured. Always far below the true 'comments' total: LinkedIn publishes only the first handful to logged-out visitors." },
+            "articlesAnalysed": { "title": "Articles analysed", "description": "SUMMARY row: how many articles this run read." },
+            "medianReactions": { "title": "Median reactions", "description": "SUMMARY row: median reactions across the run - more honest than the mean, which one viral piece distorts." },
+            "avgReactions": { "title": "Average reactions", "description": "SUMMARY row: mean reactions across the run." },
+            "medianWordCount": { "title": "Median word count", "description": "SUMMARY row: typical article length across the run." },
+            "topHashtags": { "title": "Top hashtags", "description": "SUMMARY row: most-used hashtags across everything read - a quick read on which topics an author or field is pushing." },
+            "authors": { "title": "Authors", "description": "SUMMARY row: every author represented in the run." }
+        }
+    },
+    "views": {
+        "articles": {
+            "title": "Articles",
+            "transformation": { "fields": ["articleTitle","authorName","publishedAt","wordCount","readingTimeMinutes","reactions","comments","engagementPerThousand","hashtags","articleUrl"] },
+            "display": {
+                "component": "table",
+                "properties": {
+                    "articleTitle": { "label": "Title" },
+                    "authorName": { "label": "Author" },
+                    "publishedAt": { "label": "Published" },
+                    "wordCount": { "label": "Words" },
+                    "reactions": { "label": "Reactions" },
+                    "engagementPerThousand": { "label": "React/1k followers" },
+                    "articleUrl": { "label": "Article" }
+                }
+            }
+        }
+    }
+}

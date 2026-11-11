@@ -1,0 +1,16 @@
+{
+    "actorSpecification": 1,
+    "name": "expresstribune-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "The Express Tribune Scraper",
+    "description": "Extract full article text or the newest headlines from The Express Tribune (tribune.com.pk), a major Pakistani English-language daily -- no account or API key needed.",
+    "dockerfile": "./Dockerfile",
+    "minMemoryMbytes": 256,
+    "maxMemoryMbytes": 1024,
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

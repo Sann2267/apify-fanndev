@@ -1,0 +1,12 @@
+{
+    "actorOutputSchemaVersion": 1,
+    "title": "noon.com Scraper Results",
+    "properties": {
+        "results": {
+            "type": "string",
+            "title": "Dataset results",
+            "template": "{{links.apiDefaultDatasetUrl}}/items",
+            "description": "Every product, product detail, seller offer, category, facet, noon Minutes product and diagnostic record from this run."
+        }
+    }
+}

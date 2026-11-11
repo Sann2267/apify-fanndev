@@ -1,0 +1,126 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Article / latest-headline record",
+        "description": "Raw-passthrough dataset envelope. Article-mode records (S1-jsonld) are the envelope fields merged with the ENTIRE upstream NewsArticle ld+json object spread verbatim (no field allowlist), so extra schema.org fields beyond those listed here will commonly appear. Latest-mode records (S2-rss, site-wide RSS 2.0 feed) carry title/link-style headline fields instead.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The exact input value (URL, or 'latest') that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which extraction strategy emitted this record (e.g. S1-jsonld, S2-rss)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "@type": {
+                "title": "Schema.org type",
+                "description": "The upstream ld+json node's @type, e.g. NewsArticle/ReportageNewsArticle/Article."
+            },
+            "@context": {
+                "title": "Schema.org context",
+                "description": "The upstream ld+json node's @context, raw passthrough."
+            },
+            "headline": {
+                "title": "Headline",
+                "description": "Article headline, from the ld+json NewsArticle node."
+            },
+            "description": {
+                "title": "Description",
+                "description": "Short article description/dek from ld+json."
+            },
+            "articleBody": {
+                "title": "Article body",
+                "description": "Full plain-text article body, carried inline in the ld+json node. Every sampled article carries isAccessibleForFree:false + a .paywall hasPart marker but articleBody was NOT truncated in testing -- treat as a soft/cosmetic paywall marker, but re-verify periodically since a tightening would not raise an error."
+            },
+            "author": {
+                "title": "Author",
+                "description": "Array of Person objects (raw passthrough) -- unusually rich, includes name/email/jobTitle/description bio fields for LA Times staff writers."
+            },
+            "datePublished": {
+                "title": "Date published",
+                "description": "ISO 8601 publish date from ld+json."
+            },
+            "dateModified": {
+                "title": "Date modified",
+                "description": "ISO 8601 last-modified date from ld+json."
+            },
+            "articleSection": {
+                "title": "Section",
+                "description": "Article section/category from ld+json."
+            },
+            "image": {
+                "title": "Image",
+                "description": "Array of ImageObject entries (multiple crops), raw passthrough from ld+json."
+            },
+            "isAccessibleForFree": {
+                "title": "Accessible for free",
+                "description": "Upstream paywall metering flag -- observed as false on every sampled article even though articleBody was not truncated."
+            },
+            "hasPart": {
+                "title": "Has part (paywall marker)",
+                "description": "Schema.org paywall-signal block ({@type: WebPageElement, isAccessibleForFree: false, cssSelector: '.paywall'}), raw passthrough."
+            },
+            "publisher": {
+                "title": "Publisher",
+                "description": "Publisher organization object, if present in the ld+json node."
+            },
+            "mainEntityOfPage": {
+                "title": "Main entity of page",
+                "description": "Canonical WebPage reference, if present in the ld+json node."
+            },
+            "keywords": {
+                "title": "Keywords",
+                "description": "Keywords, if present in the ld+json node."
+            },
+            "title": {
+                "title": "Title",
+                "description": "Headline text of a latest-mode RSS item."
+            },
+            "link": {
+                "title": "Link",
+                "description": "Article URL from the RSS item."
+            },
+            "guid": {
+                "title": "GUID",
+                "description": "RSS item guid."
+            },
+            "pubDate": {
+                "title": "Publish date",
+                "description": "RSS pubDate string."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across both article and latest-headline records.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "_source",
+                    "_scrapedAt",
+                    "headline",
+                    "title",
+                    "link",
+                    "datePublished",
+                    "pubDate",
+                    "author"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

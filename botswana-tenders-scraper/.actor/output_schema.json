@@ -1,0 +1,101 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Botswana ministry tender record",
+        "description": "Raw-passthrough dataset envelope. Every record carries _ministry/_source/_scrapedAt (plus _error/_errorDetail on failures). Field set differs by ministry -- 'finance' records carry RSS-feed fields, 'health' records carry HTML-table fields.",
+        "properties": {
+            "_ministry": {
+                "type": "string",
+                "title": "Ministry",
+                "description": "Which ministry source produced this record: finance or health."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "S1-mof-procurement-rss (Ministry of Finance), S2-moh-tenders-table (Ministry of Health), or none (error record)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed fetches -- blocked_or_transient."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "title": {
+                "title": "Title",
+                "description": "The tender/notice title (both ministries)."
+            },
+            "article_url": {
+                "title": "Article URL (Ministry of Finance)",
+                "description": "The Ministry of Finance article page wrapping this notice -- in practice carries no text beyond the PDF link already captured in pdf_url."
+            },
+            "category": {
+                "title": "Category (Ministry of Finance)",
+                "description": "Upstream's own RSS category tag -- always \"Procurement\" for this feed."
+            },
+            "pub_date": {
+                "title": "Published date, raw (Ministry of Finance)",
+                "description": "Upstream's own RFC-822 pubDate string, e.g. \"Thu, 03 Oct 2024 23:08:44 +0200\"."
+            },
+            "published_date": {
+                "title": "Published date, ISO UTC (Ministry of Finance)",
+                "description": "pub_date parsed into UTC ISO 8601, or null if it could not be parsed (pub_date is always kept as a fallback)."
+            },
+            "pdf_url": {
+                "title": "Tender document PDF URL",
+                "description": "Direct link to the tender/notice PDF document, present on both ministries' records where available."
+            },
+            "attachment_title": {
+                "title": "Attachment link text (Ministry of Finance)",
+                "description": "The link text of the embedded PDF anchor -- usually identical to title, occasionally with minor casing/spacing differences upstream itself introduced."
+            },
+            "tender_ref": {
+                "title": "Tender reference number (Ministry of Health)",
+                "description": "The ministry's own tender reference code, e.g. \"MTC\\MOHW\\CLS\\SER/10511/0707/2017\"."
+            },
+            "closing_date": {
+                "title": "Closing date (Ministry of Health)",
+                "description": "Bid submission closing date as shown on the page, e.g. \"31 August 2017\" -- free text, not normalized (upstream does not provide a machine-readable date)."
+            },
+            "adjudication_decisions_url": {
+                "title": "Adjudication decisions URL (Ministry of Health)",
+                "description": "A page-level reference link to \"MOH-MTC Tender Adjudication Decisions\" on ppadb.co.bw -- passed through as raw data but NOT fetched by this actor; that domain family timed out on every connection attempt during recon (same family as the central PPRA portal skipped elsewhere in this collection)."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across both ministries.",
+            "transformation": {
+                "fields": [
+                    "_ministry",
+                    "_source",
+                    "_scrapedAt",
+                    "title",
+                    "tender_ref",
+                    "published_date",
+                    "pub_date",
+                    "closing_date",
+                    "pdf_url",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

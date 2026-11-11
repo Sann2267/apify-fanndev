@@ -1,0 +1,17 @@
+{
+    "actorSpecification": 1,
+    "name": "linkedin-competitor-activity-monitor",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "LinkedIn Top Voice & Competitor Activity Monitor",
+    "description": "Profile the content strategy behind any LinkedIn person or company page: how often they post, what format they use, which hashtags they lean on, and which choices actually earn engagement on their audience. No login and no cookie required.",
+    "categories": [
+        "SOCIAL_MEDIA",
+        "BUSINESS"
+    ],
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": { "dataset": "./output_schema.json" },
+    "output": "./actor_output_links.json",
+    "defaultRunOptions": { "build": "latest", "memoryMbytes": 1024, "timeoutSecs": 3600 }
+}

@@ -1,0 +1,12 @@
+{
+    "actorOutputSchemaVersion": 1,
+    "title": "Blibli Homepage Recommendation Tracker Results",
+    "properties": {
+        "results": {
+            "type": "string",
+            "title": "Dataset results",
+            "template": "{{links.apiDefaultDatasetUrl}}/items",
+            "description": "All homepage feed tiles (product recommendations and ad banners) from this run."
+        }
+    }
+}

@@ -1,0 +1,141 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Article / latest-headline record",
+        "description": "Raw-passthrough dataset envelope. Every record carries _input/_source/_scrapedAt (and _error/_errorDetail on failures). Article-mode records carry headline/articleBody-style fields sourced from the site's own NewsArticle JSON-LD; latest-mode records (RSS feed) carry title/link-style fields. Upstream JSON-LD is passed through close to verbatim, so extra schema.org fields beyond those listed here may also appear.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The exact input value (URL, or 'latest') that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which extraction strategy emitted this record (e.g. S1-jsonld, S2-rss)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed extractions -- the error kind (e.g. not_found, unexpected_shape)."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "headline": {
+                "title": "Headline",
+                "description": "Article headline (article mode)."
+            },
+            "description": {
+                "title": "Description",
+                "description": "Short article description/dek (article mode)."
+            },
+            "articleBody": {
+                "title": "Article body",
+                "description": "Full article text, straight from the site's own JSON-LD (article mode only) -- paragraph breaks normalized from the site's raw \\r\\n\\r\\n separators."
+            },
+            "author": {
+                "title": "Author",
+                "description": "Byline name (article mode only)."
+            },
+            "authorUrl": {
+                "title": "Author URL",
+                "description": "Link to the author's profile page on uzdaily.uz (article mode only)."
+            },
+            "publisher": {
+                "title": "Publisher",
+                "description": "Publisher organization name, as emitted by the site's own JSON-LD (article mode only)."
+            },
+            "datePublished": {
+                "title": "Date published",
+                "description": "ISO 8601 publish date (article mode only)."
+            },
+            "dateModified": {
+                "title": "Date modified",
+                "description": "ISO 8601 last-modified date (article mode only)."
+            },
+            "images": {
+                "title": "Images",
+                "description": "Lead image URL(s) (article mode only)."
+            },
+            "articleSection": {
+                "title": "Section",
+                "description": "Site section/category the article was published under (article mode only), e.g. \"Economy\", \"Finance\", \"Uzbekistan\"."
+            },
+            "keywords": {
+                "title": "Keywords",
+                "description": "Comma-separated keyword string, as emitted by the site's own JSON-LD (article mode only)."
+            },
+            "wordCount": {
+                "title": "Word count",
+                "description": "Article word count, as reported by the site's own JSON-LD (article mode only)."
+            },
+            "isAccessibleForFree": {
+                "title": "Free to access",
+                "description": "Whether the article is paywalled, as reported by the site's own JSON-LD (article mode only) -- observed true on every sampled article, no paywall found."
+            },
+            "title": {
+                "title": "Title",
+                "description": "Feed item title (latest mode)."
+            },
+            "link": {
+                "title": "Link",
+                "description": "Article URL (latest mode)."
+            },
+            "teaser": {
+                "title": "Teaser",
+                "description": "Short feed <description> teaser, not the full article body (latest mode)."
+            },
+            "guid": {
+                "title": "GUID",
+                "description": "Feed item's internal article ID (latest mode)."
+            },
+            "category": {
+                "title": "Category",
+                "description": "Feed item's <category> tag (latest mode)."
+            },
+            "thumbnail": {
+                "title": "Thumbnail",
+                "description": "Lead image URL from the feed's <enclosure> element (latest mode)."
+            },
+            "pubDate": {
+                "title": "Publish date",
+                "description": "RFC 822 publish timestamp as given by the feed (latest mode)."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across both article and latest-headline records.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "_source",
+                    "_scrapedAt",
+                    "headline",
+                    "title",
+                    "link",
+                    "datePublished",
+                    "pubDate",
+                    "author",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

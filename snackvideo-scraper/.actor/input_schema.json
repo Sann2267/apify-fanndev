@@ -1,0 +1,118 @@
+{
+    "title": "SnackVideo Scraper",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "mode": {
+            "title": "Mode",
+            "type": "string",
+            "description": "What to scrape. No SnackVideo account or login is used. Each mode reads its own input field below.",
+            "editor": "select",
+            "default": "profile",
+            "prefill": "profile",
+            "enum": ["profile", "video", "hashtag", "search", "trending", "playlist"],
+            "enumTitles": [
+                "Profile - creator stats plus ALL their videos and playlists (uses 'Usernames')",
+                "Video - full details for specific videos (uses 'Video URLs')",
+                "Hashtag - every video under a hashtag, most complete source (uses 'Hashtags')",
+                "Search - videos SnackVideo recommends for a keyword (uses 'Search keywords')",
+                "Trending - the For You feed for the proxy's country (no input needed)",
+                "Playlist - every video in a creator playlist (uses 'Playlist URLs')"
+            ]
+        },
+        "usernames": {
+            "title": "Usernames",
+            "type": "array",
+            "description": "For mode 'profile'. A handle (AgathisDammaraa41198), @handle, or a profile URL such as https://www.snackvideo.com/@AgathisDammaraa41198.",
+            "editor": "stringList",
+            "prefill": ["https://www.snackvideo.com/@AgathisDammaraa41198"]
+        },
+        "videoUrls": {
+            "title": "Video URLs",
+            "type": "array",
+            "description": "For mode 'video'. A video URL (https://www.snackvideo.com/@user/video/5256413826759439232), a share link, or the numeric video ID.",
+            "editor": "stringList",
+            "prefill": ["https://www.snackvideo.com/@AgathisDammaraa41198/video/5256413826759439232"]
+        },
+        "hashtags": {
+            "title": "Hashtags",
+            "type": "array",
+            "description": "For mode 'hashtag'. With or without '#', or a https://www.snackvideo.com/topic/... URL.",
+            "editor": "stringList",
+            "prefill": ["kucing"]
+        },
+        "searchKeywords": {
+            "title": "Search keywords",
+            "type": "array",
+            "description": "For mode 'search'. NOTE: SnackVideo's search is a recommendation feed, not an exact index - results change on every run and only some mention the keyword. Each record carries keywordMatched; switch on 'Only keyword matches' to keep just those. For exhaustive results on a topic use mode 'hashtag'.",
+            "editor": "stringList",
+            "prefill": ["kucing lucu"]
+        },
+        "playlistUrls": {
+            "title": "Playlist URLs",
+            "type": "array",
+            "description": "For mode 'playlist'. https://www.snackvideo.com/@user/playlist/<id> or the numeric playlist ID. Profile mode also outputs a creator's playlists with their URLs.",
+            "editor": "stringList",
+            "prefill": ["https://www.snackvideo.com/@AgathisDammaraa41198/playlist/164068021363540803"]
+        },
+        "maxItems": {
+            "title": "Max videos per input",
+            "type": "integer",
+            "description": "Maximum videos to save for each username, hashtag, keyword, playlist (or for the trending feed).",
+            "default": 100,
+            "prefill": 50,
+            "minimum": 1,
+            "maximum": 20000
+        },
+        "includeVideos": {
+            "title": "Profile: include videos",
+            "type": "boolean",
+            "description": "Profile mode: also save the creator's videos (newest first, up to 'Max videos per input'). Turn off for profile stats only.",
+            "default": true,
+            "sectionCaption": "Options"
+        },
+        "includePlaylists": {
+            "title": "Profile: include playlists",
+            "type": "boolean",
+            "description": "Profile mode: also save the creator's playlists (SnackVideo shows up to 20 per creator).",
+            "default": true
+        },
+        "onlyKeywordMatches": {
+            "title": "Search: only keyword matches",
+            "type": "boolean",
+            "description": "Search mode: keep only videos whose caption contains every word of the keyword.",
+            "default": false
+        },
+        "includeStreamManifest": {
+            "title": "Include stream manifest",
+            "type": "boolean",
+            "description": "Keep the raw per-quality stream list (transcode_manifest_info). Large and its URLs expire; playUrl already gives a playable MP4.",
+            "default": false
+        },
+        "maxConcurrency": {
+            "title": "Max concurrency",
+            "type": "integer",
+            "description": "How many inputs are processed in parallel.",
+            "default": 3,
+            "minimum": 1,
+            "maximum": 10
+        },
+        "maxRetries": {
+            "title": "Max retries per request",
+            "type": "integer",
+            "description": "Retries with exponential backoff, rotating IP and TLS fingerprint, before an input is marked failed.",
+            "default": 6,
+            "minimum": 1,
+            "maximum": 15
+        },
+        "proxyConfiguration": {
+            "title": "Proxy",
+            "type": "object",
+            "description": "SnackVideo does not block unproxied requests. The proxy country decides WHICH regional content the Trending and Search feeds return (e.g. ID = Indonesia, PK = Pakistan, IN = India).",
+            "editor": "proxy",
+            "default": {"useApifyProxy": true, "apifyProxyGroups": ["RESIDENTIAL"]},
+            "prefill": {"useApifyProxy": true, "apifyProxyGroups": ["RESIDENTIAL"]}
+        }
+    },
+    "required": ["mode"]
+}

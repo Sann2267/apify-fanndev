@@ -1,0 +1,22 @@
+{
+    "actorSpecification": 1,
+    "name": "blibli-keyword-suggester",
+    "version": "0.1",
+    "buildTag": "latest",
+    "title": "Blibli Search Keyword Autocomplete & Suggester",
+    "description": "Harvest the keyword suggestions Blibli's search box shows shoppers, expanded far beyond the visible list, each with a measured count of competing products. For merchants optimising product titles and marketplace SEO. No login needed.",
+    "categories": ["ECOMMERCE"],
+    "minMemoryMbytes": 256,
+    "maxMemoryMbytes": 4096,
+    "defaultRunOptions": {
+        "build": "latest",
+        "memoryMbytes": 1024,
+        "timeoutSecs": 3600
+    },
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

@@ -1,0 +1,229 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Facebook page validation record",
+        "description": "Dataset envelope (_input / _source / _scrapedAt / recordType) on top of one verdict per slug. One PAGE row per slug checked, one RUN_SUMMARY row per run, ERROR rows on failure. Facebook changes its payload without notice, so unlisted fields pass through rather than failing the run.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The slug this record answers for."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source",
+                "description": "Always public-about-tab: the logged-out /{slug}/about page."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "title": "Checked at",
+                "description": "UTC ISO 8601 timestamp when this record was emitted."
+            },
+            "recordType": {
+                "type": "string",
+                "title": "Record type",
+                "description": "PAGE, RUN_SUMMARY or ERROR."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Failure rows only: fetch_failed or unexpected_error."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic accompanying _error."
+            },
+            "slug": {
+                "title": "Slug",
+                "description": "The Facebook vanity slug, normalised out of whatever form was supplied."
+            },
+            "profileUrl": {
+                "title": "Profile URL",
+                "description": "Canonical https://www.facebook.com/{slug} URL."
+            },
+            "exists": {
+                "title": "Exists",
+                "description": "Whether the slug resolves to a real page. Facebook answers HTTP 200 for missing pages, so this is derived from the payload tier, not the status code."
+            },
+            "status": {
+                "title": "Status",
+                "description": "ACTIVE or NOT_FOUND."
+            },
+            "payloadTier": {
+                "title": "Payload tier",
+                "description": "HOLLOW (~330 KB, no such page), REDUCED (~0.7-1.4 MB, page exists but Facebook withheld the post feed) or FULL (>=1.5 MB, header plus roughly ten posts)."
+            },
+            "postsAreTrustworthy": {
+                "title": "Posts trustworthy",
+                "description": "True only on a FULL payload. On REDUCED, postsInPayload is 0 even for pages that post daily, so a zero there means 'not sent', not 'not posting'."
+            },
+            "payloadBytes": {
+                "title": "Payload bytes",
+                "description": "Size of the HTML Facebook returned, which is what the tier is derived from."
+            },
+            "name": {
+                "title": "Page name",
+                "description": "The page's real display name. Null when the slug does not resolve."
+            },
+            "pageId": {
+                "title": "Page ID",
+                "description": "Numeric Facebook page id, decoded from the base64 profile-section id."
+            },
+            "expectedBrand": {
+                "title": "Expected brand",
+                "description": "The brand the caller said this slug should belong to; null when none was supplied."
+            },
+            "brandMatch": {
+                "title": "Brand match",
+                "description": "EXACT, STRONG, WEAK, MISMATCH, or UNKNOWN when no expected brand was given. MISMATCH means the slug is real but belongs to somebody else."
+            },
+            "brandMatchScore": {
+                "title": "Brand match score",
+                "description": "Share of the expected brand's meaningful tokens found in the page name, 0 to 1."
+            },
+            "followers": {
+                "title": "Followers",
+                "description": "Follower count as an integer. Facebook abbreviates large counts, so 39M is reported as 39000000 and is approximate; followersLabel keeps what was actually rendered."
+            },
+            "followersLabel": {
+                "title": "Followers label",
+                "description": "The follower count exactly as Facebook rendered it, e.g. '39M followers'."
+            },
+            "following": {
+                "title": "Following",
+                "description": "How many profiles this page follows."
+            },
+            "primaryCategory": {
+                "title": "Primary category",
+                "description": "First category Facebook lists for the page."
+            },
+            "categories": {
+                "title": "Categories",
+                "description": "All categories Facebook lists."
+            },
+            "phones": {
+                "title": "Phones",
+                "description": "Public phone numbers from the contact section."
+            },
+            "websites": {
+                "title": "Websites",
+                "description": "Public website links, unwrapped from Facebook's l.php redirect."
+            },
+            "emails": {
+                "title": "Emails",
+                "description": "Public email addresses from the contact section."
+            },
+            "addresses": {
+                "title": "Addresses",
+                "description": "Public addresses from the contact section."
+            },
+            "postsInPayload": {
+                "title": "Posts in payload",
+                "description": "How many feed stories this response carried. Read it together with postsAreTrustworthy."
+            },
+            "slugsChecked": {
+                "title": "Slugs checked",
+                "description": "RUN_SUMMARY only: how many slugs the run looked at."
+            },
+            "existing": {
+                "title": "Existing",
+                "description": "RUN_SUMMARY only: how many resolved to a real page."
+            },
+            "notFound": {
+                "title": "Not found",
+                "description": "RUN_SUMMARY only: how many did not resolve."
+            },
+            "brandChecked": {
+                "title": "Brand checked",
+                "description": "RUN_SUMMARY only: how many slugs had an expected brand to compare against."
+            },
+            "brandMismatch": {
+                "title": "Brand mismatches",
+                "description": "RUN_SUMMARY only: real pages that belong to a different brand than expected."
+            },
+            "brandWeakMatch": {
+                "title": "Weak brand matches",
+                "description": "RUN_SUMMARY only: pages that matched the expected brand only partially and deserve a human look."
+            },
+            "mismatchedSlugs": {
+                "title": "Mismatched slugs",
+                "description": "RUN_SUMMARY only: up to 50 slugs flagged as belonging to someone else."
+            },
+            "reducedPayloads": {
+                "title": "Reduced payloads",
+                "description": "RUN_SUMMARY only: existing pages whose post feed Facebook withheld."
+            },
+            "fullPayloads": {
+                "title": "Full payloads",
+                "description": "RUN_SUMMARY only: existing pages that came back complete."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "One row per slug: does it exist, whose page is it, how big is it.",
+            "transformation": {
+                "fields": [
+                    "slug",
+                    "exists",
+                    "name",
+                    "brandMatch",
+                    "followers",
+                    "primaryCategory",
+                    "payloadTier",
+                    "profileUrl",
+                    "recordType",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        },
+        "brandCheck": {
+            "title": "Brand check",
+            "description": "Whether each slug actually belongs to the brand you expected.",
+            "transformation": {
+                "fields": [
+                    "slug",
+                    "expectedBrand",
+                    "name",
+                    "brandMatch",
+                    "brandMatchScore",
+                    "followers",
+                    "primaryCategory",
+                    "pageId",
+                    "profileUrl"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        },
+        "contacts": {
+            "title": "Contacts",
+            "description": "Public contact details for the pages that exist.",
+            "transformation": {
+                "fields": [
+                    "slug",
+                    "name",
+                    "followers",
+                    "primaryCategory",
+                    "phones",
+                    "websites",
+                    "emails",
+                    "addresses",
+                    "profileUrl"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

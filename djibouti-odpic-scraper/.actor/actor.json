@@ -1,0 +1,14 @@
+{
+    "actorSpecification": 1,
+    "name": "djibouti-odpic-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Djibouti ODPIC Business Registry Scraper",
+    "description": "Search or browse Djibouti's official company/business registry (ODPIC's Registre du Commerce et des Societes) -- registration and filing dates, file number, owner, address, and declared capital. No account or API key needed.",
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

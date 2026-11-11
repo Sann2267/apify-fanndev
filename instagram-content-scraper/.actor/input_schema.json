@@ -1,0 +1,74 @@
+{
+    "title": "Instagram Public Content Scraper",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "mode": {
+            "title": "Mode",
+            "type": "string",
+            "description": "Which Instagram surface to scrape. 'profile' = account details, bio links and highlight titles. 'posts' = the profile grid (fast, but Instagram does not publish like/comment counts on this surface). 'reels' = the reels tab, which DOES carry like, comment and play counts. 'post_detail' = one post or reel with full engagement plus the comments Instagram serves logged-out viewers. 'location' = a place's page: its address and coordinates plus the media posted there, with full engagement.",
+            "editor": "select",
+            "default": "profile",
+            "enum": ["profile", "posts", "reels", "post_detail", "location"],
+            "enumTitles": [
+                "profile - account details & bio links",
+                "posts - profile grid (no engagement counts)",
+                "reels - reels tab (with play/like/comment counts)",
+                "post_detail - single post + comments",
+                "location - place info + media posted there"
+            ]
+        },
+        "targets": {
+            "title": "Targets",
+            "type": "array",
+            "description": "What to scrape, matched to the mode. For profile/posts/reels: usernames, @handles or profile URLs (e.g. \"nasa\", \"https://www.instagram.com/nasa/\"). For post_detail: post or reel URLs or bare shortcodes (e.g. \"https://www.instagram.com/p/DcOX3hWFiey/\"). For location: a numeric location id or an /explore/locations/ URL (e.g. \"212988663\").",
+            "editor": "stringList",
+            "prefill": ["nasa"],
+            "example": ["nasa", "natgeo"]
+        },
+        "maxItemsPerTarget": {
+            "title": "Max items per target",
+            "type": "integer",
+            "description": "Cap on media rows per target for the posts, reels and location modes. Instagram serves 12 media per page for posts and reels, so 60 is five pages. Ignored by the profile and post_detail modes, which always produce exactly one row per target. The location mode cannot paginate at all (see the README), so values above roughly 63 have no effect there.",
+            "default": 60,
+            "minimum": 1,
+            "maximum": 5000,
+            "unit": "items"
+        },
+        "includeComments": {
+            "title": "Include comments (post_detail only)",
+            "type": "boolean",
+            "description": "Attach the comments Instagram server-renders for logged-out viewers to each post_detail row. This is roughly the first 13 comments regardless of how many the post has - Instagram's comment pagination endpoint requires a login, so deeper comment scraping is not possible anonymously. Costs no extra request, since the comments arrive with the page.",
+            "default": true
+        },
+        "locationTab": {
+            "title": "Location tab (location only)",
+            "type": "string",
+            "description": "Which tab of a location page to read. 'recent' returns the most media (about 63 in testing) and is the better choice for monitoring. 'ranked' is what Instagram server-renders by default and returns fewer (about 27), ordered by its own popularity ranking, and saves one request.",
+            "editor": "select",
+            "default": "recent",
+            "enum": ["recent", "ranked"],
+            "enumTitles": ["recent - newest media, larger page", "ranked - Instagram's top media, smaller page"]
+        },
+        "delaySeconds": {
+            "title": "Delay between targets",
+            "type": "integer",
+            "description": "Seconds to pause between targets. Instagram throttles anonymous traffic per IP and answers with a login wall rather than an HTTP 429, so pacing keeps a run alive considerably longer than hammering does. Lower this only when running behind rotating residential proxy.",
+            "default": 2,
+            "minimum": 0,
+            "maximum": 60,
+            "unit": "seconds"
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "description": "Proxy settings. Residential proxy is strongly recommended: Instagram rate-limits anonymous traffic by IP, and datacenter ranges are throttled far sooner. A run without a proxy works for a handful of targets and then starts collecting login walls.",
+            "editor": "proxy",
+            "default": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            }
+        }
+    },
+    "required": ["targets"]
+}

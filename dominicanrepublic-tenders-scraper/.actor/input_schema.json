@@ -1,0 +1,100 @@
+{
+    "title": "Dominican Republic Government Tenders Scraper (DGCP)",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "mode": {
+            "title": "Mode",
+            "type": "string",
+            "editor": "select",
+            "description": "\"List\" browses/filters DGCP's public /procesos API (tender/procurement processes). \"Detail\" fetches one or more specific processes by code, bundled with their contracts, offers received, and requested line items.",
+            "enum": ["list", "detail"],
+            "enumTitles": ["List (browse/filter processes)", "Detail (fetch specific process codes)"],
+            "default": "list",
+            "prefill": "list"
+        },
+        "estado": {
+            "title": "Status filter (mode=list only, optional)",
+            "type": "string",
+            "editor": "textfield",
+            "description": "Optional exact-match filter on process status. Observed values (DGCP's own Spanish text, not an exhaustive list): 'Proceso publicado' (open for bids), 'Sobres abiertos o aperturados', 'Proceso adjudicado y celebrado' (awarded), 'Proceso con etapa cerrada', 'Proceso desierto' (no bids), 'Cancelado'. Leave blank to include all statuses.",
+            "prefill": "Proceso publicado"
+        },
+        "modalidad": {
+            "title": "Procurement modality filter (mode=list only, optional)",
+            "type": "string",
+            "editor": "textfield",
+            "description": "Optional exact-match filter on procurement modality. Observed values: 'Comparacion de Precios', 'Compras por Debajo del Umbral', 'Contratacion Menor', 'Licitacion Publica Abreviada', 'Licitacion Publica Nacional', 'Procesos de Excepcion'. Leave blank to include all modalities."
+        },
+        "unidadCompra": {
+            "title": "Buyer unit code filter (mode=list only, optional)",
+            "type": "integer",
+            "description": "Optional filter to a specific purchasing government institution's internal DGCP code (codigo_unidad_compra). Leave blank to include all buyers."
+        },
+        "startDate": {
+            "title": "Start date (mode=list only, optional)",
+            "type": "string",
+            "editor": "textfield",
+            "description": "Optional publish-date range filter, inclusive. Format YYYY-MM-DD.",
+            "prefill": ""
+        },
+        "endDate": {
+            "title": "End date (mode=list only, optional)",
+            "type": "string",
+            "editor": "textfield",
+            "description": "Optional publish-date range filter, inclusive. Format YYYY-MM-DD.",
+            "prefill": ""
+        },
+        "procesoCode": {
+            "title": "Process code (mode=list: optional exact filter; mode=detail: single code)",
+            "type": "string",
+            "editor": "textfield",
+            "description": "In mode=list, an optional exact-match filter on a single process code (codigo_proceso). In mode=detail, a single process code to fetch full detail for -- combine with procesoCodes for multiple.",
+            "prefill": "SUPERATE-CCC-CP-2026-0012"
+        },
+        "maxResults": {
+            "title": "Max results (mode=list only)",
+            "type": "integer",
+            "description": "Caps how many records this run returns. The API is paged internally (max 1000 rows/page), so this actor makes as many requests as needed up to this cap or until no further pages are available.",
+            "default": 25,
+            "minimum": 1,
+            "maximum": 2000,
+            "prefill": 25
+        },
+        "fetchDetail": {
+            "title": "Fetch full detail for each list row (mode=list only)",
+            "type": "boolean",
+            "description": "When enabled, each list row is enriched with that process's contracts, offers received, and requested line items -- up to 3 extra requests per row, so runs take longer.",
+            "default": false,
+            "prefill": false
+        },
+        "procesoCodes": {
+            "title": "Process codes (mode=detail only)",
+            "type": "array",
+            "editor": "stringList",
+            "description": "Multiple process codes to fetch full detail for in one run. Find codes from a 'list' mode run's codigo_proceso field."
+        },
+        "maxConcurrency": {
+            "title": "Max concurrent workers (mode=detail only)",
+            "type": "integer",
+            "description": "How many process code lookups to run in parallel.",
+            "default": 3,
+            "minimum": 1,
+            "maximum": 5,
+            "prefill": 3
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "editor": "proxy",
+            "description": "Apify Proxy configuration. This target answered cleanly on a plain datacenter-class connection during recon -- no proxy is required, but Residential is offered for reliability on longer/bulk runs.",
+            "default": {
+                "useApifyProxy": true
+            },
+            "prefill": {
+                "useApifyProxy": true
+            }
+        }
+    },
+    "required": ["mode"]
+}

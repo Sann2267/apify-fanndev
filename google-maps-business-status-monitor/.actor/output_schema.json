@@ -1,0 +1,286 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Google Maps business status record",
+        "description": "Dataset envelope (_input / _source / _scrapedAt / recordType) on top of Google's listing data plus a Google Business Profile health assessment. One BUSINESS row per listing, one AREA_SUMMARY row per run, ERROR rows on failure. Google adds and removes fields without notice, so unlisted fields pass through rather than failing the run.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The query or identifier that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "S1-tbm-map-search, S2-preview-place, or none on failure rows."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was emitted."
+            },
+            "recordType": {
+                "type": "string",
+                "title": "Record type",
+                "description": "BUSINESS, AREA_SUMMARY or ERROR."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Failure rows only: search_failed, unresolvable_input, detail_failed or no_place_data."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic accompanying _error."
+            },
+            "_searchQuery": {
+                "title": "Search query",
+                "description": "The query this business came from; null for directly supplied places."
+            },
+            "name": {
+                "title": "Business name",
+                "description": "Business name as shown on Google Maps."
+            },
+            "primaryCategory": {
+                "title": "Primary category",
+                "description": "First category Google assigns."
+            },
+            "categories": {
+                "title": "Categories",
+                "description": "All categories Google assigns."
+            },
+            "address": {
+                "title": "Address",
+                "description": "Single-line formatted address."
+            },
+            "latitude": {
+                "title": "Latitude",
+                "description": "Real GPS latitude."
+            },
+            "longitude": {
+                "title": "Longitude",
+                "description": "Real GPS longitude."
+            },
+            "phone": {
+                "title": "Phone",
+                "description": "Phone number on the listing, when present."
+            },
+            "phoneE164": {
+                "title": "Phone (E.164)",
+                "description": "Dial-ready international form."
+            },
+            "website": {
+                "title": "Website",
+                "description": "Website on the listing. Null is itself the sales signal."
+            },
+            "websiteDomain": {
+                "title": "Website domain",
+                "description": "Bare domain of the website."
+            },
+            "openingHours": {
+                "title": "Opening hours",
+                "description": "Weekly schedule where Google supplied it."
+            },
+            "openNow": {
+                "title": "Open now",
+                "description": "Google's status line at scrape time."
+            },
+            "rating": {
+                "title": "Rating",
+                "description": "Average star rating."
+            },
+            "timezone": {
+                "title": "Timezone",
+                "description": "IANA timezone of the business."
+            },
+            "placeId": {
+                "title": "Place ID",
+                "description": "Google Place ID (ChIJ...)."
+            },
+            "featureId": {
+                "title": "Feature ID",
+                "description": "Google internal feature id, 0x...:0x..."
+            },
+            "googleMapsUrl": {
+                "title": "Google Maps URL",
+                "description": "Canonical Maps link for the business."
+            },
+            "claimStatus": {
+                "title": "Claim status",
+                "description": "'unclaimed' or 'claimed'. Unclaimed means Google still offers an 'Own this business?' action, i.e. no owner has taken the profile."
+            },
+            "isUnclaimed": {
+                "title": "Is unclaimed",
+                "description": "Boolean form of claimStatus - the primary prospecting filter."
+            },
+            "businessStatus": {
+                "title": "Business status",
+                "description": "operational, temporarily_closed or permanently_closed. Closure wording only appears on detail records, and Google excludes closed businesses from search."
+            },
+            "isOperational": {
+                "title": "Is operational",
+                "description": "True when the listing is not marked closed."
+            },
+            "hasWebsite": {
+                "title": "Has website",
+                "description": "Whether a website is listed."
+            },
+            "hasPhone": {
+                "title": "Has phone",
+                "description": "Whether a phone number is listed."
+            },
+            "hasOpeningHours": {
+                "title": "Has opening hours",
+                "description": "Whether any opening hours are listed."
+            },
+            "reviewsCount": {
+                "title": "Reviews count",
+                "description": "Total Google reviews - a thin count signals a neglected profile."
+            },
+            "opportunityScore": {
+                "title": "Opportunity score",
+                "description": "0-100. Unclaimed 40, no website 25, no phone 10, no hours 10, few reviews 10, low rating 5. Forced to 0 for permanently closed listings, which are never prospects."
+            },
+            "opportunityIssues": {
+                "title": "Opportunity issues",
+                "description": "The specific problems found, e.g. unclaimed, no_website, no_phone, few_reviews."
+            },
+            "issueCount": {
+                "title": "Issue count",
+                "description": "How many issues this listing has."
+            },
+            "verifiedWithPlaceDetails": {
+                "title": "Verified with place details",
+                "description": "Whether this assessment used the richer detail record rather than the search entry alone."
+            },
+            "area": {
+                "title": "Area",
+                "description": "AREA_SUMMARY rows: the geographic filter the sweep covered."
+            },
+            "queries": {
+                "title": "Queries",
+                "description": "AREA_SUMMARY rows: the business types swept."
+            },
+            "businessesAssessed": {
+                "title": "Businesses assessed",
+                "description": "AREA_SUMMARY rows: how many listings the summary covers."
+            },
+            "unclaimed": {
+                "title": "Unclaimed count",
+                "description": "AREA_SUMMARY rows: unclaimed listings in the area."
+            },
+            "unclaimedPercent": {
+                "title": "Unclaimed %",
+                "description": "AREA_SUMMARY rows: share of listings that are unclaimed - the market-opportunity headline."
+            },
+            "withoutWebsite": {
+                "title": "Without website count",
+                "description": "AREA_SUMMARY rows: listings with no website."
+            },
+            "withoutWebsitePercent": {
+                "title": "Without website %",
+                "description": "AREA_SUMMARY rows: share with no website."
+            },
+            "withoutPhone": {
+                "title": "Without phone count",
+                "description": "AREA_SUMMARY rows: listings with no phone number."
+            },
+            "unclaimedAndNoWebsite": {
+                "title": "Unclaimed and no website",
+                "description": "AREA_SUMMARY rows: listings failing both - the strongest prospects."
+            },
+            "unclaimedAndNoWebsitePercent": {
+                "title": "Unclaimed and no website %",
+                "description": "AREA_SUMMARY rows: share failing both."
+            },
+            "permanentlyClosed": {
+                "title": "Permanently closed count",
+                "description": "AREA_SUMMARY rows: listings marked permanently closed."
+            },
+            "temporarilyClosed": {
+                "title": "Temporarily closed count",
+                "description": "AREA_SUMMARY rows: listings marked temporarily closed."
+            },
+            "averageOpportunityScore": {
+                "title": "Average opportunity score",
+                "description": "AREA_SUMMARY rows: mean score across the area."
+            },
+            "highOpportunityCount": {
+                "title": "High-opportunity count",
+                "description": "AREA_SUMMARY rows: listings scoring 65 or more."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns for scanning an audit.",
+            "transformation": {
+                "fields": [
+                    "name",
+                    "primaryCategory",
+                    "claimStatus",
+                    "hasWebsite",
+                    "hasPhone",
+                    "businessStatus",
+                    "opportunityScore",
+                    "reviewsCount",
+                    "address",
+                    "recordType",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        },
+        "prospects": {
+            "title": "Sales prospects",
+            "description": "Highest-opportunity listings with the contact details you have.",
+            "transformation": {
+                "fields": [
+                    "name",
+                    "primaryCategory",
+                    "opportunityScore",
+                    "opportunityIssues",
+                    "claimStatus",
+                    "hasWebsite",
+                    "website",
+                    "phone",
+                    "address",
+                    "rating",
+                    "reviewsCount",
+                    "googleMapsUrl"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        },
+        "status": {
+            "title": "Status & verification",
+            "description": "Claim and closure status, and how it was established.",
+            "transformation": {
+                "fields": [
+                    "name",
+                    "claimStatus",
+                    "isUnclaimed",
+                    "businessStatus",
+                    "isOperational",
+                    "openNow",
+                    "hasOpeningHours",
+                    "verifiedWithPlaceDetails",
+                    "placeId",
+                    "featureId"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

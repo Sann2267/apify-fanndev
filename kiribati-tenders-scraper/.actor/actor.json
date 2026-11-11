@@ -1,0 +1,14 @@
+{
+    "actorSpecification": 1,
+    "name": "kiribati-tenders-scraper",
+    "version": "0.1",
+    "buildTag": "latest",
+    "title": "Kiribati Government Tenders Scraper (Central Procurement Unit)",
+    "description": "Scrapes Kiribati's Central Procurement Unit tender list for public procurement notices: reference number, procuring entity, description, open/close dates, and detail page link. Covers open and historical tenders back to 2021. No login needed.",
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

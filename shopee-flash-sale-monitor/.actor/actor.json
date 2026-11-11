@@ -1,0 +1,18 @@
+{
+    "actorSpecification": 1,
+    "name": "shopee-flash-sale-monitor",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Shopee Flash Sale & Price Drop Monitor",
+    "description": "Track every Shopee Flash Sale across 11 country sites. Returns the session calendar plus each item's flash price, original price, saving, discount percent, remaining stock and units sold - as plain numbers, no currency symbols. Schedule it and diff on itemId. No login.",
+    "categories": [
+        "ECOMMERCE",
+        "BUSINESS"
+    ],
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

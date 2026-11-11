@@ -1,0 +1,65 @@
+{
+    "title": "Ethiopia Government Tenders Scraper",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "mode": {
+            "title": "Mode",
+            "type": "string",
+            "editor": "select",
+            "enum": ["latest", "list", "detail"],
+            "enumTitles": [
+                "Latest procurement lots (most recently published, newest first)",
+                "Full procurement lot register (bulk browse, list-level fields)",
+                "Detail lookup (specific lot ID(s) -- quantities, price, specs, milestones)"
+            ],
+            "description": "'latest' returns the most recently published procurement plan lots across all agencies. 'list' paginates the full register (29,000+ records) -- optionally scoped to one fiscal year. 'detail' fetches item-level detail for one or more specific lot IDs.",
+            "default": "latest",
+            "prefill": "latest"
+        },
+        "maxItems": {
+            "title": "Max items",
+            "type": "integer",
+            "description": "Applies to 'latest' and 'list' modes. Records are fetched 50 at a time -- e.g. 200 fetches 4 pages.",
+            "default": 20,
+            "minimum": 1,
+            "maximum": 5000,
+            "prefill": 20
+        },
+        "fiscalYearId": {
+            "title": "Fiscal year ID (optional)",
+            "type": "string",
+            "description": "Optional. Restricts 'latest'/'list' to one Ethiopian fiscal year (July 8 - July 7), by its internal ID. Example: \"00535025-fa1b-4ec8-a69e-1622639235ff\" is the current fiscal year (ET-FY-2019, i.e. Gregorian 2026-07-08 to 2027-07-07). Leave blank to include all fiscal years.",
+            "editor": "textfield"
+        },
+        "lotIds": {
+            "title": "Procurement lot IDs",
+            "type": "array",
+            "editor": "stringList",
+            "description": "Mode 'detail' only. Lot ID(s) from the 'id' field of a 'latest'/'list' record, e.g. \"29208ca2-a834-4bb5-80cf-95d2dc62a057\".",
+            "prefill": ["29208ca2-a834-4bb5-80cf-95d2dc62a057"]
+        },
+        "maxConcurrency": {
+            "title": "Max concurrent workers",
+            "type": "integer",
+            "description": "Mode 'detail' only -- how many lot lookups to run in parallel.",
+            "default": 4,
+            "minimum": 1,
+            "maximum": 16,
+            "prefill": 4
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "editor": "proxy",
+            "description": "Apify Proxy configuration. Off by default -- no WAF/CAPTCHA was found on this target (confirmed across multiple TLS/browser profiles), so a direct connection works reliably.",
+            "default": {
+                "useApifyProxy": false
+            },
+            "prefill": {
+                "useApifyProxy": false
+            }
+        }
+    },
+    "required": []
+}

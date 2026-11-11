@@ -1,0 +1,83 @@
+{
+    "title": "Indonesia Researcher Index Scraper (SINTA)",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "mode": {
+            "title": "Mode",
+            "type": "string",
+            "editor": "select",
+            "description": "\"authors\" lists or searches researchers. \"author\" fetches a full researcher profile with per-source publication metrics. \"affiliations\" lists institutions with their aggregate scores.",
+            "enum": ["authors", "author", "affiliations"],
+            "enumTitles": [
+                "Researchers (browse or search)",
+                "Researcher profile (by SINTA ID)",
+                "Affiliations (institutions)"
+            ],
+            "default": "authors",
+            "prefill": "authors"
+        },
+        "query": {
+            "title": "Search query",
+            "type": "string",
+            "editor": "textfield",
+            "description": "\"authors\" mode: free-text search over researcher names. Leave blank to walk the full national index (335,000+ researchers, ranked by SINTA score).",
+            "prefill": "zainul"
+        },
+        "enrichProfiles": {
+            "title": "Also fetch full profiles",
+            "type": "boolean",
+            "editor": "checkbox",
+            "description": "\"authors\" mode: after listing, fetch each researcher's own profile too -- adds affiliation scores and the full Scopus / Google Scholar / Web of Science publication table. Costs one extra request per researcher.",
+            "default": false
+        },
+        "sintaId": {
+            "title": "SINTA ID or profile URL",
+            "type": "string",
+            "editor": "textfield",
+            "description": "\"author\" mode: a numeric SINTA ID, or a full profile address.",
+            "prefill": "5980682"
+        },
+        "sintaIds": {
+            "title": "SINTA IDs",
+            "type": "array",
+            "editor": "stringList",
+            "description": "\"author\" mode: several researchers to fetch in one run."
+        },
+        "maxItems": {
+            "title": "Max items",
+            "type": "integer",
+            "editor": "number",
+            "description": "\"authors\" / \"affiliations\" mode: how many records to collect. Listing pages hold 10 each and are followed automatically. The index held 335,591 researchers and 5,567 affiliations at build time.",
+            "default": 100,
+            "minimum": 1,
+            "maximum": 50000,
+            "prefill": 100
+        },
+        "maxConcurrency": {
+            "title": "Max concurrent workers",
+            "type": "integer",
+            "editor": "number",
+            "description": "How many profiles to fetch in parallel (\"author\" mode, and \"authors\" mode when full profiles are enabled).",
+            "default": 4,
+            "minimum": 1,
+            "maximum": 16,
+            "prefill": 4
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "editor": "proxy",
+            "description": "Apify Proxy configuration. Residential is on by default for stable results on long paginated runs against a government host.",
+            "default": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            },
+            "prefill": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            }
+        }
+    },
+    "required": ["mode"]
+}

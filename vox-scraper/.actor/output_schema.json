@@ -1,0 +1,128 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Article / latest-headline record",
+        "description": "Raw-passthrough dataset envelope. Every record carries _input/_source/_scrapedAt (failed URLs are not written to the dataset -- they are reported in the ERRORS record of the run's key-value store). Article-mode records (S1-jsonld) carry the article page's NewsArticle JSON-LD block spread close to verbatim; latest-mode records (S2-atom, from Vox's site-wide Atom feed) carry title/link-style fields. Extra schema.org fields beyond those listed here may also appear since upstream JSON-LD is not filtered.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The exact input value (article URL, or 'latest') that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which extraction strategy emitted this record (S1-jsonld for articles, S2-atom for latest headlines, or 'none' on failure)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "headline": {
+                "title": "Headline",
+                "description": "Article headline (raw passthrough from the page's NewsArticle JSON-LD)."
+            },
+            "description": {
+                "title": "Description",
+                "description": "Short article description/dek (article-mode), or the Atom entry's HTML-escaped teaser summary (latest-mode)."
+            },
+            "articleBody": {
+                "title": "Article body",
+                "description": "Full plain-text article body, as emitted directly in the JSON-LD block (confirmed full-text, not paywall-truncated, on sampled articles)."
+            },
+            "datePublished": {
+                "title": "Date published",
+                "description": "ISO 8601 publish date."
+            },
+            "dateModified": {
+                "title": "Date modified",
+                "description": "ISO 8601 last-modified date."
+            },
+            "author": {
+                "title": "Author",
+                "description": "Article-mode: array of author objects (name + profile url), raw passthrough from JSON-LD. Latest-mode: single author name string from the Atom entry's <author><name>."
+            },
+            "publisher": {
+                "title": "Publisher",
+                "description": "Publisher organization object, raw passthrough from JSON-LD (typical NewsArticle field)."
+            },
+            "image": {
+                "title": "Image",
+                "description": "Lead image object, raw passthrough from JSON-LD (typical NewsArticle field)."
+            },
+            "mainEntityOfPage": {
+                "title": "Main entity of page",
+                "description": "Canonical WebPage reference, raw passthrough from JSON-LD (typical NewsArticle field)."
+            },
+            "articleSection": {
+                "title": "Section",
+                "description": "Article vertical/section (e.g. the-highlight, podcasts, future-perfect, politics)."
+            },
+            "keywords": {
+                "title": "Keywords",
+                "description": "Keywords as emitted in the JSON-LD block (shape varies -- string or array)."
+            },
+            "isAccessibleForFree": {
+                "title": "Accessible for free",
+                "description": "Upstream paywall metering flag -- observed false on every sampled article despite articleBody being full-text (soft/cosmetic paywall marker, same pattern as LA Times)."
+            },
+            "speakable": {
+                "title": "Speakable",
+                "description": "Text-to-speech CSS selector hint block, raw passthrough from JSON-LD (schema.org noise, not a first-class field for this actor's purposes)."
+            },
+            "title": {
+                "title": "Title",
+                "description": "Headline from the Atom feed entry (latest-mode)."
+            },
+            "link": {
+                "title": "Link",
+                "description": "Article URL, from the Atom entry's <link rel=\"alternate\"> (latest-mode)."
+            },
+            "guid": {
+                "title": "GUID",
+                "description": "Atom entry <id> (latest-mode)."
+            },
+            "pubDate": {
+                "title": "Publish date",
+                "description": "Atom entry <published> timestamp string (latest-mode)."
+            },
+            "updated": {
+                "title": "Updated",
+                "description": "Atom entry <updated> timestamp string (latest-mode)."
+            },
+            "categories": {
+                "title": "Categories",
+                "description": "List of <category term=\"...\"> tag values from the Atom entry (latest-mode)."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across both article and latest-headline records.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "_source",
+                    "_scrapedAt",
+                    "headline",
+                    "title",
+                    "link",
+                    "datePublished",
+                    "pubDate",
+                    "author",
+                    "articleSection",
+                    "isAccessibleForFree"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

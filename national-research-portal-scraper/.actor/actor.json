@@ -1,0 +1,18 @@
+{
+    "actorSpecification": 1,
+    "name": "national-research-portal-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "National Research Portal Scraper - Garuda, CiNii & KCI",
+    "description": "Search the national research indexes of Indonesia (Garuda), Japan (CiNii) and South Korea (KCI) from one input: papers with authors, journal, year and citations, plus Garuda's journal and researcher directories. Literature that never reaches Google Scholar cleanly.",
+    "categories": [
+        "EDUCATION",
+        "BUSINESS"
+    ],
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

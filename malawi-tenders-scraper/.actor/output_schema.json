@@ -1,0 +1,122 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Malawi procurement notice",
+        "description": "One record per notice row on one of PPDA's public boards (tenders, award-notices, intentions-to-award, debarments, admin-review-notices), or a single _error record when a keyword matches nothing or a board can't be fetched. Raw passthrough from ppda.mw's own server-rendered tables -- column presence varies by noticeType (e.g. only 'tenders' has a closingDate, only 'intentions' has a financialYear).",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The keyword that produced this record, or \"(all notices)\" when no keyword filter was given."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which extraction strategy emitted this record (S1-ppda-notice-tables, or 'none' on error)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_rowIndex": {
+                "type": "integer",
+                "title": "Row index",
+                "description": "0-based position of this notice in PPDA's table (as published upstream)."
+            },
+            "_totalMatches": {
+                "type": "integer",
+                "title": "Total matches",
+                "description": "Total notices on this board matching this keyword (or total notices on the board, for \"(all notices)\"), before any maxResults truncation."
+            },
+            "_truncated": {
+                "type": "boolean",
+                "title": "Truncated",
+                "description": "True if _totalMatches exceeded maxResults and not every match was pushed to the dataset."
+            },
+            "noticeType": {
+                "type": "string",
+                "title": "Notice board",
+                "description": "Which PPDA board this record came from: tenders, awards, intentions, debarments, or admin_reviews."
+            },
+            "title": {
+                "type": "string",
+                "title": "Title",
+                "description": "The notice's title, exactly as published."
+            },
+            "institution": {
+                "type": "string",
+                "title": "Institution",
+                "description": "The procuring government entity. Not present on the debarments board (debarment notices name a supplier, not a procuring institution, and PPDA's own table has no such column)."
+            },
+            "referenceNo": {
+                "type": "string",
+                "title": "Reference number",
+                "description": "Tender/notice reference number, exactly as published. Not present on the debarments board."
+            },
+            "financialYear": {
+                "type": "string",
+                "title": "Financial year",
+                "description": "Malawi government financial year the notice applies to (e.g. \"2023/2024\"). Only present on the 'intentions' (Intentions to Award) board."
+            },
+            "publishDate": {
+                "type": "string",
+                "format": "date",
+                "title": "Publish date",
+                "description": "ISO 8601 (YYYY-MM-DD) date the notice was published, exactly as PPDA already publishes it (no loose-date parsing needed -- upstream dates on this site are already clean ISO strings, unlike some other portfolio targets)."
+            },
+            "closingDate": {
+                "type": "string",
+                "format": "date",
+                "title": "Closing date",
+                "description": "ISO 8601 (YYYY-MM-DD) tender closing date. Only present on the 'tenders' (Open Tenders) board."
+            },
+            "isClosed": {
+                "type": "boolean",
+                "title": "Closed",
+                "description": "True if closingDate is before today (UTC). Only computed for the 'tenders' board when closingDate parses as a valid ISO date."
+            },
+            "attachmentUrl": {
+                "type": "string",
+                "title": "Attachment URL",
+                "description": "Direct link to the notice's PDF document, when the row's Attachment/Downloads button links to one. Omitted when no link is present on that row."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on a failed/empty job (no_results, blocked_or_transient)."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns for each notice.",
+            "transformation": {
+                "fields": [
+                    "noticeType",
+                    "title",
+                    "institution",
+                    "referenceNo",
+                    "publishDate",
+                    "closingDate",
+                    "isClosed",
+                    "attachmentUrl",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

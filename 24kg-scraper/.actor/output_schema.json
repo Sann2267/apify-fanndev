@@ -1,0 +1,114 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Article / latest-headline record",
+        "description": "Raw-passthrough dataset envelope. Every record carries _input/_source/_scrapedAt (failed URLs are not written to the dataset -- they are reported in the ERRORS record of the run's key-value store). Article-mode records carry headline/articleBody-style fields (from meta tags + schema.org microdata, this site has no JSON-LD NewsArticle block); latest-mode records (site RSS feed) carry title/link-style teaser fields. The site is bilingual Russian/Kyrgyz; content is passed through in whichever language it was published, not translated.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The exact input value (URL, or 'latest') that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which extraction strategy emitted this record (e.g. S1-jsonld+html, S2-rss)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "headline": {
+                "title": "Headline",
+                "description": "Article headline (article mode)."
+            },
+            "description": {
+                "title": "Description",
+                "description": "Short article description/dek, from <meta name=\"description\"> (article mode)."
+            },
+            "articleBody": {
+                "title": "Article body",
+                "description": "Full article text, reconstructed from paragraph tags inside div.cont[itemprop=articleBody] (article mode)."
+            },
+            "author": {
+                "title": "Author",
+                "description": "Byline name from <meta name=\"author\">, when present (article mode only) -- genuinely absent (no tag at all) on some articles, e.g. some Kyrgyz-language pieces."
+            },
+            "datePublished": {
+                "title": "Date published",
+                "description": "ISO 8601 publish timestamp with timezone offset, from the <meta property=\"article:published_time\"> tag (article mode only)."
+            },
+            "dateModified": {
+                "title": "Date modified",
+                "description": "ISO 8601 last-modified timestamp with timezone offset, from <meta property=\"article:modified_time\"> (article mode only)."
+            },
+            "section": {
+                "title": "Section",
+                "description": "Site section/category name, from <meta property=\"article:section\"> (article mode only)."
+            },
+            "image": {
+                "title": "Image",
+                "description": "Lead image URL, from <meta property=\"og:image\"> (article mode only)."
+            },
+            "keywords": {
+                "title": "Keywords",
+                "description": "Raw comma-separated keywords string from <meta name=\"keywords\"> (article mode only)."
+            },
+            "_lang": {
+                "title": "Language",
+                "description": "Per-article language code read from the page's <html lang=\"..\"> attribute (\"ru\" or \"ky\") -- more reliable than the site's og:locale meta tag, which is hardcoded ru_ru site-wide even on Kyrgyz-language pages (article mode only)."
+            },
+            "title": {
+                "title": "Title",
+                "description": "Feed item title (latest mode)."
+            },
+            "link": {
+                "title": "Link",
+                "description": "Article URL (latest mode)."
+            },
+            "teaser": {
+                "title": "Teaser",
+                "description": "Short feed <description> teaser (latest mode)."
+            },
+            "category": {
+                "title": "Category",
+                "description": "Feed item <category> (latest mode)."
+            },
+            "pubDate": {
+                "title": "Publish date",
+                "description": "RFC 822 publish timestamp as given by the feed (latest mode)."
+            },
+            "guid": {
+                "title": "GUID",
+                "description": "Feed item <guid> -- same as the article URL on this site (latest mode)."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across both article and latest-headline records.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "_source",
+                    "_scrapedAt",
+                    "headline",
+                    "title",
+                    "link",
+                    "datePublished",
+                    "pubDate",
+                    "author"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

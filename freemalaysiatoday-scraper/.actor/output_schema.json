@@ -1,0 +1,143 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Article / latest-headline record",
+        "description": "Raw-passthrough dataset envelope. Every record carries _input/_source/_scrapedAt (failed URLs are not written to the dataset -- they are reported in the ERRORS record of the run's key-value store). Article-mode records (S1-nextdata) carry the WordPress post object verbatim from the site's __NEXT_DATA__ payload (title/content/excerpt/date fields/author/categories/tags/featuredImage) plus a flattened articleBody convenience field; latest-mode records (S2-rss, site-wide feed) carry title/link/creator-style fields plus the full article HTML from <content:encoded>. Upstream fields are passed through close to verbatim, so extra fields beyond those listed here may also appear.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The exact input value (article URL, or 'latest') that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which extraction strategy emitted this record (S1-nextdata for articles, S2-rss for latest headlines, or 'none' on failure)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "title": {
+                "title": "Title",
+                "description": "Article headline. Article mode: WordPress post title. Latest mode: RSS item title."
+            },
+            "content": {
+                "title": "Content (raw HTML)",
+                "description": "Full article body as raw WordPress HTML (<p>, <figure> etc), verbatim from upstream. Article mode: post.content. Latest mode: RSS <content:encoded>."
+            },
+            "articleBody": {
+                "title": "Article body (plain text)",
+                "description": "Full article text flattened to plain text (paragraphs joined with blank lines) from the raw HTML `content` field. Convenience field, not present upstream."
+            },
+            "excerpt": {
+                "title": "Excerpt",
+                "description": "Short dek/teaser as raw HTML, from the WordPress post object (article mode only)."
+            },
+            "description": {
+                "title": "Description",
+                "description": "Teaser text from the RSS item (latest mode only)."
+            },
+            "slug": {
+                "title": "Slug",
+                "description": "URL slug of the article (article mode only)."
+            },
+            "status": {
+                "title": "Status",
+                "description": "WordPress publish status, e.g. \"publish\" (article mode only)."
+            },
+            "date": {
+                "title": "Date (local)",
+                "description": "Publish date/time in the site's local timezone (article mode only)."
+            },
+            "dateGmt": {
+                "title": "Date (GMT)",
+                "description": "Publish date/time in GMT/UTC (article mode only)."
+            },
+            "modifiedGmt": {
+                "title": "Modified date (GMT)",
+                "description": "Last-modified date/time in GMT/UTC (article mode only)."
+            },
+            "pubDate": {
+                "title": "Publish date",
+                "description": "RSS pubDate string (latest mode only)."
+            },
+            "uri": {
+                "title": "URI",
+                "description": "Site-relative URI path of the article (article mode only)."
+            },
+            "link": {
+                "title": "Link",
+                "description": "Article URL, from the RSS item (latest mode only)."
+            },
+            "guid": {
+                "title": "GUID",
+                "description": "RSS item GUID, matches the article URL (latest mode only)."
+            },
+            "author": {
+                "title": "Author",
+                "description": "Raw-passthrough author object from WPGraphQL (node.name, node.slug, node.avatar etc) (article mode only)."
+            },
+            "creator": {
+                "title": "Creator",
+                "description": "Byline name from the RSS <dc:creator> element (latest mode only)."
+            },
+            "categories": {
+                "title": "Categories",
+                "description": "Article mode: raw-passthrough WPGraphQL categories object (edges[].node.name/slug). Latest mode: plain list of RSS <category> text values."
+            },
+            "tags": {
+                "title": "Tags",
+                "description": "Raw-passthrough WPGraphQL tags object (edges[].node.name/slug) (article mode only)."
+            },
+            "featuredImage": {
+                "title": "Featured image",
+                "description": "Raw-passthrough WPGraphQL featured image object (node.sourceUrl/altText/caption/mediaDetails) (article mode only)."
+            },
+            "image": {
+                "title": "Image",
+                "description": "Lead image URL from the RSS <media:thumbnail> element (latest mode only)."
+            },
+            "id": {
+                "title": "GraphQL ID",
+                "description": "Base64-encoded WPGraphQL global ID (article mode only)."
+            },
+            "databaseId": {
+                "title": "Database ID",
+                "description": "Numeric WordPress post ID (article mode only)."
+            },
+            "__typename": {
+                "title": "GraphQL type",
+                "description": "WPGraphQL type name, always \"Post\" (article mode only)."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across both article and latest-headline records.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "_source",
+                    "_scrapedAt",
+                    "title",
+                    "link",
+                    "author",
+                    "creator",
+                    "dateGmt",
+                    "pubDate",
+                    "articleBody"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

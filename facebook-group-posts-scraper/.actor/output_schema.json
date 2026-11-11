@@ -1,0 +1,184 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Facebook group post record",
+        "description": "Dataset envelope (_input / _source / _scrapedAt / recordType) on top of one post per row. One POST row per post, COMMENT rows when Facebook served comment bodies, one RUN_SUMMARY per run, ERROR rows when a group cannot be read. Facebook changes its payload without notice, so unlisted fields pass through rather than failing the run.",
+        "additionalProperties": true,
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The group slug or id this record came from."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source",
+                "description": "Always group-feed."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was emitted."
+            },
+            "recordType": {
+                "type": "string",
+                "title": "Record type",
+                "description": "POST, COMMENT, RUN_SUMMARY or ERROR."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Failure rows only: group_unavailable, feed_unavailable or unexpected_error."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Why the group could not be read - private, missing, or feed not public."
+            },
+            "groupId": {
+                "title": "Group ID",
+                "description": "Numeric id of the group."
+            },
+            "groupName": {
+                "title": "Group name",
+                "description": "Display name of the group."
+            },
+            "groupUrl": {
+                "title": "Group URL",
+                "description": "Canonical group URL."
+            },
+            "groupPrivacy": {
+                "title": "Privacy",
+                "description": "OPEN or CLOSED, as Facebook reports it."
+            },
+            "groupMemberCount": {
+                "title": "Members",
+                "description": "Member count parsed from the label. Facebook abbreviates large counts ('117.4K members'), so this is approximate and the raw label is kept next to it."
+            },
+            "groupMemberCountLabel": {
+                "title": "Members (as shown)",
+                "description": "The member count exactly as Facebook rendered it."
+            },
+            "postId": {
+                "title": "Post ID",
+                "description": "Numeric id of the post."
+            },
+            "postUrl": {
+                "title": "Post URL",
+                "description": "Permalink to the post."
+            },
+            "text": {
+                "title": "Post text",
+                "description": "The post body. Null when the post carries only media."
+            },
+            "createdAtIso": {
+                "title": "Posted at",
+                "description": "ISO 8601 UTC timestamp of the post."
+            },
+            "authorName": {
+                "title": "Author",
+                "description": "Name of the member who posted. Null when Facebook withheld it."
+            },
+            "authorId": {
+                "title": "Author ID",
+                "description": "Facebook id of the author. Newer accounts appear as an opaque pfbid token rather than a number."
+            },
+            "reactionCount": {
+                "title": "Reactions",
+                "description": "Total reactions on the post."
+            },
+            "commentCount": {
+                "title": "Comments",
+                "description": "How many comments the post has. Published by Facebook even though the comment text is not - see commentsServed."
+            },
+            "commentsServed": {
+                "title": "Comment bodies served",
+                "description": "How many comment bodies Facebook actually returned for this post. For group posts on a logged-out request this is 0 while commentCount can be large; the two are reported separately rather than pretending they agree."
+            },
+            "shareCount": {
+                "title": "Shares",
+                "description": "Share count, where Facebook reports one."
+            },
+            "attachmentUrls": {
+                "title": "Attachment URLs",
+                "description": "Photo and video CDN links found on the post. These are signed URLs and expire."
+            },
+            "commentText": {
+                "title": "Comment text",
+                "description": "COMMENT rows only."
+            },
+            "commentAuthorName": {
+                "title": "Comment author",
+                "description": "COMMENT rows only."
+            },
+            "commentIndex": {
+                "title": "Comment index",
+                "description": "COMMENT rows only: position within the post's served comments."
+            }
+        }
+    },
+    "views": {
+        "overview": {
+            "title": "Posts",
+            "description": "One row per post: who said what, when, and how it landed.",
+            "transformation": {
+                "fields": [
+                    "groupName",
+                    "authorName",
+                    "text",
+                    "createdAtIso",
+                    "reactionCount",
+                    "commentCount",
+                    "shareCount",
+                    "postUrl",
+                    "recordType",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        },
+        "engagement": {
+            "title": "Engagement",
+            "description": "Sort by reactions or comments to find what the community actually responded to.",
+            "transformation": {
+                "fields": [
+                    "groupName",
+                    "postId",
+                    "authorName",
+                    "reactionCount",
+                    "commentCount",
+                    "shareCount",
+                    "commentsServed",
+                    "attachmentCount",
+                    "createdAtIso",
+                    "postUrl"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        },
+        "comments": {
+            "title": "Comments",
+            "description": "Comment bodies, where Facebook served them.",
+            "transformation": {
+                "fields": [
+                    "groupName",
+                    "postId",
+                    "commentIndex",
+                    "commentAuthorName",
+                    "commentText",
+                    "commentCreatedAtIso",
+                    "postUrl"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

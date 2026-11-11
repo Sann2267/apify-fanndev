@@ -1,0 +1,58 @@
+"""Standalone local runner -- exercises both modes without the Apify platform.
+
+Usage:
+    python test_local.py latest [limit]
+    python test_local.py article <url> [<url> ...]
+"""
+
+import asyncio
+import json
+import sys
+
+if sys.stdout.encoding and sys.stdout.encoding.lower() != "utf-8":
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+
+from src.client import DailyMirrorClient
+from src.extractor import ArticleNotFound, extract_article, extract_error
+from src.main import fetch_latest
+
+
+async def run_latest(limit: int):
+    items = await fetch_latest(limit, proxy_url=None)
+    for item in items:
+        print(json.dumps(item, ensure_ascii=False, indent=2)[:1200], "...")
+    print(f"\n-> {len(items)} headline(s)")
+
+
+async def run_article(urls: list[str]):
+    client = DailyMirrorClient()
+    try:
+        for url in urls:
+            r = await client.get(url)
+            if r.status_code != 200:
+                record = extract_error(url, f"http_{r.status_code}")
+            else:
+                try:
+                    record = extract_article(r.text, url)
+                except ArticleNotFound:
+                    record = extract_error(url, "not_found")
+            print(json.dumps(record, ensure_ascii=False, indent=2)[:1500], "...")
+            print(f"-> _source={record.get('_source')} _error={record.get('_error')}")
+    finally:
+        await client.close()
+
+
+if __name__ == "__main__":
+    mode = sys.argv[1] if len(sys.argv) > 1 else "latest"
+    if mode == "latest":
+        limit = int(sys.argv[2]) if len(sys.argv) > 2 else 5
+        asyncio.run(run_latest(limit))
+    elif mode == "article":
+        urls = sys.argv[2:]
+        if not urls:
+            print("Usage: python test_local.py article <url> [<url> ...]")
+            sys.exit(1)
+        asyncio.run(run_article(urls))
+    else:
+        print("Usage: python test_local.py [latest [limit] | article <url> ...]")
+        sys.exit(1)

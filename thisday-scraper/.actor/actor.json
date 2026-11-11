@@ -1,0 +1,14 @@
+{
+    "actorSpecification": 1,
+    "name": "thisday-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "This Day Nigeria Scraper",
+    "description": "Extract full article text or the newest headlines from This Day (thisdaylive.com), a major Nigerian national daily -- no account or API key needed.",
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

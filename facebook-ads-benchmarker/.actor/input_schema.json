@@ -1,0 +1,195 @@
+{
+    "title": "Facebook Ads Benchmarker",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "niches": {
+            "title": "Niches",
+            "type": "array",
+            "description": "What to benchmark. Simple form: one keyword per line, each treated as its own niche. Grouped form (paste as JSON): [{\"name\": \"skincare\", \"keywords\": [\"serum\", \"moisturiser\"], \"advertisers\": [\"123456789\"]}] so several searches feed one benchmark.",
+            "editor": "stringList",
+            "prefill": [
+                "skincare serum",
+                "protein powder"
+            ]
+        },
+        "countries": {
+            "title": "Countries",
+            "type": "array",
+            "description": "ISO country codes. The Ad Library is country-scoped, so benchmarking two countries shows you how the same niche is sold in each.",
+            "editor": "stringList",
+            "default": [
+                "US"
+            ],
+            "prefill": [
+                "US"
+            ]
+        },
+        "sampleSizePerNiche": {
+            "title": "Ads sampled per niche",
+            "type": "integer",
+            "description": "The budget is shared across the searches that make up a niche, so a two-keyword niche does not quietly collect twice the ads of a one-keyword niche. Every benchmark row reports the sampleSize it was computed from.",
+            "default": 150,
+            "minimum": 30,
+            "maximum": 2000,
+            "unit": "ads"
+        },
+        "activeStatus": {
+            "title": "Active status",
+            "type": "string",
+            "description": "Benchmarking currently-running ads tells you what the niche is doing now. Include stopped ads to see what it has tried.",
+            "editor": "select",
+            "enum": [
+                "active",
+                "all",
+                "inactive"
+            ],
+            "enumTitles": [
+                "Currently running",
+                "Both",
+                "Stopped only"
+            ],
+            "default": "active"
+        },
+        "adType": {
+            "title": "Ad category",
+            "type": "string",
+            "description": "Leave on 'All ads' for commercial benchmarking.",
+            "editor": "select",
+            "enum": [
+                "all",
+                "political_and_issue_ads",
+                "employment_ads",
+                "housing_ads",
+                "credit_ads",
+                "financial_products_and_services_ads"
+            ],
+            "enumTitles": [
+                "All ads",
+                "Political and issue ads",
+                "Employment ads",
+                "Housing ads",
+                "Credit ads",
+                "Financial products and services ads"
+            ],
+            "default": "all"
+        },
+        "mediaType": {
+            "title": "Creative type",
+            "type": "string",
+            "description": "Restrict the sample to one creative type. Leaving this on 'Any' is what produces the image-vs-video split in the output.",
+            "editor": "select",
+            "enum": [
+                "all",
+                "image",
+                "video",
+                "meme",
+                "image_and_meme",
+                "none"
+            ],
+            "enumTitles": [
+                "Any",
+                "Image",
+                "Video",
+                "Meme",
+                "Image and meme",
+                "No media"
+            ],
+            "default": "all"
+        },
+        "searchType": {
+            "title": "Keyword match",
+            "type": "string",
+            "editor": "select",
+            "description": "Unordered matches the words in any order; exact phrase matches the phrase as typed.",
+            "enum": [
+                "keyword_unordered",
+                "keyword_exact_phrase"
+            ],
+            "enumTitles": [
+                "Words in any order",
+                "Exact phrase"
+            ],
+            "default": "keyword_unordered"
+        },
+        "publisherPlatforms": {
+            "title": "Platforms",
+            "type": "array",
+            "description": "Restrict the sample to ads delivered on these Meta surfaces.",
+            "editor": "select",
+            "items": {
+                "type": "string",
+                "enum": [
+                    "FACEBOOK",
+                    "INSTAGRAM",
+                    "AUDIENCE_NETWORK",
+                    "MESSENGER",
+                    "WHATSAPP",
+                    "THREADS"
+                ]
+            },
+            "default": []
+        },
+        "contentLanguages": {
+            "title": "Ad languages",
+            "type": "array",
+            "description": "Two-letter language codes, e.g. en, id, es. Worth setting when benchmarking a non-English market.",
+            "editor": "stringList",
+            "default": []
+        },
+        "topN": {
+            "title": "Rows per ranking",
+            "type": "integer",
+            "description": "How many entries to keep in each top-N ranking (CTAs, words, headlines, advertisers).",
+            "default": 10,
+            "minimum": 3,
+            "maximum": 50
+        },
+        "minGroupSample": {
+            "title": "Minimum ads behind a longevity figure",
+            "type": "integer",
+            "description": "Groups thinner than this are dropped from the longevity rankings. A median computed from two ads is noise wearing a number's clothes.",
+            "default": 3,
+            "minimum": 1,
+            "maximum": 50,
+            "unit": "ads"
+        },
+        "includeAdSample": {
+            "title": "Also output the ads themselves",
+            "type": "boolean",
+            "description": "Append the sampled ads as AD_SAMPLE rows so you can check any benchmark against the creatives behind it.",
+            "default": false
+        },
+        "exportFormats": {
+            "title": "Extra export files",
+            "type": "array",
+            "description": "Also write the results to the key-value store in these formats. The dataset is always produced regardless.",
+            "editor": "select",
+            "items": {
+                "type": "string",
+                "enum": [
+                    "json",
+                    "ndjson",
+                    "csv",
+                    "xlsx"
+                ],
+                "enumTitles": [
+                    "JSON",
+                    "NDJSON",
+                    "CSV",
+                    "Excel (XLSX)"
+                ]
+            },
+            "default": []
+        },
+        "proxyConfiguration": {
+            "title": "Proxy",
+            "type": "object",
+            "description": "Recommended on the Apify platform if you want more than the first 30 ads of each search, which caps the sample. Facebook serves the rendered first page fine from any IP, but on Apify's datacenter IPs it answers the very first pagination request with \"Rate limit exceeded\" - measured 2026-09-20. Switching the Apify proxy on with the RESIDENTIAL group restored full pagination in the same test (60 ads over 4 pages against 30). Running from your own machine, no proxy is needed at all. The actor logs a warning naming this when it happens, so a short run is never silently mistaken for a short result set.",
+            "editor": "proxy",
+            "default": {
+                "useApifyProxy": false
+            }
+        }
+    }
+}

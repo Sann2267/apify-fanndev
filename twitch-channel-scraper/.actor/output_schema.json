@@ -1,0 +1,106 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Channel / video / clip / schedule-segment record",
+        "description": "Raw-passthrough dataset envelope. Every record carries _input/_source/_scrapedAt (and _error/_errorDetail on failures). Channel-mode records carry profile/live-status fields; videos/clips-mode records carry one row per item plus a channelLogin field and a _truncatedToFirstPage flag (Twitch's device-integrity gate blocks HTTP-only pagination beyond page 1 -- see CRAWLING_METHOD.md); schedule-mode records carry one row per upcoming stream segment.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The channel login that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which extraction strategy emitted this record (S1-gql, or none on failure)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed extractions -- the error kind (e.g. channel_not_found)."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "id": { "title": "Channel ID", "description": "Channel mode only." },
+            "login": { "title": "Login", "description": "Channel mode only." },
+            "displayName": { "title": "Display name", "description": "Channel mode only." },
+            "description": { "title": "Bio / description", "description": "Channel mode only." },
+            "createdAt": { "title": "Account created at", "description": "Channel mode only." },
+            "profileImageURL": { "title": "Profile image URL", "description": "Channel mode only." },
+            "bannerImageURL": { "title": "Banner image URL", "description": "Channel mode only." },
+            "primaryColorHex": { "title": "Primary brand color", "description": "Channel mode only." },
+            "followersCount": { "title": "Followers count", "description": "Channel mode only." },
+            "isLive": { "title": "Is live now", "description": "Channel mode only. True if a live stream object exists." },
+            "streamId": { "title": "Live stream ID", "description": "Channel mode only, present only while live." },
+            "streamTitle": { "title": "Live stream title", "description": "Channel mode only, present only while live." },
+            "streamType": { "title": "Stream type", "description": "Channel mode only, present only while live." },
+            "viewersCount": { "title": "Current viewers", "description": "Channel mode only, present only while live." },
+            "streamStartedAt": { "title": "Live stream started at", "description": "Channel mode only, present only while live." },
+            "gameName": { "title": "Game / category name", "description": "Channel mode (current game while live) or videos mode (per-video game)." },
+            "gameBoxArtURL": { "title": "Game box art URL", "description": "Channel mode only, present only while live." },
+            "tags": { "title": "Stream tags", "description": "Channel mode (current tags while live) or schedule mode (category names per segment)." },
+            "lastBroadcastStartedAt": { "title": "Last broadcast started at", "description": "Channel mode only." },
+            "lastBroadcastTitle": { "title": "Last broadcast title", "description": "Channel mode only." },
+            "channelLogin": { "title": "Channel login", "description": "Videos / clips / schedule modes -- echoes the input login on every row." },
+            "channelTotalVideoCount": { "title": "Total video count", "description": "Videos mode only -- the channel's total video count on this connection, even though only the first page is returned." },
+            "_truncatedToFirstPage": { "title": "Truncated to first page", "description": "Videos / clips modes -- true if more items exist beyond what this run returned (Twitch blocks deeper HTTP-only pagination)." },
+            "videoId": { "title": "Video ID", "description": "Videos mode only." },
+            "title": { "title": "Title", "description": "Videos mode (video title) or schedule mode (segment title, often blank)." },
+            "publishedAt": { "title": "Published at", "description": "Videos mode only." },
+            "viewCount": { "title": "View count", "description": "Videos mode or clips mode." },
+            "lengthSeconds": { "title": "Length (seconds)", "description": "Videos mode only." },
+            "previewThumbnailURL": { "title": "Preview thumbnail URL", "description": "Videos mode only." },
+            "url": { "title": "URL", "description": "Videos mode (constructed VOD URL) or clips mode (clip URL, from upstream)." },
+            "clipId": { "title": "Clip ID", "description": "Clips mode only." },
+            "slug": { "title": "Clip slug", "description": "Clips mode only." },
+            "durationSeconds": { "title": "Duration (seconds)", "description": "Clips mode only." },
+            "thumbnailURL": { "title": "Thumbnail URL", "description": "Clips mode only." },
+            "curatorLogin": { "title": "Curator login", "description": "Clips mode only -- the user who clipped it." },
+            "segmentId": { "title": "Schedule segment ID", "description": "Schedule mode only." },
+            "startAt": { "title": "Segment start time", "description": "Schedule mode only." },
+            "endAt": { "title": "Segment end time", "description": "Schedule mode only." },
+            "isCancelled": { "title": "Segment cancelled", "description": "Schedule mode only." },
+            "hasReminder": { "title": "Has reminder set", "description": "Schedule mode only." },
+            "categories": { "title": "Segment categories", "description": "Schedule mode only -- planned game/category names for this segment." },
+            "isNextSegment": { "title": "Is the next upcoming segment", "description": "Schedule mode only." }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across channel / video / clip / schedule records.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "_source",
+                    "_scrapedAt",
+                    "displayName",
+                    "isLive",
+                    "viewersCount",
+                    "title",
+                    "videoId",
+                    "clipId",
+                    "segmentId",
+                    "startAt",
+                    "url",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

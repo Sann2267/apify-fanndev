@@ -1,0 +1,130 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Article / latest-headline record",
+        "description": "Raw-passthrough dataset envelope. Every record carries _input/_source/_scrapedAt (and _error/_errorDetail on failures). Article-mode records (S1-jsonld+html, articleBody pulled from HTML article.single-article div.post-content since the Yoast ld+json @graph has no articleBody) carry headline/articleBody-style fields; latest-mode records (S2-rss, punchng.com/feed) carry title/link-style fields.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The exact input value (URL, or 'latest') that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which extraction strategy emitted this record (e.g. S1-jsonld+html, S2-rss)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed extractions -- the error kind (not_found, not_article, http_<code>, blocked_or_transient)."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "headline": {
+                "title": "Headline",
+                "description": "Article headline, from the Yoast ld+json NewsArticle node."
+            },
+            "description": {
+                "title": "Description",
+                "description": "Short article description, from <meta name=\"description\"> (falls back to the ld+json WebPage node's description)."
+            },
+            "articleBody": {
+                "title": "Article body",
+                "description": "Full article text, joined from direct-child <p> tags of article.single-article div.post-content (excludes ad slots, share widgets, and related-article teaser cards, which sit outside that scope)."
+            },
+            "author": {
+                "title": "Author",
+                "description": "Comma-joined byline name(s), from the ld+json NewsArticle author field (inline on this site, not a bare @id reference)."
+            },
+            "publisher": {
+                "title": "Publisher",
+                "description": "Publisher/site name (\"Punch Newspapers\"), read from <meta property=\"og:site_name\"> -- there is no Organization node in this site's ld+json graph."
+            },
+            "articleSection": {
+                "title": "Article section",
+                "description": "Section/category tags from the ld+json NewsArticle node (e.g. [\"Business & Economy\"])."
+            },
+            "keywords": {
+                "title": "Keywords",
+                "description": "Keyword tags from the ld+json NewsArticle node."
+            },
+            "datePublished": {
+                "title": "Date published",
+                "description": "ISO 8601 publish date from ld+json."
+            },
+            "dateModified": {
+                "title": "Date modified",
+                "description": "ISO 8601 last-modified date from ld+json."
+            },
+            "thumbnailUrl": {
+                "title": "Thumbnail URL",
+                "description": "Lead image URL from the ld+json NewsArticle node's thumbnailUrl field."
+            },
+            "wordCount": {
+                "title": "Word count",
+                "description": "Upstream-computed word count from ld+json."
+            },
+            "title": {
+                "title": "Title",
+                "description": "Headline text of a latest-mode RSS item."
+            },
+            "link": {
+                "title": "Link",
+                "description": "Article URL from the RSS item (carries rss.punchng.com utm tracking params, passed through raw)."
+            },
+            "pubDate": {
+                "title": "Publish date",
+                "description": "RSS pubDate string."
+            },
+            "categories": {
+                "title": "Categories",
+                "description": "List of <category> values from the RSS item -- observed always empty on this feed."
+            },
+            "guid": {
+                "title": "GUID",
+                "description": "RSS item guid (same URL as link)."
+            },
+            "enclosureUrl": {
+                "title": "Enclosure URL",
+                "description": "Image URL from the RSS item's <enclosure> tag -- observed to be the generic Punch masthead logo on every item, not a per-article thumbnail. Use article mode's thumbnailUrl for a real lead image."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across both article and latest-headline records.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "_source",
+                    "_scrapedAt",
+                    "headline",
+                    "title",
+                    "link",
+                    "datePublished",
+                    "pubDate",
+                    "author",
+                    "articleSection",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

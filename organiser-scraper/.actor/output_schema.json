@@ -1,0 +1,139 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Article / latest-headline record",
+        "description": "Raw-passthrough dataset envelope. Every record carries _input/_source/_scrapedAt (and _error/_errorDetail on failures). Article-mode records (S1-jsonld+html) combine the page's NewsArticle JSON-LD block (author/publisher references resolved against the graph) with the full article body parsed from HTML, since this site's JSON-LD never carries articleBody. Latest-mode records (S2-rss) come from the site-wide /feed/ and already include full body text via content:encoded.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The exact input value (URL, or 'latest') that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which extraction strategy emitted this record (S1-jsonld+html or S2-rss)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed extractions -- the error kind."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "headline": {
+                "title": "Headline",
+                "description": "Article headline (article-mode, from JSON-LD)."
+            },
+            "description": {
+                "title": "Description",
+                "description": "Article summary/dek, from the page's <meta name=\"description\"> tag, falling back to the JSON-LD WebPage node's description (article-mode)."
+            },
+            "articleBody": {
+                "title": "Article body",
+                "description": "Full plain-text article content, parsed from the page HTML (div.entry-content > div.content-inner) since JSON-LD never carries articleBody on this site (article-mode)."
+            },
+            "author": {
+                "title": "Author",
+                "description": "Article-mode: byline name(s), comma-joined, resolved from the JSON-LD graph's Person node(s). Latest-mode: plain byline name string from the RSS feed's dc:creator."
+            },
+            "publisher": {
+                "title": "Publisher",
+                "description": "Publisher name (\"Organiser\"), resolved from the JSON-LD graph's Organization node (article-mode)."
+            },
+            "articleSection": {
+                "title": "Section",
+                "description": "Article section/category tags, e.g. ['Politics', 'Bharat', 'RSS News'] (article-mode, from JSON-LD)."
+            },
+            "keywords": {
+                "title": "Keywords",
+                "description": "Article-mode: raw passthrough of the JSON-LD keywords field -- a JSON object with sparse, non-contiguous string-integer keys on this site (not a list), e.g. {\"2\": \"RSS\", \"3\": \"...\"}. Not present in latest-mode."
+            },
+            "datePublished": {
+                "title": "Date published",
+                "description": "ISO 8601 publish date (article-mode, from JSON-LD)."
+            },
+            "dateModified": {
+                "title": "Date modified",
+                "description": "ISO 8601 last-modified date, from JSON-LD. Not observed populated on any sampled article (article-mode)."
+            },
+            "thumbnailUrl": {
+                "title": "Thumbnail URL",
+                "description": "Thumbnail image URL (article-mode, from JSON-LD)."
+            },
+            "image": {
+                "title": "Image",
+                "description": "Lead image URL, resolved from the JSON-LD graph's ImageObject node (article-mode)."
+            },
+            "wordCount": {
+                "title": "Word count",
+                "description": "Article word count as computed by the site's SEO plugin (article-mode, from JSON-LD)."
+            },
+            "inLanguage": {
+                "title": "Language",
+                "description": "Article language code, e.g. 'en' (article-mode, from JSON-LD)."
+            },
+            "title": {
+                "title": "Title",
+                "description": "Headline from the RSS item (latest-mode)."
+            },
+            "link": {
+                "title": "Link",
+                "description": "Article URL (latest-mode)."
+            },
+            "guid": {
+                "title": "GUID",
+                "description": "RSS item guid, e.g. https://organiser.org/?p=377002 (latest-mode)."
+            },
+            "pubDate": {
+                "title": "Publish date",
+                "description": "RSS pubDate string (latest-mode)."
+            },
+            "category": {
+                "title": "Category",
+                "description": "List of category/tag names from the RSS item's <category> tags, e.g. ['Bharat', 'Analysis', 'MGNREGA'] (latest-mode)."
+            },
+            "contentEncoded": {
+                "title": "Content (encoded)",
+                "description": "Full article body as HTML markup (<img>/<p> tags), from the RSS feed's content:encoded element -- ~1.4x longer than <description> on sampled items (latest-mode)."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across both article and latest-headline records.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "_source",
+                    "_scrapedAt",
+                    "headline",
+                    "title",
+                    "link",
+                    "datePublished",
+                    "pubDate",
+                    "author",
+                    "articleSection",
+                    "category",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

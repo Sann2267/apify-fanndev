@@ -1,0 +1,7 @@
+.git
+.venv
+__pycache__
+*.pyc
+storage
+test_local.py
+scratchpad

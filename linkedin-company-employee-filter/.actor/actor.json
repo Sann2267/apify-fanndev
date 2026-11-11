@@ -1,0 +1,14 @@
+{
+    "actorSpecification": 1,
+    "name": "linkedin-company-employee-filter",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "LinkedIn Company Employee Role Filter",
+    "description": "Find the decision makers inside a target account: scrape a company's people and keep only the titles you care about - CMO, Marketing Director, Head of HR. Requires your own li_at session cookie, because LinkedIn publishes no employee list to logged-out visitors.",
+    "categories": ["LEAD_GENERATION", "BUSINESS"],
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": { "dataset": "./output_schema.json" },
+    "output": "./actor_output_links.json",
+    "defaultRunOptions": { "build": "latest", "memoryMbytes": 1024, "timeoutSecs": 3600 }
+}

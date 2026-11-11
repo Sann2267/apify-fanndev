@@ -1,0 +1,143 @@
+{
+    "title": "Karir.com Scraper",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "mode": {
+            "title": "Mode",
+            "type": "string",
+            "editor": "select",
+            "description": "\"search\" runs a keyword job search and (by default) hydrates each result into a full job record. \"detail\" fetches full detail for specific opportunity ID(s)/URL(s) directly.",
+            "enum": ["search", "detail"],
+            "enumTitles": ["Keyword search", "Job detail (by ID/URL)"],
+            "default": "search",
+            "prefill": "search"
+        },
+        "keyword": {
+            "title": "Keyword",
+            "type": "string",
+            "editor": "textfield",
+            "description": "\"search\" mode -- searches job titles (e.g. \"marketing\", \"sales\", \"programmer\"). Leave empty to list all currently active opportunities.",
+            "prefill": "marketing"
+        },
+        "sortOrder": {
+            "title": "Sort order",
+            "type": "string",
+            "editor": "select",
+            "description": "\"search\" mode -- order to return results in.",
+            "enum": ["newest", "priority", "popular", "highest_salary"],
+            "enumTitles": ["Newest first", "Priority", "Most popular", "Highest salary"],
+            "default": "newest",
+            "prefill": "newest"
+        },
+        "maxResults": {
+            "title": "Max results",
+            "type": "integer",
+            "editor": "number",
+            "description": "\"search\" mode -- maximum number of job listings to return. Pagination is followed automatically (20 results/page) until this cap or the end of the result set.",
+            "default": 50,
+            "minimum": 1,
+            "maximum": 2000,
+            "prefill": 50
+        },
+        "fetchFullDetails": {
+            "title": "Fetch full details for each result",
+            "type": "boolean",
+            "editor": "checkbox",
+            "description": "\"search\" mode -- when on (default), each search result is hydrated into a full job record (requirements, responsibilities, salary, company info) with one extra request per job. Turn off for faster/cheaper runs that only need the compact search-result fields (title, company, location, salary range, posted date).",
+            "default": true,
+            "prefill": true
+        },
+        "minSalary": {
+            "title": "Minimum salary (IDR)",
+            "type": "integer",
+            "editor": "number",
+            "description": "\"search\" mode -- optional advanced filter, passed through to the API as-is."
+        },
+        "maxSalary": {
+            "title": "Maximum salary (IDR)",
+            "type": "integer",
+            "editor": "number",
+            "description": "\"search\" mode -- optional advanced filter, passed through to the API as-is."
+        },
+        "level": {
+            "title": "Job level",
+            "type": "string",
+            "editor": "textfield",
+            "description": "\"search\" mode -- optional advanced filter, passed through to the API as-is (as shown in karir.com's own filter UI, e.g. a job-level label)."
+        },
+        "workplace": {
+            "title": "Workplace type",
+            "type": "string",
+            "editor": "textfield",
+            "description": "\"search\" mode -- optional advanced filter (e.g. remote/on-site), passed through to the API as-is."
+        },
+        "locationIds": {
+            "title": "Location IDs",
+            "type": "array",
+            "editor": "json",
+            "description": "\"search\" mode -- optional advanced filter: numeric location IDs from karir.com's own filter UI. Not name-resolved by this actor (see README's Known limits)."
+        },
+        "jobFunctionIds": {
+            "title": "Job function IDs",
+            "type": "array",
+            "editor": "json",
+            "description": "\"search\" mode -- optional advanced filter: numeric job-function IDs from karir.com's own filter UI."
+        },
+        "industryIds": {
+            "title": "Industry IDs",
+            "type": "array",
+            "editor": "json",
+            "description": "\"search\" mode -- optional advanced filter: numeric industry IDs from karir.com's own filter UI."
+        },
+        "degreeIds": {
+            "title": "Degree IDs",
+            "type": "array",
+            "editor": "json",
+            "description": "\"search\" mode -- optional advanced filter: numeric degree IDs from karir.com's own filter UI."
+        },
+        "companyIds": {
+            "title": "Company IDs",
+            "type": "array",
+            "editor": "json",
+            "description": "\"search\" mode -- optional advanced filter: numeric company IDs (see a company's karir.com/companies/<id> URL)."
+        },
+        "opportunityId": {
+            "title": "Opportunity ID or URL",
+            "type": "string",
+            "editor": "textfield",
+            "description": "\"detail\" mode -- a single job's numeric ID or the full karir.com/opportunities/<id> URL.",
+            "prefill": "https://karir.com/opportunities/1401468"
+        },
+        "opportunityIds": {
+            "title": "Opportunity IDs or URLs",
+            "type": "array",
+            "editor": "stringList",
+            "description": "\"detail\" mode only -- multiple job IDs/URLs to fetch full detail for in one run."
+        },
+        "maxConcurrency": {
+            "title": "Max concurrent workers",
+            "type": "integer",
+            "description": "How many detail requests to run in parallel (used in \"search\" mode when hydrating results, and in \"detail\" mode across multiple IDs).",
+            "default": 4,
+            "minimum": 1,
+            "maximum": 16,
+            "prefill": 4
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "editor": "proxy",
+            "description": "Apify Proxy configuration. Residential is on by default.",
+            "default": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            },
+            "prefill": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            }
+        }
+    },
+    "required": ["mode"]
+}

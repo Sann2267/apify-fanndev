@@ -1,0 +1,186 @@
+{
+    "title": "Pakistan Government Tenders Scraper (PPRA-EPMS)",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "mode": {
+            "title": "Mode",
+            "type": "string",
+            "editor": "select",
+            "description": "\"List\" scrapes epms.ppra.gov.pk's public tender listing (active or historical/closed, latest or filtered). \"Detail\" fetches the full detail page (organization contact, financial terms, workflow) for specific tender numbers.",
+            "enum": ["list", "detail"],
+            "enumTitles": ["List (latest or filtered search)", "Detail (fetch specific tenders)"],
+            "default": "list",
+            "prefill": "list"
+        },
+        "listingType": {
+            "title": "Listing type (mode=list only)",
+            "type": "string",
+            "editor": "select",
+            "description": "\"Active\" is currently open/published tenders. \"History\" includes closed tenders too.",
+            "enum": ["active", "history"],
+            "enumTitles": ["Active tenders", "Tender history (includes closed)"],
+            "default": "active",
+            "prefill": "active"
+        },
+        "keyword": {
+            "title": "Keyword (mode=list only)",
+            "type": "string",
+            "editor": "textfield",
+            "description": "Free-text keyword matched against the tender's title, description, or tender number. Leave blank together with the other filters below to get the latest tenders instead of a filtered search."
+        },
+        "tenderNoFilter": {
+            "title": "Tender number filter (mode=list only)",
+            "type": "string",
+            "editor": "textfield",
+            "description": "Restrict the listing search to a specific PPRA tender number, e.g. TS0000012236E."
+        },
+        "procurementCategory": {
+            "title": "Procurement category (mode=list only)",
+            "type": "string",
+            "editor": "select",
+            "description": "Restrict to one procurement category.",
+            "enum": ["all", "goods", "works", "consultancyServices", "nonConsultancyServices"],
+            "enumTitles": ["All categories", "Goods", "Works", "Consultancy Services", "Non-consultancy Services"],
+            "default": "all",
+            "prefill": "all"
+        },
+        "tenderType": {
+            "title": "Tender type (mode=list only)",
+            "type": "string",
+            "editor": "select",
+            "description": "Restrict to one tender-notice type.",
+            "enum": ["all", "tenderNotice", "prequalificationNotice", "requestForProposal", "expressionOfInterest"],
+            "enumTitles": ["All types", "Tender Notice", "Pre-qualification Notice (PQ)", "Request for Proposal (RFP)", "Expression of Interest (EOI)"],
+            "default": "all",
+            "prefill": "all"
+        },
+        "sector": {
+            "title": "Sector (mode=list only)",
+            "type": "string",
+            "editor": "select",
+            "description": "Restrict to one procurement sector.",
+            "enum": [
+                "all", "ammunition", "appliances", "booksJournalsManualsTechnicalLiterature", "chemicalItems",
+                "civilGoods", "civilWorks", "clothingUniform", "consumableItems", "electricalItems", "equipments",
+                "foodItems", "furnitureFixture", "healthMedicines", "infoAndCommTech", "leasing",
+                "petroleumOilLubricants", "mechanicalMachinery", "mining", "miscellaneous", "printing",
+                "repairMaintenance", "researchDevelopment", "services", "stationery", "vehicles",
+                "agriculturalProducts", "petroleumProducts", "coalSubBituminous", "lngLpg"
+            ],
+            "enumTitles": [
+                "All sectors", "Ammunition", "Appliances", "Books/Journals/Manuals (Technical/Literature)", "Chemical Items",
+                "Civil Goods", "Civil Works", "Clothing/Uniform", "Consumable Items", "Electrical Items", "Equipments",
+                "Food Items", "Furniture/Fixture", "Health/Medicines", "Info and Comm Tech", "Leasing",
+                "Petroleum, Oil & Lubricants", "Mechanical/Machinery", "Mining", "Miscellaneous", "Printing",
+                "Repair/Maintenance", "Research & Development", "Services", "Stationery", "Vehicles",
+                "Agricultural Products", "Petroleum Products", "Coal (Sub-Bituminous)", "LNG/LPG"
+            ],
+            "default": "all",
+            "prefill": "all"
+        },
+        "tenderNature": {
+            "title": "Tender nature (mode=list only)",
+            "type": "string",
+            "editor": "select",
+            "description": "Restrict to local or international tenders.",
+            "enum": ["all", "local", "international"],
+            "enumTitles": ["All", "Local", "International"],
+            "default": "all",
+            "prefill": "all"
+        },
+        "status": {
+            "title": "Status (mode=list only)",
+            "type": "string",
+            "editor": "select",
+            "description": "Restrict to one tender status.",
+            "enum": ["all", "published", "cancelled"],
+            "enumTitles": ["All statuses", "Published", "Cancelled"],
+            "default": "all",
+            "prefill": "all"
+        },
+        "organizationId": {
+            "title": "Organization ID (mode=list only, advanced)",
+            "type": "string",
+            "editor": "textfield",
+            "description": "PPRA's internal numeric ID for a specific procuring office (there are 500+, not enumerable here) -- find one from a previous run's organizationName field cross-referenced on epms.ppra.gov.pk's own filter dropdown, or leave blank."
+        },
+        "countryId": {
+            "title": "Country ID (mode=list only, advanced)",
+            "type": "string",
+            "editor": "textfield",
+            "description": "PPRA's internal numeric ID for a country (relevant mostly to international tenders) -- leave blank unless you already know the ID."
+        },
+        "advertiseDateFrom": {
+            "title": "Advertised from (mode=list only)",
+            "type": "string",
+            "editor": "textfield",
+            "description": "YYYY-MM-DD. Only tenders advertised on or after this date."
+        },
+        "advertiseDateTo": {
+            "title": "Advertised to (mode=list only)",
+            "type": "string",
+            "editor": "textfield",
+            "description": "YYYY-MM-DD. Only tenders advertised on or before this date."
+        },
+        "closingDate": {
+            "title": "Closing date (mode=list only)",
+            "type": "string",
+            "editor": "textfield",
+            "description": "YYYY-MM-DD. Only tenders closing on this exact date."
+        },
+        "startPage": {
+            "title": "Start page (mode=list only)",
+            "type": "integer",
+            "description": "Which page of results to start collecting from (50 rows/page). Leave at 1 unless resuming a specific offset.",
+            "default": 1,
+            "minimum": 1,
+            "prefill": 1
+        },
+        "maxResults": {
+            "title": "Max results (mode=list only)",
+            "type": "integer",
+            "description": "Caps how many rows this run collects, paging forward automatically (50 rows/page) until this cap, the last page, or an empty page is reached.",
+            "default": 50,
+            "minimum": 1,
+            "maximum": 2000,
+            "prefill": 50
+        },
+        "tenderNo": {
+            "title": "Tender number or URL (mode=detail only)",
+            "type": "string",
+            "editor": "textfield",
+            "description": "A single PPRA tender number (e.g. TS0000012236E), or its full detail URL. Find these from a 'list' mode run's tenderNo/detailUrl fields.",
+            "prefill": "TS0000012236E"
+        },
+        "tenderNos": {
+            "title": "Tender numbers or URLs (mode=detail only)",
+            "type": "array",
+            "editor": "stringList",
+            "description": "Multiple tender numbers (or full detail URLs) to fetch full detail for in one run."
+        },
+        "maxConcurrency": {
+            "title": "Max concurrent workers (mode=detail only)",
+            "type": "integer",
+            "description": "How many tender detail pages to fetch in parallel.",
+            "default": 4,
+            "minimum": 1,
+            "maximum": 10,
+            "prefill": 4
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "editor": "proxy",
+            "description": "Apify Proxy configuration. This target has no anti-bot gate, so a plain datacenter proxy (or no proxy) also works -- residential is offered for consistency with other actors in this collection.",
+            "default": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            },
+            "prefill": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            }
+        }
+    }
+}

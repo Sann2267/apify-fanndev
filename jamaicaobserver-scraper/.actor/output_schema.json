@@ -1,0 +1,122 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Article / latest-headline record",
+        "description": "Raw-passthrough dataset envelope. Every record carries _input/_source/_scrapedAt (and _error/_errorDetail on failures). Article-mode records (S1-jsonld+html) carry headline/articleBody-style fields parsed from ld+json plus a direct-child <p> HTML body scrape; latest-mode records (S2-rss, the site's working WordPress /feed/) carry title/link-style fields including a real reporter byline (creator) and the full RSS content:encoded HTML body.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The exact input value (URL, or 'latest') that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which extraction strategy emitted this record (e.g. S1-jsonld+html, S2-rss)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed extractions -- the error kind."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "headline": {
+                "title": "Headline",
+                "description": "Article headline, from the NewsArticle ld+json block."
+            },
+            "articleBody": {
+                "title": "Article body",
+                "description": "Full article text, joined from div.content-single-wrap's direct-child <p> paragraphs."
+            },
+            "datePublished": {
+                "title": "Date published",
+                "description": "ISO 8601 publish date from ld+json NewsArticle block."
+            },
+            "dateModified": {
+                "title": "Date modified",
+                "description": "ISO 8601 last-modified date from ld+json NewsArticle block."
+            },
+            "image": {
+                "title": "Image",
+                "description": "Lead image URL, as emitted in ld+json NewsArticle block."
+            },
+            "articleSection": {
+                "title": "Article section",
+                "description": "Section/category list from ld+json (e.g. ['News'], ['Art & Culture', 'Entertainment']). HTML-unescaped."
+            },
+            "isAccessibleForFree": {
+                "title": "Accessible for free",
+                "description": "Upstream paywall metering flag from ld+json."
+            },
+            "_paywalled": {
+                "title": "Paywalled",
+                "description": "True when isAccessibleForFree is explicitly false."
+            },
+            "title": {
+                "title": "Title",
+                "description": "Headline text of a latest-mode RSS item."
+            },
+            "link": {
+                "title": "Link",
+                "description": "Article URL from the RSS feed."
+            },
+            "guid": {
+                "title": "GUID",
+                "description": "RSS item GUID -- on this site, points at an internal newsmemory.com URL, not the public article URL (use `link` instead)."
+            },
+            "creator": {
+                "title": "Creator",
+                "description": "Reporter byline from RSS dc:creator -- typically 'Name Title email@jamaicaobserver.com' as one raw string."
+            },
+            "category": {
+                "title": "Category",
+                "description": "First RSS <category> value for the item (e.g. 'News')."
+            },
+            "pubDate": {
+                "title": "Publish date",
+                "description": "RSS pubDate, RFC 822 format."
+            },
+            "contentEncoded": {
+                "title": "Content (encoded)",
+                "description": "Full article body HTML from the RSS content:encoded field."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across both article and latest-headline records.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "_source",
+                    "_scrapedAt",
+                    "headline",
+                    "title",
+                    "link",
+                    "datePublished",
+                    "pubDate",
+                    "creator",
+                    "category",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

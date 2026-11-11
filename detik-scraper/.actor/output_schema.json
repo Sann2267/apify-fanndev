@@ -1,0 +1,95 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Detik article / latest-headline record",
+        "description": "Raw-passthrough dataset envelope. Every record carries _input/_source/_scrapedAt (failed URLs are not written to the dataset -- they are reported in the ERRORS record of the run's key-value store). Article-mode records (S1-jsonld+html) carry headline/articleBody-style fields scraped from news.detik.com. Latest-mode records (S2-sitemap, from the Google News sitemap) carry title/link-style fields. Upstream JSON-LD and sitemap XML are passed through close to verbatim, so field presence and shape can vary per record.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The exact input value that produced this record: the article URL in article mode, or 'latest' in latest mode."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which extraction strategy emitted this record (S1-jsonld+html for articles, S2-sitemap for latest headlines, or 'none' on error records)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "headline": {
+                "title": "Headline",
+                "description": "Article headline (article mode; raw passthrough from JSON-LD NewsArticle.headline)."
+            },
+            "description": {
+                "title": "Description",
+                "description": "Article summary/description (article mode; raw passthrough from JSON-LD NewsArticle.description)."
+            },
+            "articleBody": {
+                "title": "Article body",
+                "description": "Full article text (article mode), assembled from the <p> tags in div.detail__body-text, with ad-slot placeholder paragraphs (class para_caption) and empty paragraphs excluded. Paragraphs are joined with double newlines."
+            },
+            "datePublished": {
+                "title": "Date published",
+                "description": "Article publish date (article mode; raw passthrough from JSON-LD NewsArticle.datePublished)."
+            },
+            "dateModified": {
+                "title": "Date modified",
+                "description": "Article last-modified date (article mode; raw passthrough from JSON-LD NewsArticle.dateModified)."
+            },
+            "author": {
+                "title": "Author",
+                "description": "Article author name (article mode; extracted from JSON-LD NewsArticle.author.name, may be null if author is not a structured object)."
+            },
+            "image": {
+                "title": "Image URL",
+                "description": "Article lead image URL (article mode; extracted from JSON-LD NewsArticle.image.url, may be null if image is not a structured object)."
+            },
+            "title": {
+                "title": "Title",
+                "description": "Headline of a latest/sitemap item (latest mode; from the sitemap's news:title element)."
+            },
+            "link": {
+                "title": "Link",
+                "description": "URL of a latest/sitemap item (latest mode; from the sitemap's loc element)."
+            },
+            "publicationDate": {
+                "title": "Publication date",
+                "description": "Publish date of a latest/sitemap item (latest mode; from the sitemap's news:publication_date element)."
+            },
+            "keywords": {
+                "title": "Keywords",
+                "description": "Keywords/tags of a latest/sitemap item (latest mode; a list split from the sitemap's news:keywords element, empty list if absent)."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across both article and latest-headline records.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "_source",
+                    "_scrapedAt",
+                    "headline",
+                    "title",
+                    "link",
+                    "author",
+                    "datePublished",
+                    "publicationDate",
+                    "articleBody"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

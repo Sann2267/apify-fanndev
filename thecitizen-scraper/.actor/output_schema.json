@@ -1,0 +1,148 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Article / latest-headline record",
+        "description": "Raw-passthrough dataset envelope. Every record carries _input/_source/_scrapedAt (and _error/_errorDetail on failures). Article-mode records (S1-html, articleBody pulled from HTML div.text-block.blk-txt since ld+json has no articleBody) carry headline/articleBody-style fields; latest-mode records (S2-sitemap, Google News sitemap at /sitemap.xml) carry title/link-style fields.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The exact input value (URL, or 'latest') that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which extraction strategy emitted this record (e.g. S1-html, S2-sitemap)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed extractions -- the error kind."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "articleId": {
+                "title": "Article ID",
+                "description": "Internal numeric The Citizen article ID, taken from the trailing digits of the article URL."
+            },
+            "headline": {
+                "title": "Headline",
+                "description": "Article headline, from the NewsArticle ld+json node."
+            },
+            "description": {
+                "title": "Description",
+                "description": "Short article teaser, from the NewsArticle ld+json node -- passed through verbatim including its HTML tags (e.g. \"<p>...</p>\")."
+            },
+            "articleBody": {
+                "title": "Article body",
+                "description": "Full article text, reconstructed from <p> paragraphs inside div.text-block.blk-txt, with ad slots and the in-body \"Related\" teaser module excluded."
+            },
+            "summary": {
+                "title": "Summary",
+                "description": "\"What you need to know\" bullet box text, when present on the article (not all articles carry one) -- label stripped."
+            },
+            "category": {
+                "title": "Category",
+                "description": "Short category label from span.article-topic, e.g. \"National\", \"Football\"."
+            },
+            "categoryPath": {
+                "title": "Category path",
+                "description": "Breadcrumb trail from the BreadcrumbList ld+json node with \"Home\" dropped, e.g. [\"News\", \"National\"]."
+            },
+            "author": {
+                "title": "Author",
+                "description": "Raw author array from ld+json -- one or more Person objects with name/url. Unlike some sister NMG sites, The Citizen credits individual reporters here."
+            },
+            "publisher": {
+                "title": "Publisher",
+                "description": "Raw publisher object from ld+json (name + logo)."
+            },
+            "datePublished": {
+                "title": "Date published",
+                "description": "ISO 8601 publish date from ld+json."
+            },
+            "dateModified": {
+                "title": "Date modified",
+                "description": "ISO 8601 last-modified date from ld+json."
+            },
+            "image": {
+                "title": "Image",
+                "description": "Raw array of lead image URLs from ld+json (landscape16x9 / landscape3x2 / portrait1x1 crops)."
+            },
+            "keywords": {
+                "title": "Keywords",
+                "description": "Comma-separated keyword string from the page's meta[name=keywords] tag."
+            },
+            "isAccessibleForFree": {
+                "title": "Accessible for free",
+                "description": "Paywall flag from ld+json, present as the literal STRING \"False\" on articles the site marks as subscription-gated, absent (null) on free articles. Note: even when \"False\", this actor still recovers the full articleBody -- the gate is client-side only, not enforced on the raw HTTP response. See CRAWLING_METHOD.md."
+            },
+            "hasPart": {
+                "title": "Has part",
+                "description": "Raw hasPart object from ld+json, present alongside isAccessibleForFree, naming the CSS selector (\".text-block\") the site's own paywall script targets."
+            },
+            "title": {
+                "title": "Title",
+                "description": "Headline text of a latest-mode sitemap item."
+            },
+            "link": {
+                "title": "Link",
+                "description": "Article URL from the sitemap item."
+            },
+            "section": {
+                "title": "Section",
+                "description": "URL path segments between the domain and the trailing slug-id, e.g. \"news/national\", \"sports/football\" -- latest mode only, since the sitemap carries no explicit category field."
+            },
+            "publicationDate": {
+                "title": "Publication date",
+                "description": "ISO 8601 publish timestamp from the news:publication_date sitemap field -- latest mode only."
+            },
+            "language": {
+                "title": "Language",
+                "description": "ISO language code from the news:language sitemap field -- latest mode only."
+            },
+            "access": {
+                "title": "Access",
+                "description": "Paywall flag from the news:access sitemap field -- \"Subscription\" when the site marks the article as gated, absent (null) on free articles -- latest mode only. Mirrors isAccessibleForFree on the article page."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across both article and latest-headline records.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "_source",
+                    "_scrapedAt",
+                    "headline",
+                    "title",
+                    "link",
+                    "datePublished",
+                    "publicationDate",
+                    "category",
+                    "section",
+                    "isAccessibleForFree",
+                    "access",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

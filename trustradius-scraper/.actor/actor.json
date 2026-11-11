@@ -1,0 +1,18 @@
+{
+    "actorSpecification": 1,
+    "name": "trustradius-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "TrustRadius Scraper: Reviews, Products & Comparisons",
+    "description": "B2B software intelligence from TrustRadius: every verified review of a product (with the full questionnaire on request), product profiles with feature ratings and pricing, ranked category lists, alternatives by company size and head-to-head comparisons. No login.",
+    "categories": ["LEAD_GENERATION", "BUSINESS"],
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json",
+    "defaultRunOptions": {
+        "memoryMbytes": 512
+    }
+}

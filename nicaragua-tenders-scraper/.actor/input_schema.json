@@ -1,0 +1,69 @@
+{
+    "title": "Nicaragua Government Tenders Scraper",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "estados": {
+            "title": "Status filter",
+            "type": "array",
+            "editor": "select",
+            "description": "One or more procedure statuses to search. \"Vigente\" (open/in force) is the closest equivalent to \"currently open tenders\".",
+            "items": {
+                "type": "string",
+                "enum": ["vigente", "ejecucion", "cancelado", "cerrado", "desierto", "adjudicado", "suspendido"],
+                "enumTitles": ["Vigente (open/in force)", "Ejecucion (in execution)", "Cancelado (cancelled)", "Cerrado (closed)", "Desierto (declared void)", "Adjudicado (awarded)", "Suspendido (suspended)"]
+            },
+            "default": ["vigente"],
+            "prefill": ["vigente"]
+        },
+        "keyword": {
+            "title": "Keyword (object/title contains)",
+            "type": "string",
+            "editor": "textfield",
+            "description": "Optional free-text keyword (Spanish), matched against the procurement object/title. Leave empty to browse all matching the status filter."
+        },
+        "numero": {
+            "title": "Procedure number contains",
+            "type": "string",
+            "editor": "textfield",
+            "description": "Optional. Filters to a specific procedure/tender number (e.g. \"16/2026\")."
+        },
+        "institucion": {
+            "title": "Institution name contains",
+            "type": "string",
+            "editor": "textfield",
+            "description": "Optional. Filters to one government institution -- a case-insensitive substring match against SISCAE's own institution list (e.g. \"ENACAL\" or \"Alcaldia\"). Leave empty to search all institutions."
+        },
+        "departamento": {
+            "title": "Department (region) contains",
+            "type": "string",
+            "editor": "textfield",
+            "description": "Optional. Filters to one of Nicaragua's departments/regions -- a case-insensitive substring match (e.g. \"Managua\", \"Leon\"). Leave empty to search all departments."
+        },
+        "maxResults": {
+            "title": "Max results",
+            "type": "integer",
+            "editor": "number",
+            "description": "Caps how many procedures this run returns. SISCAE's own search form supports up to 100 results per request (this actor requests the smallest page size -- 10/25/50/100 -- that covers your maxResults); no further pagination beyond 100 was confirmed working during recon.",
+            "default": 50,
+            "minimum": 1,
+            "maximum": 100,
+            "prefill": 50
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "editor": "proxy",
+            "description": "Apify Proxy configuration. This target was confirmed reachable directly from Apify's plain datacenter IP during development (no Residential/country-pinned proxy was needed, unlike some other Latin American targets in this collection) -- Residential is offered here as a safety default in case that changes.",
+            "default": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            },
+            "prefill": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            }
+        }
+    },
+    "required": []
+}

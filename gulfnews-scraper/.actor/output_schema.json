@@ -1,0 +1,102 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Article / latest-headline record",
+        "description": "Every record carries _input/_source/_scrapedAt (failed URLs are not written to the dataset -- they are reported in the ERRORS record of the run's key-value store). Article-mode records (S1-jsonld) carry explicit fields extracted from the page's NewsArticle JSON-LD block. Latest-mode records (S2-sitemap) carry title/link-style fields from the Google News sitemap.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The exact input value (URL, or 'latest') that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which extraction strategy emitted this record (S1-jsonld or S2-sitemap)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "headline": {
+                "title": "Headline",
+                "description": "Article headline (HTML-unescaped, article-mode)."
+            },
+            "description": {
+                "title": "Description",
+                "description": "Short article description/dek (HTML-unescaped, article-mode)."
+            },
+            "articleBody": {
+                "title": "Article body",
+                "description": "Full article text from the NewsArticle JSON-LD's articleBody field (HTML-unescaped, article-mode)."
+            },
+            "articleSection": {
+                "title": "Section",
+                "description": "Article section/category (article-mode)."
+            },
+            "datePublished": {
+                "title": "Date published",
+                "description": "ISO 8601 publish date (article-mode)."
+            },
+            "dateModified": {
+                "title": "Date modified",
+                "description": "ISO 8601 last-modified date (article-mode)."
+            },
+            "author": {
+                "title": "Author",
+                "description": "Comma-joined byline name(s), flattened from the JSON-LD author list/dict (article-mode)."
+            },
+            "keywords": {
+                "title": "Keywords",
+                "description": "Keywords -- comma-separated string (article-mode) or a list split from news:keywords (latest-mode)."
+            },
+            "image": {
+                "title": "Image URL",
+                "description": "Lead image URL, flattened from the JSON-LD image object (article-mode)."
+            },
+            "title": {
+                "title": "Title",
+                "description": "Headline from the Google News sitemap (latest-mode)."
+            },
+            "link": {
+                "title": "Link",
+                "description": "Article URL (latest-mode)."
+            },
+            "publicationDate": {
+                "title": "Publication date",
+                "description": "news:publication_date from the sitemap (latest-mode)."
+            },
+            "imageUrl": {
+                "title": "Image URL (sitemap)",
+                "description": "image:loc from the sitemap entry (latest-mode)."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across both article and latest-headline records.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "_source",
+                    "_scrapedAt",
+                    "headline",
+                    "title",
+                    "link",
+                    "datePublished",
+                    "publicationDate",
+                    "author"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

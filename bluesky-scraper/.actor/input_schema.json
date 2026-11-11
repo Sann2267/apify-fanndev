@@ -1,0 +1,207 @@
+{
+    "title": "Bluesky Scraper",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "mode": {
+            "title": "Mode",
+            "type": "string",
+            "editor": "select",
+            "description": "What to scrape. Each mode reads ONE of the input lists below -- see each field's description for which. ACTOR modes (read \"Bluesky accounts\"): profile, posts, followers, follows, lists, starter-packs. POST modes (read \"Post URLs\"): post-detail, post-likes, post-reposts, post-quotes. SEARCH modes (read \"Search queries\"): search-posts, search-users. FEED mode (reads \"Feed / list URLs\"): feed. DISCOVERY modes (need no input at all): trends, popular-feeds.",
+            "enum": [
+                "profile",
+                "posts",
+                "followers",
+                "follows",
+                "lists",
+                "starter-packs",
+                "post-detail",
+                "post-likes",
+                "post-reposts",
+                "post-quotes",
+                "search-posts",
+                "search-users",
+                "feed",
+                "trends",
+                "popular-feeds"
+            ],
+            "enumTitles": [
+                "Profile -- account details",
+                "Posts -- an account's timeline",
+                "Followers -- who follows an account",
+                "Follows -- who an account follows",
+                "Lists -- lists an account created",
+                "Starter packs -- packs an account created",
+                "Post detail -- a post plus its reply thread",
+                "Post likes -- who liked a post",
+                "Post reposts -- who reposted a post",
+                "Post quotes -- posts quoting a post",
+                "Search posts -- full-text post search",
+                "Search users -- account search",
+                "Feed -- posts from a custom feed or list",
+                "Trends -- what is trending right now",
+                "Popular feeds -- most-liked custom feeds"
+            ],
+            "default": "posts",
+            "prefill": "posts"
+        },
+        "actors": {
+            "title": "Bluesky accounts",
+            "type": "array",
+            "editor": "stringList",
+            "description": "Used by the ACTOR modes (profile, posts, followers, follows, lists, starter-packs). Accepts a handle (bsky.app), an @handle, a DID (did:plc:...), or a profile URL (https://bsky.app/profile/bsky.app) -- mixed freely.",
+            "prefill": ["bsky.app"]
+        },
+        "postUrls": {
+            "title": "Post URLs",
+            "type": "array",
+            "editor": "stringList",
+            "description": "Used by the POST modes (post-detail, post-likes, post-reposts, post-quotes). Accepts a bsky.app post URL (https://bsky.app/profile/<handle>/post/<rkey>) or a raw at:// URI."
+        },
+        "searchQueries": {
+            "title": "Search queries",
+            "type": "array",
+            "editor": "stringList",
+            "description": "Used by the SEARCH modes (search-posts, search-users). One dataset page set per query. Bluesky's inline operators work inside the query text too (for example: from:bsky.app \"release notes\")."
+        },
+        "feedUrls": {
+            "title": "Feed / list URLs",
+            "type": "array",
+            "editor": "stringList",
+            "description": "Used by the \"feed\" mode. Accepts a custom-feed URL (https://bsky.app/profile/<did>/feed/<rkey>), a list URL (https://bsky.app/profile/<did>/lists/<rkey>), or the equivalent at:// URI. Feeds and lists are told apart automatically."
+        },
+        "maxItems": {
+            "title": "Max items per input",
+            "type": "integer",
+            "editor": "number",
+            "description": "Upper bound on records collected for EACH input item (each account, post, or query) -- not for the run as a whole. Pagination stops early when the account or result set runs out.",
+            "default": 100,
+            "minimum": 1,
+            "maximum": 100000,
+            "prefill": 100
+        },
+        "postFilter": {
+            "title": "Post type filter",
+            "type": "string",
+            "editor": "select",
+            "description": "\"posts\" mode only -- which of the account's posts to return. Default (posts_with_replies) returns everything.",
+            "enum": [
+                "posts_with_replies",
+                "posts_no_replies",
+                "posts_with_media",
+                "posts_and_author_threads",
+                "posts_with_video"
+            ],
+            "enumTitles": [
+                "Everything (posts + replies)",
+                "Posts only, no replies",
+                "Posts with media only",
+                "Posts and author threads",
+                "Posts with video only"
+            ],
+            "default": "posts_with_replies"
+        },
+        "includePins": {
+            "title": "Include pinned post",
+            "type": "boolean",
+            "editor": "checkbox",
+            "description": "\"posts\" mode only -- put the account's pinned post at the top of its feed.",
+            "default": false
+        },
+        "threadDepth": {
+            "title": "Reply thread depth",
+            "type": "integer",
+            "editor": "number",
+            "description": "\"post-detail\" mode only -- how many reply levels below the post to walk. 0 returns the post alone; 6 is the bsky.app web default. Replies come back flat with a replyDepth field, so the tree is still reconstructable.",
+            "default": 6,
+            "minimum": 0,
+            "maximum": 1000
+        },
+        "parentHeight": {
+            "title": "Parent thread height",
+            "type": "integer",
+            "editor": "number",
+            "description": "\"post-detail\" mode only -- how many ancestor posts above the given post to include. 0 (default) treats the given post as the root.",
+            "default": 0,
+            "minimum": 0,
+            "maximum": 1000
+        },
+        "sort": {
+            "title": "Search sort order",
+            "type": "string",
+            "editor": "select",
+            "description": "\"search-posts\" mode only -- rank results by engagement (top) or recency (latest).",
+            "enum": ["top", "latest"],
+            "enumTitles": ["Top (most engagement)", "Latest (newest first)"],
+            "default": "latest"
+        },
+        "since": {
+            "title": "Search: posted after",
+            "type": "string",
+            "editor": "textfield",
+            "description": "\"search-posts\" mode only -- only posts created at or after this time. ISO 8601 (2026-08-01T00:00:00Z) or a plain date (2026-08-01)."
+        },
+        "until": {
+            "title": "Search: posted before",
+            "type": "string",
+            "editor": "textfield",
+            "description": "\"search-posts\" mode only -- only posts created before this time. ISO 8601 (2026-08-29T00:00:00Z) or a plain date (2026-08-29)."
+        },
+        "lang": {
+            "title": "Search: language",
+            "type": "string",
+            "editor": "textfield",
+            "description": "\"search-posts\" mode only -- restrict to posts tagged with this BCP-47 language code, e.g. id, en, ja."
+        },
+        "author": {
+            "title": "Search: author",
+            "type": "string",
+            "editor": "textfield",
+            "description": "\"search-posts\" mode only -- restrict to posts written by this handle or DID."
+        },
+        "mentions": {
+            "title": "Search: mentions account",
+            "type": "string",
+            "editor": "textfield",
+            "description": "\"search-posts\" mode only -- restrict to posts that mention this handle or DID."
+        },
+        "domain": {
+            "title": "Search: links to domain",
+            "type": "string",
+            "editor": "textfield",
+            "description": "\"search-posts\" mode only -- restrict to posts linking to this domain, e.g. nytimes.com."
+        },
+        "url": {
+            "title": "Search: links to URL",
+            "type": "string",
+            "editor": "textfield",
+            "description": "\"search-posts\" mode only -- restrict to posts linking to this exact URL."
+        },
+        "tag": {
+            "title": "Search: hashtags",
+            "type": "array",
+            "editor": "stringList",
+            "description": "\"search-posts\" mode only -- restrict to posts carrying every one of these hashtags. Enter them without the leading # sign."
+        },
+        "maxConcurrency": {
+            "title": "Max concurrent workers",
+            "type": "integer",
+            "editor": "number",
+            "description": "How many input items to process in parallel. Ignored for \"search-posts\", which is forced to 1 because Bluesky throttles that endpoint per IP and parallel workers only drain the same budget faster.",
+            "default": 4,
+            "minimum": 1,
+            "maximum": 16
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "editor": "proxy",
+            "description": "Bluesky's public API has no WAF, so most modes need no proxy at all. \"search-posts\" is the exception: it is rate-limited per IP, and a proxy lets the actor rotate to a fresh IP instead of waiting out the cooldown.",
+            "default": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            }
+        }
+    },
+    "required": ["mode"]
+}

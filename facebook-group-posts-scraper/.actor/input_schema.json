@@ -1,0 +1,126 @@
+{
+    "title": "Facebook Group Posts & Comments Scraper",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "groups": {
+            "title": "Groups",
+            "type": "array",
+            "description": "One group per line: a full URL (https://www.facebook.com/groups/<slug-or-id>), a slug, or a numeric group id. Only groups that are readable without logging in can be scraped - private groups return an error row explaining why.",
+            "editor": "stringList",
+            "prefill": [
+                "React.JSdevelopers"
+            ]
+        },
+        "startUrls": {
+            "title": "Start URLs",
+            "type": "array",
+            "description": "Group URLs, for pasting a list straight out of another actor's dataset.",
+            "editor": "requestListSources"
+        },
+        "maxPostsPerGroup": {
+            "title": "Max posts per group",
+            "type": "integer",
+            "description": "Facebook streams a group feed in batches; this actor replays its pagination query until the cap is reached or the feed runs out.",
+            "default": 40,
+            "minimum": 1,
+            "maximum": 1000,
+            "unit": "posts"
+        },
+        "scrapeComments": {
+            "title": "Also fetch comment bodies",
+            "type": "boolean",
+            "description": "Opens each post's permalink and emits whatever comment text Facebook serves. Important: Meta publishes the comment COUNT on a group post to logged-out clients but NOT the comment text (measured 2026-09-20), so this normally returns nothing for group posts while costing one request per post. The count is reported on every post regardless, without this option. Leave it off unless you want to check for yourself.",
+            "default": false
+        },
+        "maxPostsForComments": {
+            "title": "Posts to try comments on",
+            "type": "integer",
+            "description": "Caps the extra requests made when comment fetching is on.",
+            "default": 20,
+            "minimum": 1,
+            "maximum": 500,
+            "unit": "posts"
+        },
+        "onlyWithText": {
+            "title": "Only posts with written text",
+            "type": "boolean",
+            "description": "Drop posts that carry only a photo or video. Useful when you are analysing what the community says rather than what it shares.",
+            "default": false,
+            "groupCaption": "Filters",
+            "groupDescription": "Applied after fetching, so the run summary still reflects what was read."
+        },
+        "minReactions": {
+            "title": "Minimum reactions",
+            "type": "integer",
+            "description": "Posts whose reaction count Facebook withheld are dropped, since an unknown count cannot be shown to clear the bar.",
+            "minimum": 0,
+            "unit": "reactions"
+        },
+        "minComments": {
+            "title": "Minimum comments",
+            "type": "integer",
+            "description": "Filters on the comment count, which is published even though the comment text is not.",
+            "minimum": 0,
+            "unit": "comments"
+        },
+        "textContains": {
+            "title": "Post text contains",
+            "type": "string",
+            "description": "Case-insensitive substring match against the post body.",
+            "editor": "textfield"
+        },
+        "postedAfter": {
+            "title": "Posted on or after",
+            "type": "string",
+            "description": "YYYY-MM-DD. Posts with no timestamp are dropped.",
+            "editor": "textfield"
+        },
+        "emitSummary": {
+            "title": "Add a run summary record",
+            "type": "boolean",
+            "description": "Append one RUN_SUMMARY record: posts collected, distinct authors, total reactions and comments, newest and oldest post.",
+            "default": true
+        },
+        "exportFormats": {
+            "title": "Extra export files",
+            "type": "array",
+            "description": "Also write the results to the key-value store in these formats. The dataset is always produced regardless.",
+            "editor": "select",
+            "items": {
+                "type": "string",
+                "enum": [
+                    "json",
+                    "ndjson",
+                    "csv",
+                    "xlsx"
+                ],
+                "enumTitles": [
+                    "JSON",
+                    "NDJSON",
+                    "CSV",
+                    "Excel (XLSX)"
+                ]
+            },
+            "default": []
+        },
+        "proxyConfiguration": {
+            "title": "Proxy",
+            "type": "object",
+            "description": "Apify Proxy. RESIDENTIAL is the default and you should keep it: Facebook serves datacentre addresses a reduced page with no feed and no counts, so a run without a residential proxy usually collects nothing. The exit country also decides which country's results you get.",
+            "editor": "proxy",
+            "default": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": [
+                    "RESIDENTIAL"
+                ]
+            },
+            "prefill": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": [
+                    "RESIDENTIAL"
+                ]
+            }
+        }
+    }
+}

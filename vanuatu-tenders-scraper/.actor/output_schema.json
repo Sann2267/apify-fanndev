@@ -1,0 +1,112 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "ctb.gov.vu Vanuatu tender record",
+        "description": "One record per tender card. Shape is identical for recordType CURRENT_TENDER (listType=current) and TENDER_RESULT (listType=results) -- only the source archive differs. A single _error record is emitted instead of payload fields when a request fails or is unreachable.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "Which list this record came from: 'list:current' or 'list:results'."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which extraction strategy emitted this record, or 'none' on error."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on a failed run (blocked_or_transient)."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "recordType": {
+                "type": "string",
+                "title": "Record type",
+                "description": "CURRENT_TENDER or TENDER_RESULT."
+            },
+            "tenderType": {
+                "type": ["string", "null"],
+                "title": "Solicitation type",
+                "description": "e.g. 'Request For Tender', 'Request For Proposal' -- parsed from the upstream card's own label, which varies by tender."
+            },
+            "referenceNumber": {
+                "type": ["string", "null"],
+                "title": "Reference number",
+                "description": "The Central Tender Board's own reference code for this solicitation."
+            },
+            "title": {
+                "type": "string",
+                "title": "Title",
+                "description": "What is being procured."
+            },
+            "purchaser": {
+                "type": ["string", "null"],
+                "title": "Purchaser",
+                "description": "The procuring ministry, department, or project."
+            },
+            "category": {
+                "type": ["string", "null"],
+                "title": "Category",
+                "description": "e.g. 'Construction Work', 'Road Works'."
+            },
+            "submissionDate": {
+                "type": ["string", "null"],
+                "title": "Submission date",
+                "description": "Upstream free-text bid submission deadline, usually 'DD Mon YYYY HH:MM'."
+            },
+            "expiryDate": {
+                "type": ["string", "null"],
+                "title": "Expiry date",
+                "description": "Upstream free-text tender expiry date, usually 'DD Mon YYYY'."
+            },
+            "description": {
+                "type": ["string", "null"],
+                "title": "Description",
+                "description": "Full free-text description as published by CTB."
+            },
+            "detailUrl": {
+                "type": "string",
+                "title": "Detail page URL",
+                "description": "The tender's own ctb.gov.vu page, with a few extra fields not repeated here (Date Issued, Completion Date, Opening date/time, Contact Person/Email)."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns -- rows missing a given column render blank.",
+            "transformation": {
+                "fields": [
+                    "recordType",
+                    "tenderType",
+                    "referenceNumber",
+                    "title",
+                    "purchaser",
+                    "category",
+                    "submissionDate",
+                    "expiryDate",
+                    "detailUrl",
+                    "_error",
+                    "_scrapedAt"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

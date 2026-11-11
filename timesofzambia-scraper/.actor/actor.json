@@ -1,0 +1,14 @@
+{
+    "actorSpecification": 1,
+    "name": "timesofzambia-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Times of Zambia Scraper",
+    "description": "Extract full article text or the newest headlines from Times of Zambia (times.co.zm), Zambia's oldest daily newspaper -- no account or API key needed.",
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

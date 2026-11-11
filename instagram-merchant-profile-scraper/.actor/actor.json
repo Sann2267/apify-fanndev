@@ -1,0 +1,22 @@
+{
+    "actorSpecification": 1,
+    "name": "instagram-merchant-profile-scraper",
+    "version": "0.1",
+    "buildTag": "latest",
+    "title": "Instagram Merchant Profile & Bio-Link Extractor",
+    "description": "Extract public Instagram business profiles: followers, engagement, business contact and address, and the bio links that are a merchant's real storefront (Shopee, Tokopedia, WhatsApp, webstore). For competitor mapping and lead generation. No login needed.",
+    "categories": ["SOCIAL_MEDIA", "LEAD_GENERATION"],
+    "minMemoryMbytes": 256,
+    "maxMemoryMbytes": 4096,
+    "defaultRunOptions": {
+        "build": "latest",
+        "memoryMbytes": 1024,
+        "timeoutSecs": 3600
+    },
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

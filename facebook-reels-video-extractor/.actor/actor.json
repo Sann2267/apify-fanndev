@@ -1,0 +1,23 @@
+{
+    "actorSpecification": 1,
+    "name": "facebook-reels-video-extractor",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Facebook Reels & Video Metadata / Transcript Extractor",
+    "description": "Extract Facebook reels and videos with play counts, engagement, duration, audio track, direct MP4 URLs and spoken-word transcripts. Transcripts are real: Facebook publishes a SubRip caption file for many reels and this actor downloads and parses it. Read a page's whole tab, or pass individual URLs.",
+    "categories": [
+        "SOCIAL_MEDIA",
+        "VIDEOS"
+    ],
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json",
+    "defaultRunOptions": {
+        "build": "latest",
+        "timeoutSecs": 3600,
+        "memoryMbytes": 2048
+    }
+}

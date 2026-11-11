@@ -1,0 +1,141 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Auction lot / reference record",
+        "description": "Raw-passthrough dataset envelope on top of DJKN's own API JSON shape -- upstream Indonesian field names are kept verbatim. Every record carries _input/_source/_scrapedAt (and _error/_errorDetail on failures). recordType discriminates: LOT (catalogue/office/feed row), LOT_DETAIL (full detail incl. content.barangs and photos), CATEGORY and KPKNL_OFFICE (reference mode).",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The search/office/lot input that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which extraction strategy emitted this record (S1-api, or none on failure)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "recordType": {
+                "title": "Record type",
+                "description": "LOT | LOT_DETAIL | CATEGORY | KPKNL_OFFICE."
+            },
+            "_namaLotLelangText": {
+                "title": "Lot name (plain text)",
+                "description": "namaLotLelang with HTML stripped -- upstream stores markup inside the name (e.g. \"30131 m<sup>2</sup>\"). The original field is left untouched."
+            },
+            "_lotUrl": {
+                "title": "Lot URL",
+                "description": "Public lelang.go.id page for this lot."
+            },
+            "_kpknlName": {
+                "title": "KPKNL name",
+                "description": "kpknl mode only -- the office the lot was scoped to."
+            },
+            "namaLotLelang": {
+                "title": "Lot name",
+                "description": "Upstream lot title (may contain HTML)."
+            },
+            "kodeLot": {
+                "title": "Lot code",
+                "description": "Short public lot code, e.g. \"4V6LKZ\"."
+            },
+            "nilaiLimit": {
+                "title": "Reserve price (IDR)",
+                "description": "Limit value / reserve price in rupiah."
+            },
+            "uangJaminan": {
+                "title": "Deposit (IDR)",
+                "description": "Bid security deposit required."
+            },
+            "tanggalBatasJaminan": {
+                "title": "Deposit deadline",
+                "description": "Deadline to place the deposit."
+            },
+            "tglMulaiLelang": {
+                "title": "Auction start",
+                "description": "Auction opening timestamp."
+            },
+            "tglSelesaiLelang": {
+                "title": "Auction end",
+                "description": "Auction closing timestamp."
+            },
+            "namaLokasi": {
+                "title": "Location",
+                "description": "Asset location (regency/city)."
+            },
+            "namaUnitKerja": {
+                "title": "KPKNL office",
+                "description": "Auction office handling the lot."
+            },
+            "status": {
+                "title": "Status",
+                "description": "Upstream lot status, e.g. TAYANG (published)."
+            },
+            "caraPenawaran": {
+                "title": "Bidding method",
+                "description": "e.g. OPEN_BIDDING, CLOSED_BIDDING."
+            },
+            "content": {
+                "title": "Content",
+                "description": "LOT_DETAIL only -- nested `barangs` (items) with ownership documents (buktiKepemilikan), specs and description, passed through as-is."
+            },
+            "photos": {
+                "title": "Photos",
+                "description": "Photo objects for the lot, passed through as-is."
+            },
+            "views": {
+                "title": "Views",
+                "description": "LOT_DETAIL only -- upstream view counter."
+            },
+            "_error": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Error",
+                "description": "Present only on failed extractions (e.g. not_found, office_not_found, invalid_lot_id)."
+            },
+            "_errorDetail": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across lot / reference records.",
+            "transformation": {
+                "fields": [
+                    "recordType",
+                    "_namaLotLelangText",
+                    "kodeLot",
+                    "nilaiLimit",
+                    "uangJaminan",
+                    "namaLokasi",
+                    "namaUnitKerja",
+                    "tglMulaiLelang",
+                    "tglSelesaiLelang",
+                    "status",
+                    "_lotUrl",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

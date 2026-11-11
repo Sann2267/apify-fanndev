@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+.venv/
+storage/
+apify_storage/
+.env
+output/

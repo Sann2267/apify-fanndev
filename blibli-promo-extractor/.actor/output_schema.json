@@ -1,0 +1,265 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Blibli promo / flash sale record",
+        "description": "Raw-passthrough dataset envelope on top of Blibli's own internal API JSON. Every field Blibli returns is preserved verbatim; fields prefixed with `_` are added by this actor -- the standard envelope plus flattened headline figures (discount, prices, quota, campaign window) that a price-comparison consumer would otherwise recompute on every row. Which upstream fields are present depends on `mode`: flashSale records carry `flashsale`/`price`/`merchantCode`, promoCampaigns records carry `title`/`promoPeriod`/`categoryTree`, discountedProducts records carry the full search-result product object.",
+        "properties": {
+            "_input": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Input",
+                "description": "The schedule id, promo sort, or search term/category that produced this record."
+            },
+            "_source": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Source strategy",
+                "description": "S1-flashsale-v2, S2-promotions, S3-search-discount, or none on failure."
+            },
+            "_scrapedAt": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Error",
+                "description": "Present only on failed or empty runs (BLOCKED_AFTER_RETRIES, UPSTREAM_SHAPE_CHANGED, INVALID_INPUT, EMPTY_RESULT)."
+            },
+            "_errorDetail": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "_discountPercent": {
+                "type": [
+                    "number",
+                    "null"
+                ],
+                "title": "Discount %",
+                "description": "Headline discount off list price, as Blibli advertises it."
+            },
+            "_discountSource": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Discount provenance",
+                "description": "'upstream' when Blibli published the discount figure itself, 'computed' when it was derived from list vs sale price because Blibli omits the field for reductions under 1%."
+            },
+            "_contextualDiscountPercent": {
+                "type": [
+                    "number",
+                    "null"
+                ],
+                "title": "Contextual discount %",
+                "description": "Discount after stacking payment-method and voucher promos on top -- usually a few points deeper than the headline figure, and the better measure of true aggressiveness. Nullable: Blibli only publishes it for some products."
+            },
+            "_campaignName": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Campaign name",
+                "description": "Human-readable campaign the discount belongs to, e.g. 'Techtronic 01 - 05 September 2026'."
+            },
+            "_listPrice": {
+                "type": [
+                    "number",
+                    "null"
+                ],
+                "title": "List price (IDR)",
+                "description": "Pre-discount price in rupiah."
+            },
+            "_offerPrice": {
+                "type": [
+                    "number",
+                    "null"
+                ],
+                "title": "Offer price (IDR)",
+                "description": "Discounted price in rupiah."
+            },
+            "_savingAmount": {
+                "type": [
+                    "number",
+                    "null"
+                ],
+                "title": "Saving (IDR)",
+                "description": "List price minus offer price, in rupiah."
+            },
+            "_quotaClaimedPercent": {
+                "type": [
+                    "number",
+                    "null"
+                ],
+                "title": "Flash sale quota claimed %",
+                "description": "Flash Sale mode. How much of the flash-sale allocation is already gone -- the closest public proxy for sell-through speed."
+            },
+            "_quotaStatus": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Quota status",
+                "description": "Flash Sale mode, e.g. AVAILABLE or SOLD_OUT."
+            },
+            "_campaignCode": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Campaign code",
+                "description": "Blibli campaign identifier the discount belongs to, e.g. CAMP-03285."
+            },
+            "_isExclusive": {
+                "type": [
+                    "boolean",
+                    "null"
+                ],
+                "title": "Exclusive campaign",
+                "description": "Flash Sale mode. Whether the product sits in an exclusive branded campaign (e.g. Big Brand Day)."
+            },
+            "_scheduleId": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Schedule id",
+                "description": "Flash Sale session window, formatted startEpochMs-endEpochMs."
+            },
+            "_scheduleStart": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "format": "date-time",
+                "title": "Schedule start",
+                "description": "UTC ISO 8601 start of the flash sale session."
+            },
+            "_scheduleEnd": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "format": "date-time",
+                "title": "Schedule end",
+                "description": "UTC ISO 8601 end of the flash sale session."
+            },
+            "_startTime": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "format": "date-time",
+                "title": "Promo start",
+                "description": "Promo campaign mode. UTC ISO 8601 start of the campaign."
+            },
+            "_endTime": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "format": "date-time",
+                "title": "Promo end",
+                "description": "Promo campaign mode. UTC ISO 8601 end of the campaign."
+            },
+            "_promoEndTime": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "format": "date-time",
+                "title": "Product promo end",
+                "description": "Discounted-products mode. UTC ISO 8601 expiry of the product's promo, when Blibli exposes one."
+            },
+            "_categoryFilter": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Category filter",
+                "description": "Flash Sale mode. The category code this record was fetched under, or null when unfiltered."
+            },
+            "_queryType": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Query type",
+                "description": "Discounted-products mode. searchTerm or category."
+            },
+            "_query": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Query",
+                "description": "Discounted-products mode. The search term or category code that produced this record."
+            },
+            "_rankInQuery": {
+                "type": [
+                    "number",
+                    "null"
+                ],
+                "title": "Rank in query",
+                "description": "Discounted-products mode. 1-based position in Blibli's own result ordering -- useful for tracking competitor visibility between runs."
+            },
+            "_minDiscountFilter": {
+                "type": [
+                    "number",
+                    "null"
+                ],
+                "title": "Min discount filter",
+                "description": "The minimum-discount threshold applied to this run."
+            },
+            "_promoFilter": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Promo filter",
+                "description": "The Blibli promo tag applied to this run, when one was set."
+            },
+            "_productUrl": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Product URL",
+                "description": "Absolute blibli.com URL of the product."
+            },
+            "_merchantUrl": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Merchant URL",
+                "description": "Absolute blibli.com URL of the seller's storefront."
+            },
+            "_promoUrl": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Promo URL",
+                "description": "Promo campaign mode. Absolute URL of the campaign landing page."
+            }
+        }
+    }
+}

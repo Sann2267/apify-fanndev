@@ -1,0 +1,126 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "BRELA search-result record",
+        "description": "Raw-passthrough dataset envelope. Every record carries _input/_source/_scrapedAt (and _error/_errorDetail on failures). BRELA's public Online Registration System (ORS) exposes only a search list -- there is no public detail/drill-down page (directors, shareholders, etc. require a paid 'custom search result' e-service for registered users) -- so every successful record here is one row of the public search-result table, verbatim from upstream's own field names.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The exact query (name or number) that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "S1-ors-searchresult (a real search-result row) or none (error record)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed extractions -- not_found (search matched nothing) or blocked_or_transient (network/WAF/timeout issue)."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "id": {
+                "title": "Internal ID",
+                "description": "BRELA ORS internal database row ID for this entity (not a public-facing registration number)."
+            },
+            "last_change_tracking_no": {
+                "title": "Last change tracking number",
+                "description": "BRELA's internal filing/transaction tracking code for the most recent change to this record (e.g. G260324-0601)."
+            },
+            "cert_number": {
+                "title": "Registration / incorporation number",
+                "description": "The public registration number (business names) or incorporation/compliance number (companies) -- the number printed on the certificate."
+            },
+            "reg_date": {
+                "title": "Registration date",
+                "description": "Date the business name or company was first registered with BRELA."
+            },
+            "incorporation_date": {
+                "title": "Incorporation date",
+                "description": "Date of incorporation, for companies (usually null for business names)."
+            },
+            "legal_name": {
+                "title": "Registered name",
+                "description": "The full registered legal name on file."
+            },
+            "subtype_name": {
+                "title": "Subtype (readable)",
+                "description": "Human-readable entity subtype, e.g. 'Individual', 'Corporation', 'Foreign company', 'Private company Limited by guarantee'."
+            },
+            "company_subtype": {
+                "title": "Subtype code",
+                "description": "BRELA's internal code for subtype_name, e.g. BNT-IND, BNT-CORP, CMP_FRGN, CMP_PRIV_GUAR."
+            },
+            "object_type": {
+                "title": "Object type",
+                "description": "ET-BUSINESS (business name / sole proprietorship) or ET-COMPANY (company)."
+            },
+            "ba_category": {
+                "title": "Business activity category code",
+                "description": "BRELA's internal business-activity classification code, where on file."
+            },
+            "reg_status": {
+                "title": "Status code",
+                "description": "BRELA's internal status code, e.g. LES-RGC (registered), LES-DIS (dissolved/ceased)."
+            },
+            "reg_status_name": {
+                "title": "Status",
+                "description": "Human-readable current status, e.g. 'Registered', 'Ceased'."
+            },
+            "address": {
+                "title": "Address",
+                "description": "Registered address on file, as a single free-text string (region, district, ward, postcode, street)."
+            },
+            "cess_date": {
+                "title": "Cessation date",
+                "description": "Date the business/company ceased operations or was struck off, if applicable."
+            },
+            "update_date": {
+                "title": "Last updated",
+                "description": "Timestamp of the last update to this record in the ORS."
+            },
+            "has_charges": {
+                "title": "Has registered charges",
+                "description": "Whether the entity has registered charges/liens on file, where indicated by BRELA."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns for each search-result record.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "_source",
+                    "_scrapedAt",
+                    "legal_name",
+                    "cert_number",
+                    "object_type",
+                    "subtype_name",
+                    "reg_status_name",
+                    "reg_date",
+                    "address",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

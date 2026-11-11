@@ -1,0 +1,100 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Game / stream / channel-rank record",
+        "description": "Raw-passthrough dataset envelope. Every record carries _input/_source/_scrapedAt (and _error/_errorDetail on failures). \"top-games\" records carry one row per trending game/category. \"top-streams\"/\"game-streams\" records carry one row per live stream. \"channel-rank\" records carry one row per checked channel. Every ranked record carries _approxSort:true -- Twitch's VIEWER_COUNT sort is confirmed NOT strictly monotonic (see CRAWLING_METHOD.md), so rankApprox/globalRankApprox/categoryRankApprox are best-effort positions within a single fetched page, not guaranteed exact platform ranks.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The mode descriptor, game name, or channel login that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which extraction strategy emitted this record (S1-gql, or none on failure)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed extractions (e.g. channel_not_found, game_not_found)."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "_approxSort": {
+                "type": "boolean",
+                "title": "Approximate sort",
+                "description": "True on every ranked record -- Twitch's own VIEWER_COUNT sort is not strictly monotonic (confirmed live). Treat rank fields as best-effort, not exact."
+            },
+            "_truncatedToFirstPage": {
+                "type": "boolean",
+                "title": "Truncated to first page",
+                "description": "True if more items exist beyond this page -- Twitch blocks deeper HTTP-only pagination (device-integrity gate)."
+            },
+            "rankApprox": { "title": "Approximate rank", "description": "top-games/top-streams/game-streams mode -- position within this fetched page." },
+            "gameId": { "title": "Game ID", "description": "top-games/game-streams mode." },
+            "name": { "title": "Game name", "description": "top-games mode." },
+            "displayName": { "title": "Display name", "description": "top-games mode (game) or channel-rank mode (channel)." },
+            "viewersCount": { "title": "Viewer count", "description": "Current viewer count -- game total (top-games) or a single stream's count (top-streams/game-streams/channel-rank)." },
+            "broadcastersCount": { "title": "Broadcasters count", "description": "top-games mode -- how many channels are currently streaming this game." },
+            "channelsCount": { "title": "Channels count", "description": "top-games mode -- a related but not always identical count to broadcastersCount, both passed through as reported." },
+            "boxArtURL": { "title": "Box art URL", "description": "top-games mode." },
+            "streamId": { "title": "Stream ID", "description": "top-streams/game-streams mode." },
+            "title": { "title": "Stream title", "description": "top-streams/game-streams mode." },
+            "type": { "title": "Stream type", "description": "top-streams/game-streams mode -- normally \"live\"." },
+            "createdAt": { "title": "Stream started at", "description": "top-streams/game-streams mode." },
+            "broadcasterId": { "title": "Broadcaster ID", "description": "top-streams/game-streams mode." },
+            "broadcasterLogin": { "title": "Broadcaster login", "description": "top-streams/game-streams mode." },
+            "broadcasterDisplayName": { "title": "Broadcaster display name", "description": "top-streams/game-streams mode." },
+            "gameName": { "title": "Game name", "description": "top-streams mode (the game being played) or channel-rank mode." },
+            "gameDisplayName": { "title": "Game display name", "description": "game-streams mode." },
+            "gameTotalViewersCount": { "title": "Game total viewers", "description": "game-streams mode -- the category's overall current viewer count." },
+            "gameBroadcastersCount": { "title": "Game broadcasters count", "description": "game-streams mode." },
+            "login": { "title": "Login", "description": "channel-rank mode." },
+            "isLive": { "title": "Is live now", "description": "channel-rank mode." },
+            "streamStartedAt": { "title": "Stream started at", "description": "channel-rank mode." },
+            "globalRankApprox": { "title": "Global rank (approx)", "description": "channel-rank mode -- position within the platform-wide top-30 live streams, or null if not found there." },
+            "globalRankNote": { "title": "Global rank note", "description": "channel-rank mode -- human-readable explanation of globalRankApprox." },
+            "categoryRankApprox": { "title": "Category rank (approx)", "description": "channel-rank mode -- position within the top-30 live streams of the channel's current game, or null if not found there." },
+            "categoryRankNote": { "title": "Category rank note", "description": "channel-rank mode -- human-readable explanation of categoryRankApprox." },
+            "note": { "title": "Note", "description": "channel-rank mode -- present when the channel is offline (ranking only applies to live streams)." }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across game / stream / channel-rank records.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "_source",
+                    "_scrapedAt",
+                    "rankApprox",
+                    "name",
+                    "broadcasterLogin",
+                    "login",
+                    "viewersCount",
+                    "gameName",
+                    "globalRankApprox",
+                    "categoryRankApprox",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

@@ -1,0 +1,122 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Article / latest-headline record",
+        "description": "Raw-passthrough dataset envelope. Every record carries _input/_source/_scrapedAt (and _error/_errorDetail on failures). Article-mode records (S1-html, articleBody pulled from HTML div.entry-content since ld+json has no articleBody) carry headline/articleBody-style fields; latest-mode records (S2-rss, WordPress RSS feed at /feed/) carry title/link/content-style fields and already include full article text via content:encoded.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The exact input value (URL, or 'latest') that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which extraction strategy emitted this record (e.g. S1-html, S2-rss)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed extractions -- the error kind."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "slug": {
+                "title": "Slug",
+                "description": "URL slug of the article (trailing path segment)."
+            },
+            "headline": {
+                "title": "Headline",
+                "description": "Article headline, from the Article ld+json node (article mode only)."
+            },
+            "articleBody": {
+                "title": "Article body",
+                "description": "Full article text, paragraph-joined from <p class=\"wp-block-paragraph\"> elements inside div.entry-content (article mode only)."
+            },
+            "author": {
+                "title": "Author",
+                "description": "Byline name(s). Article mode: resolved from the ld+json Person node(s) referenced by the Article node's author field -- a real reporter name on staff pieces, or the wire service name (e.g. \"AFP\") on wire pieces. Latest mode: the RSS <dc:creator> value."
+            },
+            "category": {
+                "title": "Category",
+                "description": "Article mode: the full list of WordPress category names from ld+json articleSection (e.g. [\"National\",\"News\",\"Top Story 1\"]). Latest mode: the single RSS <category> value."
+            },
+            "wordCount": {
+                "title": "Word count",
+                "description": "Word count reported by the ld+json Article node (article mode only)."
+            },
+            "datePublished": {
+                "title": "Date published",
+                "description": "ISO 8601 publish date from ld+json (article mode only)."
+            },
+            "dateModified": {
+                "title": "Date modified",
+                "description": "ISO 8601 last-modified date from ld+json (article mode only)."
+            },
+            "thumbnailUrl": {
+                "title": "Thumbnail URL",
+                "description": "Lead thumbnail image URL from ld+json (article mode only)."
+            },
+            "image": {
+                "title": "Image",
+                "description": "Lead image (url/caption/width/height), resolved from the ld+json ImageObject node referenced by the Article node's image field (article mode only)."
+            },
+            "title": {
+                "title": "Title",
+                "description": "Headline text of a latest-mode RSS item."
+            },
+            "link": {
+                "title": "Link",
+                "description": "Article URL from the RSS item (latest mode only)."
+            },
+            "pubDate": {
+                "title": "Publish date",
+                "description": "RFC-822 publish date string from the RSS item (latest mode only)."
+            },
+            "guid": {
+                "title": "GUID",
+                "description": "WordPress internal post GUID from the RSS item, e.g. \"https://www.namibian.com.na/?p=967775\" (latest mode only)."
+            },
+            "content": {
+                "title": "Content",
+                "description": "Full article text, paragraph-joined from the RSS item's <content:encoded> HTML, with the trailing WordPress \"The post ... appeared first on The Namibian.\" boilerplate paragraph stripped (latest mode only)."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across both article and latest-headline records.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "_source",
+                    "_scrapedAt",
+                    "headline",
+                    "title",
+                    "link",
+                    "author",
+                    "datePublished",
+                    "pubDate",
+                    "category",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

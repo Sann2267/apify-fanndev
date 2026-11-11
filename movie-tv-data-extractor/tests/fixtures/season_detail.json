@@ -1,0 +1,87 @@
+{
+  "_id": "5259aefd19c2957130249d52",
+  "air_date": "2008-01-20",
+  "episodes": [
+    {
+      "air_date": "2008-01-20",
+      "episode_number": 1,
+      "episode_type": "standard",
+      "id": 62085,
+      "name": "Pilot",
+      "overview": "Diagnosed with terminal lung cancer, chemistry teacher Walter White teams up with a former student to cook and sell crystal meth.",
+      "production_code": "",
+      "runtime": 58,
+      "season_number": 1,
+      "show_id": 1396,
+      "still_path": "/ydlY3iPfeOAvu8gVqrxPoMvzNCn.jpg",
+      "vote_average": 8.2,
+      "vote_count": 359,
+      "crew": [
+        {
+          "job": "Director",
+          "department": "Directing",
+          "credit_id": "d1",
+          "adult": false,
+          "gender": 2,
+          "id": 66633,
+          "known_for_department": "Writing",
+          "name": "Vince Gilligan",
+          "original_name": "Vince Gilligan",
+          "popularity": 5.5,
+          "profile_path": null
+        },
+        {
+          "job": "Writer",
+          "department": "Writing",
+          "credit_id": "w1",
+          "adult": false,
+          "gender": 2,
+          "id": 66633,
+          "known_for_department": "Writing",
+          "name": "Vince Gilligan",
+          "original_name": "Vince Gilligan",
+          "popularity": 5.5,
+          "profile_path": null
+        }
+      ],
+      "guest_stars": [
+        {
+          "character": "Bogdan Wolynetz",
+          "credit_id": "g1",
+          "order": 0,
+          "adult": false,
+          "gender": 2,
+          "id": 92495,
+          "known_for_department": "Acting",
+          "name": "Marius Stan",
+          "original_name": "Marius Stan",
+          "popularity": 1.2,
+          "profile_path": null
+        }
+      ]
+    },
+    {
+      "air_date": "2008-01-27",
+      "episode_number": 2,
+      "episode_type": "standard",
+      "id": 62086,
+      "name": "Cat's in the Bag...",
+      "overview": "Walt and Jesse try to dispose of the bodies.",
+      "production_code": "",
+      "runtime": 48,
+      "season_number": 1,
+      "show_id": 1396,
+      "still_path": "/tjDNvbokPLtEnpFyFPyXMOd6Zr1.jpg",
+      "vote_average": 8.1,
+      "vote_count": 246,
+      "crew": [],
+      "guest_stars": []
+    }
+  ],
+  "id": 3572,
+  "name": "Season 1",
+  "overview": "High school chemistry teacher Walter White's life is suddenly transformed.",
+  "poster_path": "/1BP4xYv9ZG4ZVHkL7ocOziBbSYH.jpg",
+  "season_number": 1,
+  "vote_average": 8.2
+}

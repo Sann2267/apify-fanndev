@@ -1,0 +1,24 @@
+{
+    "actorSpecification": 1,
+    "name": "alfagift-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Alfagift (Alfamart) Product, Price & Promo Scraper",
+    "description": "Twelve Alfagift scrapers in one - no login, no browser, no captcha. Pull Alfamart's whole ~10,000-product catalogue with live prices and discounts, search any keyword, read product detail down to the barcode, sweep the A-Z brand directory, and see every promo campaign running right now.",
+    "categories": [
+        "ECOMMERCE",
+        "BUSINESS",
+        "AGENTS"
+    ],
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json",
+    "defaultRunOptions": {
+        "build": "latest",
+        "memoryMbytes": 1024,
+        "timeoutSecs": 3600
+    }
+}

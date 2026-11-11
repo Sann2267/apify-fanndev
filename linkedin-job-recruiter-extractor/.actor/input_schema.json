@@ -1,0 +1,165 @@
+{
+    "title": "LinkedIn Smart Job Description & Recruiter Extractor",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "searchQueries": {
+            "title": "Search queries",
+            "type": "array",
+            "description": "Job titles or keywords to search, one per line. Each query is paginated ten results at a time and stops returning anything past roughly 975 postings, so coverage comes from using more queries rather than raising the per-query cap.",
+            "editor": "stringList",
+            "prefill": ["python developer"]
+        },
+        "location": {
+            "title": "Location",
+            "type": "string",
+            "description": "Free-text location applied to every query, exactly as you would type it on LinkedIn - 'United States', 'Jakarta, Indonesia', 'Remote'. Leave empty for worldwide.",
+            "editor": "textfield",
+            "prefill": "United States"
+        },
+        "jobUrls": {
+            "title": "Job URLs or ids",
+            "type": "array",
+            "description": "Specific postings to read, instead of or alongside a search. Full /jobs/view/ URLs, ?currentJobId= links and bare numeric ids all work.",
+            "editor": "stringList"
+        },
+        "startUrls": {
+            "title": "Job URLs (request list)",
+            "type": "array",
+            "description": "The same job links in the request-list format, for callers that already keep one.",
+            "editor": "requestListSources"
+        },
+        "datePosted": {
+            "title": "Posted within",
+            "type": "string",
+            "description": "The one filter LinkedIn's public jobs endpoint actually honours - it is applied server-side, before results are returned.",
+            "editor": "select",
+            "enum": ["", "past24Hours", "pastWeek", "pastMonth"],
+            "enumTitles": ["Any time", "Past 24 hours", "Past week", "Past month"],
+            "default": ""
+        },
+        "workplaceType": {
+            "title": "Workplace type",
+            "type": "string",
+            "description": "Applied AFTER each description is read, not by LinkedIn. LinkedIn's public endpoint accepts its own workplace filter and then ignores it - passing it returns results identical to passing nothing - so this actor infers the workplace type from the description text and filters on that instead. It means filtered runs still cost one request per posting read.",
+            "editor": "select",
+            "enum": ["", "REMOTE", "HYBRID", "ONSITE"],
+            "enumTitles": ["Any", "Remote", "Hybrid", "On-site"],
+            "default": ""
+        },
+        "employmentType": {
+            "title": "Employment type",
+            "type": "string",
+            "description": "Also applied client-side, matched against the posting's own criteria grid. Same reason as above.",
+            "editor": "select",
+            "enum": ["", "Full-time", "Part-time", "Contract", "Temporary", "Internship", "Volunteer"],
+            "enumTitles": ["Any", "Full-time", "Part-time", "Contract", "Temporary", "Internship", "Volunteer"],
+            "default": ""
+        },
+        "seniorityLevel": {
+            "title": "Seniority level",
+            "type": "string",
+            "description": "Client-side filter against the posting's stated seniority.",
+            "editor": "select",
+            "enum": ["", "Internship", "Entry level", "Associate", "Mid-Senior level", "Director", "Executive"],
+            "enumTitles": ["Any", "Internship", "Entry level", "Associate", "Mid-Senior level", "Director", "Executive"],
+            "default": ""
+        },
+        "requiredTech": {
+            "title": "Must mention these technologies",
+            "type": "array",
+            "description": "Keep only postings whose description names at least one of these, matched against the parsed tech stack rather than raw text - so 'R' will not match 'R&D' and 'React' will not match 'React Native' alone.",
+            "editor": "stringList"
+        },
+        "onlyWithSalary": {
+            "title": "Only postings that state pay",
+            "type": "boolean",
+            "description": "Keep only postings where a pay range was found. Be aware most postings state none: in a sample of eight, two carried an employer-provided range.",
+            "default": false
+        },
+        "includeFullDescription": {
+            "title": "Include the full description text",
+            "type": "boolean",
+            "description": "Keep the complete description on each row. Turn off for a much smaller dataset when you only want the parsed fields.",
+            "default": true
+        },
+        "includeRecruiter": {
+            "title": "Include the recruiter who posted",
+            "type": "boolean",
+            "description": "Requires a session cookie below. LinkedIn does not render the 'Meet the hiring team' block to logged-out visitors - none of eight sampled postings carried it - so without a cookie the recruiter fields stay empty.",
+            "default": false
+        },
+        "sessionCookie": {
+            "title": "Your li_at session cookie",
+            "type": "string",
+            "description": "Optional, and only needed for recruiter details. Copy the li_at cookie value from a browser where you are already signed in to LinkedIn (DevTools > Application > Cookies > www.linkedin.com > li_at). This actor never asks for your password and never signs in for you. Scraping while signed in breaches LinkedIn's User Agreement and can get an account restricted - use one you are willing to risk.",
+            "editor": "textfield",
+            "isSecret": true
+        },
+        "resolveCompanyDomain": {
+            "title": "Resolve each employer's web domain",
+            "type": "boolean",
+            "description": "Opens each employer's LinkedIn page once to read their website, giving you the company domain for mail-merge work. Cached per company, so forty employers cost forty extra requests regardless of how many postings they have. No email address is ever guessed from it - a fabricated address that bounces costs you your sending reputation.",
+            "default": false
+        },
+        "maxJobsPerQuery": {
+            "title": "Maximum postings per query",
+            "type": "integer",
+            "description": "Cap per search query, before detail pages are read. LinkedIn stops serving results past roughly 975 per query.",
+            "default": 50,
+            "prefill": 10,
+            "minimum": 1,
+            "maximum": 975,
+            "unit": "postings"
+        },
+        "maxJobs": {
+            "title": "Maximum postings in total",
+            "type": "integer",
+            "description": "Overall ceiling across every query and URL after de-duplication. Each posting costs one detail request on top of the search requests.",
+            "default": 200,
+            "minimum": 1,
+            "maximum": 2000,
+            "unit": "postings"
+        },
+        "minDelaySeconds": {
+            "title": "Minimum delay between requests",
+            "type": "integer",
+            "description": "LinkedIn answers request bursts with HTTP 999 and a near-empty page. A randomised gap between requests is what keeps a run under that gate; this is the floor of that range.",
+            "default": 2,
+            "minimum": 0,
+            "maximum": 60,
+            "unit": "seconds"
+        },
+        "maxDelaySeconds": {
+            "title": "Maximum delay between requests",
+            "type": "integer",
+            "description": "The ceiling of the randomised gap. Raise both bounds if the log shows rate-gate warnings.",
+            "default": 8,
+            "minimum": 0,
+            "maximum": 120,
+            "unit": "seconds"
+        },
+        "exportFormats": {
+            "title": "Extra export files",
+            "type": "array",
+            "description": "Besides the dataset, write ready-made files into this run's key-value store.",
+            "editor": "select",
+            "items": {
+                "type": "string",
+                "enum": ["json", "ndjson", "csv", "excel"],
+                "enumTitles": ["JSON", "NDJSON", "CSV", "Excel (XLSX)"]
+            },
+            "default": []
+        },
+        "proxyConfiguration": {
+            "title": "Proxy",
+            "type": "object",
+            "description": "Genuinely optional here: the public jobs endpoint has no WAF and no IP block, and Apify's datacenter range reaches it. Worth turning on for long runs, for results localised to another country, and always when you supply a session cookie.",
+            "editor": "proxy",
+            "default": {
+                "useApifyProxy": false
+            }
+        }
+    },
+    "required": []
+}

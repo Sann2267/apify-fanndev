@@ -1,0 +1,368 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Shopify Store Analyzer record",
+        "description": "Raw-passthrough dataset envelope on top of Shopify's own public JSON shapes. Every record carries _input / _source / _scrapedAt / recordType (and _error / _errorDetail on failures). Shopify's field names are preserved verbatim -- a PRODUCT row is a Shopify product object with its variants, images and options nested as-is. Use recordType to split a run's mixed output into tables.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The exact store URL you supplied that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "S1-store-profile, S1-products-json, S1-collections-json, S1-snapshot-diff, or none on failure."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was emitted."
+            },
+            "recordType": {
+                "type": "string",
+                "title": "Record type",
+                "description": "STORE, PRODUCT, NEW_PRODUCT, VARIANT, COLLECTION, CHANGE, CHANGE_SUMMARY, SNAPSHOT_BASELINE, or ERROR."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failure rows: bad_input, domain_unreachable, not_shopify, no_public_catalogue, empty_catalogue, no_new_products, no_collections, html_instead_of_json, timeout, retries_exhausted, or exception."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic, present only alongside _error."
+            },
+            "_warning": {
+                "type": "string",
+                "title": "Warning",
+                "description": "Non-fatal marker. first_run_no_baseline on a SNAPSHOT_BASELINE row means there was nothing to compare against yet."
+            },
+            "_notes": {
+                "title": "Resolution notes",
+                "description": "STORE rows -- how the store was resolved, e.g. a redirect to a regional storefront or a catalogue served from the myshopify.com domain."
+            },
+            "requestedDomain": {
+                "title": "Requested domain",
+                "description": "STORE rows -- the domain you asked for."
+            },
+            "resolvedDomain": {
+                "title": "Resolved domain",
+                "description": "STORE rows -- the domain that actually answered. Differs from requested when a store redirects by region."
+            },
+            "catalogueDomain": {
+                "title": "Catalogue domain",
+                "description": "STORE rows -- the domain the product data came from."
+            },
+            "myshopifyDomain": {
+                "title": "Shopify domain",
+                "description": "STORE rows -- the store's permanent .myshopify.com address."
+            },
+            "isShopify": {
+                "title": "Is Shopify",
+                "description": "STORE rows -- whether the site is a Shopify store."
+            },
+            "detectionConfidence": {
+                "title": "Detection confidence",
+                "description": "STORE rows -- confirmed (the site identifies itself as Shopify) or likely (only indirect signs)."
+            },
+            "storefrontType": {
+                "title": "Storefront type",
+                "description": "STORE rows -- liquid-theme for a standard Shopify theme, headless for a custom front end."
+            },
+            "isHeadless": {
+                "title": "Is headless",
+                "description": "STORE rows -- true when the shop front end is custom-built rather than a Shopify theme."
+            },
+            "poweredBy": {
+                "title": "Platform stack",
+                "description": "STORE rows -- the platform the site reports, e.g. 'Shopify' or 'Shopify, Oxygen, Hydrogen'."
+            },
+            "themeName": {
+                "title": "Theme",
+                "description": "STORE rows -- the theme the store runs, e.g. Dawn, Split, Horizon. Empty on headless stores, which have no theme."
+            },
+            "themeLabel": {
+                "title": "Theme label",
+                "description": "STORE rows -- the merchant's own name for their theme version, often a release note."
+            },
+            "themeId": {
+                "title": "Theme ID",
+                "description": "STORE rows -- the live theme's numeric id."
+            },
+            "themeStoreId": {
+                "title": "Theme Store ID",
+                "description": "STORE rows -- set when the theme comes from the official Shopify Theme Store."
+            },
+            "themeSchemaVersion": {
+                "title": "Theme version",
+                "description": "STORE rows -- the theme's version number."
+            },
+            "isThemeStoreTheme": {
+                "title": "Official theme",
+                "description": "STORE rows -- true for an official Theme Store theme, false for a custom or heavily modified one."
+            },
+            "shop_name": {
+                "title": "Shop name",
+                "description": "STORE rows -- the store's own name."
+            },
+            "shop_currency": {
+                "title": "Currency",
+                "description": "STORE rows -- the store's currency code."
+            },
+            "shop_country": {
+                "title": "Country",
+                "description": "STORE rows -- the store's registered country."
+            },
+            "shop_published_products_count": {
+                "title": "Products (reported)",
+                "description": "STORE rows -- how many products the store says it publishes."
+            },
+            "productsScraped": {
+                "title": "Products scraped",
+                "description": "STORE rows -- how many products this run actually read."
+            },
+            "variantCount": {
+                "title": "Variants",
+                "description": "STORE rows -- total variants across scraped products. PRODUCT rows -- variants on that product."
+            },
+            "avgPrice": {
+                "title": "Average price",
+                "description": "STORE rows -- mean of each product's lowest variant price."
+            },
+            "productsOnSale": {
+                "title": "Products on sale",
+                "description": "STORE rows -- how many products have a variant discounted below its compare-at price."
+            },
+            "productsInStock": {
+                "title": "Products in stock",
+                "description": "STORE rows -- how many products have at least one available variant."
+            },
+            "newestPublishedAt": {
+                "title": "Newest product date",
+                "description": "STORE rows -- when the most recent product went live."
+            },
+            "title": {
+                "title": "Title",
+                "description": "Product, collection or change rows -- the item name."
+            },
+            "handle": {
+                "title": "Handle",
+                "description": "The URL slug Shopify uses for this product or collection."
+            },
+            "productUrl": {
+                "title": "Product URL",
+                "description": "Added by this actor -- the shoppable link to the product page."
+            },
+            "storeDomain": {
+                "title": "Store domain",
+                "description": "Which store this row belongs to, for multi-store runs."
+            },
+            "vendor": {
+                "title": "Vendor",
+                "description": "PRODUCT rows -- the brand or supplier Shopify records."
+            },
+            "product_type": {
+                "title": "Product type",
+                "description": "PRODUCT rows -- the store's own product category."
+            },
+            "tags": {
+                "title": "Tags",
+                "description": "PRODUCT rows -- merchandising tags, often revealing collections and campaigns."
+            },
+            "published_at": {
+                "title": "Published at",
+                "description": "PRODUCT rows -- when the product went live in the store. This is what 'newly added' is based on."
+            },
+            "created_at": {
+                "title": "Created at",
+                "description": "PRODUCT rows -- when the product record was first created, which can be much earlier than its publish date."
+            },
+            "updated_at": {
+                "title": "Updated at",
+                "description": "PRODUCT rows -- when the product was last edited."
+            },
+            "body_html": {
+                "title": "Description",
+                "description": "PRODUCT rows -- the product description as HTML."
+            },
+            "variants": {
+                "title": "Variants",
+                "description": "PRODUCT rows -- every variant with price, compare_at_price, sku, availability, options and weight."
+            },
+            "options": {
+                "title": "Options",
+                "description": "PRODUCT rows -- the option axes (Size, Colour...) and their possible values."
+            },
+            "images": {
+                "title": "Images",
+                "description": "PRODUCT rows -- product images with source URL and dimensions."
+            },
+            "minPrice": {
+                "title": "Min price",
+                "description": "PRODUCT rows -- cheapest variant price, as a number ready for sorting."
+            },
+            "maxPrice": {
+                "title": "Max price",
+                "description": "PRODUCT rows -- dearest variant price, as a number."
+            },
+            "maxCompareAtPrice": {
+                "title": "Compare-at price",
+                "description": "PRODUCT rows -- highest compare-at (was) price across variants."
+            },
+            "onSale": {
+                "title": "On sale",
+                "description": "PRODUCT rows -- true when a variant is priced below its compare-at price."
+            },
+            "inStock": {
+                "title": "In stock",
+                "description": "PRODUCT rows -- true when at least one variant is available."
+            },
+            "availableVariantCount": {
+                "title": "Available variants",
+                "description": "PRODUCT rows -- how many variants are currently purchasable."
+            },
+            "price": {
+                "title": "Price",
+                "description": "VARIANT rows -- Shopify's price string for this variant."
+            },
+            "priceValue": {
+                "title": "Price (number)",
+                "description": "VARIANT rows -- the same price as a number, ready for sorting and charts."
+            },
+            "sku": {
+                "title": "SKU",
+                "description": "VARIANT rows -- the merchant's stock code."
+            },
+            "available": {
+                "title": "Available",
+                "description": "VARIANT rows -- whether this exact variant can be bought right now."
+            },
+            "products_count": {
+                "title": "Products in collection",
+                "description": "COLLECTION rows -- how many products the collection holds."
+            },
+            "collectionUrl": {
+                "title": "Collection URL",
+                "description": "COLLECTION rows -- added by this actor, the link to the collection page."
+            },
+            "changeType": {
+                "title": "Change type",
+                "description": "CHANGE rows -- NEW, REMOVED, PRICE_CHANGED, BACK_IN_STOCK or OUT_OF_STOCK."
+            },
+            "priceBefore": {
+                "title": "Price before",
+                "description": "CHANGE rows -- the price at the previous run."
+            },
+            "priceAfter": {
+                "title": "Price after",
+                "description": "CHANGE rows -- the price now."
+            },
+            "priceDelta": {
+                "title": "Price change",
+                "description": "CHANGE rows -- how much the price moved; negative means a price cut."
+            },
+            "changesDetected": {
+                "title": "Changes detected",
+                "description": "CHANGE_SUMMARY rows -- how many changes this run found."
+            },
+            "previousCapturedAt": {
+                "title": "Previous run at",
+                "description": "CHANGE_SUMMARY rows -- when the baseline being compared against was captured."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across every record type this actor emits.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "recordType",
+                    "title",
+                    "shop_name",
+                    "themeName",
+                    "minPrice",
+                    "inStock",
+                    "published_at",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        },
+        "stores": {
+            "title": "Stores",
+            "description": "One row per store: identity, theme and catalogue stats.",
+            "transformation": {
+                "fields": [
+                    "requestedDomain",
+                    "shop_name",
+                    "isShopify",
+                    "storefrontType",
+                    "themeName",
+                    "isThemeStoreTheme",
+                    "shop_currency",
+                    "shop_country",
+                    "productsScraped",
+                    "shop_published_products_count",
+                    "avgPrice",
+                    "productsOnSale",
+                    "newestPublishedAt"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        },
+        "products": {
+            "title": "Products",
+            "description": "Catalogue rows with pricing and stock.",
+            "transformation": {
+                "fields": [
+                    "storeDomain",
+                    "title",
+                    "vendor",
+                    "product_type",
+                    "minPrice",
+                    "maxPrice",
+                    "maxCompareAtPrice",
+                    "onSale",
+                    "inStock",
+                    "variantCount",
+                    "published_at",
+                    "productUrl"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        },
+        "changes": {
+            "title": "Changes",
+            "description": "What changed since the previous run.",
+            "transformation": {
+                "fields": [
+                    "storeDomain",
+                    "changeType",
+                    "title",
+                    "priceBefore",
+                    "priceAfter",
+                    "priceDelta",
+                    "published_at",
+                    "productUrl"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

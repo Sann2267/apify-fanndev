@@ -1,0 +1,15 @@
+{
+    "actorSpecification": 1,
+    "name": "h1bdata-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "H1B Visa Sponsor & Salary Database Scraper",
+    "description": "Search the US Department of Labor's public H1B LCA filing history by employer, job title, city, or year -- salary, worksite, and (optionally) full case detail including sponsoring attorney and employer contact. No account or API key needed.",
+    "categories": ["LEAD_GENERATION", "BUSINESS"],
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

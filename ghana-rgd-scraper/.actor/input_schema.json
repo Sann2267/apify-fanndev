@@ -1,0 +1,62 @@
+{
+    "title": "Ghana Business Registry Name Search",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "businessName": {
+            "title": "Business name to search",
+            "type": "string",
+            "editor": "textfield",
+            "description": "A single business/company name (or fragment) to search for in Ghana's ORC registry.",
+            "prefill": "MTN"
+        },
+        "businessNames": {
+            "title": "Business names to search",
+            "type": "array",
+            "editor": "stringList",
+            "description": "Multiple business/company names (or fragments) to search for in one run."
+        },
+        "searchType": {
+            "title": "Search type",
+            "type": "string",
+            "editor": "select",
+            "description": "How each query is matched against registered business names. \"Contains\" is broadest but can return very large result sets for common words (e.g. \"GHANA\" contains-matches tens of thousands of names).",
+            "enum": ["eq", "sw", "ew", "cn"],
+            "enumTitles": ["Exact match", "Starts with", "Ends with", "Contains"],
+            "default": "cn",
+            "prefill": "cn"
+        },
+        "maxResultsPerQuery": {
+            "title": "Max results per query",
+            "type": "integer",
+            "description": "Caps how many matching business names are pushed to the dataset per query. The registry has no server-side result limit, so a broad query can match tens of thousands of names -- this truncates the OUTPUT only (the full response is still downloaded and parsed either way). _totalAvailable on each record shows how many actually matched.",
+            "default": 200,
+            "minimum": 1,
+            "maximum": 2000,
+            "prefill": 200
+        },
+        "maxConcurrency": {
+            "title": "Max concurrent workers",
+            "type": "integer",
+            "description": "How many queries to run in parallel. Kept low by default -- this is a small, early-stage (v0.0.1) government web app, not a high-capacity API.",
+            "default": 2,
+            "minimum": 1,
+            "maximum": 5,
+            "prefill": 2
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "editor": "proxy",
+            "description": "Apify Proxy configuration.",
+            "default": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            },
+            "prefill": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            }
+        }
+    }
+}

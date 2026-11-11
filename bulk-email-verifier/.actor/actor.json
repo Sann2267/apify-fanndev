@@ -1,0 +1,18 @@
+{
+    "actorSpecification": 1,
+    "name": "bulk-email-verifier",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Bulk Email Verifier & Validator",
+    "description": "Clean an email list before you send: syntax, MX records, disposable and role mailboxes, typo repair and an SMTP mailbox probe with catch-all detection. Every address gets deliverable, undeliverable, risky or unknown - never a guess dressed up as a verdict.",
+    "categories": [
+        "LEAD_GENERATION",
+        "DEVELOPER_TOOLS"
+    ],
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

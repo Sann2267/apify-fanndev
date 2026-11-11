@@ -1,0 +1,18 @@
+{
+    "actorSpecification": 1,
+    "name": "snapchat-profile-spotlight-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Snapchat Scraper - Profiles, Spotlight & Lenses",
+    "description": "Scrape public Snapchat profiles: subscribers, bio, website, category and verified badge, plus Spotlight videos with view counts, Stories with snap media links, and the AR lenses an account publishes. Also pulls the public Spotlight feed and Lens chart. No login, no API key.",
+    "categories": [
+        "SOCIAL_MEDIA",
+        "VIDEOS"
+    ],
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

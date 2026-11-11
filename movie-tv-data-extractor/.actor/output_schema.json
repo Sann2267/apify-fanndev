@@ -1,0 +1,77 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Movie & TV record",
+        "description": "Every record shares one envelope - item_type, id, data, metadata - so a single dataset can hold films, series, people, episodes, seasons, reviews, chart rows, collections, companies and diagnostics and still be joined on id. The id is namespaced by media type (movie:27205, tv:1399, person:138, tv:1399:s1:e1, review:abc, collection:119, company:41077) so two records can never collide across types. The shape of data depends on item_type. TMDB adds fields without notice, so unlisted fields pass through rather than failing the run. This product uses the TMDB API but is not endorsed or certified by TMDB.",
+        "additionalProperties": true,
+        "properties": {
+            "item_type": {
+                "type": "string",
+                "title": "Item type",
+                "description": "title (a film or series), person, season, episode, review, search_result, discover_result, chart_entry, collection, company or error."
+            },
+            "id": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "ID",
+                "description": "Namespaced record id: movie:27205, tv:1399, person:138, tv:1399:s1:e1, review:5a8..., collection:119, company:41077. NULL on error rows, which is why this field is nullable - a run that hits an unresolvable name or a film with no reviews still writes a diagnostic row, and the dataset schema has to accept it or the whole push fails."
+            },
+            "data": {
+                "type": "object",
+                "title": "Data",
+                "description": "The record body, keyed by item_type. Common to every title record: mediaType, tmdbId, imdbId, title, originalTitle, tagline, overview, status, releaseDate, year, genres, voteAverage, voteCount, popularity, posterUrl, backdropUrl (ready CDN URLs at the size you chose, not the bare paths TMDB returns), productionCompanies, productionCountries, spokenLanguages, homepage, tmdbUrl. Films add runtimeMins, budgetUsd, revenueUsd, profitUsd and returnOnBudget - where budget and revenue are NULL rather than 0 when TMDB does not know them, because 0 there means unknown, not free. Series add numberOfSeasons, numberOfEpisodes, networks, createdBy, inProduction, firstAirDate/lastAirDate, seasons[], lastEpisodeToAir and nextEpisodeToAir. With the include switches on, a title also carries cast[] (with character, order and per-actor episodeCount for series), castCount, directors/writers/producers/composers/cinematographers/editors as name lists, crew[] when the full crew is asked for, keywords, videos[] and trailerUrl, posterUrls/backdropUrls/logoUrls, watchProviders (streamingOn, rentFrom, buyFrom, freeWithAdsOn for your region) and watchRegions, certification and certificationsByCountry, theatricalReleaseDate, alternativeTitles, recommended[] and similar[]. person adds biography, birthday, deathday, isAlive, age, placeOfBirth, knownForDepartment, alsoKnownAs, filmography[] (sorted by popularity, each entry carrying creditKind, title, year, character or job, episodeCount and its own tmdbId), actingCreditCount, crewCreditCount and knownFor. Titles and people both carry imdbUrl, wikidataId, instagramUrl, twitterUrl, facebookUrl, tiktokUrl and youtubeId where TMDB holds them. episode adds seriesId, seriesName, seasonNumber, episodeNumber, episodeCode (S01E01), airDate, runtimeMins, its OWN voteAverage and voteCount, stillUrl, directors, writers and guestStars[]. season adds seasonNumber, episodeCount, airDate and posterUrl. review adds author, authorUsername, authorRating (the reviewer's own 0-10 score, which is what makes these rows usable as labelled sentiment data), content (HTML stripped, entities decoded, whitespace normalised), contentLength, createdAt and the parent title. collection adds partCount and parts[] in release order. company adds headquarters, originCountry, homepage, parentCompany and logoUrl. search_result, discover_result and chart_entry are the thin list rows TMDB returns for those endpoints - about fifteen fields, always including tmdbId, which any detail mode accepts as input. error: _error (unresolvable_target, not_found, wrong_media_type, no_collection, no_seasons, season_not_found, no_reviews, no_results, unknown_chart, unsupported_input, fetch_failed, auth_failed, run_failed), _errorDetail, _input."
+            },
+            "markdown": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Markdown document",
+                "description": "Present when the output format is 'markdown' or 'both'. A self-contained document for this record - heading, facts, overview, cast, box office, where to watch - with empty fields omitted rather than rendered as nulls, and money and runtimes formatted the way a person writes them. Each one stands alone as a retrieval chunk: the film it is about is named in the text, not only in a metadata column. Diagnostic rows never get one."
+            },
+            "metadata": {
+                "type": "object",
+                "title": "Metadata",
+                "description": "scrapedAt (UTC ISO 8601), sourceUrl (the exact TMDB endpoint the record came from, with the API key stripped out), mode, query (the input value or chart name that produced this row), rank (position within the whole target, continuing across pages), page, parentId (the series a season belongs to, the season an episode belongs to, the title a review belongs to, the collection or company a row was found under) and chart on chart rows."
+            }
+        }
+    },
+    "views": {
+        "overview": {
+            "title": "All records",
+            "transformation": {
+                "fields": [
+                    "item_type",
+                    "id",
+                    "data",
+                    "metadata"
+                ]
+            },
+            "display": {
+                "component": "table",
+                "properties": {
+                    "item_type": {
+                        "label": "Type",
+                        "format": "text"
+                    },
+                    "id": {
+                        "label": "Record ID",
+                        "format": "text"
+                    },
+                    "data": {
+                        "label": "Data",
+                        "format": "object"
+                    },
+                    "metadata": {
+                        "label": "Metadata",
+                        "format": "object"
+                    }
+                }
+            }
+        }
+    }
+}

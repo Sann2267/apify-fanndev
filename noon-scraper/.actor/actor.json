@@ -1,0 +1,24 @@
+{
+    "actorSpecification": 1,
+    "name": "noon-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "noon.com Product, Price, Seller & Category Scraper",
+    "description": "Eight noon.com scrapers in one - no login, no browser, no captcha. Search keywords, walk categories and brands, pull full product detail, and list every seller competing on a SKU with its own price, stock and delivery. All 7 noon storefronts, English or Arabic.",
+    "categories": [
+        "ECOMMERCE",
+        "BUSINESS",
+        "AGENTS"
+    ],
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json",
+    "defaultRunOptions": {
+        "build": "latest",
+        "memoryMbytes": 1024,
+        "timeoutSecs": 3600
+    }
+}

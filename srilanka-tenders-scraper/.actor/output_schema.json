@@ -1,0 +1,117 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Sri Lanka Treasury procurement notice record",
+        "description": "One record per notice. Shape depends on recordType: TENDER_CURRENT (mode=latest, from the Ministry's own structured notice-management system) or TENDER_ARCHIVE (mode=archive, from the historical CMS listing, raw HTML-embedded content going back to 2018). A single _error record is emitted instead of payload fields when a fetch fails.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "'latest' for current-notice records, or 'archive:page<N>' for archive records / errors."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which extraction strategy emitted this record (S1-current-notices, S1-archive, or 'none' on error)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed records (blocked_or_transient)."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "recordType": {
+                "type": "string",
+                "title": "Record type",
+                "description": "TENDER_CURRENT or TENDER_ARCHIVE."
+            },
+            "_totalAvailable": {
+                "title": "Total available",
+                "description": "Total notices the site reports for this view (all currently-open notices for TENDER_CURRENT; the full historical archive count for TENDER_ARCHIVE), before any maxResults truncation."
+            },
+            "_page": {
+                "title": "Archive page",
+                "description": "TENDER_ARCHIVE only -- which archive page (1 = most recent) this record came from."
+            },
+            "id": {
+                "title": "Notice ID",
+                "description": "The Ministry's internal ID for this notice. Numeric for TENDER_CURRENT; either a numeric string or a dated reference code (e.g. '20210610004') for TENDER_ARCHIVE."
+            },
+            "title": {
+                "title": "Issuing department",
+                "description": "TENDER_CURRENT only -- the government department/ministry that posted this notice, e.g. 'Department of Management Services'."
+            },
+            "subtitle": {
+                "title": "Notice title",
+                "description": "TENDER_CURRENT only -- the notice's own title/summary."
+            },
+            "description": {
+                "title": "Description (raw HTML)",
+                "description": "TENDER_CURRENT only -- raw HTML fragment with contract/IFB reference numbers etc., exactly as the Ministry entered it."
+            },
+            "descriptionText": {
+                "title": "Description (plain text)",
+                "description": "Convenience field: the notice's HTML content (description for TENDER_CURRENT, descriptionHtml for TENDER_ARCHIVE) with tags stripped."
+            },
+            "descriptionHtml": {
+                "title": "Description (raw HTML)",
+                "description": "TENDER_ARCHIVE only -- raw HTML fragment containing the full notice text (department, bid/reference numbers, items, closing date), exactly as published. Field set and formatting are not standardized across notices -- this is intentional raw passthrough of a genuinely free-form CMS field."
+            },
+            "label": {
+                "title": "Issuing department (archive)",
+                "description": "TENDER_ARCHIVE only -- the government department/ministry, as labeled in the archive."
+            },
+            "status": {
+                "title": "Status flag",
+                "description": "TENDER_CURRENT only -- whether the notice is currently published (true/false)."
+            },
+            "createdBy": { "title": "Created by", "description": "TENDER_CURRENT only -- internal Ministry staff email that created the notice." },
+            "createdOn": { "title": "Created on", "description": "TENDER_CURRENT only -- raw timestamp string as shown by the site." },
+            "publishedBy": { "title": "Published by", "description": "TENDER_CURRENT only." },
+            "publishedOn": { "title": "Published on", "description": "TENDER_CURRENT only -- raw timestamp string as shown by the site." },
+            "updatedBy": { "title": "Updated by", "description": "TENDER_CURRENT only." },
+            "updatedOn": { "title": "Updated on", "description": "TENDER_CURRENT only -- raw timestamp string as shown by the site." },
+            "attachments": {
+                "title": "Attachments",
+                "description": "Downloadable documents (bidding documents, addenda, notices), each with a title and a resolved downloadUrl. TENDER_ARCHIVE attachments occasionally 404 if the Ministry has since removed an old file -- the metadata itself is always accurate."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across both record types -- rows missing a given column render blank.",
+            "transformation": {
+                "fields": [
+                    "recordType",
+                    "id",
+                    "title",
+                    "label",
+                    "subtitle",
+                    "descriptionText",
+                    "publishedOn",
+                    "_page",
+                    "_totalAvailable",
+                    "_error",
+                    "_scrapedAt"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

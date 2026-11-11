@@ -1,0 +1,309 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "PSA certificate / sale record",
+        "description": "Every record carries _input, _source, _scrapedAt and recordType. recordType discriminates the payload: CERT (the graded item with its population, PSA estimate and sales summary), SALE (one comparable sale), SURFACE (reference mode) and ERROR. Prices and counts are parsed to numbers and dates to YYYY-MM-DD, with the published values kept under _raw.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The certification number that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source",
+                "description": "S1-cert-page, or 'none' on failure rows."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was emitted."
+            },
+            "recordType": {
+                "type": ["string", "null"],
+                "title": "Record type",
+                "description": "CERT | SALE | SURFACE | ERROR."
+            },
+            "certNumber": {
+                "type": ["string", "null"],
+                "title": "Certification number",
+                "description": "The number printed on the PSA label. On SALE rows this is the certificate of the card that sold."
+            },
+            "certUrl": {
+                "type": ["string", "null"],
+                "title": "Certificate URL",
+                "description": "Public verification page for the certificate."
+            },
+            "itemGrade": {
+                "type": ["string", "null"],
+                "title": "Grade",
+                "description": "Grade as printed, e.g. 'GEM MT 10'."
+            },
+            "gradeNumber": {
+                "type": ["number", "integer", "null"],
+                "title": "Grade number",
+                "description": "Numeric part of the grade, for sorting and filtering."
+            },
+            "year": {
+                "type": ["string", "null"],
+                "title": "Year",
+                "description": "Year of the card or item."
+            },
+            "brand": {
+                "type": ["string", "null"],
+                "title": "Brand / set",
+                "description": "Brand and set title, e.g. 'PANINI PRIZM EMERGENT'."
+            },
+            "subject": {
+                "type": ["string", "null"],
+                "title": "Subject",
+                "description": "Player, character or subject on the card."
+            },
+            "cardNumber": {
+                "type": ["string", "null"],
+                "title": "Card number",
+                "description": "Card number within the set."
+            },
+            "category": {
+                "type": ["string", "null"],
+                "title": "Category",
+                "description": "Item category, e.g. 'BASKETBALL CARDS'."
+            },
+            "varietyPedigree": {
+                "type": ["string", "null"],
+                "title": "Variety / pedigree",
+                "description": "Variety or pedigree noted on the label."
+            },
+            "labelType": {
+                "type": ["string", "null"],
+                "title": "Label type",
+                "description": "Which PSA label generation the holder carries."
+            },
+            "reverseCertBarcode": {
+                "type": ["string", "null"],
+                "title": "Reverse cert / barcode",
+                "description": "Whether the holder carries a reverse certificate barcode."
+            },
+            "psaEstimate": {
+                "type": ["number", "integer", "null"],
+                "title": "PSA estimate",
+                "description": "PSA's own published value estimate for the item at this grade, as a number."
+            },
+            "psaEstimateRaw": {
+                "type": ["string", "null"],
+                "title": "PSA estimate (as published)",
+                "description": "The estimate exactly as printed, e.g. '$60.00'."
+            },
+            "psaPopulation": {
+                "type": ["integer", "null"],
+                "title": "Population",
+                "description": "How many of this item PSA has graded at this grade."
+            },
+            "psaPopHigher": {
+                "type": ["integer", "null"],
+                "title": "Population higher",
+                "description": "How many copies PSA has graded higher than this one. Zero means nothing beats it."
+            },
+            "populationReportUrl": {
+                "type": ["string", "null"],
+                "title": "Population report URL",
+                "description": "Link to the full population report for the set. That report itself requires a PSA account."
+            },
+            "recentSalesCount": {
+                "type": ["integer", "null"],
+                "title": "Comparable sales",
+                "description": "How many comparable sales the certificate page lists."
+            },
+            "recentSaleMin": {
+                "type": ["number", "integer", "null"],
+                "title": "Lowest comparable sale",
+                "description": "Lowest price among the listed comparable sales."
+            },
+            "recentSaleMax": {
+                "type": ["number", "integer", "null"],
+                "title": "Highest comparable sale",
+                "description": "Highest price among the listed comparable sales."
+            },
+            "recentSaleAvg": {
+                "type": ["number", "integer", "null"],
+                "title": "Average comparable sale",
+                "description": "Mean of the listed comparable sales - a plain average, with no outlier handling."
+            },
+            "latestSaleDate": {
+                "type": ["string", "null"],
+                "title": "Latest sale date",
+                "description": "Date of the most recent comparable sale, YYYY-MM-DD."
+            },
+            "sourceCertNumber": {
+                "type": ["string", "null"],
+                "title": "Looked-up certificate",
+                "description": "On SALE rows, the certificate whose page this sale was listed on."
+            },
+            "saleIndex": {
+                "type": ["integer", "null"],
+                "title": "Sale position",
+                "description": "Position of the sale in the published list, newest first."
+            },
+            "soldPrice": {
+                "type": ["number", "integer", "null"],
+                "title": "Sold price",
+                "description": "Sale price as a number."
+            },
+            "soldPriceRaw": {
+                "type": ["string", "null"],
+                "title": "Sold price (as published)",
+                "description": "Sale price exactly as printed."
+            },
+            "soldDate": {
+                "type": ["string", "null"],
+                "title": "Sold date",
+                "description": "Sale date normalised to YYYY-MM-DD."
+            },
+            "soldDateRaw": {
+                "type": ["string", "null"],
+                "title": "Sold date (as published)",
+                "description": "Sale date exactly as printed, MM/DD/YY."
+            },
+            "seller": {
+                "type": ["string", "null"],
+                "title": "Marketplace",
+                "description": "Where the sale happened, e.g. eBay or an auction house."
+            },
+            "saleType": {
+                "type": ["string", "null"],
+                "title": "Sale type",
+                "description": "Auction, FixedPrice, BestOffer and similar."
+            },
+            "grade": {
+                "type": ["string", "null"],
+                "title": "Sold item grade",
+                "description": "Grade of the item that sold, e.g. 'PSA 10'."
+            },
+            "lotNumber": {
+                "type": ["string", "null"],
+                "title": "Lot / listing number",
+                "description": "Marketplace listing or lot identifier."
+            },
+            "imageUrl": {
+                "type": ["string", "null"],
+                "title": "Image",
+                "description": "Listing image for the sold item, where published."
+            },
+            "surface": {
+                "type": ["string", "null"],
+                "title": "Surface (reference mode)",
+                "description": "Which public surface was probed."
+            },
+            "url": {
+                "type": ["string", "null"],
+                "title": "Probed URL",
+                "description": "Exact URL used for the probe."
+            },
+            "isAvailable": {
+                "type": ["boolean", "null"],
+                "title": "Available",
+                "description": "Whether the source answered with usable data right now."
+            },
+            "detail": {
+                "type": ["string", "null"],
+                "title": "Detail",
+                "description": "Human-readable probe result."
+            },
+            "sample": {
+                "title": "Sample",
+                "description": "Evidence measured during the probe, including which connection profile got through."
+            },
+            "_tlsProfile": {
+                "type": ["string", "null"],
+                "title": "Connection profile",
+                "description": "Which connection profile the run used. Useful when diagnosing a sudden wave of refusals."
+            },
+            "_raw": {
+                "title": "Raw published values",
+                "description": "The certificate's published fields exactly as printed."
+            },
+            "_error": {
+                "type": ["string", "null"],
+                "title": "Error kind",
+                "description": "not_found | invalid_cert | empty_section | shape_changed | blocked_or_transient."
+            },
+            "_errorDetail": {
+                "type": ["string", "null"],
+                "title": "Error detail",
+                "description": "Human-readable detail for the failure."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across both record types.",
+            "transformation": {
+                "fields": [
+                    "recordType",
+                    "certNumber",
+                    "subject",
+                    "year",
+                    "brand",
+                    "itemGrade",
+                    "psaPopulation",
+                    "psaEstimate",
+                    "soldPrice",
+                    "soldDate",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        },
+        "certificates": {
+            "title": "Certificates",
+            "description": "Graded items with population and value.",
+            "transformation": {
+                "fields": [
+                    "certNumber",
+                    "subject",
+                    "year",
+                    "brand",
+                    "cardNumber",
+                    "itemGrade",
+                    "psaPopulation",
+                    "psaPopHigher",
+                    "psaEstimate",
+                    "recentSaleAvg",
+                    "recentSalesCount",
+                    "latestSaleDate",
+                    "certUrl"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        },
+        "sales": {
+            "title": "Comparable sales",
+            "description": "Recent sales of similar items.",
+            "transformation": {
+                "fields": [
+                    "sourceCertNumber",
+                    "subject",
+                    "grade",
+                    "soldPrice",
+                    "soldDate",
+                    "seller",
+                    "saleType",
+                    "certNumber",
+                    "lotNumber"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

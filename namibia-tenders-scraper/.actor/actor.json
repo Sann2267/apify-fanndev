@@ -1,0 +1,14 @@
+{
+    "actorSpecification": 1,
+    "name": "namibia-tenders-scraper",
+    "version": "0.1",
+    "buildTag": "latest",
+    "title": "Namibia Government Tenders Scraper (CPBN)",
+    "description": "Scrapes Namibia's Central Procurement Board (CPBN) public bid notices: open bids, bids under evaluation, cancelled bids, awarded contracts, clarifications, the bid opening register, and the full historical archive, plus per-bid detail pages. No account or login needed.",
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

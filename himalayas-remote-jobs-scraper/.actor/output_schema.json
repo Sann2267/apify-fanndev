@@ -1,0 +1,317 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Himalayas remote job record",
+        "description": "Every record carries _input, _source, _scrapedAt and recordType. recordType is JOB for a job, COMPANY for an aggregated employer, SURFACE for a reference probe and ERROR for a failure. Upstream fields are passed through unchanged; derived fields (ISO dates, yearly-equivalent salaries, plain-text description, public URLs) are added alongside them, never in place of them.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The mode that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source",
+                "description": "himalayas-jobs-api, reference, error, or 'none'."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was emitted."
+            },
+            "recordType": {
+                "type": ["string", "null"],
+                "title": "Record type",
+                "description": "JOB | COMPANY | SURFACE | ERROR."
+            },
+            "guid": {
+                "type": ["string", "null"],
+                "title": "Job ID",
+                "description": "The source's unique identifier for the job listing, which is itself the listing URL."
+            },
+            "title": {
+                "type": ["string", "null"],
+                "title": "Job title",
+                "description": "Job title as published."
+            },
+            "jobUrl": {
+                "type": ["string", "null"],
+                "title": "Job URL",
+                "description": "Public listing page for the job. The source publishes its listing URL as the guid, so this matches guid rather than being a separate page."
+            },
+            "applicationLink": {
+                "type": ["string", "null"],
+                "title": "Application link",
+                "description": "Where to apply. Measured over 60 consecutive listings this was always the listing page on the source itself, not the employer's own careers page, so treat it as the apply entry point rather than as an employer ATS link."
+            },
+            "excerpt": {
+                "type": ["string", "null"],
+                "title": "Excerpt",
+                "description": "Short summary of the role."
+            },
+            "description": {
+                "type": ["string", "null"],
+                "title": "Description (HTML)",
+                "description": "Full job description as published, with HTML markup."
+            },
+            "descriptionText": {
+                "type": ["string", "null"],
+                "title": "Description (plain text)",
+                "description": "The same description with markup stripped, ready for search or a language model."
+            },
+            "companyName": {
+                "type": ["string", "null"],
+                "title": "Company",
+                "description": "Employer name."
+            },
+            "companySlug": {
+                "type": ["string", "null"],
+                "title": "Company slug",
+                "description": "The source's identifier for the employer - a stable key for grouping."
+            },
+            "companyLogo": {
+                "type": ["string", "null"],
+                "title": "Company logo",
+                "description": "Logo image URL."
+            },
+            "companyUrl": {
+                "type": ["string", "null"],
+                "title": "Company page",
+                "description": "Public company page on the source."
+            },
+            "employmentType": {
+                "type": ["string", "null"],
+                "title": "Employment type",
+                "description": "Full Time, Contractor, Part Time and similar."
+            },
+            "seniority": {
+                "type": ["array", "null"],
+                "title": "Seniority",
+                "description": "Levels the role is open to, e.g. Entry-level, Mid-level, Senior."
+            },
+            "categories": {
+                "type": ["array", "null"],
+                "title": "Categories",
+                "description": "Detailed role tags."
+            },
+            "parentCategories": {
+                "type": ["array", "null"],
+                "title": "Broad categories",
+                "description": "Broad families, e.g. Developer, Data Science, Sales."
+            },
+            "locationRestrictions": {
+                "type": ["array", "null"],
+                "title": "Location restrictions",
+                "description": "Countries or regions the role is restricted to. Empty means no restriction was published."
+            },
+            "timezoneRestrictions": {
+                "type": ["array", "null"],
+                "title": "Timezone restrictions",
+                "description": "UTC offsets the role is open to."
+            },
+            "minSalary": {
+                "type": ["number", "null"],
+                "title": "Minimum salary (as published)",
+                "description": "Lower bound exactly as published - read it together with salaryPeriod, because this number can be an hourly rate."
+            },
+            "maxSalary": {
+                "type": ["number", "null"],
+                "title": "Maximum salary (as published)",
+                "description": "Upper bound exactly as published, on the same basis."
+            },
+            "salaryPeriod": {
+                "type": ["string", "null"],
+                "title": "Pay period",
+                "description": "annual, hourly, monthly or weekly. Essential context for minSalary and maxSalary."
+            },
+            "currency": {
+                "type": ["string", "null"],
+                "title": "Currency",
+                "description": "Currency of the published salary. Never converted."
+            },
+            "salaryText": {
+                "type": ["string", "null"],
+                "title": "Salary",
+                "description": "The salary as one readable string, e.g. 'USD 140,000 - 190,000 annual'."
+            },
+            "annualizedSalaryMin": {
+                "type": ["number", "null"],
+                "title": "Minimum salary per year",
+                "description": "Lower bound scaled to a yearly equivalent (hourly x 2080, weekly x 52, monthly x 12) so roles on different pay periods can be compared. Still in the job's own currency."
+            },
+            "annualizedSalaryMax": {
+                "type": ["number", "null"],
+                "title": "Maximum salary per year",
+                "description": "Upper bound on the same yearly-equivalent basis."
+            },
+            "annualizedFrom": {
+                "type": ["string", "null"],
+                "title": "Annualized from",
+                "description": "Which pay period the yearly equivalent was derived from, so the conversion is auditable."
+            },
+            "pubDate": {
+                "type": ["number", "null"],
+                "title": "Published (epoch)",
+                "description": "Publication time as published, in epoch seconds."
+            },
+            "pubDateIso": {
+                "type": ["string", "null"],
+                "title": "Published",
+                "description": "Publication time as ISO 8601 UTC."
+            },
+            "expiryDate": {
+                "type": ["number", "null"],
+                "title": "Expires (epoch)",
+                "description": "Expiry time as published, in epoch seconds."
+            },
+            "expiryDateIso": {
+                "type": ["string", "null"],
+                "title": "Expires",
+                "description": "Expiry time as ISO 8601 UTC."
+            },
+            "jobsScannedInRun": {
+                "type": ["integer", "null"],
+                "title": "Jobs scanned in this run",
+                "description": "How many jobs the run read to produce this result. With a filter, this is the denominator behind your matches - and the number to compare against maxScannedJobs if a search came back short."
+            },
+            "jobsSeen": {
+                "type": ["integer", "null"],
+                "title": "Roles seen for this company",
+                "description": "Companies mode: how many of this employer's roles appeared in the slice that was scanned. It is not necessarily their total number of openings."
+            },
+            "jobTitles": {
+                "type": ["array", "null"],
+                "title": "Role titles",
+                "description": "Companies mode: the titles this employer is advertising."
+            },
+            "lowestAnnualizedSalarySeen": {
+                "type": ["number", "null"],
+                "title": "Lowest salary per year seen",
+                "description": "Companies mode: lowest yearly-equivalent figure across this employer's roles. Mixed currency unless the run filtered by currency."
+            },
+            "highestAnnualizedSalarySeen": {
+                "type": ["number", "null"],
+                "title": "Highest salary per year seen",
+                "description": "Companies mode: highest yearly-equivalent figure, on the same basis."
+            },
+            "newestPubDateIso": {
+                "type": ["string", "null"],
+                "title": "Most recent posting",
+                "description": "Companies mode: when this employer last posted, within the scanned slice."
+            },
+            "probedUrl": {
+                "type": ["string", "null"],
+                "title": "Probed URL",
+                "description": "Reference mode: the URL that was checked."
+            },
+            "isAvailable": {
+                "type": ["boolean", "null"],
+                "title": "Source available",
+                "description": "Reference mode: whether the source returned parseable data."
+            },
+            "note": {
+                "type": ["string", "null"],
+                "title": "Note",
+                "description": "Reference mode: what happened, in words."
+            },
+            "sample": {
+                "type": ["object", "null"],
+                "title": "Sample",
+                "description": "Reference mode: measured evidence - total jobs in the feed, when it was last updated, how many jobs a request for 100 actually returns, and whether the source filters server-side yet."
+            },
+            "error": {
+                "type": ["string", "null"],
+                "title": "Error",
+                "description": "Failure reason: feed_unavailable or no_matches."
+            },
+            "errorDetail": {
+                "type": ["string", "null"],
+                "title": "Error detail",
+                "description": "Diagnostic text for the failure, including how far the run got."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "The essentials of each opening.",
+            "transformation": {
+                "fields": [
+                    "title",
+                    "companyName",
+                    "employmentType",
+                    "salaryText",
+                    "seniority",
+                    "locationRestrictions",
+                    "pubDateIso",
+                    "jobUrl"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        },
+        "salaries": {
+            "title": "Salary comparison",
+            "description": "Yearly-equivalent pay, comparable across hourly and salaried roles.",
+            "transformation": {
+                "fields": [
+                    "title",
+                    "companyName",
+                    "currency",
+                    "annualizedSalaryMin",
+                    "annualizedSalaryMax",
+                    "annualizedFrom",
+                    "minSalary",
+                    "maxSalary",
+                    "salaryPeriod",
+                    "seniority"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        },
+        "employers": {
+            "title": "Who is hiring",
+            "description": "Companies mode: hiring volume per employer.",
+            "transformation": {
+                "fields": [
+                    "companyName",
+                    "jobsSeen",
+                    "categories",
+                    "seniority",
+                    "locationRestrictions",
+                    "lowestAnnualizedSalarySeen",
+                    "highestAnnualizedSalarySeen",
+                    "newestPubDateIso",
+                    "companyUrl"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        },
+        "apply": {
+            "title": "Application links",
+            "description": "Everything needed to apply or to hand the role to a candidate.",
+            "transformation": {
+                "fields": [
+                    "title",
+                    "companyName",
+                    "applicationLink",
+                    "expiryDateIso",
+                    "salaryText",
+                    "jobUrl"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

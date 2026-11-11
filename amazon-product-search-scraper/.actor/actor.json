@@ -1,0 +1,22 @@
+{
+    "actorSpecification": 1,
+    "name": "amazon-product-search-scraper",
+    "version": "0.1",
+    "buildTag": "latest",
+    "title": "Amazon Product & Search Scraper",
+    "description": "Scrape Amazon search results by keyword or search URL: ASIN, title, price, list price and discount, rating, exact review count, bestseller and Amazon's Choice badges, units bought last month, and image URL. Built for price-distribution analysis and competitor catalogue monitoring.",
+    "categories": ["ECOMMERCE", "BUSINESS"],
+    "minMemoryMbytes": 256,
+    "maxMemoryMbytes": 4096,
+    "defaultRunOptions": {
+        "build": "latest",
+        "memoryMbytes": 1024,
+        "timeoutSecs": 3600
+    },
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

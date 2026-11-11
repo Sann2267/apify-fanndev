@@ -1,0 +1,186 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "SPSE Nasional tender record",
+        "description": "One record per Indonesia SPSE Nasional (LKPP) tender, produced by mode=list (a page of the national 'Cari Paket' search table for one fiscal year, optionally enriched with full announcement detail) or mode=detail (one specific tender code's full public announcement page). A single _error record is emitted instead of payload fields when a record can't be fetched.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "For list records: 'list:tahun=<year>' plus any active filters, e.g. 'list:tahun=2026:kategoriId=7:instansiId=L4:rekanan=PT'. For detail records: the tender code that was requested."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which strategy emitted this record (S1-dt-lelang, S1-pengumumanlelang-detail, or 'none' on error)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed records (blocked_or_transient, not_found)."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "_detailError": {
+                "type": "string",
+                "title": "Detail enrichment error",
+                "description": "Present only on a list-mode row when fetchDetail=true and that row's own detail fetch failed -- the rest of the row's list fields are still valid."
+            },
+            "kode": {
+                "title": "Tender code",
+                "description": "SPSE's stable identifier for this tender, e.g. 10051479000."
+            },
+            "namaPaket": {
+                "title": "Package/tender name (list rows)",
+                "description": "The tender's title, with any embedded status-badge markup (e.g. 'Tender Ulang') stripped out into statusBadges."
+            },
+            "namaTender": {
+                "title": "Tender name (detail rows)",
+                "description": "The tender's title as shown on its own announcement page."
+            },
+            "statusBadges": {
+                "title": "Status badges",
+                "description": "Re-run/re-evaluation flags SPSE shows inline with the title on list rows, e.g. 'Tender Ulang' (re-tendered), 'Seleksi Ulang' (re-selected)."
+            },
+            "instansi": {
+                "title": "Procuring agency",
+                "description": "The K/L/PD/Instansi Lainnya (ministry/agency/regional government/other institution) running this tender."
+            },
+            "satuanKerja": {
+                "title": "Work unit",
+                "description": "The specific department/unit within the procuring agency (detail rows only)."
+            },
+            "tahapanSaatIni": {
+                "title": "Current stage (list rows)",
+                "description": "The tender's current lifecycle stage as of scrape time, e.g. 'Tender Sudah Selesai' (completed), 'Evaluasi Dokumen Kualifikasi' (qualification evaluation)."
+            },
+            "tahapTenderSaatIni": {
+                "title": "Current stage (detail rows)",
+                "description": "Same as tahapanSaatIni, plus a link to the tender's full stage-by-stage schedule page."
+            },
+            "nilaiHPS": {
+                "title": "Budget ceiling (list rows, abbreviated)",
+                "description": "The HPS (Harga Perkiraan Sendiri, owner's cost estimate) as shown in the listing, abbreviated e.g. '1,3 T' (trillion IDR), '305,1 M' (million IDR), '204,8 Jt' (thousand IDR)."
+            },
+            "nilaiPaguPaket": {
+                "title": "Budget ceiling, full (detail rows)",
+                "description": "The full Nilai Pagu Paket (package budget ceiling) in exact rupiah, e.g. 'Rp. 44.093.831.000,00'."
+            },
+            "nilaiHpsPaket": {
+                "title": "Owner's estimate, full (detail rows)",
+                "description": "The full Nilai HPS Paket (owner's cost estimate) in exact rupiah."
+            },
+            "nilaiKontrak": {
+                "title": "Contract value",
+                "description": "The signed contract's value in rupiah, once awarded -- null while still 'Nilai Kontrak belum dibuat' (contract not yet made)."
+            },
+            "kontrakSudahDibuat": {
+                "title": "Contract signed?",
+                "description": "True once nilaiKontrak has been populated with a real awarded value."
+            },
+            "metodeKualifikasi": {
+                "title": "Qualification method",
+                "description": "e.g. 'Pascakualifikasi Satu File' (post-qualification, one-file), 'Prakualifikasi Dua File' (pre-qualification, two-file)."
+            },
+            "jenis": {
+                "title": "Procurement type",
+                "description": "'Tender' (goods/works) or 'Seleksi' (consulting services selection)."
+            },
+            "metodeEvaluasi": {
+                "title": "Evaluation method",
+                "description": "e.g. 'Harga Terendah Sistem Gugur' (lowest price, elimination system), 'Kualitas dan Biaya' (quality and cost)."
+            },
+            "metodePengadaan": {
+                "title": "Procurement method (detail rows)",
+                "description": "Combined jenis/metodeKualifikasi/metodeEvaluasi as one string, as shown on the announcement page."
+            },
+            "jenisPengadaan": {
+                "title": "Category of work",
+                "description": "e.g. 'Pekerjaan Konstruksi' (construction work), 'Jasa Konsultansi Badan Usaha Konstruksi' (construction consulting services), 'Jasa Lainnya' (other services)."
+            },
+            "jenisKontrak": {
+                "title": "Contract type (detail rows)",
+                "description": "e.g. 'Lumsum' (lump sum), 'Harga Satuan' (unit price)."
+            },
+            "tahunAnggaran": {
+                "title": "Fiscal year(s)",
+                "description": "The budget year(s) this tender's contract spans, parsed as integers, e.g. [2026, 2027, 2028] for a multi-year contract."
+            },
+            "tahunAnggaranRaw": {
+                "title": "Fiscal year(s), raw (detail rows)",
+                "description": "The unparsed 'Tahun Anggaran' text as shown on the announcement page, e.g. 'APBN 2026 APBN 2027 APBN 2028'."
+            },
+            "tanggalPembuatan": {
+                "title": "Date created (detail rows)",
+                "description": "When this tender announcement was published, as shown on the page (Indonesian date format)."
+            },
+            "rencanaUmumPengadaan": {
+                "title": "Procurement plan (RUP) line items (detail rows)",
+                "description": "The linked general procurement plan (Rencana Umum Pengadaan) entries this tender was budgeted under -- RUP code, package name, and funding source, one entry per funding line."
+            },
+            "uraianSingkatPekerjaan": {
+                "title": "Work description document (detail rows)",
+                "description": "The short work-description PDF's filename and download path."
+            },
+            "lokasiPekerjaan": {
+                "title": "Work location(s) (detail rows)",
+                "description": "Where the procured work/goods/services are located, as a list."
+            },
+            "kualifikasiUsaha": {
+                "title": "Business qualification tier (detail rows)",
+                "description": "e.g. 'Kecil' (small), 'Menengah' (medium), 'Besar' (large)."
+            },
+            "syaratKualifikasi": {
+                "title": "Qualification requirements (detail rows)",
+                "description": "The full text of legal/administrative and technical qualification requirements bidders must meet."
+            },
+            "khususOrangAsliPapua": {
+                "title": "Papua-only tender? (detail rows)",
+                "description": "Whether this tender is restricted to businesses owned by Indigenous Papuans (Orang Asli Papua) -- 'Ya' (yes) or 'Tidak' (no)."
+            },
+            "pesertaTender": {
+                "title": "Participant count (detail rows)",
+                "description": "How many bidders participated, e.g. '62 peserta'. Individual bidder identities are anonymized by SPSE itself as 'Peserta 1', 'Peserta 2', etc until an award is made, so only the count is meaningful here."
+            },
+            "kodeTender": {
+                "title": "Tender code (detail rows, redundant with kode)",
+                "description": "Same value as kode, as labeled on the announcement page itself."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across list and detail records -- rows missing a given column render blank.",
+            "transformation": {
+                "fields": [
+                    "kode",
+                    "namaPaket",
+                    "instansi",
+                    "tahapanSaatIni",
+                    "nilaiHPS",
+                    "nilaiKontrak",
+                    "jenisPengadaan",
+                    "tahunAnggaran",
+                    "_error",
+                    "_scrapedAt"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

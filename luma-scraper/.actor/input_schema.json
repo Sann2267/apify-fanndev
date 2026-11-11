@@ -1,0 +1,87 @@
+{
+    "title": "Luma Events Scraper",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "mode": {
+            "title": "Mode",
+            "type": "string",
+            "editor": "select",
+            "description": "\"event\" fetches full detail for specific event URL(s). \"calendar\" fetches an organizer's profile plus their full event list (upcoming or past). \"discover\" fetches the platform-wide discover/trending feed (no URL needed, optionally geo-filtered).",
+            "enum": ["event", "calendar", "discover"],
+            "enumTitles": ["Event detail (by URL)", "Calendar / organizer (by URL)", "Discover / trending feed"],
+            "default": "event",
+            "prefill": "event"
+        },
+        "url": {
+            "title": "Luma URL",
+            "type": "string",
+            "editor": "textfield",
+            "description": "\"event\" or \"calendar\" mode: a single lu.ma URL, path, or bare slug (e.g. \"https://lu.ma/sggq2oi9\", \"lu.ma/a16z\", or just \"sggq2oi9\").",
+            "prefill": "https://lu.ma/sggq2oi9"
+        },
+        "urls": {
+            "title": "Luma URLs",
+            "type": "array",
+            "editor": "stringList",
+            "description": "\"event\" or \"calendar\" mode: multiple lu.ma URLs/slugs to process in one run."
+        },
+        "period": {
+            "title": "Event period (calendar mode)",
+            "type": "string",
+            "editor": "select",
+            "description": "\"calendar\" mode only -- list this organizer's upcoming (future) or past events.",
+            "enum": ["future", "past"],
+            "enumTitles": ["Upcoming", "Past"],
+            "default": "future",
+            "prefill": "future"
+        },
+        "latitude": {
+            "title": "Latitude (discover mode)",
+            "type": "string",
+            "editor": "textfield",
+            "description": "\"discover\" mode only -- filter the trending feed around this latitude. Leave blank to use the request's own IP-based location (so Apify proxy country also steers results)."
+        },
+        "longitude": {
+            "title": "Longitude (discover mode)",
+            "type": "string",
+            "editor": "textfield",
+            "description": "\"discover\" mode only -- filter the trending feed around this longitude. Leave blank to use the request's own IP-based location."
+        },
+        "maxItems": {
+            "title": "Max items",
+            "type": "integer",
+            "editor": "number",
+            "description": "\"calendar\" mode: max events to list per organizer. \"discover\" mode: max events to list. Pagination is followed automatically until this cap or the end of the result set, whichever comes first.",
+            "default": 100,
+            "minimum": 1,
+            "maximum": 10000,
+            "prefill": 100
+        },
+        "maxConcurrency": {
+            "title": "Max concurrent workers",
+            "type": "integer",
+            "editor": "number",
+            "description": "\"event\"/\"calendar\" mode only -- how many URLs to fetch in parallel.",
+            "default": 4,
+            "minimum": 1,
+            "maximum": 16,
+            "prefill": 4
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "editor": "proxy",
+            "description": "Apify Proxy configuration. Residential is on by default. Not required for this endpoint (no WAF was found -- see CRAWLING_METHOD.md), but kept on for production robustness and to steer \"discover\" mode's geo-personalized results by proxy country.",
+            "default": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            },
+            "prefill": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            }
+        }
+    },
+    "required": ["mode"]
+}

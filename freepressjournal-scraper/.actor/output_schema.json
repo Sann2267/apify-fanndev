@@ -1,0 +1,167 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Article / latest-headline record",
+        "description": "Raw-passthrough dataset envelope. Every record carries _input/_source/_scrapedAt (and _error/_errorDetail on failures). Article-mode records (S1-jsonld) are a near-verbatim spread of the page's NewsArticle JSON-LD block, so extra schema.org fields beyond those listed here may appear. Latest-mode records (S2-rss) carry title/link-style fields from the site-wide stories.rss feed.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The exact input value (URL, or 'latest') that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which extraction strategy emitted this record (S1-jsonld or S2-rss)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed extractions -- the error kind (e.g. 'not_found', 'blocked_or_transient')."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "headline": {
+                "title": "Headline",
+                "description": "Article headline (raw passthrough from JSON-LD NewsArticle, article-mode). Quirk: hard-truncated around ~100-110 characters on longer titles, with no ellipsis -- the full headline is in the page's <title>/og:title tags but is not part of this JSON-LD block, so it is passed through as-is, not repaired."
+            },
+            "description": {
+                "title": "Description",
+                "description": "Short article description/dek (article-mode from JSON-LD). Often empty in latest-mode (RSS <description> is usually blank on this feed)."
+            },
+            "articleBody": {
+                "title": "Article body",
+                "description": "Full plain-text article content, from the upstream JSON-LD NewsArticle node (article-mode)."
+            },
+            "datePublished": {
+                "title": "Date published",
+                "description": "ISO 8601 publish date with +05:30 offset (article-mode)."
+            },
+            "dateModified": {
+                "title": "Date modified",
+                "description": "ISO 8601 last-modified date with +05:30 offset (article-mode)."
+            },
+            "author": {
+                "title": "Author",
+                "description": "Article-mode: byline Person object(s) as emitted by upstream JSON-LD (raw passthrough -- list of dicts with name/url). Latest-mode: plain byline name string from the RSS feed's atom:author/atom:name."
+            },
+            "authorUrl": {
+                "title": "Author URL",
+                "description": "Author profile path from the RSS feed's atom:author/atom:uri (latest-mode only)."
+            },
+            "publisher": {
+                "title": "Publisher",
+                "description": "Publisher (NewsMediaOrganization) object, including name/url/logo (article-mode)."
+            },
+            "image": {
+                "title": "Image",
+                "description": "Article-mode: list of plain image URL strings from JSON-LD (not ImageObject dicts). Latest-mode: single lead-image URL string from the RSS feed's media:content."
+            },
+            "thumbnail": {
+                "title": "Thumbnail",
+                "description": "Thumbnail image URL, smaller crop (latest-mode, from the RSS feed's media:thumbnail)."
+            },
+            "mainEntityOfPage": {
+                "title": "Main entity of page",
+                "description": "Canonical WebPage reference (article-mode)."
+            },
+            "isPartOf": {
+                "title": "Is part of",
+                "description": "Parent CreativeWork reference (article-mode)."
+            },
+            "articleSection": {
+                "title": "Section",
+                "description": "Article section/category, e.g. 'Bhopal News' (article-mode)."
+            },
+            "category": {
+                "title": "Category",
+                "description": "Section/category name from the RSS <category> tag (latest-mode)."
+            },
+            "keywords": {
+                "title": "Keywords",
+                "description": "Comma-separated keyword/tag string. Populated in both article-mode (JSON-LD) and latest-mode (RSS media:keywords, though sometimes empty there)."
+            },
+            "inLanguage": {
+                "title": "Language",
+                "description": "Article language code, e.g. 'en' (article-mode)."
+            },
+            "url": {
+                "title": "URL",
+                "description": "Canonical article URL as emitted by JSON-LD (article-mode)."
+            },
+            "contentLocation": {
+                "title": "Content location",
+                "description": "AdministrativeArea object(s) from JSON-LD (article-mode). Quirk: observed as a static 'Mumbai, India' value on every sampled article regardless of the story's actual dateline (e.g. a Bhopal-datelined story still carries this) -- appears to be a fixed publisher-HQ value, not a per-article geotag. Passed through as-is."
+            },
+            "associatedMedia": {
+                "title": "Associated media",
+                "description": "Lead image object (JSON-LD @type is lower-cased 'imageObject' on this site, a minor upstream quirk) with url/caption/description/height/width (article-mode)."
+            },
+            "speakable": {
+                "title": "Speakable",
+                "description": "SpeakableSpecification CSS selector hints for voice assistants (article-mode)."
+            },
+            "isAccessibleForFree": {
+                "title": "Accessible for free",
+                "description": "Paywall signal from JSON-LD. Observed as true on every sampled article -- no metering/paywall detected on Free Press Journal's main news content (article-mode)."
+            },
+            "title": {
+                "title": "Title",
+                "description": "Headline from the RSS item, full-length and NOT truncated the way article-mode headline is (latest-mode)."
+            },
+            "link": {
+                "title": "Link",
+                "description": "Article URL (latest-mode)."
+            },
+            "guid": {
+                "title": "GUID",
+                "description": "RSS item guid, a UUID (latest-mode)."
+            },
+            "pubDate": {
+                "title": "Publish date",
+                "description": "RSS pubDate string, RFC 822 format (latest-mode)."
+            },
+            "contentEncoded": {
+                "title": "Content (encoded)",
+                "description": "Full article body as HTML markup (<p> tags), from the RSS feed's content:encoded element (latest-mode)."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across both article and latest-headline records.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "_source",
+                    "_scrapedAt",
+                    "headline",
+                    "title",
+                    "link",
+                    "datePublished",
+                    "pubDate",
+                    "author",
+                    "articleSection",
+                    "category",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

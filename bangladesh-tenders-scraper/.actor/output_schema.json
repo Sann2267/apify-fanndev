@@ -1,0 +1,204 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "eprocure.gov.bd tender record",
+        "description": "One record per row/tender. Shape depends on recordType: TENDER_LIST (mode=list, one live-tender row), TENDER_AWARDED (mode=awarded, one Notice-of-Award row with supplier and contract value), or TENDER_DETAIL (mode=detail, a raw label/value passthrough of the tender's own detail page -- field set can vary slightly by procurement type, so extra fields beyond those listed below may appear). A single _error record is emitted instead of payload fields when a query/tender fails or is not found.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "For list/awarded records: 'latest' or a 'search:...' summary of the filters used. For detail records: the tenderId or URL that was requested."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "S1-list, S1-awarded, or S1-detail on success, 'none' on error."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed records (not_found, blocked_or_transient)."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "recordType": {
+                "type": "string",
+                "title": "Record type",
+                "description": "TENDER_LIST, TENDER_AWARDED, or TENDER_DETAIL."
+            },
+            "_totalPages": {
+                "title": "Total pages reported",
+                "description": "TENDER_LIST/TENDER_AWARDED only -- eprocure.gov.bd's own reported page count for this query at the requested page size, before this actor's maxResults truncation."
+            },
+            "tenderId": {
+                "title": "Tender ID",
+                "description": "eprocure.gov.bd's internal numeric tender ID."
+            },
+            "tenderUrl": {
+                "title": "Tender detail URL",
+                "description": "Link to this tender's full detail page."
+            },
+            "referenceNo": {
+                "title": "Reference number",
+                "description": "The procuring entity's own tender/contract reference number."
+            },
+            "referenceDate": {
+                "title": "Reference date",
+                "description": "TENDER_LIST only -- the 'Dated:' date shown alongside the reference number."
+            },
+            "status": {
+                "title": "Status",
+                "description": "TENDER_LIST only -- e.g. 'Live'."
+            },
+            "procurementNature": {
+                "title": "Procurement nature",
+                "description": "TENDER_LIST only -- e.g. Goods, Works, Service, Physical Services."
+            },
+            "projectTitle": {
+                "title": "Project title",
+                "description": "TENDER_LIST only."
+            },
+            "procuringEntity": {
+                "title": "Procuring entity",
+                "description": "Full ministry/division/department hierarchy, joined with ' / '."
+            },
+            "procurementType": {
+                "title": "Procurement type",
+                "description": "TENDER_LIST only -- raw text combining tendering type and method, e.g. 'NCT / OTM'."
+            },
+            "noticePublishDate": {
+                "title": "Notice publish date",
+                "description": "TENDER_LIST only."
+            },
+            "bidClosingDate": {
+                "title": "Bid closing date",
+                "description": "TENDER_LIST only."
+            },
+            "pkgLotId": {
+                "title": "Package/lot ID",
+                "description": "TENDER_AWARDED only -- eprocure's internal ID for the specific awarded lot."
+            },
+            "awardedContractUrl": {
+                "title": "Awarded contract detail URL",
+                "description": "TENDER_AWARDED only."
+            },
+            "ministry": {
+                "title": "Ministry",
+                "description": "TENDER_AWARDED only (top-level ministry of the awarding entity)."
+            },
+            "packageDescription": {
+                "title": "Package description",
+                "description": "TENDER_AWARDED only -- brief text describing what was procured."
+            },
+            "awardNoticeDate": {
+                "title": "Award notice date",
+                "description": "TENDER_AWARDED only -- date/time shown alongside the package description."
+            },
+            "procuringOffice": {
+                "title": "Procuring office",
+                "description": "TENDER_AWARDED only."
+            },
+            "procurementMethod": {
+                "title": "Procurement method",
+                "description": "TENDER_AWARDED (e.g. LTM, RFQ, OTM) or TENDER_DETAIL (e.g. 'Open Tendering Method (OTM)')."
+            },
+            "location": {
+                "title": "Location",
+                "description": "TENDER_AWARDED only -- district."
+            },
+            "publishDate": {
+                "title": "Publish date",
+                "description": "TENDER_AWARDED only -- date this award notice was published."
+            },
+            "supplierName": {
+                "title": "Supplier name",
+                "description": "TENDER_AWARDED only -- the winning bidder."
+            },
+            "contractValueCroreBdt": {
+                "title": "Contract value (BDT crore)",
+                "description": "TENDER_AWARDED only -- raw text as shown, in crore Bangladeshi Taka (1 crore = 10,000,000 BDT)."
+            },
+            "division": {
+                "title": "Division",
+                "description": "TENDER_DETAIL only."
+            },
+            "organization": {
+                "title": "Organization",
+                "description": "TENDER_DETAIL only."
+            },
+            "procuringEntityName": {
+                "title": "Procuring entity name",
+                "description": "TENDER_DETAIL only."
+            },
+            "sourceOfFunds": {
+                "title": "Source of funds",
+                "description": "TENDER_DETAIL only."
+            },
+            "tenderProposalPackageNoAndDescription": {
+                "title": "Package no. and description",
+                "description": "TENDER_DETAIL only."
+            },
+            "scheduledTenderProposalPublicationDateAndTime": {
+                "title": "Scheduled publication date/time",
+                "description": "TENDER_DETAIL only."
+            },
+            "tenderProposalClosingDateAndTime": {
+                "title": "Closing date/time",
+                "description": "TENDER_DETAIL only."
+            },
+            "tenderProposalDocumentPriceInBdt": {
+                "title": "Document price (BDT)",
+                "description": "TENDER_DETAIL only."
+            },
+            "lots": {
+                "type": "array",
+                "title": "Lots",
+                "description": "TENDER_DETAIL only -- list of {lotNo, identificationOfLot, location, ...} rows from the tender's own lot table, keys slugified from eprocure's own column headers (can vary by procurement type)."
+            },
+            "documentsUrl": {
+                "title": "Documents URL",
+                "description": "TENDER_DETAIL only -- link to the tender's downloadable-documents listing page (not followed by this actor)."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across all record types -- rows missing a given column render blank.",
+            "transformation": {
+                "fields": [
+                    "recordType",
+                    "tenderId",
+                    "referenceNo",
+                    "projectTitle",
+                    "packageDescription",
+                    "procuringEntity",
+                    "ministry",
+                    "supplierName",
+                    "contractValueCroreBdt",
+                    "noticePublishDate",
+                    "bidClosingDate",
+                    "status",
+                    "_totalPages",
+                    "_error",
+                    "_scrapedAt"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

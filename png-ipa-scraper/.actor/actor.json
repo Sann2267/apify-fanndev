@@ -1,0 +1,15 @@
+{
+    "actorSpecification": 1,
+    "name": "png-ipa-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "PNG IPA Business Registry Scraper",
+    "description": "Search Papua New Guinea's Investment Promotion Authority (IPA) business entity registry by company name and pull registration number, status, type, addresses, and business activities -- no account or API key needed.",
+    "categories": ["BUSINESS"],
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

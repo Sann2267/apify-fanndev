@@ -1,0 +1,23 @@
+{
+    "actorSpecification": 1,
+    "name": "steam-review-sentiment-analyzer",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Steam Review & Sentiment Analyzer",
+    "description": "Scrape Steam game reviews and get a ready-made sentiment report: Steam score, recent vs lifetime trend, review-bomb detection, per-language sentiment, positivity by playtime and top complaint keywords. Also exports full reviews, monthly review history and user reviews. No login.",
+    "categories": [
+        "ENTERTAINMENT",
+        "AI"
+    ],
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json",
+    "defaultRunOptions": {
+        "build": "latest",
+        "memoryMbytes": 256,
+        "timeoutSecs": 3600
+    }
+}

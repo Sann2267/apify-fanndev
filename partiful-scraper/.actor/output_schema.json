@@ -1,0 +1,39 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Event / host / discover record",
+        "description": "Raw-passthrough dataset envelope on top of Partiful's own Next.js SSR JSON shape (__NEXT_DATA__.props.pageProps). Every record carries _input/_source/_scrapedAt (and _error/_errorDetail on failures). \"event\" mode records carry the full upstream pageProps verbatim (event, hosts, guest, similarEvents, passwordRequired). \"host\" mode emits one HOST_PROFILE record plus one HOST_EVENT record per published event (recordType discriminates; HOST_PROFILE carries a _warning if the host hasn't made an event list public). \"discover\" mode records carry one upstream trending-feed event verbatim, tagged with region/regionTitle.",
+        "properties": {
+            "_input": { "type": "string", "title": "Input", "description": "The URL/ID that produced this record (or a region descriptor for discover mode)." },
+            "_source": { "type": "string", "title": "Source strategy", "description": "Which extraction strategy emitted this record (S1-nextdata, or none on failure)." },
+            "_scrapedAt": { "type": "string", "format": "date-time", "title": "Scraped at", "description": "UTC ISO 8601 timestamp when this record was scraped." },
+            "_error": { "type": "string", "title": "Error", "description": "Present only on failed extractions (e.g. not_found, empty_input, blocked_or_transient)." },
+            "_errorDetail": { "type": "string", "title": "Error detail", "description": "Free-form diagnostic detail, present only alongside _error." },
+            "_warning": { "type": "string", "title": "Warning", "description": "HOST_PROFILE records only -- set when the host has not made a public event list available." },
+            "recordType": { "title": "Record type", "description": "\"host\" mode only -- HOST_PROFILE or HOST_EVENT. \"discover\" mode -- always DISCOVER_EVENT." },
+            "event": { "title": "Event", "description": "\"event\" mode -- title, startDate/endDate, timezone, location/locationInfo, image, description, customFields, guest-count breakdown, passed through as-is." },
+            "hosts": { "title": "Hosts", "description": "\"event\" mode -- list of host user objects, passed through as-is." },
+            "guest": { "title": "Guest (viewer)", "description": "\"event\" mode -- the requesting viewer's own RSVP status; always null for an anonymous/logged-out request." },
+            "similarEvents": { "title": "Similar events", "description": "\"event\" mode -- other events Partiful suggests alongside this one, passed through as-is." },
+            "passwordRequired": { "title": "Password required", "description": "\"event\" mode -- true if the event is password-gated; some fields may be withheld by Partiful in that case." },
+            "user": { "title": "User", "description": "\"host\" mode -- the organizer's public profile (name, photo, bio, socials), passed through as-is." },
+            "region": { "title": "Region", "description": "\"discover\" mode -- which trending region this event was listed under (NYC, LA, SF)." },
+            "regionTitle": { "title": "Region title", "description": "\"discover\" mode -- Partiful's own display title for the region section." }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across event / host / discover records.",
+            "transformation": {
+                "fields": ["_input", "_source", "recordType", "_scrapedAt", "event", "user", "region", "_error"]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

@@ -1,0 +1,139 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "GOJEP tender/award record",
+        "description": "Raw-passthrough dataset envelope. Every record carries _noticeType/_source/_scrapedAt (and _error/_errorDetail on failures). Field set differs by _noticeType: 'opened' records carry the opened-bid-details fields, 'awarded' records carry the contract-award-notice fields -- both listed below, verbatim field names/shapes from GOJEP's own listing tables.",
+        "properties": {
+            "_noticeType": {
+                "type": "string",
+                "title": "Notice type",
+                "description": "'opened' (opened bid details -- open + historical tenders) or 'awarded' (contract award notices)."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "S1-opened-bid-details, S2-contract-award-notices, or none (error record)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed extractions -- not_found (zero rows for this notice type) or blocked_or_transient (network/upstream issue)."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "resourceId": {
+                "title": "Resource ID",
+                "description": "GOJEP's internal id for this tender/contract. The full detail page it links to (prepareViewCfTWS.do) requires a registered-bidder login -- not fetched by this actor."
+            },
+            "title": {
+                "title": "Title",
+                "description": "Tender/contract title as published."
+            },
+            "referenceNumber": {
+                "title": "Reference number",
+                "description": "opened records only. GOJEP's own tender reference number, e.g. '1360/263'."
+            },
+            "procuringEntity": {
+                "title": "Procuring entity",
+                "description": "The government ministry/agency/entity running this tender or contract."
+            },
+            "description": {
+                "title": "Description",
+                "description": "opened records only. Free-text tender description (from the listing's info tooltip); null when GOJEP didn't publish one."
+            },
+            "submissionDeadline": {
+                "title": "Submission deadline",
+                "description": "opened records only. Free-text date/time as displayed by GOJEP, e.g. 'Thu Sep 03 12:00:00 EST 2026'."
+            },
+            "procedure": {
+                "title": "Procedure",
+                "description": "opened records only. Procurement method/procedure, e.g. 'International Competitive Bidding (ICB)', 'Direct Bidding', 'Single Source (SS)'."
+            },
+            "status": {
+                "title": "Status",
+                "description": "opened records only. e.g. 'Bid submission' (currently open), 'Evaluation', 'For archival'."
+            },
+            "openedBidsUrl": {
+                "title": "Opened bids URL",
+                "description": "opened records only. Link to this tender's public bidder/supplier list page. Set includeBidders=true in input to fetch it inline into 'bidders' instead."
+            },
+            "tenderOpeningRecord": {
+                "title": "Tender opening record",
+                "description": "opened records only. Free-text/link content GOJEP shows in this column; empty on most records observed."
+            },
+            "awardDate": {
+                "title": "Award date",
+                "description": "opened records only. Free-text date the tender was awarded, when disclosed."
+            },
+            "estimatedContractValue": {
+                "title": "Estimated contract value",
+                "description": "opened records only. Rarely populated on the source register."
+            },
+            "bidders": {
+                "type": "array",
+                "title": "Bidders",
+                "description": "opened records only, present when input includeBidders=true. Each item: envelope, supplierName, bidId, financialValueJMD (often null -- sealed/undisclosed)."
+            },
+            "procurementMethod": {
+                "title": "Procurement method",
+                "description": "awarded records only. e.g. 'National Competitive Bidding (NCB)', 'Restricted Bidding (RB)'."
+            },
+            "contractAmount": {
+                "title": "Contract amount",
+                "description": "awarded records only. Free-text awarded contract amount as published (currency not always stated by GOJEP on this column)."
+            },
+            "datePublished": {
+                "title": "Date published",
+                "description": "awarded records only. Free-text publish date/time of the award notice."
+            },
+            "noticePdfUrl": {
+                "title": "Notice PDF URL",
+                "description": "awarded records only. Direct, no-login download link to the official Contract Award Notice PDF."
+            },
+            "listRank": {
+                "title": "List rank",
+                "description": "Row position as returned by GOJEP for this run's result set. Observed behavior: continues incrementing across pages (1, 2, 3, ...) when an explicit sortBy is set; may restart at 1 each page under the register's own default order. Not guaranteed unique/comparable across separate runs with different filters."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across both notice types.",
+            "transformation": {
+                "fields": [
+                    "_noticeType",
+                    "_source",
+                    "_scrapedAt",
+                    "title",
+                    "referenceNumber",
+                    "procuringEntity",
+                    "procedure",
+                    "procurementMethod",
+                    "status",
+                    "submissionDeadline",
+                    "awardDate",
+                    "datePublished",
+                    "contractAmount",
+                    "noticePdfUrl",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

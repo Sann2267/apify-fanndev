@@ -1,0 +1,14 @@
+{
+    "actorSpecification": 1,
+    "name": "saudigazette-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Saudi Gazette Scraper",
+    "description": "Extract full article text or the newest headlines from Saudi Gazette (saudigazette.com.sa), Saudi Arabia's oldest English-language newspaper -- no account or API key needed.",
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

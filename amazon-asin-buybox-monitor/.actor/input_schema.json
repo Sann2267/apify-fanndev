@@ -1,0 +1,118 @@
+{
+  "title": "Amazon ASIN Lookup & Buy Box Monitor",
+  "type": "object",
+  "schemaVersion": 1,
+  "properties": {
+    "asins": {
+      "title": "ASINs",
+      "type": "array",
+      "description": "Amazon ASINs to look up. Full product URLs are accepted too — the ASIN is extracted from them.",
+      "editor": "stringList",
+      "prefill": [
+        "B00XIKPUK4",
+        "B06XX65GS1",
+        "B0BJLBD427"
+      ],
+      "default": [
+        "B00XIKPUK4",
+        "B06XX65GS1",
+        "B0BJLBD427"
+      ]
+    },
+    "marketplace": {
+      "title": "Marketplace",
+      "type": "string",
+      "description": "Amazon domain to query. Prices are pinned to this marketplace's currency regardless of where the run exits from.",
+      "editor": "select",
+      "enum": [
+        "com",
+        "co.uk",
+        "de",
+        "fr",
+        "it",
+        "es",
+        "ca",
+        "com.au",
+        "co.jp",
+        "in"
+      ],
+      "enumTitles": [
+        "amazon.com (US)",
+        "amazon.co.uk",
+        "amazon.de",
+        "amazon.fr",
+        "amazon.it",
+        "amazon.es",
+        "amazon.ca",
+        "amazon.com.au",
+        "amazon.co.jp",
+        "amazon.in"
+      ],
+      "default": "com"
+    },
+    "includeVariations": {
+      "title": "Include variation family",
+      "type": "boolean",
+      "description": "Capture the parent ASIN, child ASINs and variation dimensions (size, colour, flavour) for each product.",
+      "default": true
+    },
+    "expandVariations": {
+      "title": "Also scrape variation children",
+      "type": "boolean",
+      "description": "Fetch each child ASIN as its own row, giving per-variant prices. Costs one extra request per child.",
+      "default": false
+    },
+    "buyBoxRetries": {
+      "title": "Buy Box retries on a fresh proxy IP",
+      "type": "integer",
+      "description": "Amazon withholds the offer block from some exit IPs. When the Buy Box is missing, refetch this many times on a new proxy session. Raises seller coverage substantially; costs extra requests only on the ASINs that need it. Set 0 to disable.",
+      "minimum": 0,
+      "maximum": 5,
+      "default": 2
+    },
+    "maxVariationsPerAsin": {
+      "title": "Max children per ASIN",
+      "type": "integer",
+      "description": "Cap on child ASINs fetched per product when expanding variations.",
+      "minimum": 1,
+      "maximum": 30,
+      "default": 5
+    },
+    "trackChanges": {
+      "title": "Track changes between runs",
+      "type": "boolean",
+      "description": "Compare against the previous run and label each row NEW / UNCHANGED / PRICE_INCREASED / PRICE_DECREASED / BUYBOX_SELLER_CHANGED / BACK_IN_STOCK / OUT_OF_STOCK.",
+      "default": false
+    },
+    "snapshotName": {
+      "title": "Snapshot store name",
+      "type": "string",
+      "description": "Named key-value store holding the previous run's state. Use separate names to track separate ASIN portfolios.",
+      "editor": "textfield",
+      "default": "amazon-buybox-snapshots"
+    },
+    "delaySeconds": {
+      "title": "Delay between products (seconds)",
+      "type": "integer",
+      "description": "Pacing between product pages. Amazon blocks fast anonymous crawling of /dp/ quickly.",
+      "minimum": 0,
+      "maximum": 30,
+      "default": 2
+    },
+    "proxyConfiguration": {
+      "title": "Proxy configuration",
+      "type": "object",
+      "description": "Residential proxy is strongly recommended — Amazon blocks datacentre IPs on product pages within a few requests.",
+      "editor": "proxy",
+      "default": {
+        "useApifyProxy": true,
+        "apifyProxyGroups": [
+          "RESIDENTIAL"
+        ]
+      }
+    }
+  },
+  "required": [
+    "asins"
+  ]
+}

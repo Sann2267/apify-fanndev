@@ -1,0 +1,124 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "ROCIP search-result record",
+        "description": "Raw-passthrough dataset envelope. Every record carries _input/_searchMode/_source/_scrapedAt (and _error/_errorDetail on failures). ROCIP's public search API returns full entity detail directly on the search row -- there is no separate/richer detail endpoint -- so every successful record here is one row of the public search result, verbatim from upstream's own field names.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The exact query (name, number, or surname) that produced this record."
+            },
+            "_searchMode": {
+                "type": "string",
+                "title": "Search mode",
+                "description": "entities, directors, or shareholders -- which ROCIP search index this query ran against."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "S1-ocrs-entitysearch (a real search-result row) or none (error record)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed extractions -- not_found (search matched nothing) or blocked_or_transient (network/timeout issue)."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "EntityID": {
+                "title": "Internal entity ID",
+                "description": "ROCIP's internal database GUID for this entity (not a public-facing registration number)."
+            },
+            "EntityName": {
+                "title": "Registered name",
+                "description": "The full registered company or business name on file."
+            },
+            "EntityNumber": {
+                "title": "Registration number",
+                "description": "The public registration number on the certificate, e.g. '2001/C135' (companies) or '1997/B202' (business firms)."
+            },
+            "DateOfIncorporation": {
+                "title": "Date of incorporation/registration",
+                "description": "Date the entity was incorporated or registered, where on file."
+            },
+            "TypeName": {
+                "title": "Legal form",
+                "description": "e.g. 'Private Ordinary Company', 'Private Ordinary Foreign Company', 'Business By Firm', 'Business By Corporation'."
+            },
+            "StatusName": {
+                "title": "Status",
+                "description": "Current registry status, e.g. 'Active', 'Inactive', 'Amalgamated', 'LRA-Review'."
+            },
+            "PrincipalOfficeAddress": {
+                "title": "Principal office address",
+                "description": "Registered address on file, where recorded."
+            },
+            "Email": {
+                "title": "Email",
+                "description": "Contact email on file, where recorded (usually null in recon samples)."
+            },
+            "Directors": {
+                "title": "Directors",
+                "description": "Comma-separated list of director names on file (order and duplicates as returned upstream)."
+            },
+            "Shareholders": {
+                "title": "Shareholders",
+                "description": "Comma-separated list of shareholder names on file. Null on almost every observed record -- ROCIP's public search does not appear to expose shareholder data for most entities."
+            },
+            "Secretaries": {
+                "title": "Secretaries",
+                "description": "Comma-separated list of company secretary names on file, where recorded."
+            },
+            "ProfitStatus": {
+                "title": "Profit status",
+                "description": "'Profit' or null, where indicated."
+            },
+            "ApplicationId": {
+                "title": "Platform application ID",
+                "description": "Internal GUID identifying the registry tenant on ROCIP's shared multi-country e-filing platform. Constant for all Saint Lucia records."
+            },
+            "LoweredApplicationName": {
+                "title": "Platform tenant name",
+                "description": "Internal lowercase tenant name on the shared platform. Always 'stlucia' for this actor."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns for each search-result record.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "_searchMode",
+                    "_source",
+                    "_scrapedAt",
+                    "EntityName",
+                    "EntityNumber",
+                    "TypeName",
+                    "StatusName",
+                    "DateOfIncorporation",
+                    "PrincipalOfficeAddress",
+                    "Directors",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

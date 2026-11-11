@@ -1,0 +1,168 @@
+{
+    "title": "Alfagift Scraper",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "mode": {
+            "title": "What to scrape",
+            "type": "string",
+            "description": "Pick the surface you want. Modes marked (needs input) require a list below; the rest discover their own targets.",
+            "editor": "select",
+            "default": "search",
+            "enum": [
+                "search",
+                "searchSuggestions",
+                "categoryTree",
+                "categoryProducts",
+                "fullCatalog",
+                "productDetail",
+                "brandDirectory",
+                "brandProducts",
+                "newArrivals",
+                "recommendations",
+                "promoBanners",
+                "promoProducts"
+            ],
+            "enumTitles": [
+                "Search products by keyword (needs input)",
+                "Keyword autocomplete suggestions (needs input)",
+                "Category tree",
+                "Products in a category (needs input)",
+                "Full catalogue (~10,000 products)",
+                "Product detail: barcode, brand, gallery (needs input)",
+                "Brand directory (A-Z sweep)",
+                "Products of a brand (needs input)",
+                "New arrivals feed",
+                "Homepage recommendations",
+                "Promotional campaigns and banners",
+                "Products on promotion right now"
+            ]
+        },
+        "searchKeywords": {
+            "title": "Keywords",
+            "type": "array",
+            "editor": "stringList",
+            "description": "For 'search' and 'searchSuggestions'. Plain keywords ('susu uht') or pasted alfagift.id/find/... URLs.",
+            "prefill": [
+                "indomie",
+                "susu uht"
+            ]
+        },
+        "categoryIds": {
+            "title": "Category IDs or URLs",
+            "type": "array",
+            "editor": "stringList",
+            "description": "For 'categoryProducts'. A 24-character category id, or a pasted alfagift.id/c/... URL. Run 'categoryTree' first to see what exists."
+        },
+        "productIds": {
+            "title": "Product IDs or URLs",
+            "type": "array",
+            "editor": "stringList",
+            "description": "For 'productDetail'. A numeric productId, or a pasted alfagift.id/p/... URL. A SKU such as A13170001210 will NOT work -- Alfagift only accepts the numeric id."
+        },
+        "brandIds": {
+            "title": "Brand IDs or URLs",
+            "type": "array",
+            "editor": "stringList",
+            "description": "For 'brandProducts'. A numeric brandId, or a pasted alfagift.id/b/... URL. Run 'brandDirectory' first to find ids."
+        },
+        "promotionIds": {
+            "title": "Promotion IDs or URLs",
+            "type": "array",
+            "editor": "stringList",
+            "description": "Optional for 'promoProducts'. Leave empty to discover every live campaign from the banner rail. Note this is the id from a banner's deep link (/promotion-products?id=...), NOT the banner's own id."
+        },
+        "brandLetters": {
+            "title": "Brand letters",
+            "type": "array",
+            "editor": "stringList",
+            "description": "Optional for 'brandDirectory'. Defaults to A-Z. Letters C, F, G, V and W are broken in Alfagift's own brand index and return HTTP 500 whatever you do -- the run reports them as diagnostic rows."
+        },
+        "targets": {
+            "title": "Targets (generic)",
+            "type": "array",
+            "editor": "stringList",
+            "description": "A single list routed into whichever field the chosen mode needs. Handy when chaining this actor after another one."
+        },
+        "maxItems": {
+            "title": "Max items",
+            "type": "integer",
+            "description": "Stop after this many dataset rows. 0 means no limit.",
+            "default": 0,
+            "minimum": 0
+        },
+        "pageSize": {
+            "title": "Page size",
+            "type": "integer",
+            "description": "Rows per request. Alfagift enforces no cap, so the default of 1000 fits most whole categories and keyword result sets into a single request.",
+            "default": 1000,
+            "minimum": 1,
+            "maximum": 5000
+        },
+        "maxPagesPerTarget": {
+            "title": "Max pages per target",
+            "type": "integer",
+            "description": "Safety ceiling on how far to page one category, brand or keyword. Rarely reached at the default page size.",
+            "default": 50,
+            "minimum": 1,
+            "maximum": 500
+        },
+        "bannerLocation": {
+            "title": "Banner location",
+            "type": "string",
+            "description": "For 'promoBanners' and 'promoProducts'. Only 'main_banner_new' is used by the live site; an unknown location returns an empty list rather than an error.",
+            "default": "main_banner_new",
+            "editor": "textfield"
+        },
+        "bannerLimit": {
+            "title": "Banner limit",
+            "type": "integer",
+            "description": "How many banners to pull from the rail before resolving promotions.",
+            "default": 150,
+            "minimum": 1,
+            "maximum": 500
+        },
+        "includePromoDetail": {
+            "title": "Include promo detail",
+            "type": "boolean",
+            "description": "For 'promoBanners': also fetch each campaign's detail page (title, artwork, SEO copy). Costs one extra request per banner.",
+            "default": false
+        },
+        "requestDelaySecs": {
+            "title": "Delay between requests (seconds)",
+            "type": "number",
+            "description": "Alfagift did not rate limit 20 back-to-back requests during testing, so this is deliberately small. Raise it if a long catalogue walk starts seeing HTTP 429.",
+            "default": 0.2,
+            "minimum": 0,
+            "maximum": 30
+        },
+        "maxRetries": {
+            "title": "Max retries",
+            "type": "integer",
+            "description": "How many times to retry a request that fails with a transient error. A 401 is never retried -- it means the site's encryption key rotated and no number of retries will help.",
+            "default": 4,
+            "minimum": 1,
+            "maximum": 10
+        },
+        "requestTimeoutSecs": {
+            "title": "Request timeout (seconds)",
+            "type": "integer",
+            "description": "A full-category request can return several megabytes, so keep this generous.",
+            "default": 90,
+            "minimum": 10,
+            "maximum": 300
+        },
+        "proxyConfiguration": {
+            "title": "Proxy",
+            "type": "object",
+            "editor": "proxy",
+            "description": "Optional. Alfagift has no WAF and no IP gate, so this actor works without a proxy. A residential Indonesian address only buys rate-limit headroom on very large walks.",
+            "default": {
+                "useApifyProxy": false
+            }
+        }
+    },
+    "required": [
+        "mode"
+    ]
+}

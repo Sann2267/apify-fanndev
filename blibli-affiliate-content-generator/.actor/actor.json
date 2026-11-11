@@ -1,0 +1,22 @@
+{
+    "actorSpecification": 1,
+    "name": "blibli-affiliate-content-generator",
+    "version": "0.1",
+    "buildTag": "latest",
+    "title": "Blibli Affiliate Link Generator & Content Parser",
+    "description": "Source best-selling, high-rated Blibli products (optionally official-warranty only), extract images and clean descriptions, and generate share links plus ready-to-post captions. Built for affiliate and content marketers. No login needed.",
+    "categories": ["ECOMMERCE"],
+    "minMemoryMbytes": 256,
+    "maxMemoryMbytes": 4096,
+    "defaultRunOptions": {
+        "build": "latest",
+        "memoryMbytes": 1024,
+        "timeoutSecs": 3600
+    },
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

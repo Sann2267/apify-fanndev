@@ -1,0 +1,140 @@
+{
+    "title": "Steam Concurrent Players Monitor",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "mode": {
+            "title": "What to collect",
+            "type": "string",
+            "description": "topConcurrent = Steam's live top 100 games by players right now (+ today's peak). topDailyPeak = Steam's top 100 by yesterday's peak, with last week's rank. appsCurrent = live player count for the games you list. appHistory = player history for the games you list (monthly average/peak since launch + daily and hourly points). steamchartsTop = the long tail: up to ~12,700 games ranked by current players with 30-day peak and hours played. steamOnline = total Steam users online, last 48 hours.",
+            "editor": "select",
+            "enum": [
+                "topConcurrent",
+                "topDailyPeak",
+                "appsCurrent",
+                "appHistory",
+                "steamchartsTop",
+                "steamOnline"
+            ],
+            "enumTitles": [
+                "Live top 100 by current players",
+                "Top 100 by daily peak",
+                "Live player count for my games",
+                "Player history for my games",
+                "Long-tail ranking (up to ~12,700 games)",
+                "Total Steam users online"
+            ],
+            "default": "topConcurrent",
+            "prefill": "topConcurrent"
+        },
+        "apps": {
+            "title": "Games (for appsCurrent / appHistory)",
+            "type": "array",
+            "editor": "stringList",
+            "description": "One per line: a Steam appid (730), a Steam store / SteamCharts / SteamDB app URL, or a game name (resolved through Steam store search; an exact title match wins). Only used by the appsCurrent and appHistory modes.",
+            "prefill": [
+                "730",
+                "https://store.steampowered.com/app/570/Dota_2/",
+                "Elden Ring"
+            ]
+        },
+        "maxItems": {
+            "title": "Max results",
+            "type": "integer",
+            "description": "Maximum ranked games to return. The two official Steam charts stop at 100; steamchartsTop goes up to ~12,700.",
+            "default": 100,
+            "minimum": 1,
+            "maximum": 15000
+        },
+        "minPlayers": {
+            "title": "Minimum players",
+            "type": "integer",
+            "description": "Skip games below this many players (current players for live charts, daily peak for topDailyPeak). 0 = no filter. In steamchartsTop the run stops at the first game below the threshold, so a high value is also a cheap way to cap the run.",
+            "default": 0,
+            "minimum": 0
+        },
+        "compareWithPrevious": {
+            "title": "Compare with previous run (monitoring)",
+            "type": "boolean",
+            "description": "Remember each game's player count between runs and add previousPlayers, playersChange, playersChangePct, previousRank and rankChange. Schedule the actor (e.g. hourly) to turn it into a monitor. Snapshots are kept per mode in the named key-value store 'steam-players-monitor-snapshots'.",
+            "default": true
+        },
+        "alertChangePct": {
+            "title": "Alert threshold (%)",
+            "type": "integer",
+            "description": "When comparing with the previous run, mark records whose player count moved by at least this percentage (up or down) with alert: true. 0 = off.",
+            "default": 0,
+            "minimum": 0
+        },
+        "includeStoreDetails": {
+            "title": "Include game details",
+            "type": "boolean",
+            "description": "Add name, store URL, developers, publishers, release date and the raw Steam store item. Costs one extra request per 100 games for appsCurrent; free for the two official charts.",
+            "default": true
+        },
+        "includeSteamchartsStats": {
+            "title": "Add 24h peak & all-time peak (appsCurrent)",
+            "type": "boolean",
+            "description": "appsCurrent only: also read SteamCharts for each game's 24-hour peak, all-time peak and last-30-days average (one extra request per game). Games SteamCharts does not track keep their live count and get steamchartsError.",
+            "default": false
+        },
+        "includeSeries": {
+            "title": "Include time series points",
+            "type": "boolean",
+            "description": "appHistory: add every player-count point (monthly since launch, then daily, then hourly for the last ~30 days). steamOnline: add the 48-hour series at ~5-minute steps. Turn off to get only the summary.",
+            "default": true
+        },
+        "historyDays": {
+            "title": "History window (days)",
+            "type": "integer",
+            "description": "appHistory only: keep only points and months from the last N days. 0 = full history since launch.",
+            "default": 0,
+            "minimum": 0
+        },
+        "country": {
+            "title": "Store country",
+            "type": "string",
+            "description": "Two-letter country code used for game details (store URL, availability). Player counts are global and do not change with it.",
+            "default": "US",
+            "editor": "textfield"
+        },
+        "language": {
+            "title": "Store language",
+            "type": "string",
+            "description": "Steam language name for game names and descriptions (english, german, japanese, koreana, schinese, ...).",
+            "default": "english",
+            "editor": "textfield"
+        },
+        "maxConcurrency": {
+            "title": "Max concurrent requests",
+            "type": "integer",
+            "description": "Parallel requests for per-game modes and steamchartsTop pages.",
+            "default": 5,
+            "minimum": 1,
+            "maximum": 16
+        },
+        "maxRetries": {
+            "title": "Max retries per request",
+            "type": "integer",
+            "description": "Attempts per request with exponential backoff before a game is reported as an error.",
+            "default": 5,
+            "minimum": 1,
+            "maximum": 10
+        },
+        "proxyConfiguration": {
+            "title": "Proxy",
+            "type": "object",
+            "editor": "proxy",
+            "description": "Not needed: none of the Steam or SteamCharts endpoints used is blocked or rate-limited for normal volumes. Turn on Apify Proxy (Residential) only if you run very large, very frequent jobs and start seeing errors.",
+            "default": {
+                "useApifyProxy": false
+            },
+            "prefill": {
+                "useApifyProxy": false
+            }
+        }
+    },
+    "required": [
+        "mode"
+    ]
+}

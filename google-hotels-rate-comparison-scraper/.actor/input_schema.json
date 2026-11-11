@@ -1,0 +1,109 @@
+{
+    "title": "Google Hotels Rate Comparison Scraper input",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "mode": {
+            "title": "Mode",
+            "type": "string",
+            "description": "search = find hotels for a query and get their cards (price, rating, star class, deal flag). hotel = full detail for specific hotels, with every OTA quote nested under 'rates'. rates = the same quotes flattened to one record each, which is the shape you want for rate-parity analysis. sponsored = the paid placements shown on a hotel's page, which are quotes for OTHER hotels. reference = check the source and report what it returns, including the winning TLS profile and the currency your proxy produces.",
+            "editor": "select",
+            "default": "search",
+            "enum": [
+                "search",
+                "hotel",
+                "rates",
+                "sponsored",
+                "reference"
+            ],
+            "enumTitles": [
+                "search - find hotels for a query",
+                "hotel - full detail + nested OTA rates",
+                "rates - one record per OTA quote",
+                "sponsored - paid placements on a hotel page",
+                "reference - is the source live, what does it return"
+            ]
+        },
+        "searchQuery": {
+            "title": "Search query (search mode)",
+            "type": "string",
+            "description": "A destination or hotel name, e.g. 'hotels in Singapore' or 'hotels near Ubud Bali'. Google returns about 21 hotels per query and offers no deeper pages, so use several narrower queries to cover a city rather than expecting pagination.",
+            "editor": "textfield",
+            "prefill": "hotels in Singapore"
+        },
+        "searchQueries": {
+            "title": "Search queries (search mode)",
+            "type": "array",
+            "description": "Several queries in one run. One request each.",
+            "editor": "stringList",
+            "prefill": [
+                "hotels in Singapore",
+                "hotels in Bali"
+            ]
+        },
+        "fetchRates": {
+            "title": "Also fetch OTA rates (search mode)",
+            "type": "boolean",
+            "description": "Search cards already carry Google's own price, rating, star class and deal flag. Turn this on to also pull each hotel's full cross-OTA rate table - one extra request per hotel, so roughly 21x the requests of a bare search.",
+            "default": false
+        },
+        "hotelId": {
+            "title": "Hotel entity ID or URL (hotel/rates/sponsored modes)",
+            "type": "string",
+            "description": "A Google Hotels entity ID, or the https://www.google.com/travel/hotels/entity/<id> URL it came from. Run mode 'search' first to collect IDs.",
+            "editor": "textfield"
+        },
+        "hotelIds": {
+            "title": "Hotel entity IDs or URLs (hotel/rates/sponsored modes)",
+            "type": "array",
+            "description": "Several hotels in one run. One request each.",
+            "editor": "stringList"
+        },
+        "languageCode": {
+            "title": "Language",
+            "type": "string",
+            "description": "Google's 'hl' parameter. Controls the language of labels such as 'Free cancellation' and '5-star hotel'. It does NOT control the currency.",
+            "editor": "textfield",
+            "default": "en"
+        },
+        "countryCode": {
+            "title": "Country",
+            "type": "string",
+            "description": "Google's 'gl' parameter. Influences which OTAs Google lists. It does NOT control the currency - see the proxy note.",
+            "editor": "textfield",
+            "default": "us"
+        },
+        "maxItems": {
+            "title": "Max items",
+            "type": "integer",
+            "description": "Maximum records per run. A search query yields about 21 hotels; a single hotel yields up to about 25 OTA quotes in mode 'rates'.",
+            "editor": "number",
+            "default": 200,
+            "minimum": 1
+        },
+        "maxConcurrency": {
+            "title": "Max concurrency",
+            "type": "integer",
+            "description": "How many hotel pages to fetch in parallel. Google tolerates far less parallelism than a typical site; 3 is a deliberate default.",
+            "editor": "number",
+            "default": 3,
+            "minimum": 1,
+            "maximum": 8
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "description": "Residential proxy is on by default and is effectively required: Google gates on the exit IP as well as the TLS fingerprint, and datacenter addresses get challenges instead of pages. The proxy country also decides the CURRENCY of every price, because Google ignores 'curr', 'currency' and 'gl' on this surface - so pick a proxy country matching the currency you want to report in.",
+            "editor": "proxy",
+            "default": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": [
+                    "RESIDENTIAL"
+                ]
+            }
+        }
+    },
+    "required": [
+        "mode"
+    ]
+}

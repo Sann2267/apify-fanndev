@@ -1,0 +1,12 @@
+{
+    "actorOutputSchemaVersion": 1,
+    "title": "LinkedIn Alumni Mapping Results",
+    "properties": {
+        "results": {
+            "type": "string",
+            "title": "Dataset results",
+            "template": "{{links.apiDefaultDatasetUrl}}/items",
+            "description": "One ALUMNUS row per graduate, a SUMMARY row per school with top employers and destinations, plus NOTICE and ERROR rows."
+        }
+    }
+}

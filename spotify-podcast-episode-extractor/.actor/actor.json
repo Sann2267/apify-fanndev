@@ -1,0 +1,23 @@
+{
+    "actorSpecification": 1,
+    "name": "spotify-podcast-episode-extractor",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Spotify Podcast Episode Extractor",
+    "description": "Export every episode of any Spotify podcast with title, full description, duration, release date and share link - plus chapter timestamps, sponsor domains and likely guest names mined out of the descriptions. Includes show rating and review count. No Spotify account or API key needed.",
+    "categories": [
+        "ENTERTAINMENT",
+        "OTHER"
+    ],
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json",
+    "defaultRunOptions": {
+        "build": "latest",
+        "memoryMbytes": 512,
+        "timeoutSecs": 3600
+    }
+}

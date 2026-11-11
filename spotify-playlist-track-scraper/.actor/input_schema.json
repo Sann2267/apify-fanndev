@@ -1,0 +1,89 @@
+{
+    "title": "Spotify Playlist & Track Metadata Scraper",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "playlistUrls": {
+            "title": "Playlist URLs",
+            "type": "array",
+            "description": "Spotify playlists to read. Share links (with or without the ?si= tail), localised /intl-xx/ links, spotify:playlist: URIs and bare playlist ids all work. Editorial playlists such as Top 50 - Global are readable too.",
+            "editor": "stringList",
+            "prefill": [
+                "https://open.spotify.com/playlist/37i9dQZF1DXcBWIGoYBM5M"
+            ],
+            "example": [
+                "https://open.spotify.com/playlist/37i9dQZEVXbMDoHDwVN2tF"
+            ]
+        },
+        "trackUrls": {
+            "title": "Individual track URLs",
+            "type": "array",
+            "description": "Single tracks to look up, for when you already know the songs and only want their metadata. Each one costs a single request and returns the same columns as a playlist track, plus the record label and copyright lines.",
+            "editor": "stringList"
+        },
+        "startUrls": {
+            "title": "Mixed URLs",
+            "type": "array",
+            "description": "Playlist and track links mixed together, for callers that keep one list. Each entry is routed by what it points at.",
+            "editor": "requestListSources"
+        },
+        "maxTracksPerPlaylist": {
+            "title": "Maximum tracks per playlist",
+            "type": "integer",
+            "description": "Stop after this many tracks from each playlist. Spotify serves 100 tracks per request, so a 1000-track playlist costs 10 requests.",
+            "default": 1000,
+            "minimum": 1,
+            "maximum": 10000,
+            "unit": "tracks"
+        },
+        "includePlaylistRecord": {
+            "title": "Include a playlist summary row",
+            "type": "boolean",
+            "description": "Emit one PLAYLIST record per playlist carrying its name, description, follower count, owner and cover art, alongside the TRACK records. Turn this off if you only want the songs.",
+            "default": true
+        },
+        "enrichWithIsrc": {
+            "title": "Add ISRC and popularity score (slow, rate-limited)",
+            "type": "boolean",
+            "description": "ISRC and Spotify's 0-100 popularity score are not part of the playlist payload. They exist only on Spotify's search endpoint, so each track needs its own extra request. That endpoint also rate-limits by IP: after a few dozen lookups it starts refusing for about 20 hours, and enrichment then stops for the rest of the run while everything else still completes. Leave this off unless you specifically need ISRC, and enable the proxy when you do. Playcount - Spotify's real lifetime stream count, which the official API never exposes - is always included either way.",
+            "default": false
+        },
+        "maxIsrcLookups": {
+            "title": "Maximum ISRC lookups",
+            "type": "integer",
+            "description": "Hard ceiling on the extra search requests when ISRC enrichment is on, so a large playlist cannot burn the daily search allowance in one run. Tracks beyond it are marked not-attempted.",
+            "default": 200,
+            "minimum": 0,
+            "maximum": 5000,
+            "unit": "lookups"
+        },
+        "market": {
+            "title": "Market",
+            "type": "string",
+            "description": "Two-letter country code used when looking up ISRC and popularity. It decides which release of a song Spotify considers available, so set it to the market you actually care about.",
+            "editor": "textfield",
+            "default": "US"
+        },
+        "exportFormats": {
+            "title": "Extra export files",
+            "type": "array",
+            "description": "Besides the dataset, write ready-made files into this run's key-value store. Nested fields become dotted columns in the tabular formats.",
+            "editor": "select",
+            "items": {
+                "type": "string",
+                "enum": ["json", "ndjson", "csv", "excel"],
+                "enumTitles": ["JSON", "NDJSON", "CSV", "Excel (XLSX)"]
+            },
+            "default": []
+        },
+        "proxyConfiguration": {
+            "title": "Proxy",
+            "type": "object",
+            "description": "Off by default, and genuinely optional: none of the Spotify endpoints this actor reads has a WAF or an IP block, so the platform's own address reaches all of them. Turn it on if you enable ISRC enrichment, which is rate-limited per IP.",
+            "editor": "proxy",
+            "default": {
+                "useApifyProxy": false
+            }
+        }
+    }
+}

@@ -1,0 +1,43 @@
+{
+    "title": "Vanuatu Government Tenders Scraper (Central Tender Board)",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "listType": {
+            "title": "List type",
+            "type": "string",
+            "editor": "select",
+            "description": "\"Current\" = tenders open for submission right now (~58 at a time), each with reference number, purchaser, category, submission/expiry dates, and full description. \"Results\" = the historical archive of the same card shape (~140 records).",
+            "enum": ["current", "results"],
+            "enumTitles": [
+                "Current tenders (open now)",
+                "Tenders results (historical archive)"
+            ],
+            "default": "current",
+            "prefill": "current"
+        },
+        "maxResults": {
+            "title": "Max results",
+            "type": "integer",
+            "description": "Caps how many records are kept in the output for this run.",
+            "default": 500,
+            "minimum": 1,
+            "maximum": 10000,
+            "prefill": 500
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "editor": "proxy",
+            "description": "Apify Proxy configuration.",
+            "default": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            },
+            "prefill": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            }
+        }
+    }
+}

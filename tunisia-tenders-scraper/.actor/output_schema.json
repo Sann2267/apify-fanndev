@@ -1,0 +1,201 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "TUNEPS tender ('Appel d'offres') record",
+        "description": "One record per Tunisian public tender from TUNEPS's public portal, produced by mode=list (a sparse ~10-field summary row) or mode=detail (a rich ~90-field object for one bid id). Every field TUNEPS's own API returns for the record is passed through verbatim, including trilingual coded-value labels: most fields ending in a raw code (e.g. 'procedureType') have companion '<field>StrFr'/'<field>StrAr'/'<field>StrEn' fields carrying the human-readable French/Arabic/English label for that code. A single _error record is emitted instead of payload fields when a tender can't be fetched.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "For list records: 'list:openOnly=<bool>,keyword=<value>'. For detail records: the bid id that was requested."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which strategy emitted this record (S1-portail-bid-master-list, S1-portail-bid-master-detail, or 'none' on error)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed records (blocked_or_transient, not_found)."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "epBidMasterId": {
+                "title": "Bid id",
+                "description": "TUNEPS's internal numeric identifier for this tender -- stable across list and detail, used as the 'detail' mode input."
+            },
+            "bidNo": {
+                "title": "Tender reference number",
+                "description": "TUNEPS's own reference number for this tender."
+            },
+            "refNo": {
+                "title": "Buyer's reference number",
+                "description": "The procuring entity's own internal reference for this tender (detail only)."
+            },
+            "bidModSeq": {
+                "title": "Modification sequence",
+                "description": "Revision counter for this tender ('00' = original publication)."
+            },
+            "bidInstNm": {
+                "title": "Procuring institution",
+                "description": "Name of the government buyer/institution running this tender."
+            },
+            "bidInstCd": {
+                "title": "Procuring institution code",
+                "description": "TUNEPS's internal code for the procuring institution (detail only)."
+            },
+            "instRegNo": {
+                "title": "Institution registration number",
+                "description": "The procuring institution's registration number (detail only)."
+            },
+            "bidNmFr": {
+                "title": "Tender title (French)",
+                "description": "The tender's title/description in French."
+            },
+            "bidNmAr": {
+                "title": "Tender title (Arabic)",
+                "description": "The tender's title/description in Arabic."
+            },
+            "bidNmEn": {
+                "title": "Tender title (English)",
+                "description": "The tender's title/description as published in the English-labeled field -- in practice often identical to the French or Arabic text depending on which language the buyer originally submitted in."
+            },
+            "publicDt": {
+                "title": "Published at",
+                "description": "Timestamp when this tender was published to the public portal (SQL-style 'YYYY-MM-DD HH:MM:SS.ffffff', not ISO 8601)."
+            },
+            "publicYn": {
+                "title": "Published flag",
+                "description": "'Y' if published to the public portal (this actor only ever returns 'Y' records)."
+            },
+            "bdRecvStartDt": {
+                "title": "Submission opens",
+                "description": "When bid submission opens (detail only; SQL-style timestamp)."
+            },
+            "bdRecvEndDt": {
+                "title": "Submission deadline",
+                "description": "Bid submission deadline (SQL-style timestamp) -- used for the 'openOnly' list filter."
+            },
+            "bdOpenDt": {
+                "title": "Bid opening date",
+                "description": "Scheduled public bid-opening date/time (detail only)."
+            },
+            "bidExpiredDays": {
+                "title": "Bid validity (days)",
+                "description": "How many days submitted bids must remain valid for (detail only)."
+            },
+            "procedureType": {
+                "title": "Procedure type (code)",
+                "description": "Coded procurement procedure type; see procedureTypeStrFr/Ar/En for the label (detail only)."
+            },
+            "procedureTypeStrFr": {
+                "title": "Procedure type (French)",
+                "description": "e.g. \"Appel d'offres ouvert\" (open tender) (detail only)."
+            },
+            "bizKindStrFr": {
+                "title": "Business kind (French)",
+                "description": "e.g. \"Fournitures des biens\" (supply of goods), \"Travaux\" (works), \"Services\" (detail only)."
+            },
+            "priceTypeStrFr": {
+                "title": "Price type (French)",
+                "description": "e.g. \"Marché à prix unitaire\" (unit-price contract) (detail only)."
+            },
+            "financialMethodStrFr": {
+                "title": "Financing method (French)",
+                "description": "e.g. \"Budget\", self-financed, donor-financed (detail only)."
+            },
+            "guaranteeTypeStrFr": {
+                "title": "Guarantee type (French)",
+                "description": "Required bid guarantee/deposit type (detail only)."
+            },
+            "internationalBidYnStrFr": {
+                "title": "International bid scope (French)",
+                "description": "e.g. \"Appel d'offres national\" (national) vs. international tender scope (detail only)."
+            },
+            "onOffTypeStrFr": {
+                "title": "Submission channel (French)",
+                "description": "\"En ligne\" (online, via TUNEPS) vs. offline submission (detail only)."
+            },
+            "evalMethodStrFr": {
+                "title": "Evaluation method (French)",
+                "description": "e.g. \"Moins disant\" (lowest bidder) (detail only)."
+            },
+            "executionPlaceStrFr": {
+                "title": "Execution place (French)",
+                "description": "Governorate/region where the contract will be executed (detail only)."
+            },
+            "frameworkYn": {
+                "title": "Framework agreement flag",
+                "description": "'Y' if this is a framework/marché-cadre agreement (detail only)."
+            },
+            "consorYnStrFr": {
+                "title": "Consortium bids allowed (French)",
+                "description": "Whether bidding consortia are permitted (detail only)."
+            },
+            "biddingDocPrice": {
+                "title": "Bidding document price",
+                "description": "Cost to obtain the bidding/tender document, if any (detail only)."
+            },
+            "biddingDocPriceCurr": {
+                "title": "Bidding document currency",
+                "description": "Currency for biddingDocPrice, typically 'TND' (detail only)."
+            },
+            "staffNm": {
+                "title": "Contact staff name",
+                "description": "Named contact person at the procuring institution (detail only)."
+            },
+            "bdRecvAddrsFr": {
+                "title": "Submission address (French)",
+                "description": "Physical address for bid submission (detail only)."
+            },
+            "bdDepartFr": {
+                "title": "Department (French)",
+                "description": "Department within the procuring institution handling this tender (detail only)."
+            },
+            "hasAnnonce": {
+                "title": "Has announcement",
+                "description": "'Y'/'N' flag for an associated announcement/corrigendum (detail only)."
+            },
+            "regId": {
+                "title": "Registration id",
+                "description": "TUNEPS registration identifier for the procuring institution (detail only)."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across list and detail records -- rows missing a given column render blank.",
+            "transformation": {
+                "fields": [
+                    "epBidMasterId",
+                    "bidNo",
+                    "bidInstNm",
+                    "bidNmFr",
+                    "bdRecvEndDt",
+                    "publicDt",
+                    "procedureTypeStrFr",
+                    "bizKindStrFr",
+                    "_error",
+                    "_scrapedAt"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

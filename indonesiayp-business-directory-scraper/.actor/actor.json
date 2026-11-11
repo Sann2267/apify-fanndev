@@ -1,0 +1,18 @@
+{
+    "actorSpecification": 1,
+    "name": "indonesiayp-business-directory-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Indonesia Business Directory Scraper (IndonesiaYP)",
+    "description": "Extract Indonesian business listings from IndonesiaYP -- name, full address, landline and mobile phone, website, GPS coordinates, opening hours, manager, establishment year, employee band and ratings. Browse any category, optionally scoped to a city. No account or API key needed.",
+    "categories": [
+        "LEAD_GENERATION",
+        "BUSINESS"
+    ],
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

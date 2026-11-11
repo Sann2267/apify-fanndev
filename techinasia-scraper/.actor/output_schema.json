@@ -1,0 +1,300 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Tech in Asia record",
+        "description": "The portfolio dataset envelope (_input / _source / _scrapedAt / recordType) wrapped around whatever the upstream API returned, passed through field-for-field. recordType is POST, COMPANY, JOB, CATEGORY, TAG, TOPIC, TRENDING_QUESTION or ERROR. Upstream adds and drops fields without notice, so anything not listed here still reaches the dataset rather than failing the run.",
+        "additionalProperties": true,
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The slug, query, URL or mode label this record came from."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which backend answered: S1-wp-* for the WordPress newsroom, S2-algolia-* for search and funding facets, S3-laravel-* for the company database and job board, or none on error rows."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was emitted."
+            },
+            "recordType": {
+                "type": "string",
+                "title": "Record type",
+                "description": "POST, COMPANY, JOB, CATEGORY, TAG, TOPIC, TRENDING_QUESTION or ERROR."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Error rows only: not_found, no_results, no_posts, invalid_slug, fetch_failed or mode_failed."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic accompanying _error."
+            },
+            "id": {
+                "title": "Id",
+                "description": "Upstream identifier. Numeric string for articles, UUID for companies and jobs."
+            },
+            "title": {
+                "title": "Title",
+                "description": "Article headline or job title."
+            },
+            "slug": {
+                "title": "Slug",
+                "description": "URL slug. Feed this back into postDetail to re-resolve the record."
+            },
+            "link": {
+                "title": "Link",
+                "description": "Canonical URL on techinasia.com."
+            },
+            "excerpt": {
+                "title": "Excerpt",
+                "description": "The publisher's own summary line."
+            },
+            "date_gmt": {
+                "title": "Published (UTC)",
+                "description": "Publication timestamp."
+            },
+            "modified_gmt": {
+                "title": "Modified (UTC)",
+                "description": "Last edit timestamp."
+            },
+            "type": {
+                "title": "Article type",
+                "description": "post for full articles, short for news briefs, visual-story for the illustrated format."
+            },
+            "read_time": {
+                "title": "Read time",
+                "description": "Estimated reading minutes."
+            },
+            "author": {
+                "title": "Author",
+                "description": "Byline object: display name, profile URL, avatar and staff flag."
+            },
+            "categories": {
+                "title": "Categories",
+                "description": "Category objects with id, name and slug."
+            },
+            "tags": {
+                "title": "Tags",
+                "description": "Tag objects with id, name and slug."
+            },
+            "companies": {
+                "title": "Companies mentioned",
+                "description": "Companies the newsroom linked to this article."
+            },
+            "featured_image": {
+                "title": "Featured image",
+                "description": "Source URL plus width, height and the CDN's derived sizes."
+            },
+            "is_sponsored": {
+                "title": "Sponsored",
+                "description": "True when the article is paid placement. The sponsor object carries the advertiser."
+            },
+            "is_subscriber_exclusive": {
+                "title": "Subscriber exclusive",
+                "description": "True when the article sits behind the subscription. Note that is_paywalled is true on essentially every record and does not discriminate - this field does."
+            },
+            "content": {
+                "title": "Article body",
+                "description": "Full article HTML. Present only when includeArticleContent was turned on."
+            },
+            "name": {
+                "title": "Name",
+                "description": "Company name."
+            },
+            "entity_slug": {
+                "title": "Company slug",
+                "description": "The slug companyDetail expects. Company records from the database carry it here."
+            },
+            "pitch": {
+                "title": "Pitch",
+                "description": "One-line company pitch."
+            },
+            "date_founded": {
+                "title": "Founded",
+                "description": "Company founding date."
+            },
+            "total_amount_raised": {
+                "title": "Total raised",
+                "description": "Lifetime funding raised, in USD. Search-index records only."
+            },
+            "last_funding_stage": {
+                "title": "Latest stage",
+                "description": "Most recent funding stage, e.g. Seed or Series A."
+            },
+            "last_funding_round": {
+                "title": "Latest round",
+                "description": "Most recent funding round detail."
+            },
+            "is_investor": {
+                "title": "Is investor",
+                "description": "True when the entity invests rather than only raises."
+            },
+            "number_investments": {
+                "title": "Investments made",
+                "description": "Count of investments this entity has made."
+            },
+            "number_exits": {
+                "title": "Exits",
+                "description": "Count of portfolio exits."
+            },
+            "entity_locations": {
+                "title": "Locations",
+                "description": "Company locations including country name."
+            },
+            "entity_industries": {
+                "title": "Industries",
+                "description": "Industry and vertical classification."
+            },
+            "employee_count": {
+                "title": "Employees",
+                "description": "Headcount band."
+            },
+            "job_posting_count": {
+                "title": "Open roles",
+                "description": "How many live postings this company has on the board."
+            },
+            "salary_min": {
+                "title": "Salary minimum",
+                "description": "Lower bound, in the currency object's units. Only meaningful when is_salary_visible is true."
+            },
+            "salary_max": {
+                "title": "Salary maximum",
+                "description": "Upper bound, in the currency object's units."
+            },
+            "period": {
+                "title": "Salary period",
+                "description": "MONTHLY or YEARLY - the two bounds mean nothing without it."
+            },
+            "currency": {
+                "title": "Currency",
+                "description": "Currency object for the salary figures."
+            },
+            "is_remote": {
+                "title": "Remote",
+                "description": "True for remote postings."
+            },
+            "work_arrangement": {
+                "title": "Work arrangement",
+                "description": "onsite, hybrid or remote."
+            },
+            "job_skills": {
+                "title": "Skills",
+                "description": "Skills attached to the posting."
+            },
+            "company": {
+                "title": "Hiring company",
+                "description": "Full company object embedded in each job posting."
+            },
+            "city": {
+                "title": "City",
+                "description": "City object with country and state."
+            },
+            "expires_at": {
+                "title": "Expires",
+                "description": "When the posting comes down."
+            },
+            "pageviews": {
+                "title": "Pageviews",
+                "description": "Trending question rows only: pageviews over the lookback window."
+            },
+            "position": {
+                "title": "Position",
+                "description": "Trending question rows only: current leaderboard rank, with previous_position alongside."
+            }
+        }
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "transformation": {
+                "fields": [
+                    "recordType",
+                    "title",
+                    "name",
+                    "link",
+                    "date_gmt",
+                    "type",
+                    "excerpt",
+                    "_source",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        },
+        "articles": {
+            "title": "Articles",
+            "transformation": {
+                "fields": [
+                    "title",
+                    "link",
+                    "date_gmt",
+                    "type",
+                    "read_time",
+                    "author",
+                    "categories",
+                    "tags",
+                    "is_sponsored",
+                    "is_subscriber_exclusive",
+                    "excerpt"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        },
+        "companies": {
+            "title": "Companies",
+            "transformation": {
+                "fields": [
+                    "name",
+                    "entity_slug",
+                    "pitch",
+                    "date_founded",
+                    "total_amount_raised",
+                    "last_funding_stage",
+                    "is_investor",
+                    "number_investments",
+                    "number_exits",
+                    "employee_count",
+                    "job_posting_count",
+                    "entity_locations",
+                    "entity_industries"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        },
+        "jobs": {
+            "title": "Jobs",
+            "transformation": {
+                "fields": [
+                    "title",
+                    "company",
+                    "city",
+                    "is_remote",
+                    "work_arrangement",
+                    "salary_min",
+                    "salary_max",
+                    "period",
+                    "currency",
+                    "job_skills",
+                    "expires_at"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

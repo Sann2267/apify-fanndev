@@ -1,0 +1,94 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Express Tribune article / latest-headline record",
+        "description": "Raw-passthrough dataset envelope. Every record carries _input/_source/_scrapedAt (failed URLs are not written to the dataset -- they are reported in the ERRORS record of the run's key-value store). Article-mode records (S1-html) carry headline/articleBody-style fields parsed from a NewsArticle ld+json block plus the article body HTML. Latest-mode records (S2-sitemap) carry title/link-style fields derived from the sitemap, with no article body. Upstream JSON-LD is passed through close to verbatim, so field values may occasionally be null or missing on a CMS quirk.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The exact input value that produced this record: the article URL in article mode, or the literal string 'latest' in latest mode."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which extraction strategy emitted this record, e.g. 'S1-html[express-parent-div]' or 'S1-html[custom-row]' for article mode (named after the body-container template found), 'S2-sitemap' for latest mode, or 'none' on a failed extraction."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "headline": {
+                "title": "Headline",
+                "description": "Article headline, from NewsArticle ld+json 'headline' (article mode only)."
+            },
+            "description": {
+                "title": "Description",
+                "description": "Article summary/description, from NewsArticle ld+json 'description' (article mode only)."
+            },
+            "articleBody": {
+                "title": "Article body",
+                "description": "Full article text, extracted from the page's body container (div.express-parent-div or, as a fallback, div.custom-row) as paragraphs joined by blank lines. Boilerplate paragraphs (comment prompts, copyright notice, 'Read More:' related-article links) are filtered out (article mode only)."
+            },
+            "author": {
+                "title": "Author",
+                "description": "Article author name, from NewsArticle ld+json 'author.name' (article mode only)."
+            },
+            "publisher": {
+                "title": "Publisher",
+                "description": "Publisher name, from NewsArticle ld+json 'publisher.name' (article mode only)."
+            },
+            "datePublished": {
+                "title": "Date published",
+                "description": "Publication date/time, from NewsArticle ld+json 'datePublished' (article mode only)."
+            },
+            "dateModified": {
+                "title": "Date modified",
+                "description": "Last-modified date/time, from NewsArticle ld+json 'dateModified' (article mode only)."
+            },
+            "image": {
+                "title": "Image",
+                "description": "Article image URL(s), from NewsArticle ld+json 'image' -- may be a string or an array depending on upstream shape (article mode only)."
+            },
+            "title": {
+                "title": "Title",
+                "description": "Readable title derived from the URL slug (last path segment, hyphens replaced with spaces, title-cased) -- cosmetic only, not the real headline (latest mode only)."
+            },
+            "link": {
+                "title": "Link",
+                "description": "Article URL, from the sitemap's <loc> element (latest mode only)."
+            },
+            "lastmod": {
+                "title": "Last modified",
+                "description": "Sitemap <lastmod> value for this URL, if present (latest mode only)."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across both article and latest-headline records.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "_source",
+                    "_scrapedAt",
+                    "headline",
+                    "title",
+                    "link",
+                    "author",
+                    "datePublished",
+                    "lastmod"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

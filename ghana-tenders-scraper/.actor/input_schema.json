@@ -1,0 +1,76 @@
+{
+    "title": "Ghana Government Tenders Scraper (GHANEPS)",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "mode": {
+            "title": "Mode",
+            "type": "string",
+            "editor": "select",
+            "description": "\"List\" scrapes one of GHANEPS's public listing pages (paginated). \"Detail\" fetches the full per-tender detail page for specific tender IDs/URLs.",
+            "enum": ["list", "detail"],
+            "enumTitles": ["List (browse a listing page)", "Detail (fetch specific tenders)"],
+            "default": "list",
+            "prefill": "list"
+        },
+        "listType": {
+            "title": "List type (mode=list only)",
+            "type": "string",
+            "editor": "select",
+            "description": "Which GHANEPS listing to scrape. \"Current\" = still accepting bids (small, ~65 live at a time). \"Opened\" = bid submission closed, in evaluation/awarding (large, 12,000+). \"Awarded\" = finished contracts with supplier name and award amount (large, 15,000+).",
+            "enum": ["current", "opened", "awarded"],
+            "enumTitles": [
+                "Current Tenders (open for bidding)",
+                "Opened Bids (in evaluation)",
+                "Awarded Contracts (supplier + amount)"
+            ],
+            "default": "current",
+            "prefill": "current"
+        },
+        "maxResults": {
+            "title": "Max results (mode=list only)",
+            "type": "integer",
+            "description": "Caps how many rows are scraped for this run, across as many pages as needed (10 rows per page server-side). \"Opened\" and \"Awarded\" listings can have 10,000+ total rows -- raise this only as high as you actually need.",
+            "default": 50,
+            "minimum": 1,
+            "maximum": 5000,
+            "prefill": 50
+        },
+        "resourceId": {
+            "title": "Tender ID or URL (mode=detail only)",
+            "type": "string",
+            "editor": "textfield",
+            "description": "A single GHANEPS tender's numeric resourceId (e.g. 3463468), or its full tender URL. Find IDs from a 'list' mode run's tenderUrl/resourceId fields.",
+            "prefill": "3463468"
+        },
+        "resourceIds": {
+            "title": "Tender IDs or URLs (mode=detail only)",
+            "type": "array",
+            "editor": "stringList",
+            "description": "Multiple tender resourceIds (or full tender URLs) to fetch full detail for in one run."
+        },
+        "maxConcurrency": {
+            "title": "Max concurrent workers (mode=detail only)",
+            "type": "integer",
+            "description": "How many tender detail pages to fetch in parallel.",
+            "default": 3,
+            "minimum": 1,
+            "maximum": 5,
+            "prefill": 3
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "editor": "proxy",
+            "description": "Apify Proxy configuration.",
+            "default": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            },
+            "prefill": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            }
+        }
+    }
+}

@@ -1,0 +1,75 @@
+{
+    "title": "Partiful Events Scraper",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "mode": {
+            "title": "Mode",
+            "type": "string",
+            "editor": "select",
+            "description": "\"event\" fetches full public detail for specific Partiful event URL(s). \"host\" fetches a host/organizer's public profile plus their published event list (when they've made one public). \"discover\" fetches Partiful's public trending feed (no URL needed).",
+            "enum": ["event", "host", "discover"],
+            "enumTitles": ["Event detail (by URL)", "Host / organizer profile (by URL)", "Discover / trending feed"],
+            "default": "event",
+            "prefill": "event"
+        },
+        "url": {
+            "title": "Partiful URL",
+            "type": "string",
+            "editor": "textfield",
+            "description": "\"event\" or \"host\" mode: a single partiful.com URL, path, or bare ID (e.g. \"https://partiful.com/e/S9m7mAA0avBXnFR6rgf0\", \"partiful.com/u/CxuTjQCQmpQfWu4Dur4yyOzAQ8b2\", or just the ID).",
+            "prefill": "https://partiful.com/e/S9m7mAA0avBXnFR6rgf0"
+        },
+        "urls": {
+            "title": "Partiful URLs",
+            "type": "array",
+            "editor": "stringList",
+            "description": "\"event\" or \"host\" mode: multiple partiful.com URLs/IDs to process in one run."
+        },
+        "regions": {
+            "title": "Regions (discover mode)",
+            "type": "array",
+            "editor": "select",
+            "description": "\"discover\" mode only -- limit results to these trending regions. Leave empty for all regions currently published (NYC, LA, SF as of last verification -- see CRAWLING_METHOD.md).",
+            "items": {
+                "type": "string",
+                "enum": ["NYC", "LA", "SF"]
+            }
+        },
+        "maxItems": {
+            "title": "Max items",
+            "type": "integer",
+            "editor": "number",
+            "description": "\"host\" mode: max events to list from a host's public event list. \"discover\" mode: max trending events to return across selected regions.",
+            "default": 100,
+            "minimum": 1,
+            "maximum": 10000,
+            "prefill": 100
+        },
+        "maxConcurrency": {
+            "title": "Max concurrent workers",
+            "type": "integer",
+            "editor": "number",
+            "description": "\"event\"/\"host\" mode only -- how many URLs to fetch in parallel.",
+            "default": 4,
+            "minimum": 1,
+            "maximum": 16,
+            "prefill": 4
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "editor": "proxy",
+            "description": "Apify Proxy configuration. Residential is on by default. Not required for this target (no WAF was found -- see CRAWLING_METHOD.md) but kept on for production robustness.",
+            "default": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            },
+            "prefill": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            }
+        }
+    },
+    "required": ["mode"]
+}

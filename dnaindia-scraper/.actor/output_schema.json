@@ -1,0 +1,121 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Article / latest-headline record",
+        "description": "Raw-passthrough dataset envelope. Every record carries _input/_source/_scrapedAt (and _error/_errorDetail on failures). Article-mode records (S1-flight) are a near-verbatim spread of a NewsArticle structured-data object extracted from a Next.js React-Server-Components flight payload (not a <script type=\"application/ld+json\"> tag), so extra schema.org fields beyond those listed here may appear. Latest-mode records (S2-sitemap, Google News sitemap) carry title/link-style fields.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The exact input value (URL, or 'latest') that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which extraction strategy emitted this record: S1-flight or S2-sitemap."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed extractions -- the error kind (e.g. \"not_found\", \"http_500\", \"blocked_or_transient\")."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "headline": {
+                "title": "Headline",
+                "description": "Article headline, from the flight-payload NewsArticle node. HTML entities (e.g. &#039;) are unescaped."
+            },
+            "description": {
+                "title": "Description",
+                "description": "Short article summary/dek from the flight-payload node."
+            },
+            "articleBody": {
+                "title": "Article body",
+                "description": "Full plain-text article content, resolved from a separate cross-chunk reference in the flight stream and HTML-entity-unescaped."
+            },
+            "keywords": {
+                "title": "Keywords",
+                "description": "Comma-separated topic tags, as emitted upstream."
+            },
+            "inLanguage": {
+                "title": "Language",
+                "description": "Article language code (e.g. \"en\")."
+            },
+            "author": {
+                "title": "Author",
+                "description": "Byline -- a list of Person objects (@type/name/url), passed through as-is."
+            },
+            "datePublished": {
+                "title": "Date published",
+                "description": "ISO 8601 publish date."
+            },
+            "dateModified": {
+                "title": "Date modified",
+                "description": "ISO 8601 last-modified date."
+            },
+            "image": {
+                "title": "Image",
+                "description": "Lead image -- an ImageObject with url/height/width, passed through as-is."
+            },
+            "publisher": {
+                "title": "Publisher",
+                "description": "Publisher NewsMediaOrganization object (name, url, logo, sameAs), passed through as-is."
+            },
+            "mainEntityOfPage": {
+                "title": "Main entity of page",
+                "description": "Canonical WebPage reference (@type/@id)."
+            },
+            "url": {
+                "title": "Canonical URL",
+                "description": "Canonical article URL as emitted upstream."
+            },
+            "title": {
+                "title": "Title",
+                "description": "Headline text of a latest-mode sitemap item (news:title). HTML entities are unescaped."
+            },
+            "link": {
+                "title": "Link",
+                "description": "Article URL from the sitemap item (latest-mode)."
+            },
+            "publication_date": {
+                "title": "Publication date",
+                "description": "ISO 8601 timestamp from the sitemap item's news:publication_date (latest-mode). Entries are sorted by this field, descending."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across both article and latest-headline records.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "_source",
+                    "_scrapedAt",
+                    "headline",
+                    "title",
+                    "link",
+                    "datePublished",
+                    "publication_date",
+                    "author",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

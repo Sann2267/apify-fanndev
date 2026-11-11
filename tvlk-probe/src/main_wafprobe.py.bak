@@ -1,0 +1,219 @@
+"""Throwaway probe: does Traveloka's AWS WAF answer `challenge` (headlessly
+solvable) or `captcha` (not) when the request comes from an Apify residential
+Indonesian IP rather than from a developer machine that has been hammering it?
+
+Everything else about the Traveloka surface is already settled by local recon;
+this run exists only to decide whether the hotel-search and Xperience-search
+endpoints are buildable.
+"""
+
+from __future__ import annotations
+
+import asyncio
+import datetime as dt
+import json
+import logging
+import os
+import subprocess
+import uuid
+
+from apify import Actor
+from curl_cffi import requests
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger("tvlk-probe")
+
+SITE = "https://www.traveloka.com"
+SDK_URL = "https://d9253bf4bdfd.edge.sdk.awswaf.com/d9253bf4bdfd/1fcfec27aa97/challenge.compact.js"
+UA = (
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+    "(KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
+)
+MINT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "mint_tvlk.js")
+
+DISPLAY = [
+    "INVENTORY", "INVENTORY_LIST", "HEADER", "INVENTORY_WITH_HEADER",
+    "CURATION_LIST", "SEARCH_REDIRECTION_BANNER", "GENERIC_CARD",
+]
+
+
+def mint_token() -> str:
+    proc = subprocess.run(["node", MINT, SDK_URL], capture_output=True, timeout=120)
+    token = proc.stdout.decode("utf-8", "replace").strip()
+    if not token:
+        raise RuntimeError(proc.stderr.decode("utf-8", "replace")[:400])
+    return token
+
+
+def _d(day: dt.date) -> dict:
+    return {"year": str(day.year), "month": str(day.month), "day": str(day.day)}
+
+
+def hotel_search_payload(geo_id: str = "102813") -> dict:
+    check_in = dt.date.today() + dt.timedelta(days=25)
+    return {
+        "checkInDate": _d(check_in),
+        "checkOutDate": _d(check_in + dt.timedelta(days=1)),
+        "numOfNights": 1, "currency": "IDR", "numAdults": 2, "numChildren": 0,
+        "childAges": [], "numInfants": 0, "numRooms": 1,
+        "ccGuaranteeOptions": {
+            "ccInfoPreferences": ["CC_TOKEN", "CC_FULL_INFO"],
+            "ccGuaranteeRequirementOptions": ["CC_GUARANTEE"],
+        },
+        "rateTypes": ["PAY_NOW", "PAY_AT_PROPERTY"],
+        "isJustLogin": False, "backdate": False,
+        "geoId": geo_id, "landmarkId": None, "geoLocation": None,
+        "monitoringSpec": {"flowId": None, "sourcePage": "SEARCH_FORM"},
+        "showHidden": False, "locationName": "Jakarta", "sourceType": "GEO_REGION",
+        "isExtraBedIncluded": True, "supportedDisplayTypes": DISPLAY,
+        "userSearchPreferences": [], "highlightedHotelId": None,
+        "enableMultiOccupancy": False, "boundaries": None, "contexts": {},
+        "basicFilterSortSpec": None, "criteriaFilterSortSpec": None,
+        "filterSortRequestSpec": {"skip": 0, "top": 20},
+        "tid": str(uuid.uuid4()), "frTid": None,
+        "catalogContext": {"catalogState": {"displayedEntryCount": 0, "displayedHotelCount": 0}},
+        "searchListId": None, "couponContexts": None, "enableDiscoverCoupon": None,
+        "discoverCouponState": None, "priceCatalogContext": None, "featureId": None,
+    }
+
+
+def make_session(proxy_url, token):
+    session = requests.Session(
+        impersonate="chrome131",
+        proxies=({"http": proxy_url, "https": proxy_url} if proxy_url else None),
+    )
+    session.headers.update({
+        "user-agent": UA,
+        "accept": "application/json, text/plain, */*",
+        "content-type": "application/json",
+        "origin": SITE,
+        "accept-language": "en-US,en;q=0.9",
+    })
+    if token:
+        session.cookies.set("aws-waf-token", token, domain="www.traveloka.com")
+    boot = session.post(
+        SITE + "/api/v2/user/context/web",
+        json={"clientInterface": "desktop",
+              "data": {"client": "MOBILE_WEB", "info": {"User-Agent": UA}, "query": {}},
+              "context": {}, "fields": []},
+        timeout=45,
+        headers={"referer": SITE + "/en-id/", "x-domain": "user",
+                 "x-client-interface": "desktop"},
+    )
+    return session, boot.status_code
+
+
+def call(session, path, domain, data, token=None, ref=SITE + "/en-id/"):
+    headers = {"referer": ref, "x-domain": domain, "x-client-interface": "desktop"}
+    if token:
+        headers["x-aws-waf-token"] = token
+    return session.post(
+        SITE + "/api" + path,
+        json={"fields": [], "clientInterface": "desktop", "data": data, "context": {}},
+        timeout=90, headers=headers,
+    )
+
+
+async def _proxy_url(mode, session_id):
+    if mode == "none":
+        return None
+    country = "ID" if mode == "residential-id" else "SG"
+    cfg = await Actor.create_proxy_configuration(
+        groups=["RESIDENTIAL"], country_code=country)
+    if cfg is None:
+        logger.warning("No proxy configuration available; probing direct.")
+        return None
+    return await cfg.new_url(session_id)
+
+
+async def main() -> None:
+    async with Actor:
+        actor_input = await Actor.get_input() or {}
+        mode = actor_input.get("proxyMode", "residential-id")
+        rounds = int(actor_input.get("rounds", 2))
+
+        for round_no in range(1, rounds + 1):
+            proxy_url = await _proxy_url(mode, "r%d%s" % (round_no, uuid.uuid4().hex[:6]))
+
+            exit_ip = None
+            try:
+                probe = requests.get(
+                    "https://api.ipify.org?format=json", timeout=45,
+                    proxies=({"http": proxy_url, "https": proxy_url} if proxy_url else None))
+                exit_ip = probe.json().get("ip")
+            except Exception as exc:  # noqa: BLE001
+                logger.warning("exit-ip probe failed: %s", exc)
+
+            token = None
+            mint_error = None
+            try:
+                token = mint_token()
+            except Exception as exc:  # noqa: BLE001
+                mint_error = str(exc)[:300]
+                logger.warning("mint failed: %s", mint_error)
+
+            try:
+                session, boot_status = make_session(proxy_url, token)
+            except Exception as exc:  # noqa: BLE001
+                await Actor.push_data({"round": round_no, "exitIp": exit_ip,
+                                       "error": ("session bootstrap failed: %s" % exc)[:300]})
+                continue
+
+            datadome = {}
+            try:
+                page = session.get(SITE + "/en-id/hotel", timeout=60)
+                datadome = {
+                    "status": page.status_code,
+                    "bytes": len(page.content),
+                    "blocked": "captcha-delivery" in page.text[:1200],
+                }
+            except Exception as exc:  # noqa: BLE001
+                datadome = {"error": str(exc)[:200]}
+
+            checks = [
+                ("hotel-searchList", "/v2/hotel/searchList", "accomSearch",
+                 hotel_search_payload(), True),
+                ("hotel-staticSearch", "/v2/hotel/staticSearch", "accomSearch",
+                 hotel_search_payload(), True),
+                ("xperience-searchV2", "/v2/experience/searchV2", "experience", {}, True),
+                ("xperience-detail", "/v2/experience/detail", "experience",
+                 {"activityId": "2000858975309"}, True),
+                ("hotel-autocomplete", "/v1/hotel/autocomplete", "accomContent",
+                 {"query": "Jakarta", "clientInterface": "desktop", "fields": [],
+                  "maxResult": 10, "currency": "IDR"}, False),
+                ("pps-multileg", "/v2/pps/search/multileg", "pps", {}, False),
+                ("ugc-getReviews", "/v2/ugc/review/consumption/v2/getReviews",
+                 "ugcReview", {"configId": "ACCOMMODATION", "objectId": "2000000113168",
+                               "filter": {}, "ratingTagSet": [], "skip": 0, "top": 10}, False),
+                ("flight-price-table", "/v2/flight/price-table", "flight", {}, False),
+            ]
+
+            results = {}
+            for name, path, domain, data, needs_token in checks:
+                try:
+                    resp = call(session, path, domain, data,
+                                token=token if needs_token else None)
+                    results[name] = {
+                        "status": resp.status_code,
+                        "wafAction": resp.headers.get("x-amzn-waf-action"),
+                        "bytes": len(resp.content),
+                        "snippet": resp.text[:180].replace("\n", " "),
+                    }
+                except Exception as exc:  # noqa: BLE001
+                    results[name] = {"error": str(exc)[:200]}
+                await asyncio.sleep(1)
+
+            await Actor.push_data({
+                "round": round_no,
+                "proxyMode": mode,
+                "exitIp": exit_ip,
+                "bootStatus": boot_status,
+                "wafTokenMinted": bool(token),
+                "wafTokenLength": len(token) if token else 0,
+                "mintError": mint_error,
+                "datadomeHotelPage": datadome,
+                "checks": results,
+            })
+            logger.info("round %s done: %s", round_no,
+                        json.dumps({k: v.get("wafAction") or v.get("status")
+                                    for k, v in results.items()}))

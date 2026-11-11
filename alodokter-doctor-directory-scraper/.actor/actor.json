@@ -1,0 +1,18 @@
+{
+    "actorSpecification": 1,
+    "name": "alodokter-doctor-directory-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Indonesia Doctor Directory Scraper (Alodokter)",
+    "description": "Extract Indonesian doctor listings from Alodokter -- name, sub-specialty, hospital and address, consultation price in IDR, satisfaction rating, review count and next available schedule. Browse any specialty, optionally scoped to a city. No account or API key needed.",
+    "categories": [
+        "LEAD_GENERATION",
+        "BUSINESS"
+    ],
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

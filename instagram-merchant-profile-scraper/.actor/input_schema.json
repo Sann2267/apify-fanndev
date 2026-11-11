@@ -1,0 +1,47 @@
+{
+    "title": "Instagram Merchant Profile & Bio-Link Extractor",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "usernames": {
+            "title": "Instagram accounts",
+            "type": "array",
+            "description": "Handles or profile URLs, e.g. [\"cottonink\", \"@nike\", \"https://www.instagram.com/hijup/\"]. Only public profiles can be read - private accounts return a NOT_FOUND-style row.",
+            "editor": "stringList",
+            "prefill": ["cottonink"],
+            "default": []
+        },
+        "includeRecentPosts": {
+            "title": "Include recent posts",
+            "type": "boolean",
+            "description": "Attach the most recent posts with caption, likes, comments and media URLs, and compute an engagement rate from them. Posts come from the JSON API only - when the actor falls back to page HTML for an account, that account's posts will be empty.",
+            "default": true
+        },
+        "maxPostsPerProfile": {
+            "title": "Max posts per profile",
+            "type": "integer",
+            "description": "Cap how many recent posts to attach. Instagram returns about 12 on the first page anonymously; asking for more does not fetch more.",
+            "editor": "number",
+            "minimum": 0,
+            "maximum": 50,
+            "default": 12
+        },
+        "delaySeconds": {
+            "title": "Delay between profiles (seconds)",
+            "type": "integer",
+            "description": "Pause between accounts. Instagram throttles anonymous traffic per IP and starts serving login walls when hit too fast - pacing keeps a run alive far longer than speed does. Lower it only with a good residential proxy.",
+            "editor": "number",
+            "minimum": 0,
+            "maximum": 60,
+            "default": 2
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "description": "STRONGLY RECOMMENDED. Instagram rate-limits anonymous traffic hard; without a rotating residential proxy a run will start hitting login walls after a handful of profiles.",
+            "editor": "proxy",
+            "default": { "useApifyProxy": true, "apifyProxyGroups": ["RESIDENTIAL"] }
+        }
+    },
+    "required": ["usernames"]
+}

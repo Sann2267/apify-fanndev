@@ -1,0 +1,101 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Article / latest-headline record",
+        "description": "Raw-passthrough dataset envelope. Every record carries _input/_source/_scrapedAt (and _error/_errorDetail on failures). Article-mode records (S1-html) carry headline/articleBody-style fields parsed from plain HTML and <meta> tags -- fijitimes.com.fj emits no ld+json of any kind. Latest-mode records (S2-sitemap, from the newest post-sitemap*.xml since /feed/ redirects to the homepage) carry link/lastmod-style fields with no title (this site has no Yoast News sitemap).",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The exact input value (URL, or 'latest') that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which extraction strategy emitted this record (e.g. S1-html, S2-sitemap)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed extractions -- the error kind."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "headline": {
+                "title": "Headline",
+                "description": "Article headline, from the h1.fijitimes_title HTML element."
+            },
+            "articleBody": {
+                "title": "Article body",
+                "description": "Full article text, joined from div.entry-content.post_content > p paragraphs."
+            },
+            "author": {
+                "title": "Author",
+                "description": "Byline name, from meta[name=author] (e.g. 'ANISH CHAND')."
+            },
+            "description": {
+                "title": "Description",
+                "description": "Short article summary/dek, from meta[name=description]."
+            },
+            "categories": {
+                "title": "Categories",
+                "description": "List of WordPress category names the article is tagged with (e.g. ['Local News', 'News', \"Today's Main Story\"])."
+            },
+            "datePublished": {
+                "title": "Date published",
+                "description": "ISO 8601 publish timestamp from meta[property=article:published_time]."
+            },
+            "dateModified": {
+                "title": "Date modified",
+                "description": "ISO 8601 last-modified timestamp from meta[property=article:modified_time]."
+            },
+            "image": {
+                "title": "Image",
+                "description": "Lead image URL, from meta[property=og:image]."
+            },
+            "link": {
+                "title": "Link",
+                "description": "Article URL of a latest-mode sitemap listing item."
+            },
+            "lastmod": {
+                "title": "Last modified (sitemap)",
+                "description": "ISO 8601 <lastmod> timestamp from the post sitemap entry -- not a true publish date (this generic Yoast sitemap carries no title or publish timestamp). Fetch the article in article mode for the exact datePublished."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across both article and latest-headline records.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "_source",
+                    "_scrapedAt",
+                    "headline",
+                    "author",
+                    "link",
+                    "datePublished",
+                    "lastmod",
+                    "categories",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

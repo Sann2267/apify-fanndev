@@ -1,0 +1,181 @@
+{
+    "title": "Blibli Affiliate Link Generator & Content Parser",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "searchTerms": {
+            "title": "Search terms",
+            "type": "array",
+            "description": "Keywords to source products from, e.g. [\"laptop gaming\", \"skincare\"]. Combine with the quality filters below to surface only products worth promoting.",
+            "editor": "stringList",
+            "prefill": [
+                "laptop"
+            ],
+            "default": []
+        },
+        "categories": {
+            "title": "Categories",
+            "type": "array",
+            "description": "Blibli category codes or full category URLs, e.g. [\"TI-1000001\"] or [\"https://www.blibli.com/c3/memory-card/ME-1000006\"].",
+            "editor": "stringList",
+            "default": []
+        },
+        "sortBy": {
+            "title": "Sort by",
+            "type": "string",
+            "description": "How Blibli orders the source list. 'bestSelling' is the default and what most affiliate sourcing wants.",
+            "editor": "select",
+            "enum": [
+                "bestSelling",
+                "relevance",
+                "cheapest",
+                "mostExpensive",
+                "newest"
+            ],
+            "enumTitles": [
+                "Best selling",
+                "Relevance",
+                "Cheapest",
+                "Most expensive",
+                "Newest"
+            ],
+            "default": "bestSelling"
+        },
+        "minRating": {
+            "title": "Minimum rating",
+            "type": "integer",
+            "description": "Keep only products rated at least this many stars. Pushed to Blibli's own rating filter where possible, then enforced exactly on each product's real rating. 0 disables.",
+            "editor": "number",
+            "minimum": 0,
+            "maximum": 5,
+            "default": 4
+        },
+        "minReviewCount": {
+            "title": "Minimum review count",
+            "type": "integer",
+            "description": "Skip products with too few reviews for the rating to mean anything. 0 disables.",
+            "editor": "number",
+            "minimum": 0,
+            "default": 10
+        },
+        "minSoldCount": {
+            "title": "Minimum units sold",
+            "type": "integer",
+            "description": "Keep only proven sellers. 0 disables.",
+            "editor": "number",
+            "minimum": 0,
+            "default": 0
+        },
+        "minDiscountPercent": {
+            "title": "Minimum discount %",
+            "type": "integer",
+            "description": "Keep only products discounted by at least this much - a discount makes a far better post. Pushed to Blibli's discount facet (buckets of 10/25/50/75) and then enforced exactly. 0 disables.",
+            "editor": "number",
+            "minimum": 0,
+            "maximum": 99,
+            "default": 0
+        },
+        "officialWarrantyOnly": {
+            "title": "Official warranty only (Garansi Resmi)",
+            "type": "boolean",
+            "description": "Restrict to products carrying an official manufacturer warranty - the 'produk orisinal bergaransi resmi' filter. Applied server-side by Blibli.",
+            "default": false
+        },
+        "officialStoreOnly": {
+            "title": "Official stores only",
+            "type": "boolean",
+            "description": "Keep only products sold by an official brand store, which are the safest to promote.",
+            "default": false
+        },
+        "topRatedSellerOnly": {
+            "title": "Top-rated sellers only",
+            "type": "boolean",
+            "description": "Restrict to sellers Blibli marks as top rated.",
+            "default": false
+        },
+        "generateShareLink": {
+            "title": "Generate Blibli share link",
+            "type": "boolean",
+            "description": "Mint Blibli's own OneLink short link (blibli.onelink.me/...) for each product, carrying your tracking values. Costs one extra request per product. NOTE: this is a tracking/deep link, not a commission link - see the actor README on what Blibli's affiliate commission API requires.",
+            "default": true
+        },
+        "trackingCampaign": {
+            "title": "Tracking campaign (utm_campaign)",
+            "type": "string",
+            "description": "Stamped onto every link as utm_campaign. This is where your affiliate or creator ID goes, e.g. 'aff-yourname-sep2026'.",
+            "editor": "textfield"
+        },
+        "trackingSource": {
+            "title": "Tracking source (utm_source)",
+            "type": "string",
+            "description": "Stamped onto every link as utm_source, e.g. 'instagram', 'tiktok', 'blog'.",
+            "editor": "textfield"
+        },
+        "trackingMedium": {
+            "title": "Tracking medium (utm_medium)",
+            "type": "string",
+            "description": "Stamped onto every link as utm_medium, e.g. 'social', 'bio-link', 'newsletter'.",
+            "editor": "textfield"
+        },
+        "captionTemplate": {
+            "title": "Caption template",
+            "type": "string",
+            "description": "Ready-to-post caption built for every product. Placeholders: {name} {brand} {price} {listPrice} {discount} {rating} {reviewCount} {sold} {warranty} {description} {link} {merchant}. Leave empty to skip caption generation.",
+            "editor": "textarea",
+            "default": "{name}\nRp{price} (diskon {discount}, dari Rp{listPrice})\n{rating} bintang - {sold} terjual\n{description}\n{link}"
+        },
+        "enrichFromProductPage": {
+            "title": "Enrich from product page",
+            "type": "boolean",
+            "description": "Open each product page to add the exact warranty statement (e.g. 'Garansi resmi 2 tahun'), Blibli's own SEO description, and stock. Costs one extra request per product but is the only way to get the warranty wording - search results do not carry it.",
+            "default": false
+        },
+        "imageSize": {
+            "title": "Image size",
+            "type": "string",
+            "description": "Which image variant to return. 'full' is best for posts.",
+            "editor": "select",
+            "enum": [
+                "full",
+                "medium",
+                "thumbnail"
+            ],
+            "enumTitles": [
+                "Full",
+                "Medium",
+                "Thumbnail"
+            ],
+            "default": "full"
+        },
+        "maxItemsPerQuery": {
+            "title": "Max products per query",
+            "type": "integer",
+            "description": "Stop after this many qualifying products per search term or category. 0 means no limit (Blibli serves at most 800 per query).",
+            "editor": "number",
+            "minimum": 0,
+            "default": 50
+        },
+        "maxConcurrency": {
+            "title": "Max concurrency",
+            "type": "integer",
+            "description": "Parallel link-minting and enrichment requests. Keep low to stay under Blibli's rate limiting.",
+            "editor": "number",
+            "minimum": 1,
+            "maximum": 10,
+            "default": 5
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "description": "Blibli is behind Cloudflare and throttles sustained traffic from one IP. Apify Residential proxy with country 'ID' is strongly recommended here.",
+            "editor": "proxy",
+            "default": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": [
+                    "RESIDENTIAL"
+                ]
+            }
+        }
+    },
+    "required": []
+}

@@ -1,0 +1,65 @@
+{
+    "title": "YouTube Sponsor & Affiliate Link Extractor",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "mode": {
+            "title": "Mode",
+            "type": "string",
+            "description": "video = the URLs/IDs you list. channel = the newest uploads of each handle. reference = probe the surface and report what it yielded (run this first if a result looks wrong).",
+            "editor": "select",
+            "enum": ["video", "channel", "reference"],
+            "enumTitles": [
+                "video - specific videos",
+                "channel - newest uploads per handle",
+                "reference - measure the surface"
+            ],
+            "default": "video"
+        },
+        "videos": {
+            "title": "Videos (mode: video)",
+            "type": "array",
+            "description": "Video IDs or any YouTube link: watch?v=, youtu.be/, /shorts/, /live/, /embed/.",
+            "editor": "stringList",
+            "prefill": ["https://www.youtube.com/watch?v=dQw4w9WgXcQ"]
+        },
+        "channels": {
+            "title": "Channels (mode: channel)",
+            "type": "array",
+            "description": "Channel handles such as @mkbhd, or full channel URLs.",
+            "editor": "stringList",
+            "prefill": ["@mkbhd"]
+        },
+        "videosPerChannel": {
+            "title": "Videos per channel",
+            "type": "integer",
+            "description": "How many of each channel's newest uploads to inspect. One request per video.",
+            "default": 15,
+            "minimum": 1,
+            "maximum": 100
+        },
+        "concurrency": {
+            "title": "Concurrent requests",
+            "type": "integer",
+            "description": "Parallel watch-page fetches. Keep this modest: the page is 1.1-1.3 MB and is often served without its payload, so the Actor already retries each video several times.",
+            "default": 4,
+            "minimum": 1,
+            "maximum": 10
+        },
+        "tlsProfile": {
+            "title": "Preferred TLS profile",
+            "type": "string",
+            "description": "Optional. Tried first, then the rest of the ladder. All four answered 200 during recon; this is a tuning knob, not a requirement.",
+            "editor": "select",
+            "enum": ["chrome124", "chrome120", "safari17_0", "firefox133"],
+            "default": "chrome124"
+        },
+        "proxyConfiguration": {
+            "title": "Proxy",
+            "type": "object",
+            "description": "Optional. Useful when many videos come back as REDUCED - that is an IP-shaped symptom, so a different exit IP often fixes it.",
+            "editor": "proxy"
+        }
+    },
+    "required": ["mode"]
+}

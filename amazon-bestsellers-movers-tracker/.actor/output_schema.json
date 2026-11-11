@@ -1,0 +1,142 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Amazon ranked product record",
+        "description": "One row per ranked product, plus rows for products that dropped out of the list. Rank and ASIN are present for every product in the top 100; title, price, rating and reviews come from the server-rendered tiles and cover roughly 60% of a 100-rank run - `hasDetails` says which. Movement fields compare against the previous run's snapshot. Every type is nullable accordingly.",
+        "properties": {
+            "_input": {
+                "type": ["string", "null"],
+                "title": "Input",
+                "description": "The marketplace/listType/category this row came from."
+            },
+            "_source": {
+                "type": ["string", "null"],
+                "title": "Source strategy",
+                "description": "S1-recs-list (rank + ASIN only), S1-recs-list+faceout (with full details), S2-snapshot-diff (a dropped-out product), or none on failure."
+            },
+            "_scrapedAt": {
+                "type": ["string", "null"],
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this row was captured."
+            },
+            "_error": {
+                "type": ["string", "null"],
+                "title": "Error",
+                "description": "Present only on failure rows (INVALID_INPUT, NOT_FOUND, BLOCKED_AFTER_RETRIES, CAPTCHA_ESCALATION, EMPTY_RESULT). CAPTCHA_ESCALATION means Amazon served a CAPTCHA; this actor does not solve them."
+            },
+            "_errorDetail": {
+                "type": ["string", "null"],
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "asin": {
+                "type": ["string", "null"],
+                "title": "ASIN",
+                "description": "Amazon product identifier - the key to join against your own data."
+            },
+            "rank": {
+                "type": ["number", "null"],
+                "title": "Rank",
+                "description": "Position in the list this run, 1 being best. Null on a dropped-out row."
+            },
+            "title": {
+                "type": ["string", "null"],
+                "title": "Product title",
+                "description": "Product name. Only on rows where hasDetails is true."
+            },
+            "price": {
+                "type": ["number", "null"],
+                "title": "Price",
+                "description": "Listed price as a number. Only on rows where hasDetails is true."
+            },
+            "currencySymbol": {
+                "type": ["string", "null"],
+                "title": "Currency symbol",
+                "description": "Currency symbol as shown on the page, e.g. $ or £."
+            },
+            "rating": {
+                "type": ["number", "null"],
+                "title": "Rating",
+                "description": "Star rating out of 5. Only on rows where hasDetails is true."
+            },
+            "reviewCount": {
+                "type": ["number", "null"],
+                "title": "Review count",
+                "description": "Number of ratings behind the star score - a proxy for how established a product is."
+            },
+            "imageUrl": {
+                "type": ["string", "null"],
+                "title": "Image URL",
+                "description": "Product image."
+            },
+            "productUrl": {
+                "type": ["string", "null"],
+                "title": "Product URL",
+                "description": "Canonical Amazon product URL, always present (built from the ASIN when the tile did not render)."
+            },
+            "hasDetails": {
+                "type": ["boolean", "null"],
+                "title": "Has details",
+                "description": "False when only rank and ASIN could be captured, because Amazon lazy-loads roughly 20 of the 50 tiles on each page. Filter on this if your pipeline needs price and rating."
+            },
+            "category": {
+                "type": ["string", "null"],
+                "title": "Category",
+                "description": "Category slug or node path tracked."
+            },
+            "listType": {
+                "type": ["string", "null"],
+                "title": "List type",
+                "description": "bestsellers, new-releases, most-wished-for or movers-and-shakers."
+            },
+            "marketplace": {
+                "type": ["string", "null"],
+                "title": "Marketplace",
+                "description": "Amazon domain suffix, e.g. com or co.uk."
+            },
+            "previousRank": {
+                "type": ["number", "null"],
+                "title": "Previous rank",
+                "description": "This product's rank in the previous run. Null for a brand-new entry."
+            },
+            "rankChange": {
+                "type": ["number", "null"],
+                "title": "Rank change",
+                "description": "previousRank minus rank, so POSITIVE means it climbed (a lower rank number is better). Null for new entries and drop-outs."
+            },
+            "movementType": {
+                "type": ["string", "null"],
+                "title": "Movement",
+                "description": "NEW_ENTRY, RISING, FALLING, UNCHANGED, or DROPPED_OUT. The winning-product shortlist is NEW_ENTRY plus RISING."
+            },
+            "isNewEntry": {
+                "type": ["boolean", "null"],
+                "title": "New entry",
+                "description": "True when the product was not in this list on the previous run."
+            },
+            "isSignificantMove": {
+                "type": ["boolean", "null"],
+                "title": "Significant move",
+                "description": "True for a move of 5+ ranks, a new entry or a drop-out - filtering out the noise of an hourly-reshuffling list."
+            },
+            "amazonPercentageChange": {
+                "type": ["number", "null"],
+                "title": "Amazon % change",
+                "description": "Amazon's own sales-rank percentage change from its Movers & Shakers metadata. Read when present, but it was empty on every page seen during recon - use rankChange instead."
+            },
+            "amazonCurrentSalesRank": {
+                "type": ["number", "null"],
+                "title": "Amazon current sales rank",
+                "description": "Amazon's own current sales rank from Movers & Shakers metadata. Typically empty - see above."
+            },
+            "amazonPreviousSalesRank": {
+                "type": ["number", "null"],
+                "title": "Amazon 24h-old sales rank",
+                "description": "Amazon's own 24-hour-old sales rank from Movers & Shakers metadata. Typically empty - see above."
+            }
+        }
+    }
+}

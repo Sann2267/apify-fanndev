@@ -1,0 +1,122 @@
+{
+    "title": "Nepal Government Tenders Scraper (PPMO e-GP / Bolpatra)",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "mode": {
+            "title": "Mode",
+            "type": "string",
+            "editor": "select",
+            "description": "\"List\" scrapes bolpatra.gov.np's public tender listing (latest, or filtered by keyword/category/method/entity). \"Detail\" fetches the full detail page (bid schedule, fee, contact, documents) for specific tender IDs/URLs.",
+            "enum": ["list", "detail"],
+            "enumTitles": ["List (latest or filtered search)", "Detail (fetch specific tenders)"],
+            "default": "list",
+            "prefill": "list"
+        },
+        "keyword": {
+            "title": "Project title keyword (mode=list only)",
+            "type": "string",
+            "editor": "textfield",
+            "description": "Free-text keyword matched against the tender's project title. Leave blank together with the other filters below to get the 'latest' 30 published tenders instead of a filtered search."
+        },
+        "procurementCategory": {
+            "title": "Procurement category (mode=list only)",
+            "type": "string",
+            "editor": "select",
+            "description": "Restrict to one procurement category.",
+            "enum": ["all", "goods", "works", "consultancy", "otherServices"],
+            "enumTitles": ["All categories", "Goods", "Works", "Consultancy", "Other Services"],
+            "default": "all",
+            "prefill": "all"
+        },
+        "procurementMethod": {
+            "title": "Procurement method (mode=list only)",
+            "type": "string",
+            "editor": "select",
+            "description": "Restrict to one procurement method.",
+            "enum": [
+                "all",
+                "ncb",
+                "icb",
+                "sealedQuotation",
+                "directPurchase",
+                "qcbs",
+                "qbs",
+                "fbs",
+                "commodityPurchase",
+                "ration",
+                "userCommittee",
+                "forceAccount",
+                "leastCostSelection"
+            ],
+            "enumTitles": [
+                "All methods",
+                "NCB (National Competitive Bidding)",
+                "ICB (International Competitive Bidding)",
+                "Sealed Quotation",
+                "Direct Purchase",
+                "QCBS",
+                "QBS",
+                "FBS",
+                "Commodity Purchase",
+                "Ration",
+                "User Committee",
+                "Force Account",
+                "Least Cost Selection"
+            ],
+            "default": "all",
+            "prefill": "all"
+        },
+        "publicEntityName": {
+            "title": "Public entity name (mode=list only)",
+            "type": "string",
+            "editor": "textfield",
+            "description": "Name (or partial name) of the government office/entity running the procurement, e.g. \"Kathmandu Metropolitan\". Resolved automatically to bolpatra's internal entity ID via its own autocomplete (first match is used) -- if nothing matches, the search runs without this filter and a warning is logged."
+        },
+        "maxResults": {
+            "title": "Max results (mode=list only)",
+            "type": "integer",
+            "description": "Caps how many rows are kept from this query. bolpatra.gov.np does not support reliable page-by-page pagination via plain HTTP requests (see the actor's CRAWLING_METHOD.md) -- a single query returns one page of 10-30 rows depending on which filters are set, and this only trims that page down further. Narrow your keyword/category/method/entity for a more targeted result if you need a specific subset of the 200,000+ historical notices.",
+            "default": 30,
+            "minimum": 1,
+            "maximum": 30,
+            "prefill": 30
+        },
+        "tenderId": {
+            "title": "Tender ID or URL (mode=detail only)",
+            "type": "string",
+            "editor": "textfield",
+            "description": "A single bolpatra tender's numeric tenderId (e.g. 324758), or its full detail URL. Find IDs from a 'list' mode run's tenderId/tenderUrl fields.",
+            "prefill": "324758"
+        },
+        "tenderIds": {
+            "title": "Tender IDs or URLs (mode=detail only)",
+            "type": "array",
+            "editor": "stringList",
+            "description": "Multiple tender IDs (or full detail URLs) to fetch full detail for in one run."
+        },
+        "maxConcurrency": {
+            "title": "Max concurrent workers (mode=detail only)",
+            "type": "integer",
+            "description": "How many tender detail pages to fetch in parallel.",
+            "default": 4,
+            "minimum": 1,
+            "maximum": 10,
+            "prefill": 4
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "editor": "proxy",
+            "description": "Apify Proxy configuration.",
+            "default": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            },
+            "prefill": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            }
+        }
+    }
+}

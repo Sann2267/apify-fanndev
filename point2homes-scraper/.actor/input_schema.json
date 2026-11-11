@@ -1,0 +1,84 @@
+{
+    "title": "Point2Homes Scraper",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "mode": {
+            "title": "Mode",
+            "type": "string",
+            "editor": "select",
+            "description": "\"search\" browses rental listings for a location (city/state), with automatic pagination. \"listing\" fetches full detail for specific listing/apartment-building URL(s) directly.",
+            "enum": ["search", "listing"],
+            "enumTitles": ["Search by location", "Listing detail (by URL)"],
+            "default": "search",
+            "prefill": "search"
+        },
+        "propertyType": {
+            "title": "Property type",
+            "type": "string",
+            "editor": "select",
+            "description": "\"search\" mode -- \"Houses for rent\" covers single-family homes, townhomes, and condos for rent; \"Apartments for rent\" covers apartment complexes/buildings (each with multiple floor plans).",
+            "enum": ["Houses-For-Rent", "Apartments-For-Rent"],
+            "enumTitles": ["Houses for rent", "Apartments for rent (complexes)"],
+            "default": "Houses-For-Rent",
+            "prefill": "Houses-For-Rent"
+        },
+        "locations": {
+            "title": "Locations",
+            "type": "array",
+            "editor": "stringList",
+            "description": "\"search\" mode -- one or more \"STATE/City-Name\" path segments exactly as Point2Homes uses in its own URLs (e.g. \"TX/Dallas\", \"CA/Los-Angeles\"). Some cities require a county segment, e.g. \"NV/Clark-County/Henderson\" -- copy the exact segment from a point2homes.com/US/Houses-For-Rent/... URL if a plain \"STATE/City\" 404s.",
+            "prefill": ["TX/Dallas"]
+        },
+        "maxItemsPerLocation": {
+            "title": "Max items per location",
+            "type": "integer",
+            "editor": "number",
+            "description": "\"search\" mode -- maximum number of listings to return per location. Pagination (30 items/page) is followed automatically until this cap or the end of the result set.",
+            "default": 60,
+            "minimum": 1,
+            "maximum": 5000,
+            "prefill": 60
+        },
+        "fetchDetails": {
+            "title": "Enrich with full listing detail",
+            "type": "boolean",
+            "editor": "checkbox",
+            "description": "\"search\" mode -- when true (default), each search result is additionally fetched for full detail (description, bed/bath breakdown per floor plan, agent/broker name, photo gallery, geo-coordinates). When false, only the lightweight search-result card (name, price range, address, one image, URL) is returned, which is much faster/cheaper for large location lists.",
+            "default": true,
+            "prefill": true
+        },
+        "listingUrls": {
+            "title": "Listing / apartment-building URLs",
+            "type": "array",
+            "editor": "stringList",
+            "description": "\"listing\" mode -- full point2homes.com URLs to fetch full detail for, e.g. https://www.point2homes.com/US/Home-For-Rent/TX/Dallas/5031-Clover-Haven-Street.html or https://www.point2homes.com/US/Apartment-Buildings/TX/Dallas/The-Brazos0.html",
+            "prefill": ["https://www.point2homes.com/US/Home-For-Rent/TX/Dallas/5031-Clover-Haven-Street.html"]
+        },
+        "maxConcurrency": {
+            "title": "Max concurrent workers",
+            "type": "integer",
+            "editor": "number",
+            "description": "How many detail pages (search mode's enrichment, or listing mode's URLs) to fetch in parallel.",
+            "default": 4,
+            "minimum": 1,
+            "maximum": 16,
+            "prefill": 4
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "editor": "proxy",
+            "description": "Apify Proxy configuration. Residential is on by default.",
+            "default": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            },
+            "prefill": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            }
+        }
+    },
+    "required": ["mode"]
+}

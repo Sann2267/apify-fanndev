@@ -1,0 +1,133 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "CIPO entity search-result / detail record",
+        "description": "Raw-passthrough dataset envelope. Every record carries _input/_searchType/_source/_scrapedAt (and _error/_errorDetail on failures). Field names and casing mirror upstream's own JSON verbatim (including its 'Schareholders' typo on detail records), since this actor calls CIPO's e-Filing portal's own internal REST API directly.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The exact search term that produced this record."
+            },
+            "_searchType": {
+                "type": "string",
+                "title": "Search type",
+                "description": "entities, directors, or shareholders -- which register field _input was matched against."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "S1-ocrs-entitysearch (search row only), S1-ocrs-entitysearch+entityinfo (search row enriched with a follow-up Directors/Secretaries/Shareholders lookup), or none (error record)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed extractions -- not_found (search matched nothing), invalid_query (term contains an unsupported ',' or '=' character), upstream_error (CIPO's own API returned an error message, e.g. its 'Divide by zero' bug on overly broad queries), or blocked_or_transient (network issue)."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "EntityID": {
+                "title": "Entity ID",
+                "description": "CIPO's internal GUID for this entity -- used to fetch the Directors/Secretaries/Shareholders detail lookup."
+            },
+            "EntityName": {
+                "title": "Entity name",
+                "description": "Registered name of the company or business name."
+            },
+            "EntityNumber": {
+                "title": "Registration number",
+                "description": "Official CIPO registration/incorporation number (e.g. 2015/C3170 for an IBC, or a legacy plain number for an older local registration)."
+            },
+            "DateOfIncorporation": {
+                "title": "Date of incorporation",
+                "description": "Registration/incorporation date on file, as returned by CIPO (not normalized)."
+            },
+            "StatusName": {
+                "title": "Status",
+                "description": "Current register status, e.g. Active."
+            },
+            "TypeName": {
+                "title": "Entity type",
+                "description": "e.g. Private Ordinary Company, Business By Firm."
+            },
+            "PrincipalOfficeAddress": {
+                "title": "Principal office address",
+                "description": "Registered/principal office address on file, as a single free-text string."
+            },
+            "registry": {
+                "title": "Registry",
+                "description": "Which CIPO register this entity is filed under (always 'COMPANIES & INTELLECTUAL PROPERTY OFFICE' for Dominica)."
+            },
+            "CaricomStatus": {
+                "title": "CARICOM status",
+                "description": "CARICOM / non-CARICOM classification on file."
+            },
+            "LoweredApplicationName": {
+                "title": "Application name",
+                "description": "Internal jurisdiction/application key (always 'dominica')."
+            },
+            "ApplicationId": {
+                "title": "Application ID",
+                "description": "Directors/shareholders search mode only: internal jurisdiction GUID."
+            },
+            "Email": {
+                "title": "Email",
+                "description": "Directors/shareholders search mode only: contact email on file, when present."
+            },
+            "Directors": {
+                "title": "Directors",
+                "description": "Comma-separated director names on file, as a single free-text string (not a structured list) -- present on directors/shareholders search-mode rows, and re-supplied by the detail lookup for entities-mode rows."
+            },
+            "Secretaries": {
+                "title": "Secretaries",
+                "description": "Comma-separated company secretary names on file, same free-text shape as Directors."
+            },
+            "Shareholders": {
+                "title": "Shareholders",
+                "description": "Comma-separated shareholder names on file (correct spelling; only present on directors/shareholders search-mode rows)."
+            },
+            "Schareholders": {
+                "title": "Shareholders (detail lookup)",
+                "description": "Same data as Shareholders, but from the separate detail (EntityInfo) lookup -- upstream spells this field 'Schareholders' (typo) on that endpoint; kept verbatim rather than silently corrected."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across search-result and detail-enriched records.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "_searchType",
+                    "_source",
+                    "_scrapedAt",
+                    "EntityName",
+                    "EntityNumber",
+                    "StatusName",
+                    "TypeName",
+                    "DateOfIncorporation",
+                    "PrincipalOfficeAddress",
+                    "Directors",
+                    "Shareholders",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

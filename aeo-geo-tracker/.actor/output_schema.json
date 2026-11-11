@@ -1,0 +1,62 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Bing SERP record",
+        "description": "Raw-passthrough dataset envelope. Every record carries _input/_source/_scrapedAt (and _error/_errorDetail on failures).",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The query that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "S1-html, or none on failure."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed lookups (e.g. blocked_or_transient)."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "query": { "title": "Query" },
+            "targetDomain": { "title": "Target domain", "description": "Normalized (no scheme, no www.) from your input." },
+            "targetFound": { "type": "boolean", "title": "Target found", "description": "True if targetDomain appears anywhere in the top 10 results." },
+            "targetRank": { "title": "Target rank", "description": "1-10 position if found, else null." },
+            "resultCount": { "title": "Result count", "description": "Always up to 10 (Bing's own ceiling for this HTTP path -- see CRAWLING_METHOD.md)." },
+            "results": { "title": "Results", "description": "Full list of {rank, title, url, domain, snippet, isTarget}." }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "targetFound",
+                    "targetRank",
+                    "resultCount",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

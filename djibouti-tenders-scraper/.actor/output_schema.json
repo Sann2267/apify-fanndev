@@ -1,0 +1,142 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "marchespublics.gouv.dj Djibouti tender/award record",
+        "description": "One record per row. Shape depends on recordType: CURRENT_TENDER (listType=current, a tender card from the portal's first page) or TENDER_AWARD (listType=awards, this week's contract-award notice with supplier and amount). A single _error record is emitted instead of payload fields when a request fails or is unreachable.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "Which list this record came from: 'list:current' or 'list:awards'."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which extraction strategy emitted this record, or 'none' on error."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on a failed run (blocked_or_transient)."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "recordType": {
+                "type": "string",
+                "title": "Record type",
+                "description": "CURRENT_TENDER or TENDER_AWARD."
+            },
+            "title": {
+                "type": ["string", "null"],
+                "title": "Title",
+                "description": "CURRENT_TENDER only -- what is being procured."
+            },
+            "detailUrl": {
+                "type": ["string", "null"],
+                "title": "Detail page URL",
+                "description": "The tender's own marchespublics.gouv.dj page."
+            },
+            "code": {
+                "type": ["string", "null"],
+                "title": "Code",
+                "description": "CURRENT_TENDER only -- the tender's own reference code, often blank upstream."
+            },
+            "administrationContractante": {
+                "type": ["string", "null"],
+                "title": "Administration contractante",
+                "description": "CURRENT_TENDER only -- the contracting government body."
+            },
+            "nature": {
+                "type": ["string", "null"],
+                "title": "Nature",
+                "description": "CURRENT_TENDER only -- e.g. 'Services', 'Fournitures et services', 'Prestations Intellectuelles'."
+            },
+            "modalite": {
+                "type": ["string", "null"],
+                "title": "Modalite",
+                "description": "CURRENT_TENDER only -- e.g. 'Nationale', 'Internationale', 'Avenant'."
+            },
+            "dateParution": {
+                "type": ["string", "null"],
+                "title": "Date de parution",
+                "description": "CURRENT_TENDER only -- upstream publication date, frequently 'N/A' as published."
+            },
+            "dateLimiteRemiseOffres": {
+                "type": ["string", "null"],
+                "title": "Date limite de remise des offres",
+                "description": "CURRENT_TENDER only -- upstream bid submission deadline, frequently 'N/A' as published."
+            },
+            "lieuExecution": {
+                "type": ["string", "null"],
+                "title": "Lieu d'execution",
+                "description": "CURRENT_TENDER only -- execution location."
+            },
+            "procedure": {
+                "type": ["string", "null"],
+                "title": "Procedure",
+                "description": "The procurement procedure type."
+            },
+            "designation": {
+                "type": ["string", "null"],
+                "title": "Designation",
+                "description": "TENDER_AWARD only -- what was procured."
+            },
+            "projet": {
+                "type": ["string", "null"],
+                "title": "Projet",
+                "description": "TENDER_AWARD only -- the funding project, or 'Aucun Projet' if none."
+            },
+            "institution": {
+                "type": ["string", "null"],
+                "title": "Institution",
+                "description": "TENDER_AWARD only -- the contracting government body."
+            },
+            "supplier": {
+                "type": ["string", "null"],
+                "title": "Supplier",
+                "description": "TENDER_AWARD only -- the winning company's name."
+            },
+            "amountDJF": {
+                "type": ["string", "null"],
+                "title": "Amount (DJF)",
+                "description": "TENDER_AWARD only -- the awarded amount in Djibouti Francs, upstream free-text (space-separated thousands)."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across both record types -- rows missing a given column render blank.",
+            "transformation": {
+                "fields": [
+                    "recordType",
+                    "title",
+                    "designation",
+                    "administrationContractante",
+                    "institution",
+                    "supplier",
+                    "amountDJF",
+                    "procedure",
+                    "detailUrl",
+                    "_error",
+                    "_scrapedAt"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

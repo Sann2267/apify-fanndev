@@ -1,0 +1,14 @@
+{
+    "actorSpecification": 1,
+    "name": "diariolibre-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Diario Libre Scraper",
+    "description": "Extract full article text or the newest headlines from Diario Libre (diariolibre.com), a leading Dominican Republic national newspaper -- no account or API key needed.",
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

@@ -1,0 +1,252 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Spotify curator record",
+        "description": "Dataset envelope (_input / _source / _scrapedAt / recordType) on top of Spotify's playlist and owner data, plus taste metrics derived from the tracks each curator selected. One CURATOR row per owner, one PLAYLIST row per playlist, ERROR rows on failure. Spotify adds and removes fields without notice, so unlisted fields pass through rather than failing the run.",
+        "additionalProperties": true,
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The keyword or URL that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "pathfinder-searchSuggestions, pathfinder-fetchPlaylist, or none on failure rows."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was emitted."
+            },
+            "recordType": {
+                "type": "string",
+                "title": "Record type",
+                "description": "CURATOR, PLAYLIST or ERROR."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Failure rows only: search_failed, not_found, unparsable_input or fetch_failed."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic accompanying _error."
+            },
+            "ownerName": {
+                "title": "Curator",
+                "description": "Display name of the account that owns the playlists."
+            },
+            "ownerId": {
+                "title": "Curator id",
+                "description": "Spotify user id - the stable handle that appears in profile links, and the key curators are grouped on."
+            },
+            "ownerUrl": {
+                "title": "Curator URL",
+                "description": "open.spotify.com profile link."
+            },
+            "ownerAvatar": {
+                "title": "Avatar",
+                "description": "Largest profile image Spotify offers."
+            },
+            "ownerSocialHandle": {
+                "title": "Social handle",
+                "description": "Handle the curator has attached to their Spotify profile, when they set one."
+            },
+            "isEditorial": {
+                "title": "Spotify editorial",
+                "description": "True when the owner is Spotify's own editorial account rather than an independent curator."
+            },
+            "playlistsFound": {
+                "title": "Playlists found",
+                "description": "How many of this curator's playlists this run profiled. It is what the run discovered, not their full catalogue - Spotify does not expose a public list of a user's playlists."
+            },
+            "totalFollowers": {
+                "title": "Total followers",
+                "description": "Followers summed across the playlists found. The headline reach number."
+            },
+            "reach": {
+                "title": "Reach",
+                "description": "Same as totalFollowers, present on every row so curators sort cleanly even when follower data is missing."
+            },
+            "maxPlaylistFollowers": {
+                "title": "Largest playlist followers",
+                "description": "Followers on their single biggest playlist found."
+            },
+            "totalTracksCurated": {
+                "title": "Tracks curated",
+                "description": "Combined track count across the playlists found."
+            },
+            "biggestPlaylistName": {
+                "title": "Biggest playlist",
+                "description": "The playlist with the most followers."
+            },
+            "biggestPlaylistUrl": {
+                "title": "Biggest playlist URL",
+                "description": "Link to that playlist."
+            },
+            "playlistNames": {
+                "title": "Playlist names",
+                "description": "Every playlist of theirs this run profiled."
+            },
+            "playlistUrls": {
+                "title": "Playlist URLs",
+                "description": "Links to each of those playlists."
+            },
+            "lastUpdated": {
+                "title": "Last updated",
+                "description": "Most recent update timestamp across their playlists, when Spotify publishes one. Tells you whether the curator is still active."
+            },
+            "topArtists": {
+                "title": "Top artists",
+                "description": "Artists appearing most often across the sampled tracks, with a count each."
+            },
+            "topArtistNames": {
+                "title": "Top artist names",
+                "description": "Just the names, for quick scanning and filtering."
+            },
+            "distinctArtists": {
+                "title": "Distinct artists",
+                "description": "How many different artists appear in the sample. A low number against a large sample means a repetitive playlist."
+            },
+            "trackSample": {
+                "title": "Tracks sampled",
+                "description": "How many tracks the taste metrics were computed from."
+            },
+            "medianPlaycount": {
+                "title": "Median play count",
+                "description": "Median lifetime streams across the sampled tracks. Spotify's official API publishes no equivalent figure."
+            },
+            "maxPlaycount": {
+                "title": "Highest play count",
+                "description": "The most-streamed track in the sample."
+            },
+            "undergroundScore": {
+                "title": "Underground score",
+                "description": "0 to 1, derived from the median play count. Near 1 means the curator mostly picks little-heard recordings; near 0 means they play established hits. A low median beside a high maximum is the signature of a discovery curator with one or two anchor tracks."
+            },
+            "medianReleaseYear": {
+                "title": "Median release year",
+                "description": "How current the selection is."
+            },
+            "oldestReleaseYear": {
+                "title": "Oldest release year",
+                "description": "Earliest release year in the sample."
+            },
+            "newestReleaseYear": {
+                "title": "Newest release year",
+                "description": "Latest release year in the sample."
+            },
+            "catalogueSpreadYears": {
+                "title": "Catalogue spread",
+                "description": "Years between the oldest and newest release. A wide spread means a retrospective selection; a narrow one means a new-music curator."
+            },
+            "explicitShare": {
+                "title": "Explicit share",
+                "description": "Fraction of sampled tracks Spotify labels explicit, 0 to 1."
+            },
+            "playlistName": {
+                "title": "Playlist",
+                "description": "PLAYLIST rows: the playlist's name."
+            },
+            "playlistId": {
+                "title": "Playlist id",
+                "description": "PLAYLIST rows: Spotify playlist id."
+            },
+            "playlistUrl": {
+                "title": "Playlist URL",
+                "description": "PLAYLIST rows: open.spotify.com link."
+            },
+            "description": {
+                "title": "Playlist description",
+                "description": "PLAYLIST rows: the curator's own description, HTML stripped. Often where submission instructions or contact details are."
+            },
+            "followers": {
+                "title": "Followers",
+                "description": "PLAYLIST rows: accounts following this playlist."
+            },
+            "trackCount": {
+                "title": "Tracks",
+                "description": "PLAYLIST rows: total tracks in the playlist, which can exceed the sample."
+            },
+            "coverArt": {
+                "title": "Cover art",
+                "description": "PLAYLIST rows: largest cover image Spotify offers."
+            },
+            "foundVia": {
+                "title": "Found via",
+                "description": "PLAYLIST rows: the keyword that surfaced this playlist, or 'input' when it was supplied directly."
+            }
+        }
+    },
+    "views": {
+        "overview": {
+            "title": "Curators",
+            "transformation": {
+                "fields": [
+                    "ownerName",
+                    "playlistsFound",
+                    "totalFollowers",
+                    "maxPlaylistFollowers",
+                    "biggestPlaylistName",
+                    "topArtistNames",
+                    "medianPlaycount",
+                    "undergroundScore",
+                    "medianReleaseYear",
+                    "explicitShare",
+                    "lastUpdated",
+                    "ownerUrl"
+                ]
+            },
+            "display": {
+                "component": "table",
+                "properties": {
+                    "ownerName": { "label": "Curator" },
+                    "playlistsFound": { "label": "Playlists" },
+                    "totalFollowers": { "label": "Reach" },
+                    "maxPlaylistFollowers": { "label": "Biggest" },
+                    "biggestPlaylistName": { "label": "Top playlist" },
+                    "topArtistNames": { "label": "Favours" },
+                    "medianPlaycount": { "label": "Median plays" },
+                    "undergroundScore": { "label": "Underground" },
+                    "medianReleaseYear": { "label": "Median year" },
+                    "explicitShare": { "label": "Explicit" },
+                    "lastUpdated": { "label": "Updated" },
+                    "ownerUrl": { "label": "Profile" }
+                }
+            }
+        },
+        "playlists": {
+            "title": "Playlists",
+            "transformation": {
+                "fields": [
+                    "playlistName",
+                    "ownerName",
+                    "followers",
+                    "trackCount",
+                    "lastUpdated",
+                    "foundVia",
+                    "description",
+                    "playlistUrl"
+                ]
+            },
+            "display": {
+                "component": "table",
+                "properties": {
+                    "playlistName": { "label": "Playlist" },
+                    "ownerName": { "label": "Owner" },
+                    "followers": { "label": "Followers" },
+                    "trackCount": { "label": "Tracks" },
+                    "lastUpdated": { "label": "Updated" },
+                    "foundVia": { "label": "Found via" },
+                    "description": { "label": "Description" },
+                    "playlistUrl": { "label": "Link" }
+                }
+            }
+        }
+    }
+}

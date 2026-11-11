@@ -1,0 +1,22 @@
+{
+    "actorSpecification": 1,
+    "name": "klikindomaret-scraper",
+    "version": "0.1",
+    "buildTag": "latest",
+    "title": "Klikindomaret (Indomaret Xpress) Scraper",
+    "description": "Scrape Indomaret Klik Xpress groceries: product listings (price, discount, promo, stock) by keyword or category, the category tree, promo banners, search suggestions, and store resolution. HTTP-only internal API; auto-solves AWS WAF + Cloudflare. No login.",
+    "categories": ["ECOMMERCE"],
+    "dockerfile": "./Dockerfile",
+    "minMemoryMbytes": 1024,
+    "maxMemoryMbytes": 8192,
+    "defaultRunOptions": {
+        "build": "latest",
+        "memoryMbytes": 4096,
+        "timeoutSecs": 3600
+    },
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

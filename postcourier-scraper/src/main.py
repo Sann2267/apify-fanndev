@@ -1,0 +1,115 @@
+import asyncio
+import logging
+
+from apify import Actor
+from curl_cffi.requests.exceptions import RequestException
+
+from src.client import PostCourierClient
+from src.constants import LATEST_FEED_URL, WP_API_POSTS_URL
+from src.extractor import (
+    ArticleNotFound,
+    extract_article,
+    extract_error,
+    extract_rss_items,
+    slug_from_url,
+)
+from src.input_errors import input_error
+
+log = logging.getLogger(__name__)
+
+
+async def process_article(url: str, proxy_url: str | None) -> dict:
+    client = PostCourierClient(proxy_url=proxy_url)
+    try:
+        r = await client.get(url)
+        if r.status_code == 404:
+            return extract_error(url, "not_found")
+        if r.status_code != 200:
+            return extract_error(url, f"http_{r.status_code}")
+
+        # Fetch the structured WP REST API record (full content.rendered +
+        # embedded author/media/terms) by slug in parallel with nothing else
+        # -- one extra lightweight request per article.
+        slug = slug_from_url(url)
+        wp_post = None
+        try:
+            wp_r = await client.get(
+                WP_API_POSTS_URL,
+                params={"slug": slug, "_embed": "1"},
+            )
+            if wp_r.status_code == 200:
+                wp_list = wp_r.json()
+                if wp_list:
+                    wp_post = wp_list[0]
+        except (RuntimeError, ConnectionError, RequestException) as e:
+            # WP API hiccup is non-fatal -- extract_article() degrades
+            # gracefully (articleBody=None, _warning set) rather than
+            # failing the whole record over a secondary request.
+            log.warning(f"WP API lookup failed for {url}: {e!r}")
+
+        try:
+            # UnexpectedShape propagates -- schema drift must fail the run
+            # loudly, not silently disappear into a per-item error record.
+            return extract_article(r.text, wp_post, url)
+        except ArticleNotFound:
+            return extract_error(url, "not_article")
+    except (RuntimeError, ConnectionError, RequestException) as e:
+        # NOTE: curl_cffi's own `ConnectionError` (raised on a failed proxy
+        # CONNECT tunnel, DNS failure, etc.) does NOT inherit from Python's
+        # builtin `ConnectionError` -- its MRO is RequestException ->
+        # CurlError -> OSError, a parallel hierarchy with the same class
+        # name. Both are caught explicitly here so a transient proxy/network
+        # hiccup degrades to a per-item error record instead of crashing the
+        # whole run.
+        return extract_error(url, "blocked_or_transient", repr(e))
+    finally:
+        await client.close()
+
+
+async def fetch_latest(limit: int, proxy_url: str | None) -> list[dict]:
+    client = PostCourierClient(proxy_url=proxy_url)
+    try:
+        r = await client.get(LATEST_FEED_URL)
+        if r.status_code != 200:
+            raise RuntimeError(f"RSS feed {LATEST_FEED_URL} returned {r.status_code}")
+        items = extract_rss_items(r.content)
+        return items[:limit]
+    finally:
+        await client.close()
+
+
+async def main():
+    async with Actor:
+        input_data = await Actor.get_input() or {}
+
+        mode = input_data.get("mode", "article")
+        proxy_config = await Actor.create_proxy_configuration(
+            actor_proxy_input=input_data.get("proxyConfiguration"),
+        )
+
+        if mode == "latest":
+            limit = min(int(input_data.get("limit", 10)), 100)
+            proxy_url = await proxy_config.new_url() if proxy_config else None
+            items = await fetch_latest(limit, proxy_url)
+            Actor.log.info(f"latest mode: -> {len(items)} headlines")
+            await Actor.push_data(items)
+            return
+
+        # mode == "article"
+        urls = list(input_data.get("urls") or [])
+        if input_data.get("url"):
+            urls.insert(0, input_data["url"])
+        if not urls:
+            raise input_error("Provide 'url' or 'urls' when mode is 'article'.")
+
+        max_concurrency = int(input_data.get("maxConcurrency", 4))
+        sem = asyncio.Semaphore(max_concurrency)
+
+        async def _bounded(url: str):
+            async with sem:
+                proxy_url = await proxy_config.new_url() if proxy_config else None
+                record = await process_article(url, proxy_url)
+                await Actor.push_data(record)
+
+        Actor.log.info(f"article mode: {len(urls)} url(s), maxConcurrency={max_concurrency}")
+        await asyncio.gather(*(_bounded(u) for u in urls))

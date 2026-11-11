@@ -1,0 +1,23 @@
+{
+    "actorSpecification": 1,
+    "name": "spotify-artist-analytics-tracker",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Spotify Artist Analytics & Monthly Listeners Tracker",
+    "description": "Track any Spotify artist's monthly listeners, followers and top-5 listener cities over time, with per-run growth deltas. Also returns top tracks with lifetime play counts, the playlists driving discovery, upcoming concerts and social links. No Spotify account or API key needed.",
+    "categories": [
+        "ENTERTAINMENT",
+        "BUSINESS"
+    ],
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json",
+    "defaultRunOptions": {
+        "build": "latest",
+        "memoryMbytes": 512,
+        "timeoutSecs": 3600
+    }
+}

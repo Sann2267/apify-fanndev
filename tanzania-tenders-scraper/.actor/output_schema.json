@@ -1,0 +1,133 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "NeST tender/award/contract record",
+        "description": "One record per Open Contracting (OCDS) record from Tanzania's NeST e-Procurement system, produced by mode=list (a page of recent records starting from a date) or mode=detail (one specific OCID). Both modes emit the same shape: a handful of convenience summary fields pulled up to the top, plus the full upstream 'compiledRelease' (tender/awards/contracts/parties, verbatim) and the 'releases' history array. A single _error record is emitted instead of payload fields when a record can't be fetched.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "For list records: 'list:since=<date>'. For detail records: the OCID that was requested."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which strategy emitted this record (S1-records-list, S1-records-detail, or 'none' on error)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed records (blocked_or_transient, not_found)."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "ocid": {
+                "title": "OCID",
+                "description": "The Open Contracting ID -- NeST's stable identifier for this procurement process, stable across its whole tender -> award -> contract lifecycle."
+            },
+            "tenderId": {
+                "title": "Tender ID",
+                "description": "The procuring entity's own tender reference number."
+            },
+            "tenderTitle": {
+                "title": "Tender title",
+                "description": "The tender's title or description."
+            },
+            "tenderStatus": {
+                "title": "Tender status",
+                "description": "e.g. active, complete, cancelled."
+            },
+            "procurementMethod": {
+                "title": "Procurement method",
+                "description": "e.g. limited, open."
+            },
+            "procurementMethodDetails": {
+                "title": "Procurement method details",
+                "description": "Free-text procedure name, e.g. 'National Shopping -Lower Level (Mini Competition Quotation)'."
+            },
+            "buyerName": {
+                "title": "Buyer name",
+                "description": "The government buyer named on the record."
+            },
+            "procuringEntityName": {
+                "title": "Procuring entity name",
+                "description": "The procuring entity running this procurement (usually the same as buyerName)."
+            },
+            "tenderPeriodStartDate": {
+                "title": "Tender period start date",
+                "description": "When bid submission opened."
+            },
+            "tenderPeriodEndDate": {
+                "title": "Tender period end date",
+                "description": "Bid submission deadline."
+            },
+            "recordDate": {
+                "title": "Record date",
+                "description": "The compiled record's own 'date' field -- generally its most recent event date."
+            },
+            "tags": {
+                "title": "Tags",
+                "description": "OCDS release tags present on this compiled record (e.g. ['compiled'])."
+            },
+            "awardsCount": {
+                "title": "Awards count",
+                "description": "Number of award entries on this record."
+            },
+            "contractsCount": {
+                "title": "Contracts count",
+                "description": "Number of contract entries on this record."
+            },
+            "totalAwardAmount": {
+                "title": "Total award amount",
+                "description": "Sum of all award value amounts on this record, when present."
+            },
+            "awardCurrency": {
+                "title": "Award currency",
+                "description": "Currency code for totalAwardAmount, e.g. TZS."
+            },
+            "compiledRelease": {
+                "title": "Compiled release (full detail)",
+                "description": "The complete upstream OCDS compiledRelease object verbatim -- includes tender (with line items), parties, awards, contracts, buyer, and more. Field set varies by procurement type and stage; passed through as-is rather than enumerated field-by-field."
+            },
+            "releases": {
+                "title": "Release history",
+                "description": "The list of individual OCDS release events (tender, tenderUpdate, award, contract, ...) that were compiled into this record, each with its own URL and date."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across list and detail records -- rows missing a given column render blank.",
+            "transformation": {
+                "fields": [
+                    "ocid",
+                    "tenderTitle",
+                    "tenderStatus",
+                    "procuringEntityName",
+                    "tenderPeriodEndDate",
+                    "awardsCount",
+                    "totalAwardAmount",
+                    "awardCurrency",
+                    "_error",
+                    "_scrapedAt"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

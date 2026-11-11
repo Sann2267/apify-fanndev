@@ -1,0 +1,170 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "NOCOPO tender/award/contract record",
+        "description": "One record per Nigeria NOCOPO procurement process, produced by mode=list (a page of the Published Records table, optionally enriched with full detail) or mode=detail (one specific OCID's full OCDS release history). A single _error record is emitted instead of payload fields when a record can't be fetched.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "For list records: 'list' or 'list:search=<query>'. For detail records: the OCID that was requested."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which strategy emitted this record (S1-published-record-handler, S1-ocdsjson-detail, or 'none' on error)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed records (blocked_or_transient, not_found)."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "_detailError": {
+                "type": "string",
+                "title": "Detail enrichment error",
+                "description": "Present only on a list-mode row when fetchDetail=true and that row's own detail fetch failed -- the rest of the row's list fields are still valid."
+            },
+            "id": {
+                "title": "Internal ID",
+                "description": "NOCOPO's own internal database row ID (list rows only)."
+            },
+            "ocid": {
+                "title": "OCID",
+                "description": "The Open Contracting ID -- NOCOPO's stable identifier for this procurement process across its whole planning -> tender -> award -> contract lifecycle."
+            },
+            "procuringEntity": {
+                "title": "Procuring entity",
+                "description": "The Ministry/Department/Agency (MDA) running this procurement (list rows only)."
+            },
+            "projectTitle": {
+                "title": "Project title",
+                "description": "The project's title as published in the listing (list rows only)."
+            },
+            "datePublished": {
+                "title": "Date published",
+                "description": "When this record was published on NOCOPO (list rows only)."
+            },
+            "packageNumber": {
+                "title": "Package number",
+                "description": "The procuring entity's own package reference (list rows only)."
+            },
+            "lotNumber": {
+                "title": "Lot number",
+                "description": "The procuring entity's own lot reference, when applicable (list rows only)."
+            },
+            "budgetYear": {
+                "title": "Budget year",
+                "description": "The fiscal year this project's budget belongs to (list rows only)."
+            },
+            "tenderId": {
+                "title": "Tender ID",
+                "description": "The procuring entity's own tender reference number (detail, or list rows with fetchDetail=true)."
+            },
+            "tenderTitle": {
+                "title": "Tender title",
+                "description": "The tender's title or description."
+            },
+            "tenderStatus": {
+                "title": "Tender status",
+                "description": "e.g. active, complete, planned."
+            },
+            "procurementMethod": {
+                "title": "Procurement method",
+                "description": "e.g. open, limited, direct."
+            },
+            "buyerName": {
+                "title": "Buyer name",
+                "description": "The government buyer named on the record."
+            },
+            "budgetAmount": {
+                "title": "Budget amount",
+                "description": "The planning-stage budget amount, when present."
+            },
+            "budgetCurrency": {
+                "title": "Budget currency",
+                "description": "Currency code for budgetAmount, e.g. NGN."
+            },
+            "tags": {
+                "title": "Tags",
+                "description": "Union of OCDS release tags seen across this record's release history (e.g. ['planning', 'tender', 'award'])."
+            },
+            "awardsCount": {
+                "title": "Awards count",
+                "description": "Number of award entries across this record's release history."
+            },
+            "contractsCount": {
+                "title": "Contracts count",
+                "description": "Number of contract entries across this record's release history."
+            },
+            "totalAwardAmount": {
+                "title": "Total award amount",
+                "description": "Sum of all award value amounts on this record, when present."
+            },
+            "awardCurrency": {
+                "title": "Award currency",
+                "description": "Currency code for totalAwardAmount, e.g. NGN."
+            },
+            "latestReleaseDate": {
+                "title": "Latest release date",
+                "description": "The date of the most recent entry in this record's release history."
+            },
+            "releases": {
+                "title": "Release history (full detail)",
+                "description": "The complete upstream OCDS 'releases' array verbatim, one entry per planning/tender/award/contract/implementation event -- present on detail records and list rows fetched with fetchDetail=true."
+            },
+            "publisher": {
+                "title": "Publisher",
+                "description": "The OCDS publisher block (name, scheme, uid) -- 'The Bureau of Public Procurement' / 'NG-BPP'."
+            },
+            "publishedDate": {
+                "title": "Package published date",
+                "description": "The release package's own publishedDate field, upstream."
+            },
+            "license": {
+                "title": "License URL",
+                "description": "Upstream OCDS license URL."
+            },
+            "publicationPolicy": {
+                "title": "Publication policy URL",
+                "description": "Upstream OCDS publication policy URL."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across list and detail records -- rows missing a given column render blank.",
+            "transformation": {
+                "fields": [
+                    "ocid",
+                    "procuringEntity",
+                    "projectTitle",
+                    "datePublished",
+                    "budgetYear",
+                    "tenderStatus",
+                    "totalAwardAmount",
+                    "awardCurrency",
+                    "_error",
+                    "_scrapedAt"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

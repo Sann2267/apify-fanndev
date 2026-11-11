@@ -1,0 +1,14 @@
+{
+    "actorSpecification": 1,
+    "name": "madagascar-tenders-scraper",
+    "version": "0.1",
+    "buildTag": "latest",
+    "title": "Madagascar Government Tenders Scraper (ARMP e-GP)",
+    "description": "Scrapes Madagascar's official ARMP procurement portal for live calls for tender by region, the searchable multi-year dossier archive, and awarded contracts with supplier name, tax ID, beneficial owner, and amount. No account or login needed.",
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

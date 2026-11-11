@@ -1,0 +1,114 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Article / latest-headline record",
+        "description": "Raw-passthrough dataset envelope. Every record carries _input/_source/_scrapedAt (failed URLs are not written to the dataset -- they are reported in the ERRORS record of the run's key-value store). Article-mode records carry headline/articleBody-style fields; latest-mode records (RSS or sitemap) carry title/link-style fields. Upstream JSON-LD is passed through close to verbatim, so extra schema.org fields beyond those listed here may also appear.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The exact input value (URL, or 'latest'/'latest:<section>') that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which extraction strategy emitted this record (e.g. S1-jsonld, S2-rss)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "headline": {
+                "title": "Headline",
+                "description": "Article headline."
+            },
+            "description": {
+                "title": "Description",
+                "description": "Short article description/dek."
+            },
+            "articleBody": {
+                "title": "Article body",
+                "description": "Full article text from p.article--paragraph--text."
+            },
+            "authors": {
+                "title": "Authors",
+                "description": "List of author display names."
+            },
+            "publisher": {
+                "title": "Publisher",
+                "description": "Publisher organization name."
+            },
+            "datePublished": {
+                "title": "Date published",
+                "description": "ISO 8601 publish date."
+            },
+            "dateModified": {
+                "title": "Date modified",
+                "description": "ISO 8601 last-modified date."
+            },
+            "keywords": {
+                "title": "Keywords",
+                "description": "Keywords, raw passthrough."
+            },
+            "articleSection": {
+                "title": "Section",
+                "description": "Article section/category."
+            },
+            "isAccessibleForFree": {
+                "title": "Accessible for free",
+                "description": "Upstream paywall metering flag."
+            },
+            "_paywalled": {
+                "title": "Paywalled",
+                "description": "True when isAccessibleForFree is explicitly false."
+            },
+            "subscriptionTier": {
+                "title": "Subscription tier",
+                "description": "isPartOf product name, when the article requires a subscription."
+            },
+            "image": {
+                "title": "Image URL",
+                "description": "Lead image URL."
+            },
+            "title": {
+                "title": "Title",
+                "description": "Google News sitemap title."
+            },
+            "link": {
+                "title": "Link",
+                "description": "Article URL."
+            },
+            "publicationDate": {
+                "title": "Publication date",
+                "description": "Sitemap publication date."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across both article and latest-headline records.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "_source",
+                    "_scrapedAt",
+                    "headline",
+                    "title",
+                    "link",
+                    "datePublished",
+                    "publicationDate",
+                    "_paywalled"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

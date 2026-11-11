@@ -1,0 +1,84 @@
+{
+    "title": "Ecommerce Platform Market Share Scraper input",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "mode": {
+            "title": "Mode",
+            "type": "string",
+            "description": "platform = headline stats for a platform (live stores, quarter-over-quarter and year-over-year growth). growth = the full quarterly store-count series back to 2019. breakdown = stores by country, category, app, technology, theme, shipping carrier and more. migration = how many stores switched to and from the platform. stores = the top and newest stores published in the report. reference = every platform report available.",
+            "editor": "select",
+            "default": "platform",
+            "enum": ["platform", "growth", "breakdown", "migration", "stores", "reference"],
+            "enumTitles": [
+                "platform - headline stats and growth rates",
+                "growth - quarterly store counts since 2019",
+                "breakdown - stores by country, app, technology ...",
+                "migration - stores switching in and out",
+                "stores - top and newest stores on the platform",
+                "reference - list every platform report"
+            ]
+        },
+        "platform": {
+            "title": "Platform",
+            "type": "string",
+            "description": "A single platform slug, e.g. shopify, woocommerce, bigcommerce, wix, squarespace, magento. A full report URL works too.",
+            "editor": "textfield",
+            "prefill": "shopify"
+        },
+        "platforms": {
+            "title": "Platforms",
+            "type": "array",
+            "description": "Several platforms to compare in one run. Run mode 'reference' first to see all 110 available slugs.",
+            "editor": "stringList",
+            "prefill": ["shopify", "woocommerce", "bigcommerce"]
+        },
+        "allPlatforms": {
+            "title": "All platforms",
+            "type": "boolean",
+            "description": "Ignore the list above and process every platform report published (about 110). Useful for a full market snapshot in one run.",
+            "default": false
+        },
+        "dimension": {
+            "title": "Dimension (breakdown mode)",
+            "type": "string",
+            "description": "Limit the breakdown to one dimension.",
+            "editor": "select",
+            "enum": ["country", "category", "app", "technology", "theme", "tld", "shipping-carrier", "employee-count", "product-count", "social-media", "contact-info"],
+            "enumTitles": ["country", "category", "app", "technology", "theme", "top-level domain", "shipping carrier", "employee count", "product count", "social media", "contact info"]
+        },
+        "dimensions": {
+            "title": "Dimensions (breakdown mode)",
+            "type": "array",
+            "description": "Several dimensions at once. Leave empty for all of them.",
+            "editor": "stringList"
+        },
+        "maxItems": {
+            "title": "Max items",
+            "type": "integer",
+            "description": "Maximum records per run. A full breakdown of one platform is roughly 150 rows.",
+            "editor": "number",
+            "default": 1000,
+            "minimum": 1
+        },
+        "maxConcurrency": {
+            "title": "Max concurrency",
+            "type": "integer",
+            "description": "How many platform reports to fetch in parallel.",
+            "editor": "number",
+            "default": 4,
+            "minimum": 1,
+            "maximum": 10
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "description": "Optional. The reports answered every request without a proxy.",
+            "editor": "proxy",
+            "default": {
+                "useApifyProxy": false
+            }
+        }
+    },
+    "required": ["mode"]
+}

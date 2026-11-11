@@ -1,0 +1,14 @@
+{
+    "actorSpecification": 1,
+    "name": "substack-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Substack Newsletter to Markdown Scraper",
+    "description": "Convert Substack newsletter posts to clean Markdown -- a single post by URL, or a whole publication's archive -- for AI ingestion (RAG, embeddings, LLM context). No account or API key needed.",
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

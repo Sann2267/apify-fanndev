@@ -1,0 +1,22 @@
+{
+    "actorSpecification": 1,
+    "name": "blibli-merchant-profile-scraper",
+    "version": "0.1",
+    "buildTag": "latest",
+    "title": "Blibli Merchant Profile & Inventory Scraper",
+    "description": "Map any Blibli competitor's storefront: full product inventory, seller ratings, response speed, shipping origin, followers, review stats and active vouchers. Paste a store URL or any product link from it. No login needed.",
+    "categories": ["ECOMMERCE"],
+    "minMemoryMbytes": 256,
+    "maxMemoryMbytes": 4096,
+    "defaultRunOptions": {
+        "build": "latest",
+        "memoryMbytes": 1024,
+        "timeoutSecs": 3600
+    },
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

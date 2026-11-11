@@ -1,0 +1,170 @@
+{
+    "title": "Google Maps Lead Generation & Contact Scraper",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "searchQueries": {
+            "title": "Search queries",
+            "type": "array",
+            "description": "What to look for, e.g. 'dentist', 'coffee shop', 'law firm'. Each query is run across the location you set below. A location is required when you use queries.",
+            "editor": "stringList",
+            "prefill": [
+                "dentist"
+            ]
+        },
+        "areaName": {
+            "title": "Location - named area",
+            "type": "string",
+            "description": "Easiest way to set a location: a built-in city or country, e.g. 'jakarta', 'bali', 'singapore', 'london', 'new york', 'indonesia'. For anywhere else, use a centre point with a radius, or a bounding box.",
+            "editor": "textfield",
+            "prefill": "jakarta"
+        },
+        "centerLatitude": {
+            "title": "Location - centre latitude",
+            "type": "string",
+            "description": "Latitude of the centre point. Use with centre longitude and radius.",
+            "editor": "textfield"
+        },
+        "centerLongitude": {
+            "title": "Location - centre longitude",
+            "type": "string",
+            "description": "Longitude of the centre point.",
+            "editor": "textfield"
+        },
+        "radiusKm": {
+            "title": "Location - radius (km)",
+            "type": "string",
+            "description": "Search this many kilometres around the centre point. Results are also filtered to this exact radius using each lead's real coordinates.",
+            "editor": "textfield"
+        },
+        "boundingBox": {
+            "title": "Location - bounding box [south, west, north, east]",
+            "type": "array",
+            "description": "Most precise option. The box is tiled into multiple search points for coverage, then results are filtered to the box using each lead's real coordinates.",
+            "editor": "json"
+        },
+        "tileSizeKm": {
+            "title": "Search tile size (km)",
+            "type": "integer",
+            "description": "How far apart the search points are placed inside your area. Smaller = more thorough and more requests. Leave empty to pick automatically from the area size.",
+            "minimum": 1,
+            "maximum": 200
+        },
+        "maxResultsPerQuery": {
+            "title": "Max results per query",
+            "type": "integer",
+            "description": "Stop each query after this many unique businesses. Google returns 20 per request.",
+            "default": 100,
+            "minimum": 1,
+            "maximum": 5000
+        },
+        "placeUrls": {
+            "title": "Specific Google Maps URLs",
+            "type": "array",
+            "description": "Optional. Scrape named businesses directly instead of (or as well as) searching. Paste Google Maps URLs; short links are followed automatically.",
+            "editor": "requestListSources"
+        },
+        "placeIds": {
+            "title": "Specific Place IDs / CIDs / feature IDs",
+            "type": "array",
+            "description": "Optional. Accepts a Place ID (ChIJ...), a numeric CID, or a raw feature ID (0x...:0x...).",
+            "editor": "stringList"
+        },
+        "enrichFromWebsite": {
+            "title": "Enrich from the business website",
+            "type": "boolean",
+            "description": "Visit each lead's website and extract email addresses and social media accounts. This is what makes the leads outreach-ready - Google never exposes an email.",
+            "default": true
+        },
+        "followContactPage": {
+            "title": "Follow the contact page",
+            "type": "boolean",
+            "description": "When a homepage has no email, follow one same-domain contact/about link and try there. One extra request per lead, only when needed.",
+            "default": true
+        },
+        "enrichmentConcurrency": {
+            "title": "Enrichment concurrency",
+            "type": "integer",
+            "description": "How many business websites to fetch at once.",
+            "default": 6,
+            "minimum": 1,
+            "maximum": 15
+        },
+        "fetchPlaceDetails": {
+            "title": "Fetch full place details",
+            "type": "boolean",
+            "description": "Google returns two richnesses of record and chooses by client; the Apify platform usually gets the reduced one, which has no review count and only today's opening hours. Switch this on to fetch each lead's detail page: it reliably recovers review counts, review URLs and descriptions. The full 7-day schedule often cannot be recovered from a datacenter IP at all - check openingHoursComplete on each lead. Costs one extra request per lead.",
+            "default": false
+        },
+        "requirePhone": {
+            "title": "Only keep leads with a phone number",
+            "type": "boolean",
+            "default": false,
+            "description": "Drop businesses with no phone number. Useful when your outreach is cold-calling rather than email."
+        },
+        "requireWebsite": {
+            "title": "Only keep leads with a website",
+            "type": "boolean",
+            "default": false,
+            "description": "Drop businesses with no website. Also the ones enrichment can actually find an email for, so pair it with enrichment."
+        },
+        "requireEmail": {
+            "title": "Only keep leads with an email address",
+            "type": "boolean",
+            "description": "Applied after enrichment. Needs 'Enrich from the business website' switched on, otherwise nothing has an email and every lead is dropped.",
+            "default": false
+        },
+        "minRating": {
+            "title": "Minimum rating",
+            "type": "string",
+            "description": "Only keep businesses rated at or above this, e.g. 4.0. Leave empty for no rating filter.",
+            "editor": "textfield"
+        },
+        "exportFormats": {
+            "title": "Extra export files",
+            "type": "array",
+            "description": "Also write the leads to the key-value store in these formats. The Apify dataset is always produced regardless.",
+            "editor": "select",
+            "default": [],
+            "items": {
+                "type": "string",
+                "enum": [
+                    "json",
+                    "csv",
+                    "excel",
+                    "ndjson"
+                ],
+                "enumTitles": [
+                    "JSON",
+                    "CSV",
+                    "Excel (.xlsx)",
+                    "NDJSON"
+                ]
+            }
+        },
+        "language": {
+            "title": "Language (hl)",
+            "type": "string",
+            "description": "Google interface language. Affects category names and opening-hours wording.",
+            "default": "en",
+            "editor": "textfield"
+        },
+        "region": {
+            "title": "Region (gl)",
+            "type": "string",
+            "description": "Two-letter country code biasing Google's results, e.g. US, ID, GB. Set this to the country you are targeting.",
+            "default": "US",
+            "editor": "textfield"
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "description": "Off by default, and that is the recommended setting: these Google endpoints have no WAF, so the platform's own IP works and costs nothing. Enable a proxy only to spread load across IPs at high volume, and leave the group list empty so Apify picks a group your plan has. RESIDENTIAL is NOT recommended for Google - it is commonly answered with a consent or CAPTCHA interstitial, which makes searches return nothing.",
+            "editor": "proxy",
+            "default": {
+                "useApifyProxy": false
+            }
+        }
+    },
+    "required": []
+}

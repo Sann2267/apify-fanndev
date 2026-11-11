@@ -1,0 +1,14 @@
+{
+    "actorSpecification": 1,
+    "name": "bangkokpost-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Bangkok Post Scraper",
+    "description": "Extract full article text or the newest headlines from the Bangkok Post (Thailand) -- no account or API key needed.",
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

@@ -1,0 +1,97 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Job search / detail record",
+        "description": "Raw-passthrough dataset envelope on top of karir.com's own gateway2-beta.karir.com JSON API shape. Every record carries _input/_source/_scrapedAt (and _error/_errorDetail on failures). Full-detail records (search mode with fetchFullDetails=true, or detail mode) carry the complete upstream opportunity object verbatim (job_position, requirements, responsibilities, salary_lower/salary_upper, company{...}, ...). Search-mode records with fetchFullDetails=false carry only the compact search-result object (id, job_position, description [city], company_name, salary range, posted_at).",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The keyword search or opportunity ID/URL that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "S1-detail-api, S1-search-api, or none on failure."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed extractions (e.g. not_found, invalid_input, disallowed_by_robots_txt)."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "id": { "title": "Job ID", "description": "Numeric opportunity ID." },
+            "job_position": { "title": "Job title", "description": "The job posting's title." },
+            "location": { "title": "Location", "description": "Full-detail record -- e.g. a regency/city or province name." },
+            "description": { "title": "Location (search summary)", "description": "Search-summary record only -- confusingly named by the upstream API, this holds the city/province, not job description text." },
+            "address": { "title": "Address", "description": "Full-detail record -- the employer's street address for this posting." },
+            "workplace": { "title": "Workplace type", "description": "Full-detail record -- e.g. on-site/remote label." },
+            "job_type": { "title": "Job type", "description": "Full-detail record -- e.g. employment type label." },
+            "requirements": { "title": "Requirements", "description": "Full-detail record -- HTML-formatted requirements text." },
+            "responsibilities": { "title": "Responsibilities", "description": "Full-detail record -- HTML-formatted responsibilities text." },
+            "required_skills": { "title": "Required skills", "description": "Full-detail record." },
+            "salary_info": { "title": "Salary label", "description": "Upstream i18n label key, e.g. LABEL_COMPETITIVE_SALARY or LABEL_FULL_SALARY -- passed through raw, not translated." },
+            "salary_lower": { "title": "Salary (lower, IDR)", "description": "Full-detail and search-summary records -- may be null if undisclosed." },
+            "salary_upper": { "title": "Salary (upper, IDR)", "description": "Full-detail and search-summary records -- may be null if undisclosed." },
+            "degrees": { "title": "Degrees", "description": "Full-detail record -- list of accepted education levels." },
+            "majors": { "title": "Majors", "description": "Full-detail record -- list of accepted fields of study." },
+            "job_functions": { "title": "Job functions", "description": "Full-detail record." },
+            "job_function_ids": { "title": "Job function IDs", "description": "Full-detail record." },
+            "job_levels": { "title": "Job levels", "description": "Full-detail record -- e.g. entry level / staff." },
+            "work_experience": { "title": "Years of experience required", "description": "Full-detail record." },
+            "company_name": { "title": "Company name", "description": "May be the literal upstream label \"LABEL_COMPANY_CONFIDENTIAL\" when the employer chose to stay anonymous -- not a login gate, just the employer's own choice." },
+            "company": { "title": "Company", "description": "Full-detail record -- nested object: id, name, logo, industry_name, description, subscribers, benefits." },
+            "company_id": { "title": "Company ID", "description": "Search-summary record only." },
+            "company_logo": { "title": "Company logo URL", "description": "Full-detail record." },
+            "company_logo_url": { "title": "Company logo URL (search summary)", "description": "Search-summary record only." },
+            "confidential": { "title": "Confidential", "description": "Whether the employer chose to hide company identity." },
+            "is_urgent": { "title": "Urgent", "description": "Whether the posting is flagged urgent by the employer." },
+            "posted_at": { "title": "Posted at", "description": "ISO 8601 timestamp the job was posted." },
+            "updated_at": { "title": "Updated at", "description": "ISO 8601 timestamp of last update." },
+            "expires_at": { "title": "Expires at", "description": "Full-detail record -- ISO 8601 expiry timestamp." },
+            "is_expired": { "title": "Is expired", "description": "Full-detail record." },
+            "visited_count": { "title": "Visit count", "description": "Full-detail record." },
+            "opportunities_link": { "title": "Job URL", "description": "Full-detail record -- canonical karir.com URL for this posting." },
+            "branchs": { "title": "Branches", "description": "Full-detail record." },
+            "branch_location_names": { "title": "Branch location names", "description": "" },
+            "latitude": { "title": "Latitude", "description": "Full-detail record -- may be null." },
+            "longitude": { "title": "Longitude", "description": "Full-detail record -- may be null." }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across search-summary and full-detail records.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "job_position",
+                    "company_name",
+                    "location",
+                    "description",
+                    "salary_lower",
+                    "salary_upper",
+                    "posted_at",
+                    "opportunities_link",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

@@ -1,0 +1,88 @@
+{
+    "title": "Spotify Podcast Episode Extractor",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "showUrls": {
+            "title": "Podcast URLs",
+            "type": "array",
+            "description": "Spotify shows to read. Share links, /intl-xx/ localised links, spotify:show: URIs and bare show ids all work.",
+            "editor": "stringList",
+            "prefill": [
+                "https://open.spotify.com/show/4rOoJ6Egrf8K2IrywzwOMk"
+            ]
+        },
+        "showNames": {
+            "title": "Podcast names",
+            "type": "array",
+            "description": "Podcasts to look up by name instead of by link, one per line. Each name costs one extra search request and the run log prints which show it matched, so check the log when a name is ambiguous.",
+            "editor": "stringList"
+        },
+        "episodeUrls": {
+            "title": "Individual episode URLs",
+            "type": "array",
+            "description": "Specific episodes to read, for when you already know which ones you want. One request each.",
+            "editor": "stringList"
+        },
+        "startUrls": {
+            "title": "Mixed URLs",
+            "type": "array",
+            "description": "Show and episode links mixed together, for callers that keep one list.",
+            "editor": "requestListSources"
+        },
+        "maxEpisodesPerShow": {
+            "title": "Maximum episodes per show",
+            "type": "integer",
+            "description": "Stop after this many episodes per show. Spotify serves 100 episodes per request, so a 500-episode back catalogue costs five.",
+            "default": 100,
+            "minimum": 1,
+            "maximum": 5000,
+            "unit": "episodes"
+        },
+        "releasedAfter": {
+            "title": "Released on or after",
+            "type": "string",
+            "description": "YYYY-MM-DD. Episodes arrive newest first, so this also stops paging as soon as the catalogue goes older than the date - reading recent episodes of a long-running show costs a couple of requests rather than hundreds.",
+            "editor": "textfield"
+        },
+        "releasedBefore": {
+            "title": "Released on or before",
+            "type": "string",
+            "description": "YYYY-MM-DD. Combine with releasedAfter to pull one month, quarter or season.",
+            "editor": "textfield"
+        },
+        "mineDescriptions": {
+            "title": "Mine the descriptions",
+            "type": "boolean",
+            "description": "Parse each description for chapter timestamps, links, sponsor domains and @handles, and derive likely guest names from the episode title. Costs no extra requests - it reads text that is already in the response. Guest names are labelled guestHints because nothing on Spotify marks who the guest is.",
+            "default": true
+        },
+        "includeShowRecord": {
+            "title": "Include a show summary row",
+            "type": "boolean",
+            "description": "Emit one SHOW record per podcast with publisher, description, episode count, average rating, review count and cover art, alongside the EPISODE records.",
+            "default": true
+        },
+        "exportFormats": {
+            "title": "Extra export files",
+            "type": "array",
+            "description": "Besides the dataset, write ready-made files into this run's key-value store.",
+            "editor": "select",
+            "items": {
+                "type": "string",
+                "enum": ["json", "ndjson", "csv", "excel"],
+                "enumTitles": ["JSON", "NDJSON", "CSV", "Excel (XLSX)"]
+            },
+            "default": []
+        },
+        "proxyConfiguration": {
+            "title": "Proxy",
+            "type": "object",
+            "description": "Off by default and genuinely optional: the endpoint this actor reads has no WAF and no IP block. Turn it on only for very large back-catalogue sweeps.",
+            "editor": "proxy",
+            "default": {
+                "useApifyProxy": false
+            }
+        }
+    }
+}

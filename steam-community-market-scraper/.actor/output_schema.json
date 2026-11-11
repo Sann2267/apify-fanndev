@@ -1,0 +1,530 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Steam Community Market record",
+        "description": "The dataset envelope (_input / _source / _scrapedAt / recordType) on top of Steam's own field names, plus decimal prices and flattened helpers. recordType is ITEM (search), ITEM_OVERVIEW, PRICE_HISTORY or PRICE_POINT, ORDER_BOOK, LISTING, SALE, or ERROR. Steam adds fields without notice, so fields not listed here pass through instead of failing the run.",
+        "additionalProperties": true,
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The item, URL or search this record came from."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "S1-market-rpc for real records, none on error rows."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was emitted."
+            },
+            "recordType": {
+                "type": "string",
+                "title": "Record type",
+                "description": "ITEM, ITEM_OVERVIEW, PRICE_HISTORY, PRICE_POINT, ORDER_BOOK, LISTING, SALE or ERROR."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Error rows only: item_not_found, commodity_no_listings, no_listings, no_matching_listings, invalid_input, expand_failed, api_contract_changed or request_failed."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic accompanying _error."
+            },
+            "appid": {
+                "title": "App id",
+                "description": "Steam app id of the game (730 = CS2)."
+            },
+            "appName": {
+                "title": "Game",
+                "description": "SALE rows: game name."
+            },
+            "marketHashName": {
+                "title": "Market hash name",
+                "description": "The item's exact market identifier."
+            },
+            "name": {
+                "title": "Name",
+                "description": "Display name."
+            },
+            "type": {
+                "title": "Item type",
+                "description": "e.g. Base Grade Container, Classified Rifle, Covert Knife."
+            },
+            "currency": {
+                "title": "Currency",
+                "description": "ISO code of the prices on this row (follows the proxy country, except search which is always USD)."
+            },
+            "marketUrl": {
+                "title": "Market URL",
+                "description": "Steam Community Market page of the item."
+            },
+            "iconUrl": {
+                "title": "Image",
+                "description": "Item image URL."
+            },
+            "sellListings": {
+                "title": "Listings for sale",
+                "description": "ITEM rows: number of sell listings (cSellOrders)."
+            },
+            "minSellPrice": {
+                "title": "Lowest price",
+                "description": "ITEM rows: cheapest listing a buyer pays, decimal (USD)."
+            },
+            "minSellPriceText": {
+                "title": "Lowest price (text)",
+                "description": "ITEM rows: Steam's formatted cheapest price."
+            },
+            "minSellFee": {
+                "title": "Fee in lowest price",
+                "description": "ITEM rows: Steam + game publisher fee contained in the lowest price."
+            },
+            "commodity": {
+                "title": "Commodity",
+                "description": "True for interchangeable items (cases, keys, stickers) that trade via the order book."
+            },
+            "bucketGroupId": {
+                "title": "Group id",
+                "description": "Id grouping all variants of a skin (e.g. G1807209A023004)."
+            },
+            "bucketGroupName": {
+                "title": "Group name",
+                "description": "Name of the variant group (e.g. AK-47 | Redline)."
+            },
+            "highestBuyOrder": {
+                "title": "Highest buy order",
+                "description": "Best bid, decimal."
+            },
+            "lowestSellOrder": {
+                "title": "Lowest sell order",
+                "description": "Best ask, decimal."
+            },
+            "spread": {
+                "title": "Spread",
+                "description": "lowestSellOrder - highestBuyOrder."
+            },
+            "spreadPct": {
+                "title": "Spread %",
+                "description": "Spread as a percentage of the lowest sell order."
+            },
+            "buyOrderQuantity": {
+                "title": "Items wanted",
+                "description": "Total quantity across all buy orders."
+            },
+            "sellOrderQuantity": {
+                "title": "Items for sale",
+                "description": "Total quantity across all sell orders."
+            },
+            "buyPriceLevels": {
+                "title": "Buy price levels",
+                "description": "Number of distinct buy prices in the full book."
+            },
+            "sellPriceLevels": {
+                "title": "Sell price levels",
+                "description": "Number of distinct sell prices in the full book."
+            },
+            "buyOrders": {
+                "title": "Buy orders",
+                "description": "Price levels, best first: {price, quantity, cumulativeQuantity}."
+            },
+            "sellOrders": {
+                "title": "Sell orders",
+                "description": "Price levels, best first: {price, quantity, cumulativeQuantity}."
+            },
+            "historyPoints": {
+                "title": "History points",
+                "description": "Number of price history data points (daily, hourly for the most recent month)."
+            },
+            "firstSaleDate": {
+                "title": "First sale",
+                "description": "Date of the first recorded sale."
+            },
+            "lastSaleDate": {
+                "title": "Last sale",
+                "description": "Time of the most recent data point."
+            },
+            "lastMedianPrice": {
+                "title": "Last median price",
+                "description": "Median sale price of the most recent data point."
+            },
+            "avgPrice24h": {
+                "title": "Avg price 24h",
+                "description": "Volume-weighted median price over the last 24 hours."
+            },
+            "volume24h": {
+                "title": "Sold 24h",
+                "description": "Units sold in the last 24 hours."
+            },
+            "avgPrice7d": {
+                "title": "Avg price 7d",
+                "description": "Volume-weighted median price over the last 7 days."
+            },
+            "volume7d": {
+                "title": "Sold 7d",
+                "description": "Units sold in the last 7 days."
+            },
+            "avgPrice30d": {
+                "title": "Avg price 30d",
+                "description": "Volume-weighted median price over the last 30 days."
+            },
+            "volume30d": {
+                "title": "Sold 30d",
+                "description": "Units sold in the last 30 days."
+            },
+            "avgPrice90d": {
+                "title": "Avg price 90d",
+                "description": "Volume-weighted median price over the last 90 days."
+            },
+            "volume90d": {
+                "title": "Sold 90d",
+                "description": "Units sold in the last 90 days."
+            },
+            "avgPrice365d": {
+                "title": "Avg price 1y",
+                "description": "Volume-weighted median price over the last 365 days."
+            },
+            "volume365d": {
+                "title": "Sold 1y",
+                "description": "Units sold in the last 365 days."
+            },
+            "change7dVs30dPct": {
+                "title": "7d vs 30d %",
+                "description": "How the 7-day average compares to the 30-day average, in percent."
+            },
+            "allTimeHigh": {
+                "title": "All-time high",
+                "description": "Highest median price ever recorded."
+            },
+            "allTimeHighDate": {
+                "title": "All-time high date",
+                "description": "When the all-time high was recorded."
+            },
+            "allTimeLow": {
+                "title": "All-time low",
+                "description": "Lowest median price ever recorded."
+            },
+            "allTimeLowDate": {
+                "title": "All-time low date",
+                "description": "When the all-time low was recorded."
+            },
+            "totalVolume": {
+                "title": "Total sold",
+                "description": "Units sold across the whole history."
+            },
+            "historyCurrency": {
+                "title": "History currency",
+                "description": "ITEM_OVERVIEW rows: currency of the price-history statistics."
+            },
+            "prices": {
+                "title": "Price history",
+                "description": "PRICE_HISTORY rows: [{time, unixTime, medianPrice, volume}], oldest first."
+            },
+            "time": {
+                "title": "Time",
+                "description": "PRICE_POINT rows: UTC time of the data point."
+            },
+            "unixTime": {
+                "title": "Unix time",
+                "description": "PRICE_POINT rows: Unix timestamp of the data point."
+            },
+            "medianPrice": {
+                "title": "Median price",
+                "description": "PRICE_POINT rows: median sale price in that period."
+            },
+            "volume": {
+                "title": "Units sold",
+                "description": "PRICE_POINT rows: units sold in that period."
+            },
+            "listingid": {
+                "title": "Listing id",
+                "description": "LISTING rows: Steam listing id."
+            },
+            "listingRank": {
+                "title": "Rank",
+                "description": "LISTING rows: position in the chosen sort order."
+            },
+            "price": {
+                "title": "Price",
+                "description": "LISTING rows: what a buyer pays (seller amount + fees), decimal."
+            },
+            "sellerReceives": {
+                "title": "Seller receives",
+                "description": "LISTING rows: price minus fees."
+            },
+            "fee": {
+                "title": "Fee",
+                "description": "LISTING rows: Steam + publisher fee."
+            },
+            "assetId": {
+                "title": "Asset id",
+                "description": "LISTING rows: id of the item in the seller's inventory."
+            },
+            "floatValue": {
+                "title": "Float",
+                "description": "LISTING rows: wear rating, 0 (best) to 1."
+            },
+            "paintSeed": {
+                "title": "Pattern seed",
+                "description": "LISTING rows: pattern template (0-1000), drives fade %, blue gem etc."
+            },
+            "nameTag": {
+                "title": "Name tag",
+                "description": "LISTING rows: custom name, if any."
+            },
+            "stickers": {
+                "title": "Stickers",
+                "description": "LISTING rows: applied stickers [{name, classid, wear}]."
+            },
+            "charms": {
+                "title": "Charms",
+                "description": "LISTING rows: attached charms."
+            },
+            "inspectImages": {
+                "title": "Inspect images",
+                "description": "LISTING rows: rendered screenshots of this exact copy."
+            },
+            "soldAt": {
+                "title": "Sold at",
+                "description": "SALE rows: UTC time of the sale."
+            },
+            "soldPrice": {
+                "title": "Sold price",
+                "description": "SALE rows: sale price, decimal, in the proxy country's currency."
+            },
+            "soldPriceText": {
+                "title": "Sold price (text)",
+                "description": "SALE rows: Steam's formatted sale price."
+            },
+            "listingId": {
+                "title": "Listing id",
+                "description": "SALE rows: id of the listing that sold."
+            },
+            "tagsByCategory": {
+                "title": "Tags",
+                "description": "ITEM_OVERVIEW rows: {category: tag}, e.g. Rarity, Exterior, Collection."
+            },
+            "descriptionText": {
+                "title": "Description",
+                "description": "ITEM_OVERVIEW rows: the item's description text."
+            }
+        }
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across every record type.",
+            "transformation": {
+                "fields": [
+                    "recordType",
+                    "marketHashName",
+                    "currency",
+                    "minSellPrice",
+                    "sellListings",
+                    "highestBuyOrder",
+                    "lowestSellOrder",
+                    "spreadPct",
+                    "avgPrice7d",
+                    "volume7d",
+                    "allTimeHigh",
+                    "price",
+                    "floatValue",
+                    "paintSeed",
+                    "medianPrice",
+                    "volume",
+                    "time",
+                    "soldAt",
+                    "soldPrice",
+                    "marketUrl",
+                    "_error",
+                    "_errorDetail"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        },
+        "search": {
+            "title": "Search results",
+            "description": "ITEM rows from search mode.",
+            "transformation": {
+                "fields": [
+                    "recordType",
+                    "marketHashName",
+                    "type",
+                    "minSellPrice",
+                    "currency",
+                    "sellListings",
+                    "minSellFee",
+                    "commodity",
+                    "bucketGroupName",
+                    "iconUrl",
+                    "marketUrl",
+                    "_input",
+                    "_scrapedAt"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        },
+        "itemOverview": {
+            "title": "Item overview",
+            "description": "ITEM_OVERVIEW rows: spread, averages, volume and extremes per item.",
+            "transformation": {
+                "fields": [
+                    "recordType",
+                    "marketHashName",
+                    "type",
+                    "currency",
+                    "highestBuyOrder",
+                    "lowestSellOrder",
+                    "spread",
+                    "spreadPct",
+                    "buyOrderQuantity",
+                    "sellOrderQuantity",
+                    "avgPrice24h",
+                    "volume24h",
+                    "avgPrice7d",
+                    "volume7d",
+                    "avgPrice30d",
+                    "volume30d",
+                    "change7dVs30dPct",
+                    "allTimeHigh",
+                    "allTimeHighDate",
+                    "allTimeLow",
+                    "allTimeLowDate",
+                    "firstSaleDate",
+                    "marketUrl",
+                    "_input",
+                    "_scrapedAt"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        },
+        "priceHistory": {
+            "title": "Price history",
+            "description": "PRICE_POINT rows (perPoint output) and PRICE_HISTORY summary rows.",
+            "transformation": {
+                "fields": [
+                    "recordType",
+                    "marketHashName",
+                    "time",
+                    "medianPrice",
+                    "volume",
+                    "currency",
+                    "historyPoints",
+                    "lastMedianPrice",
+                    "avgPrice30d",
+                    "volume30d",
+                    "marketUrl",
+                    "_input",
+                    "_scrapedAt"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        },
+        "orderBook": {
+            "title": "Order books",
+            "description": "ORDER_BOOK rows: best bid/ask, depth and price levels.",
+            "transformation": {
+                "fields": [
+                    "recordType",
+                    "marketHashName",
+                    "currency",
+                    "highestBuyOrder",
+                    "lowestSellOrder",
+                    "spread",
+                    "spreadPct",
+                    "buyOrderQuantity",
+                    "sellOrderQuantity",
+                    "buyPriceLevels",
+                    "sellPriceLevels",
+                    "buyOrders",
+                    "sellOrders",
+                    "marketUrl",
+                    "_input",
+                    "_scrapedAt"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        },
+        "listings": {
+            "title": "Listings",
+            "description": "LISTING rows: individual items for sale with float, pattern seed and stickers.",
+            "transformation": {
+                "fields": [
+                    "recordType",
+                    "marketHashName",
+                    "listingRank",
+                    "price",
+                    "sellerReceives",
+                    "fee",
+                    "currency",
+                    "floatValue",
+                    "paintSeed",
+                    "nameTag",
+                    "stickers",
+                    "charms",
+                    "listingid",
+                    "inspectImages",
+                    "marketUrl",
+                    "_input",
+                    "_scrapedAt"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        },
+        "recentSales": {
+            "title": "Recent sales",
+            "description": "SALE rows from the live sales feed.",
+            "transformation": {
+                "fields": [
+                    "recordType",
+                    "appName",
+                    "marketHashName",
+                    "type",
+                    "soldAt",
+                    "soldPrice",
+                    "soldPriceText",
+                    "listingId",
+                    "marketUrl",
+                    "_input",
+                    "_scrapedAt"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        },
+        "errors": {
+            "title": "Errors",
+            "description": "ERROR rows: inputs that could not be served, with the reason.",
+            "transformation": {
+                "fields": [
+                    "recordType",
+                    "_input",
+                    "_error",
+                    "_errorDetail",
+                    "_scrapedAt"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

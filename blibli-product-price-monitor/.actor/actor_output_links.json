@@ -1,0 +1,12 @@
+{
+    "actorOutputSchemaVersion": 1,
+    "title": "Hasil Blibli Product & Price Monitor",
+    "properties": {
+        "results": {
+            "type": "string",
+            "title": "Dataset hasil",
+            "template": "{{links.apiDefaultDatasetUrl}}/items",
+            "description": "Semua baris produk — harga, diskon, rating, ulasan, dan status stok — dari run ini."
+        }
+    }
+}

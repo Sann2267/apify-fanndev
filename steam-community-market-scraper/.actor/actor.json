@@ -1,0 +1,23 @@
+{
+    "actorSpecification": 1,
+    "name": "steam-community-market-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Steam Community Market Scraper - Prices, History & Order Books",
+    "description": "Track the Steam Community Market economy for CS2, Dota 2, TF2, Rust and any Steam game: full price history back as far as 2014, live buy/sell order books, individual listings with float and pattern seed, catalogue search and a live feed of completed sales. No login needed.",
+    "categories": [
+        "ECOMMERCE",
+        "DEVELOPER_TOOLS"
+    ],
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json",
+    "defaultRunOptions": {
+        "build": "latest",
+        "memoryMbytes": 512,
+        "timeoutSecs": 3600
+    }
+}

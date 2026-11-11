@@ -1,0 +1,158 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Facebook ads benchmark record",
+        "description": "Dataset envelope (_input / _source / _scrapedAt / recordType) on top of benchmark rows. One OVERVIEW row per niche, many BENCHMARK rows per niche (one per ranked entry), COMPARISON rows when more than one niche was run, optional AD_SAMPLE rows, one RUN_SUMMARY, and ERROR rows when a search fails. Facebook changes its payload without notice, so unlisted fields pass through rather than failing the run.",
+        "additionalProperties": true,
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The niche this record belongs to."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source",
+                "description": "Always ad-library-benchmark."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "title": "Computed at",
+                "description": "UTC ISO 8601 timestamp when this record was emitted."
+            },
+            "recordType": {
+                "type": "string",
+                "title": "Record type",
+                "description": "BENCHMARK, COMPARISON, AD_SAMPLE, RUN_SUMMARY or ERROR."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Failure rows only: fetch_failed or unexpected_error."
+            },
+            "niche": {
+                "title": "Niche",
+                "description": "The niche label this row was computed for. COMPARISON rows use ALL_NICHES."
+            },
+            "metric": {
+                "title": "Metric",
+                "description": "OVERVIEW, TOP_CTA, TOP_FORMAT, TOP_ADVERTISER, TOP_PLATFORM, TOP_HEADLINE, TOP_LANDING_DOMAIN, TOP_WORD, TOP_PHRASE_2, TOP_PHRASE_3, LONGEVITY_BY_CTA, LONGEVITY_BY_FORMAT, LONGEVITY_BY_COPY_LENGTH, or COMPARE_*."
+            },
+            "rank": {
+                "title": "Rank",
+                "description": "Position within this metric's ranking, 1 = most common (or longest-running, for LONGEVITY_* metrics)."
+            },
+            "value": {
+                "title": "Value",
+                "description": "The ranked thing itself: a CTA label, a format, an advertiser, a word or phrase, a domain, or a copy-length band."
+            },
+            "count": {
+                "title": "Ads",
+                "description": "How many ads in the sample carry this value. Words and phrases are counted once per ad, so a slogan repeated six times in one ad counts once."
+            },
+            "share": {
+                "title": "Share of sample (%)",
+                "description": "count as a percentage of sampleSize."
+            },
+            "sampleSize": {
+                "title": "Sample size",
+                "description": "How many ads this row was computed from. Always read a benchmark together with this number."
+            },
+            "medianRunningDays": {
+                "title": "Median days on air",
+                "description": "The midpoint of how long these ads have been running. This is the closest thing to a performance signal public data allows: advertisers keep paying for creatives that work."
+            },
+            "p90RunningDays": {
+                "title": "90th percentile days on air",
+                "description": "How long the most durable tenth of these ads have run."
+            },
+            "activeShare": {
+                "title": "Active share (%)",
+                "description": "OVERVIEW rows: percentage of the sample still running."
+            },
+            "videoShare": {
+                "title": "Video share (%)",
+                "description": "OVERVIEW rows: percentage of the sample carrying a video creative."
+            },
+            "distinctAdvertisers": {
+                "title": "Advertisers",
+                "description": "OVERVIEW rows: how many different pages are represented in the sample."
+            },
+            "adsPerAdvertiser": {
+                "title": "Ads per advertiser",
+                "description": "OVERVIEW rows: sample size divided by distinct advertisers. A high number means a few pages dominate the niche."
+            },
+            "medianCopyWords": {
+                "title": "Median copy length (words)",
+                "description": "OVERVIEW rows: the typical ad body length in this niche."
+            },
+            "sharePerNiche": {
+                "title": "Share per niche (%)",
+                "description": "COMPARISON rows: the same value's share within each niche, side by side."
+            }
+        }
+    },
+    "views": {
+        "overview": {
+            "title": "Niche overview",
+            "description": "One row per niche: sample size, how active it is, creative mix and copy length.",
+            "transformation": {
+                "fields": [
+                    "niche",
+                    "metric",
+                    "sampleSize",
+                    "activeShare",
+                    "videoShare",
+                    "distinctAdvertisers",
+                    "adsPerAdvertiser",
+                    "medianCopyWords",
+                    "medianRunningDays",
+                    "p90RunningDays",
+                    "recordType"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        },
+        "rankings": {
+            "title": "Rankings",
+            "description": "Every top-N ranking: CTAs, formats, advertisers, words, phrases, headlines and domains.",
+            "transformation": {
+                "fields": [
+                    "niche",
+                    "metric",
+                    "rank",
+                    "value",
+                    "count",
+                    "share",
+                    "sampleSize"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        },
+        "longevity": {
+            "title": "What survives longest",
+            "description": "Median days on air grouped by CTA, format and copy length.",
+            "transformation": {
+                "fields": [
+                    "niche",
+                    "metric",
+                    "rank",
+                    "value",
+                    "count",
+                    "medianRunningDays",
+                    "p90RunningDays",
+                    "sampleSize"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

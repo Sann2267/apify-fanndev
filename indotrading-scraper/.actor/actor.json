@@ -1,0 +1,24 @@
+{
+    "actorSpecification": 1,
+    "name": "indotrading-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Indotrading.com B2B Supplier & Product Scraper",
+    "description": "Scrape products, suppliers and contacts from Indotrading.com, Indonesia's largest B2B marketplace. Seven modes: category listings, product search, product detail, supplier profiles, supplier directories, company search and the full category tree. Optional supplier WhatsApp number. No login needed.",
+    "categories": [
+        "ECOMMERCE",
+        "BUSINESS",
+        "LEAD_GENERATION"
+    ],
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json",
+    "defaultRunOptions": {
+        "build": "latest",
+        "memoryMbytes": 512,
+        "timeoutSecs": 3600
+    }
+}

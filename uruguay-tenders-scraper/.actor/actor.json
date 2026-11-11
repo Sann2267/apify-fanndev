@@ -1,0 +1,14 @@
+{
+    "actorSpecification": 1,
+    "name": "uruguay-tenders-scraper",
+    "version": "0.1",
+    "buildTag": "latest",
+    "title": "Uruguay Government Tenders Scraper (ARCE OCDS)",
+    "description": "Scrapes Uruguay's official ARCE public OCDS tender feed (comprasestatales.gub.uy) -- browse the latest or a given month's tender/award activity, and fetch full merged detail for any specific purchase. No account or login needed.",
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

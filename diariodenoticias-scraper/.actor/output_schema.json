@@ -1,0 +1,151 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Article / latest-headline record",
+        "description": "Raw-passthrough dataset envelope. Every record carries _input/_source/_scrapedAt (and _error/_errorDetail on failures). Article-mode records (S1-jsonld, from the NewsArticle ld+json block) carry headline/articleBody-style fields plus a derived _paywalled flag; latest-mode records (S2-rss, dn.pt's /stories.rss feed) carry title/link-style fields and also include a near-full articleBody pulled from the feed's content:encoded.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The exact input value (URL, or 'latest') that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which extraction strategy emitted this record (e.g. S1-jsonld, S2-rss)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed extractions -- the error kind (e.g. not_found, http_500, blocked_or_transient)."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "_paywalled": {
+                "title": "Paywalled",
+                "description": "Article-mode only. True if dn.pt flagged this article as premium/subscription content (isAccessibleForFree:false and/or a .paywall hasPart marker in ld+json). This is a SOFT paywall -- articleBody is the full text either way; this flag just tells you the story is normally metered for real site visitors."
+            },
+            "headline": {
+                "title": "Headline",
+                "description": "Article headline, from the NewsArticle ld+json node."
+            },
+            "alternativeHeadline": {
+                "title": "Alternative headline",
+                "description": "Secondary/alternate headline field from ld+json -- usually empty on dn.pt."
+            },
+            "description": {
+                "title": "Description",
+                "description": "Short article summary/dek, from the NewsArticle ld+json node."
+            },
+            "articleBody": {
+                "title": "Article body",
+                "description": "Full article text. Article mode: from the NewsArticle ld+json node (untruncated even on premium/paywalled stories). Latest mode: reconstructed plain text from the RSS item's content:encoded HTML."
+            },
+            "author": {
+                "title": "Author",
+                "description": "Article mode: array of ld+json Person objects (name/givenName/url/image) -- dn.pt always emits this as an array even for a single byline. Latest mode: plain author name string from the RSS item's atom:author."
+            },
+            "keywords": {
+                "title": "Keywords",
+                "description": "Comma-separated keyword string from ld+json (article mode) or the RSS item's media:keywords (latest mode) -- not an array."
+            },
+            "articleSection": {
+                "title": "Section",
+                "description": "Section name from ld+json, e.g. \"Sociedade\", \"Cultura\", \"Opiniao DN\" (article mode only)."
+            },
+            "datePublished": {
+                "title": "Date published",
+                "description": "ISO 8601 publish date from ld+json (article mode only)."
+            },
+            "dateModified": {
+                "title": "Date modified",
+                "description": "ISO 8601 last-modified date from ld+json (article mode only)."
+            },
+            "dateCreated": {
+                "title": "Date created",
+                "description": "ISO 8601 creation date from ld+json (article mode only)."
+            },
+            "inLanguage": {
+                "title": "Language",
+                "description": "ISO language code from ld+json, e.g. \"pt\" (article mode only)."
+            },
+            "thumbnailUrl": {
+                "title": "Thumbnail URL",
+                "description": "Lead thumbnail image URL from ld+json (article mode only)."
+            },
+            "image": {
+                "title": "Image",
+                "description": "Array of ld+json ImageObject entries (dn.pt serves 3 crop variants: 16:9, 4:3, 1:1), passed through as-is (article mode only)."
+            },
+            "publisher": {
+                "title": "Publisher",
+                "description": "ld+json NewsMediaOrganization publisher object (name/url/logo/sameAs socials), passed through as-is (article mode only)."
+            },
+            "mainEntityOfPage": {
+                "title": "Main entity of page",
+                "description": "ld+json mainEntityOfPage WebPage reference (article mode only)."
+            },
+            "title": {
+                "title": "Title",
+                "description": "Headline text of a latest-mode RSS item."
+            },
+            "link": {
+                "title": "Link",
+                "description": "Article URL from the RSS item (latest mode only)."
+            },
+            "guid": {
+                "title": "GUID",
+                "description": "dn.pt's internal story UUID from the RSS item's guid element (latest mode only)."
+            },
+            "pubDate": {
+                "title": "Publication date",
+                "description": "RFC 822 publish timestamp from the RSS item's pubDate (latest mode only)."
+            },
+            "categories": {
+                "title": "Categories",
+                "description": "Array of RSS <category> tag values, e.g. [\"Opiniao DN\", \"colunistas\"] (latest mode only)."
+            },
+            "section": {
+                "title": "Section (URL path)",
+                "description": "URL path segment right after dn.pt/ (e.g. sociedade, cultura, opiniao-dn) derived from the RSS item's link -- latest mode only, since the feed carries no explicit section field."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across both article and latest-headline records.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "_source",
+                    "_scrapedAt",
+                    "headline",
+                    "title",
+                    "link",
+                    "datePublished",
+                    "pubDate",
+                    "articleSection",
+                    "section",
+                    "_paywalled",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

@@ -1,0 +1,10 @@
+apify>=4.0.0,<5.0.0
+curl_cffi>=0.15.0
+
+# Defensive pin, per this project's build-incident rules. This actor never
+# imports `crawlee.fingerprint_suite` itself, but `apify` pulls in
+# `crawlee`, whose fingerprint adapter imports browserforge -- and
+# browserforge 1.2.4 broke that shim
+# (`module 'browserforge.download' has no attribute 'DATA_FILES'`),
+# taking down a build in this portfolio. 1.2.3 is what was tested here.
+browserforge==1.2.3

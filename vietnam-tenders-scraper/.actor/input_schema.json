@@ -1,0 +1,93 @@
+{
+    "title": "Vietnam Government Tenders Scraper (VNEPS)",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "mode": {
+            "title": "Mode",
+            "type": "string",
+            "editor": "select",
+            "description": "\"List\" searches VNEPS's public procurement-plan / tender-notice / award-result feed. \"Detail\" fetches full award/contract detail for one or more specific contractor-selection-result records by their inputResultId.",
+            "enum": ["list", "detail"],
+            "enumTitles": ["List (search/browse records)", "Detail (fetch award result by inputResultId)"],
+            "default": "list",
+            "prefill": "list"
+        },
+        "keyword": {
+            "title": "Keyword (mode=list only)",
+            "type": "string",
+            "editor": "textfield",
+            "description": "Free-text search across the tender/notice number and bid name fields. Leave blank to browse everything (newest first).",
+            "prefill": ""
+        },
+        "dateFrom": {
+            "title": "Publish date from (mode=list only)",
+            "type": "string",
+            "editor": "textfield",
+            "description": "Only return records published on/after this local Vietnam-time timestamp (e.g. 2026-08-20T00:00:00, no timezone suffix -- matches VNEPS's own format). Leave blank together with 'Publish date to' to get the newest records with no date filter.",
+            "prefill": ""
+        },
+        "dateTo": {
+            "title": "Publish date to (mode=list only)",
+            "type": "string",
+            "editor": "textfield",
+            "description": "Only return records published on/before this local Vietnam-time timestamp. Leave blank for no upper bound.",
+            "prefill": ""
+        },
+        "recordType": {
+            "title": "Record type (mode=list only)",
+            "type": "string",
+            "editor": "select",
+            "description": "Restrict results to one record type, or leave as 'All' to get procurement plans, tender notices, award results, and signed contracts blended together (VNEPS's own default search behavior).",
+            "enum": ["all", "es-plan-project-p", "es-notify-contractor", "es-ct-contract"],
+            "enumTitles": ["All types", "Procurement plans only", "Tender notices & award results only", "Signed contracts only"],
+            "default": "all",
+            "prefill": "all"
+        },
+        "maxResults": {
+            "title": "Max results (mode=list only)",
+            "type": "integer",
+            "description": "Caps how many records this run returns. VNEPS's search index only exposes the first 10,000 hits of any given filtered query (a fixed Elasticsearch window) -- narrow the date range to look further back than that.",
+            "default": 50,
+            "minimum": 1,
+            "maximum": 10000,
+            "prefill": 50
+        },
+        "inputResultId": {
+            "title": "Input result ID (mode=detail only)",
+            "type": "string",
+            "editor": "textfield",
+            "description": "A single VNEPS contractor-selection-result id to fetch full award detail for. Find one from a 'list' mode record's 'inputResultId' field (only present on records that reached the award stage).",
+            "prefill": ""
+        },
+        "inputResultIds": {
+            "title": "Input result IDs (mode=detail only)",
+            "type": "array",
+            "editor": "stringList",
+            "description": "Multiple contractor-selection-result ids to fetch full award detail for in one run."
+        },
+        "maxConcurrency": {
+            "title": "Max concurrent workers (mode=detail only)",
+            "type": "integer",
+            "description": "How many detail lookups to run in parallel.",
+            "default": 3,
+            "minimum": 1,
+            "maximum": 5,
+            "prefill": 3
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "editor": "proxy",
+            "description": "Apify Proxy configuration.",
+            "default": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            },
+            "prefill": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            }
+        }
+    }
+}

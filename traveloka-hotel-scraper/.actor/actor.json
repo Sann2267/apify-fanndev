@@ -1,0 +1,18 @@
+{
+    "actorSpecification": 1,
+    "name": "traveloka-hotel-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Traveloka Hotel & Accommodation Scraper",
+    "description": "Scrape Traveloka hotels, villas and apartments: profile, coordinates, star rating, facilities, room inventory and a full month of nightly rates per property, with an automatic weekday-versus-weekend price comparison. HTTP-only, no browser.",
+    "categories": [
+        "TRAVEL",
+        "ECOMMERCE"
+    ],
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

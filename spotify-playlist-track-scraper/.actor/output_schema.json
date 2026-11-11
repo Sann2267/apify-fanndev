@@ -1,0 +1,268 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Spotify playlist track record",
+        "description": "Dataset envelope (_input / _source / _scrapedAt / recordType) on top of Spotify's own playlist and track data. One TRACK row per song, one PLAYLIST row per playlist, ERROR rows on failure. Spotify adds and removes fields without notice, so unlisted fields pass through rather than failing the run.",
+        "additionalProperties": true,
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The URL or id that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "pathfinder-fetchPlaylist, pathfinder-getTrack, or none on failure rows."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was emitted."
+            },
+            "recordType": {
+                "type": "string",
+                "title": "Record type",
+                "description": "TRACK, PLAYLIST or ERROR."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Failure rows only: unparsable_input, not_found, unsupported_entity or fetch_failed."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic accompanying _error."
+            },
+            "position": {
+                "title": "Position",
+                "description": "1-based position of the track within its playlist."
+            },
+            "trackName": {
+                "title": "Track name",
+                "description": "Song title exactly as Spotify shows it, version suffixes included."
+            },
+            "artistName": {
+                "title": "Main artist",
+                "description": "First credited artist."
+            },
+            "artistNames": {
+                "title": "All artists",
+                "description": "Every credited artist, in Spotify's own order."
+            },
+            "artists": {
+                "title": "Artist references",
+                "description": "Each credited artist as name, id, URI and open.spotify.com URL."
+            },
+            "albumName": {
+                "title": "Album",
+                "description": "Album or single this recording belongs to."
+            },
+            "albumUrl": {
+                "title": "Album URL",
+                "description": "open.spotify.com link to the album."
+            },
+            "releaseDate": {
+                "title": "Release date",
+                "description": "Album release date, ISO 8601. Precision can be year-only for older catalogue."
+            },
+            "durationMs": {
+                "title": "Duration (ms)",
+                "description": "Track length in milliseconds."
+            },
+            "duration": {
+                "title": "Duration",
+                "description": "Track length as m:ss, or h:mm:ss when it runs past an hour."
+            },
+            "playcount": {
+                "title": "Play count",
+                "description": "Spotify's lifetime stream count for this recording. Has no equivalent in Spotify's official API, which only publishes a relative popularity score."
+            },
+            "popularity": {
+                "title": "Popularity (0-100)",
+                "description": "Spotify's relative popularity score. Present only when ISRC enrichment ran."
+            },
+            "isrc": {
+                "title": "ISRC",
+                "description": "International Standard Recording Code. Present only when ISRC enrichment ran."
+            },
+            "isrcLookup": {
+                "title": "ISRC lookup outcome",
+                "description": "How the ISRC was obtained: exact (same recording id), title-artist (same title and artist, possibly a different release), disabled, not-attempted, no-match, no-title, search-failed or skipped-quota."
+            },
+            "previewUrl": {
+                "title": "Audio preview",
+                "description": "30-second MP3 preview URL, when Spotify publishes one for this market."
+            },
+            "explicit": {
+                "title": "Explicit",
+                "description": "True when Spotify labels the recording explicit."
+            },
+            "discNumber": {
+                "title": "Disc number",
+                "description": "Disc the track sits on within its album."
+            },
+            "trackNumber": {
+                "title": "Track number",
+                "description": "Position of the track within its album."
+            },
+            "playable": {
+                "title": "Playable",
+                "description": "Whether Spotify reports the recording as playable in the requested market."
+            },
+            "trackId": {
+                "title": "Track id",
+                "description": "Spotify track id."
+            },
+            "trackUri": {
+                "title": "Track URI",
+                "description": "spotify:track: URI, the form Spotify's own tools accept."
+            },
+            "trackUrl": {
+                "title": "Track URL",
+                "description": "open.spotify.com link to the track."
+            },
+            "coverArt": {
+                "title": "Cover art",
+                "description": "Largest album cover image Spotify offers."
+            },
+            "addedAt": {
+                "title": "Added to playlist",
+                "description": "Date the track was added to the playlist."
+            },
+            "label": {
+                "title": "Record label",
+                "description": "Phonographic copyright line, which names the label. Individually requested tracks only."
+            },
+            "copyright": {
+                "title": "Copyright lines",
+                "description": "Full composition and recording copyright notices. Individually requested tracks only."
+            },
+            "playlistName": {
+                "title": "Playlist name",
+                "description": "Name of the playlist this track came from."
+            },
+            "playlistId": {
+                "title": "Playlist id",
+                "description": "Spotify playlist id."
+            },
+            "playlistUrl": {
+                "title": "Playlist URL",
+                "description": "open.spotify.com link to the playlist."
+            },
+            "description": {
+                "title": "Playlist description",
+                "description": "PLAYLIST rows: the curator's description, HTML stripped."
+            },
+            "followers": {
+                "title": "Playlist followers",
+                "description": "PLAYLIST rows: how many accounts follow the playlist."
+            },
+            "trackCount": {
+                "title": "Playlist size",
+                "description": "PLAYLIST rows: total tracks in the playlist, which can exceed the number scraped."
+            },
+            "ownerName": {
+                "title": "Owner",
+                "description": "Display name of the account that owns the playlist."
+            },
+            "ownerId": {
+                "title": "Owner id",
+                "description": "Spotify user id of the owner."
+            },
+            "ownerUrl": {
+                "title": "Owner URL",
+                "description": "open.spotify.com profile link for the owner."
+            },
+            "isEditorialChart": {
+                "title": "Editorial chart",
+                "description": "PLAYLIST rows: true for Spotify's own ranked playlists, which carry the extra chart fields below."
+            },
+            "lastUpdated": {
+                "title": "Chart last updated",
+                "description": "Editorial charts only: when Spotify last recalculated the ranking."
+            },
+            "rankType": {
+                "title": "Ranking basis",
+                "description": "Editorial charts only: what the ranking counts, for example plays."
+            },
+            "newEntriesCount": {
+                "title": "New entries",
+                "description": "Editorial charts only: how many tracks are new since the previous edition."
+            },
+            "shareUrl": {
+                "title": "Share URL",
+                "description": "Spotify's own share link, including its si tracking parameter."
+            }
+        }
+    },
+    "views": {
+        "overview": {
+            "title": "Tracks",
+            "transformation": {
+                "fields": [
+                    "position",
+                    "trackName",
+                    "artistName",
+                    "albumName",
+                    "releaseDate",
+                    "duration",
+                    "playcount",
+                    "popularity",
+                    "isrc",
+                    "explicit",
+                    "trackUrl",
+                    "playlistName"
+                ]
+            },
+            "display": {
+                "component": "table",
+                "properties": {
+                    "position": { "label": "#" },
+                    "trackName": { "label": "Track" },
+                    "artistName": { "label": "Artist" },
+                    "albumName": { "label": "Album" },
+                    "releaseDate": { "label": "Released" },
+                    "duration": { "label": "Length" },
+                    "playcount": { "label": "Plays" },
+                    "popularity": { "label": "Pop." },
+                    "isrc": { "label": "ISRC" },
+                    "explicit": { "label": "Explicit" },
+                    "trackUrl": { "label": "Link" },
+                    "playlistName": { "label": "Playlist" }
+                }
+            }
+        },
+        "playlists": {
+            "title": "Playlists",
+            "transformation": {
+                "fields": [
+                    "playlistName",
+                    "ownerName",
+                    "followers",
+                    "trackCount",
+                    "description",
+                    "isEditorialChart",
+                    "lastUpdated",
+                    "playlistUrl"
+                ]
+            },
+            "display": {
+                "component": "table",
+                "properties": {
+                    "playlistName": { "label": "Playlist" },
+                    "ownerName": { "label": "Owner" },
+                    "followers": { "label": "Followers" },
+                    "trackCount": { "label": "Tracks" },
+                    "description": { "label": "Description" },
+                    "isEditorialChart": { "label": "Editorial" },
+                    "lastUpdated": { "label": "Updated" },
+                    "playlistUrl": { "label": "Link" }
+                }
+            }
+        }
+    }
+}

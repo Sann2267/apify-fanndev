@@ -1,0 +1,65 @@
+{
+    "title": "Guyana Government Tenders Scraper (NPTAB eProcure)",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "mode": {
+            "title": "Mode",
+            "type": "string",
+            "editor": "select",
+            "description": "'list' fetches every currently advertised bid opportunity (the complete public board -- there is no historical archive on this platform). 'detail' fetches one project's full-text advertisement by its project ID.",
+            "enum": ["list", "detail"],
+            "enumTitles": [
+                "List all currently advertised bid opportunities",
+                "Fetch one project's full advertisement by ID"
+            ],
+            "default": "list",
+            "prefill": "list"
+        },
+        "projectId": {
+            "title": "Project ID",
+            "type": "string",
+            "description": "Required when mode='detail'. NPTAB's own project id, e.g. 'PROC-2026-00425' (visible in list-mode output as 'project_id').",
+            "editor": "textfield",
+            "prefill": "PROC-2026-00425"
+        },
+        "fetchDetail": {
+            "title": "Fetch detail for each list row",
+            "type": "boolean",
+            "description": "In 'list' mode, additionally fetch each project's full-text advertisement (scope, instructions, contact addresses, complete document list) -- one extra request per record. Ignored in 'detail' mode.",
+            "default": false
+        },
+        "maxItems": {
+            "title": "Max items",
+            "type": "integer",
+            "description": "Safety cap on how many currently advertised opportunities to return in 'list' mode. The upstream board is small and unpaginated (a handful of records at any given time, reflecting only what's currently open) -- this is a cap, not a pagination control.",
+            "default": 100,
+            "minimum": 1,
+            "maximum": 5000,
+            "prefill": 100
+        },
+        "maxConcurrency": {
+            "title": "Max concurrent requests",
+            "type": "integer",
+            "description": "How many detail-page lookups to fetch in parallel when 'Fetch detail for each list row' is on.",
+            "default": 3,
+            "minimum": 1,
+            "maximum": 10,
+            "prefill": 3
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "editor": "proxy",
+            "description": "Apify Proxy configuration. Residential is on by default (not required by this target -- no WAF was found -- but kept as the portfolio default).",
+            "default": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            },
+            "prefill": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            }
+        }
+    }
+}

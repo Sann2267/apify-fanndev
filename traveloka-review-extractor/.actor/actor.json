@@ -1,0 +1,18 @@
+{
+    "actorSpecification": 1,
+    "name": "traveloka-review-extractor",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Traveloka Review & Sentiment Extractor",
+    "description": "Download Traveloka reviews in bulk from a hotel or Xperience URL: review text (original and translated), score, date, reviewer, photos, and aspect sentiment tags with counts. Ready for NLP. HTTP-only, no browser.",
+    "categories": [
+        "TRAVEL",
+        "SOCIAL_MEDIA"
+    ],
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

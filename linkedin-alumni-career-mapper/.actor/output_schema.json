@@ -1,0 +1,58 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "LinkedIn alumni record",
+        "description": "Dataset envelope (_input / _source / _scrapedAt / recordType) on top of LinkedIn school and alumni data. One ALUMNUS row per graduate, one SUMMARY row per school aggregating employers, locations and roles, NOTICE rows explaining any gap, and ERROR rows on failure. LinkedIn changes its private API without notice, so unlisted fields pass through rather than failing the run.",
+        "additionalProperties": true,
+        "properties": {
+            "_input": { "type": "string", "title": "Input", "description": "The school URL that produced this record." },
+            "_source": { "type": "string", "title": "Source surface", "description": "voyager-search-clusters, or none on NOTICE and ERROR rows." },
+            "_scrapedAt": { "type": "string", "title": "Scraped at", "description": "UTC ISO 8601 timestamp when this record was emitted." },
+            "recordType": { "type": "string", "title": "Record type", "description": "ALUMNUS, SUMMARY, NOTICE or ERROR." },
+            "_error": { "type": "string", "title": "Error", "description": "Failure rows only: auth_required, fetch_failed or alumni_search_failed." },
+            "_errorDetail": { "type": "string", "title": "Error detail", "description": "Free-form diagnostic accompanying _error." },
+            "_notice": { "type": "string", "title": "Notice", "description": "cookie_required, school_id_not_found or no_alumni_returned." },
+            "_noticeDetail": { "type": "string", "title": "Notice detail", "description": "What the notice means and what to change." },
+            "fullName": { "title": "Full name", "description": "The alumnus's display name." },
+            "firstName": { "title": "First name", "description": "Split from the display name with pronouns, emoji frames and credential suffixes removed." },
+            "lastName": { "title": "Last name", "description": "Last remaining name part after the same cleanup." },
+            "headline": { "title": "Headline", "description": "Their LinkedIn headline, as written." },
+            "currentTitle": { "title": "Current role", "description": "The role half of the headline, split on 'at' and its common localisations. Best-effort: headlines that are slogans rather than titles will not split cleanly, which is why the raw headline is kept alongside it." },
+            "currentCompany": { "title": "Current employer", "description": "The employer half of the headline. This is the field the destination mapping aggregates on." },
+            "location": { "title": "Location", "description": "Where LinkedIn places them - the basis of the geographic mobility picture." },
+            "graduationYear": { "title": "Graduation year", "description": "Earliest plausible year found in the text LinkedIn attached to the result. Best-effort and often null: LinkedIn does not return a structured graduation year in search results." },
+            "profileUrl": { "title": "Profile URL", "description": "Canonical profile link, tracking parameters stripped." },
+            "schoolName": { "title": "School", "description": "The university this row belongs to." },
+            "schoolUrl": { "title": "School URL", "description": "Canonical /school/ link." },
+            "schoolId": { "title": "School id", "description": "LinkedIn's internal numeric id - the key the alumni search facets on." },
+            "alumniAnalysed": { "title": "Alumni analysed", "description": "SUMMARY rows: how many graduates this summary is based on. Always read it as a sample: LinkedIn's people search stops serving results past roughly 1,000, and large universities have far more alumni than that." },
+            "topEmployers": { "title": "Top employers", "description": "SUMMARY rows: where these graduates work, ranked by headcount. The core tracer-study output." },
+            "topLocations": { "title": "Top locations", "description": "SUMMARY rows: where these graduates live, ranked - the talent-mobility picture." },
+            "topRoles": { "title": "Top roles", "description": "SUMMARY rows: the roles they hold, ranked." },
+            "distinctEmployers": { "title": "Distinct employers", "description": "SUMMARY rows: how many different organisations appear - a read on whether a school feeds a few big employers or scatters widely." },
+            "graduationYearRange": { "title": "Graduation year range", "description": "SUMMARY rows: earliest and latest graduation year detected in the sample." },
+            "withEmployerPct": { "title": "With employer %", "description": "SUMMARY rows: share of graduates whose headline yielded an employer. Low values mean the headlines were slogans rather than titles, and the employer ranking should be read with that in mind." }
+        }
+    },
+    "views": {
+        "alumni": {
+            "title": "Alumni",
+            "transformation": {
+                "fields": ["fullName", "headline", "currentTitle", "currentCompany", "location", "graduationYear", "profileUrl", "schoolName"]
+            },
+            "display": {
+                "component": "table",
+                "properties": {
+                    "fullName": { "label": "Name" },
+                    "currentTitle": { "label": "Role" },
+                    "currentCompany": { "label": "Employer" },
+                    "location": { "label": "Location" },
+                    "graduationYear": { "label": "Class of" },
+                    "profileUrl": { "label": "Profile" }
+                }
+            }
+        }
+    }
+}

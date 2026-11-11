@@ -1,0 +1,22 @@
+{
+    "actorSpecification": 1,
+    "name": "amazon-asin-buybox-monitor",
+    "version": "0.1",
+    "buildTag": "latest",
+    "title": "Amazon ASIN Lookup & Buy Box Monitor",
+    "description": "Look up Amazon products by ASIN: price, stock, condition, rating, Best Sellers rank, variation family, and the Buy Box seller with ships-from and return policy. Tracks price and Buy Box changes between runs. No login needed.",
+    "categories": ["ECOMMERCE", "BUSINESS"],
+    "minMemoryMbytes": 256,
+    "maxMemoryMbytes": 4096,
+    "defaultRunOptions": {
+        "build": "latest",
+        "memoryMbytes": 1024,
+        "timeoutSecs": 3600
+    },
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

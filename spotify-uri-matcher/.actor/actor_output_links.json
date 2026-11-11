@@ -1,0 +1,18 @@
+{
+    "actorOutputSchemaVersion": 1,
+    "title": "Spotify URI Matcher Results",
+    "properties": {
+        "results": {
+            "type": "string",
+            "title": "Dataset results",
+            "template": "{{links.apiDefaultDatasetUrl}}/items",
+            "description": "Every input line with its matched track, confidence score and any error records."
+        },
+        "uriList": {
+            "type": "string",
+            "title": "Matched URI list",
+            "template": "{{links.apiDefaultKeyValueStoreUrl}}/records/matched-uris.txt",
+            "description": "Plain text file of the matched spotify:track: URIs, one per line, ready to paste into a playlist importer."
+        }
+    }
+}

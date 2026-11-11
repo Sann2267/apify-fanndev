@@ -1,0 +1,82 @@
+{
+    "title": "Snapchat Scraper input",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "mode": {
+            "title": "Mode",
+            "type": "string",
+            "description": "profile = public profile with subscriber count, bio, link and related accounts. spotlight = each Spotlight video of an account with its view count. highlights = Stories/highlights with every snap media URL. lenses = AR lenses published by the account. related = walk Snapchat's own 'related accounts' graph out from your seeds. trending = the public Spotlight feed (no username needed). top-lenses = the Lens hub chart (no username needed). reference = probe which surfaces are live right now.",
+            "editor": "select",
+            "default": "profile",
+            "enum": ["profile", "spotlight", "highlights", "lenses", "related", "trending", "top-lenses", "reference"],
+            "enumTitles": [
+                "profile - public profile + related accounts",
+                "spotlight - Spotlight videos with view counts",
+                "highlights - Stories & highlights with snap media",
+                "lenses - AR lenses published by the account",
+                "related - discover accounts via Snapchat's graph",
+                "trending - public Spotlight feed (no username)",
+                "top-lenses - Lens hub chart (no username)",
+                "reference - which surfaces are live (probed live)"
+            ]
+        },
+        "username": {
+            "title": "Username",
+            "type": "string",
+            "description": "A single Snapchat username. '@nasa', 'nasa' and 'https://www.snapchat.com/add/nasa' are all accepted.",
+            "editor": "textfield",
+            "prefill": "nasa"
+        },
+        "usernames": {
+            "title": "Usernames",
+            "type": "array",
+            "description": "Multiple Snapchat usernames or profile URLs to process in one run. Used by the profile, spotlight, highlights, lenses and related modes.",
+            "editor": "stringList",
+            "prefill": ["nasa", "netflix"]
+        },
+        "relatedDepth": {
+            "title": "Related depth (related mode)",
+            "type": "integer",
+            "description": "How many levels to expand out from each seed. 0 = seeds only, 1 = seeds plus the accounts Snapchat lists as related, 2 = their related accounts too. Capped at 3 because each level multiplies the number of requests.",
+            "editor": "number",
+            "default": 1,
+            "minimum": 0,
+            "maximum": 3
+        },
+        "locale": {
+            "title": "Locale",
+            "type": "string",
+            "description": "Language for the text Snapchat renders (bio and titles are user-generated and stay as written). Snapchat otherwise follows the exit IP, so 'en-US' keeps output stable no matter where the run executes.",
+            "editor": "textfield",
+            "default": "en-US"
+        },
+        "maxItems": {
+            "title": "Max items",
+            "type": "integer",
+            "description": "Maximum records for this run, across all usernames.",
+            "editor": "number",
+            "default": 200,
+            "minimum": 1
+        },
+        "maxConcurrency": {
+            "title": "Max concurrency",
+            "type": "integer",
+            "description": "How many usernames to fetch in parallel.",
+            "editor": "number",
+            "default": 4,
+            "minimum": 1,
+            "maximum": 10
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "description": "Optional. Snapchat served every recon request without a proxy and no anti-bot challenge was seen; use one only if your IP is rate-limited or you want a specific country's locale.",
+            "editor": "proxy",
+            "default": {
+                "useApifyProxy": false
+            }
+        }
+    },
+    "required": ["mode"]
+}

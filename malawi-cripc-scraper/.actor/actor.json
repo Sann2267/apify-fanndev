@@ -1,0 +1,14 @@
+{
+    "actorSpecification": 1,
+    "name": "malawi-cripc-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Malawi CRIPC Business Registry Scraper",
+    "description": "Search Malawi's official company and business register (CRIPC/MBRS) by company/business name or by individual owner name, and get back the public registry record: registration number, name, registration date, status, and (for individuals) every business they own. No account or API key needed.",
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

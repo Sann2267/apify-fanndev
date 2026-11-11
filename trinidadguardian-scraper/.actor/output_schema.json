@@ -1,0 +1,118 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Article / latest-headline record",
+        "description": "Raw-passthrough dataset envelope. Every record carries _input/_source/_scrapedAt (and _error/_errorDetail on failures). Article-mode records (S1-html, articleBody pulled from HTML div.ag-article-text since ld+json has no articleBody/author/datePublished) carry headline/articleBody-style fields; latest-mode records (S2-html-listing, homepage link scan since the site has no RSS feed or sitemap) carry title/link-style fields.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The exact input value (URL, or 'latest') that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which extraction strategy emitted this record (e.g. S1-html, S2-html-listing)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed extractions -- the error kind."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "headline": {
+                "title": "Headline",
+                "description": "Article headline, from the ld+json NewsArticle block."
+            },
+            "description": {
+                "title": "Description",
+                "description": "Short article description/teaser, from the ld+json NewsArticle block."
+            },
+            "articleBody": {
+                "title": "Article body",
+                "description": "Full article text, joined from <p class=\"bodytext\"> / <p class=\"byline\"> paragraphs inside div.ag-article-text (excludes p.Caption/p.Source image-caption paragraphs interleaved in the same container)."
+            },
+            "author": {
+                "title": "Author",
+                "description": "Byline name from the article header's div.author element. Absent (null) on unsigned wire-desk pieces and some opinion columns -- not present in ld+json at all."
+            },
+            "category": {
+                "title": "Category",
+                "description": "Section slug parsed from the article URL path (e.g. 'news', 'business', 'sports', 'opinion', 'article')."
+            },
+            "datePublished": {
+                "title": "Date published",
+                "description": "ISO 8601 publish timestamp derived from the HTML createdTimeRaw field, assuming Trinidad & Tobago's fixed UTC-4 offset (AST, no DST observed). Not present in ld+json at all -- synthesized field, see CRAWLING_METHOD.md."
+            },
+            "dateModified": {
+                "title": "Date modified",
+                "description": "Last-modified timestamp string exactly as emitted by ld+json (RFC-822-style, e.g. 'Tue, 25 Aug 2026 07:44:17 -0400') -- passed through as-is, not reformatted."
+            },
+            "createdTimeRaw": {
+                "title": "Created time (raw)",
+                "description": "Raw YYYYMMDDHHMMSS string from HTML span.textelement-createdtime -- the source value datePublished is derived from."
+            },
+            "publishDateRaw": {
+                "title": "Publish date (raw)",
+                "description": "Raw YYYYMMDD day-precision string from HTML span.textelement-publishing.date -- secondary/redundant to datePublished."
+            },
+            "image": {
+                "title": "Image",
+                "description": "Lead image object from ld+json (article mode, {url, width, height, caption}) or the thumbnail URL scraped from the homepage listing (latest mode)."
+            },
+            "isAccessibleForFree": {
+                "title": "Accessible for free",
+                "description": "Upstream paywall metering flag from ld+json. Emitted upstream as the string \"true\"/\"false\", not a boolean -- passed through as-is."
+            },
+            "title": {
+                "title": "Title",
+                "description": "Headline text of a latest-mode homepage listing item (longest anchor text found for the link)."
+            },
+            "link": {
+                "title": "Link",
+                "description": "Article URL, normalized to an absolute https:// URL."
+            },
+            "articleId": {
+                "title": "Article ID",
+                "description": "Numeric CMS content ID parsed out of the article URL (the '6.2.<id>.<hash>' path segment). Latest mode sorts by this descending as a best-effort recency proxy -- the site has no date in its URLs and no feed/sitemap to source a real timestamp from without visiting each article."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across both article and latest-headline records.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "_source",
+                    "_scrapedAt",
+                    "headline",
+                    "title",
+                    "link",
+                    "datePublished",
+                    "author",
+                    "category",
+                    "articleId",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

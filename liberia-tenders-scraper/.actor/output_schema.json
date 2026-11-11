@@ -1,0 +1,196 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Liberia e-GP tender record",
+        "description": "One record per row/tender. Shape depends on recordType: TENDER_CURRENT / TENDER_OPENED / TENDER_AWARDED (one per listing mode=list can produce) or TENDER_DETAIL (mode=detail, a raw dt/dd key-value passthrough of the tender's own detail page -- field set varies by procurement type, so extra fields beyond those listed below may appear). A single _error record is emitted instead of payload fields when a page/tender fails or is inaccessible.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "For list records: 'list:<listType>'. For detail records: the resourceId or URL that was requested."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which extraction strategy emitted this record (S1-current-listing, S1-opened-listing, S1-awarded-listing, S1-detail, or 'none' on error)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed records (blocked_or_transient, not_found_or_restricted)."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "recordType": {
+                "type": "string",
+                "title": "Record type",
+                "description": "TENDER_CURRENT, TENDER_OPENED, TENDER_AWARDED, or TENDER_DETAIL."
+            },
+            "_page": {
+                "title": "Page",
+                "description": "Which page of the listing (10 rows/page) this row came from. mode=list only."
+            },
+            "_totalAvailable": {
+                "title": "Total available",
+                "description": "Total rows the platform reports for this listing, before any maxResults truncation. mode=list only."
+            },
+            "resourceId": {
+                "title": "Resource ID",
+                "description": "The e-GP platform's internal numeric tender ID."
+            },
+            "tenderUrl": {
+                "title": "Tender URL",
+                "description": "Link to the tender's full detail page on the e-GP platform."
+            },
+            "title": {
+                "title": "Tender title",
+                "description": "The tender's title/name. On TENDER_CURRENT rows this comes from a column upstream mislabels 'Process No' -- it holds the title, not a reference number (verified against the raw HTML)."
+            },
+            "procuringEntity": {
+                "title": "Procuring entity",
+                "description": "The government body running this procurement."
+            },
+            "description": {
+                "title": "Description",
+                "description": "Short description (TENDER_CURRENT rows only, from the listing's info tooltip; TENDER_DETAIL rows have their own separate 'description' field from the detail page)."
+            },
+            "bidsSubmissionDeadline": {
+                "title": "Bids submission deadline",
+                "description": "TENDER_CURRENT / TENDER_OPENED only. Platform's own date format (dd/mm/yyyy HH:MM:SS)."
+            },
+            "procedure": {
+                "title": "Procedure",
+                "description": "TENDER_CURRENT only -- procurement procedure (e.g. National Open Competitive Bidding)."
+            },
+            "status": {
+                "title": "Status",
+                "description": "TENDER_CURRENT / TENDER_OPENED only -- e.g. Bid Submission, Evaluation."
+            },
+            "noticePdfUrl": {
+                "title": "Notice PDF URL",
+                "description": "TENDER_CURRENT / TENDER_AWARDED only -- link to the official notice PDF, when published."
+            },
+            "publicationDate": {
+                "title": "Publication date",
+                "description": "TENDER_CURRENT only."
+            },
+            "procurementMethod": {
+                "title": "Procurement method",
+                "description": "TENDER_OPENED only -- e.g. Restricted Bidding (RB), Request for Quotations (QT)."
+            },
+            "openedBidsUrl": {
+                "title": "Opened bids URL",
+                "description": "TENDER_OPENED only -- link to the opened-bids detail view."
+            },
+            "openedBidsLabel": {
+                "title": "Opened bids label",
+                "description": "TENDER_OPENED only -- link text, usually 'View Opened Bids'."
+            },
+            "awardDate": {
+                "title": "Award date",
+                "description": "TENDER_OPENED (often blank pre-award) / TENDER_AWARDED."
+            },
+            "supplierName": {
+                "title": "Supplier name",
+                "description": "TENDER_AWARDED only -- the winning bidder."
+            },
+            "awardAmount": {
+                "title": "Award amount",
+                "description": "TENDER_AWARDED only -- raw text as shown upstream, e.g. '4518.00 (USD)'."
+            },
+            "packageNumberCode": {
+                "title": "Package number code",
+                "description": "TENDER_AWARDED only -- the procuring entity's own tender/package reference number."
+            },
+            "grantOrLoanNumber": {
+                "title": "Grant or loan number",
+                "description": "TENDER_AWARDED only -- present when the contract was funded by a donor grant/loan."
+            },
+            "lotName": {
+                "title": "Lot name",
+                "description": "TENDER_AWARDED only -- raw text, 'N/A' when the contract wasn't split into lots, or a region/county list for multi-lot contracts."
+            },
+            "nameOfProcuringEntity": {
+                "title": "Name of procuring entity",
+                "description": "TENDER_DETAIL only."
+            },
+            "nameOfProcuringEntityUrl": {
+                "title": "Procuring entity URL",
+                "description": "TENDER_DETAIL only -- link to the procuring entity's organisation profile page."
+            },
+            "currentStatus": {
+                "title": "Current status",
+                "description": "TENDER_DETAIL only -- e.g. 'Process at bidding stage'."
+            },
+            "annualPlanReference": {
+                "title": "Annual plan reference",
+                "description": "TENDER_DETAIL only."
+            },
+            "resourceIdFromDetailPage": {
+                "title": "Resource ID (as shown on detail page)",
+                "description": "TENDER_DETAIL only -- the detail page's own 'Resource ID:' field (e.g. 'procurement-250740'), renamed from 'resourceId' to avoid colliding with this actor's own numeric resourceId field."
+            },
+            "procurementType": {
+                "title": "Procurement type",
+                "description": "TENDER_DETAIL only -- e.g. Goods, Works, Non Consultancy Services."
+            },
+            "bidSubmissionDeadlineDate": {
+                "title": "Bid submission deadline (detail)",
+                "description": "TENDER_DETAIL only."
+            },
+            "bidOpeningDate": {
+                "title": "Bid opening date",
+                "description": "TENDER_DETAIL only."
+            },
+            "dateOfPublicationInvitation": {
+                "title": "Date of publication/invitation",
+                "description": "TENDER_DETAIL only."
+            },
+            "procurementEstimateAmount": {
+                "title": "Procurement estimate amount",
+                "description": "TENDER_DETAIL only -- raw text, currency given separately."
+            },
+            "bidSecurityAmount": {
+                "title": "Bid security amount",
+                "description": "TENDER_DETAIL only -- present only when a bid security is required for this tender."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across all record types -- rows missing a given column render blank.",
+            "transformation": {
+                "fields": [
+                    "recordType",
+                    "resourceId",
+                    "title",
+                    "procuringEntity",
+                    "supplierName",
+                    "bidsSubmissionDeadline",
+                    "status",
+                    "awardDate",
+                    "awardAmount",
+                    "_totalAvailable",
+                    "_error",
+                    "_scrapedAt"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

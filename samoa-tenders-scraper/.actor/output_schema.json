@@ -1,0 +1,115 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "mof.gov.ws Samoa tender/award record",
+        "description": "One record per card. Shape depends on recordType: CURRENT_TENDER (listType=current, an open-tender card with title, closing date, agency, contact info, and document links) or TENDER_AWARD (listType=awards, a contract-award card with implementing agency, winning bidder(s)/amounts, and all competing bidders). A single _error record is emitted instead of payload fields when a request fails or is unreachable.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "Which list this record came from: 'list:current' or 'list:awards'."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which extraction strategy emitted this record, or 'none' on error."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on a failed run (blocked_or_transient)."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "recordType": {
+                "type": "string",
+                "title": "Record type",
+                "description": "CURRENT_TENDER or TENDER_AWARD."
+            },
+            "title": {
+                "type": ["string", "null"],
+                "title": "Title",
+                "description": "CURRENT_TENDER only -- what is being procured."
+            },
+            "closingDate": {
+                "type": ["string", "null"],
+                "title": "Closing date",
+                "description": "CURRENT_TENDER only -- upstream free-text bid submission deadline."
+            },
+            "agency": {
+                "type": ["string", "null"],
+                "title": "Agency",
+                "description": "CURRENT_TENDER only -- the procuring government agency."
+            },
+            "contactText": {
+                "type": ["string", "null"],
+                "title": "Contact info",
+                "description": "CURRENT_TENDER only -- contact name(s), email(s), phone, and portal link, combined as upstream published them."
+            },
+            "documents": {
+                "type": ["array", "null"],
+                "title": "Documents",
+                "description": "CURRENT_TENDER only -- direct links to the tender's PDF/DOCX/XLS documents (advertisement, bidding document, annexes -- labels vary per tender), each {label, url}."
+            },
+            "contract": {
+                "type": ["string", "null"],
+                "title": "Contract",
+                "description": "TENDER_AWARD only -- the awarded contract's name."
+            },
+            "approvalDate": {
+                "type": ["string", "null"],
+                "title": "Approval date",
+                "description": "TENDER_AWARD only -- upstream free-text award approval date."
+            },
+            "implementingAgency": {
+                "type": ["string", "null"],
+                "title": "Implementing agency",
+                "description": "TENDER_AWARD only -- the government agency implementing the contract."
+            },
+            "winningBiddersText": {
+                "type": ["string", "null"],
+                "title": "Winning bidder(s) and amounts",
+                "description": "TENDER_AWARD only -- free text, sometimes multiple lines for multi-lot/multi-package contracts."
+            },
+            "allBiddersText": {
+                "type": ["string", "null"],
+                "title": "All bidders",
+                "description": "TENDER_AWARD only -- every company that competed for this contract, as a comma-separated list."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across both record types -- rows missing a given column render blank.",
+            "transformation": {
+                "fields": [
+                    "recordType",
+                    "title",
+                    "agency",
+                    "closingDate",
+                    "contract",
+                    "implementingAgency",
+                    "approvalDate",
+                    "_error",
+                    "_scrapedAt"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

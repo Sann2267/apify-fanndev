@@ -1,0 +1,167 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "CIPA entity profile / search-result record",
+        "description": "Raw-passthrough dataset envelope. Every record carries _input/_source/_scrapedAt (and _error/_errorDetail on failures). Detail-mode records (_source: S1-verne-entityview, the default) carry the full company profile flattened from CIPA's own view-tree node graph -- field names and grouping (e.g. Director/Shareholder/BeneficialOwner as lists) mirror upstream's own domain/attribute vocabulary verbatim, since CIPA exposes no traditional JSON REST API. Summary-mode records (_source: S1-verne-searchresult, when 'Fetch full company profile' is off) carry only the search-result row.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The exact query (name or registration number) that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "S1-verne-entityview (full profile), S1-verne-searchresult (summary row only), or none (error record)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed extractions -- not_found (search matched nothing), click_failed / detail_fetch_failed / blocked_or_transient (network or session issue)."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "entityViewUrl": {
+                "title": "Entity profile URL",
+                "description": "The public, bookmarkable CIPA entityView permalink this detail record was extracted from (works from a fresh, cookie-less session)."
+            },
+            "CompanyNumber": {
+                "title": "Registration number",
+                "description": "CIPA company/entity registration number (e.g. BW00000015806)."
+            },
+            "OldCompanyNumber": {
+                "title": "Old registration number",
+                "description": "Legacy pre-migration registration number, if the entity predates CIPA's current system."
+            },
+            "Status": {
+                "title": "Status",
+                "description": "Current register status (e.g. registered, removed, amalgamated, liquidation, judicialManagement)."
+            },
+            "EntityType": {
+                "title": "Entity type",
+                "description": "businessName, private, public, external, or close."
+            },
+            "SubType": {
+                "title": "Company sub type",
+                "description": "e.g. limitedByShares, limitedByGuarantee."
+            },
+            "RegistrationDate": {
+                "title": "Registration date",
+                "description": "Original registration date, as displayed by CIPA (free-text date, not normalized)."
+            },
+            "ReregistrationDate": {
+                "title": "Re-registration date",
+                "description": "Date the entity was re-registered under the current system, if applicable."
+            },
+            "FilingMonth": {
+                "title": "Filing month",
+                "description": "Annual return filing month (1-12)."
+            },
+            "LastRenewalDate": {
+                "title": "Last/next renewal date",
+                "description": "Most recent (or upcoming) annual renewal date on file."
+            },
+            "TotalShare": {
+                "title": "Total shares",
+                "description": "Total number of issued shares, for share-capital entities."
+            },
+            "IsExemptFromAudit": {
+                "title": "Exempt from audit",
+                "description": "Whether the entity is exempt from mandatory audit."
+            },
+            "CompanyName": {
+                "title": "Company name",
+                "description": "List with the entity's registered Name and Suffix (e.g. proprietaryLimited)."
+            },
+            "RegisteredOfficeAddress": {
+                "title": "Registered office address",
+                "description": "List wrapping the entity's registered PhysicalAddress record (CountryCode/CareOf/Line1/Line2/City)."
+            },
+            "PostalAddress": {
+                "title": "Postal address",
+                "description": "Postal address record, where present as its own top-level group (CountryCode/CareOf/Line1/Line2/City)."
+            },
+            "MailAddress": {
+                "title": "Mail address",
+                "description": "List wrapping the entity's PostalAddress record used for correspondence."
+            },
+            "PrincipalPlaceOfBusinessAddress": {
+                "title": "Principal place of business",
+                "description": "List wrapping the entity's principal-place-of-business PhysicalAddress record."
+            },
+            "Director": {
+                "title": "Directors",
+                "description": "List of directors -- each an IndividualDirector (or CorporateDirector, if CIPA models a corporate director that way) with Nationality/StartDate/IndividualName/RolePostalAddress, passed through as CIPA's own node structure."
+            },
+            "Secretary": {
+                "title": "Secretary",
+                "description": "List of company secretaries, same shape as Director."
+            },
+            "Shareholder": {
+                "title": "Shareholders",
+                "description": "List of shareholders, same shape as Director."
+            },
+            "ShareAllocation": {
+                "title": "Share allocations",
+                "description": "List of {ShareholderIds, NumberOfShares, PercentageAllocated} -- ShareholderIds cross-references a Shareholder's/BeneficialOwner's internal mro-<id>, not exposed elsewhere on the record."
+            },
+            "BeneficialOwner": {
+                "title": "Beneficial owners",
+                "description": "List of ultimate beneficial owners -- each an IndividualBeneficialOwner with Nationalities/StartDate/IndividualName/RolePostalAddress/Interest (interest Type, e.g. shareholding, and Exact percentage)."
+            },
+            "Auditor": {
+                "title": "Auditor",
+                "description": "List of auditors, same shape as Director. Absent when IsExemptFromAudit is true."
+            },
+            "label": {
+                "title": "Search result label",
+                "description": "Summary-mode only: raw \"<Name> (<CompanyNumber>)\" label as shown on the CIPA search-results page."
+            },
+            "name": {
+                "title": "Name",
+                "description": "Summary-mode only: entity name parsed out of 'label'."
+            },
+            "registrationNumber": {
+                "title": "Registration number",
+                "description": "Summary-mode only: registration number parsed out of 'label' (same value as CompanyNumber in detail mode)."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across both full-profile and search-summary records.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "_source",
+                    "_scrapedAt",
+                    "name",
+                    "label",
+                    "CompanyNumber",
+                    "registrationNumber",
+                    "Status",
+                    "EntityType",
+                    "RegistrationDate",
+                    "entityViewUrl",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

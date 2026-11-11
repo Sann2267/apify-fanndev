@@ -1,0 +1,65 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Guyana bid-opportunity / project-advertisement record",
+        "description": "Raw-passthrough dataset envelope. List-mode records carry every field returned by NPTAB's public 'get_public_bid_opportunities' API verbatim; detail-mode records (or list-mode with fetchDetail=true, nested under _detail) carry 'get_public_project_advertisement' fields instead -- a different, not-strictly-superset field set (rich-text ad_header/ad_scope/ad_instruction/ad_footer instead of procurement_nature/estimated_value/current_state/regions).",
+        "properties": {
+            "_source": {"type": "string", "title": "Source strategy", "description": "S1-json-api (list only), S1-json-api-detail (list+detail, or standalone detail mode), or none (error record)."},
+            "_scrapedAt": {"type": "string", "format": "date-time", "title": "Scraped at", "description": "UTC ISO 8601 timestamp when this record was scraped."},
+            "_error": {"type": "string", "title": "Error", "description": "Present only on failed extractions -- not_found (zero currently advertised opportunities, or an unknown/unpublished projectId in detail mode) or blocked_or_transient (network/upstream issue)."},
+            "_errorDetail": {"type": "string", "title": "Error detail", "description": "Free-form diagnostic detail, present only alongside _error -- often NPTAB's own Frappe backend error message verbatim."},
+            "_detail": {"type": "object", "title": "Project advertisement detail", "description": "Present only when input fetchDetail=true (list mode). The full-text project advertisement -- see the detail-mode fields below (project_id, project_name, agency, ad_header, ad_scope, ad_instruction, ad_footer, advertisement_documents). Null if the detail fetch failed (_detailError set alongside)."},
+            "_detailError": {"type": "string", "title": "Detail fetch error", "description": "Present only when fetchDetail=true and the per-project detail request failed for this specific row -- the list fields are still returned."},
+
+            "project_id": {"title": "Project ID", "description": "NPTAB's own project identifier, e.g. 'PROC-2026-00425'. Present on both list and detail records."},
+            "project_name": {"title": "Project name", "description": "Present on both list and detail records."},
+            "agency": {"title": "Publishing agency", "description": "The government ministry/agency issuing this notice, e.g. '31-Ministry of Public Works'. Present on both list and detail records."},
+            "agency_logo": {"title": "Agency logo", "description": "List records only. Observed null on every record seen during recon."},
+            "procurement_method": {"title": "Procurement method", "description": "e.g. 'Open Tendered'. Present on both list and detail records."},
+            "procurement_nature": {"title": "Procurement nature", "description": "List records only, e.g. 'Services', 'Works', 'Consultancy Services'."},
+            "procurement_sub_nature": {"title": "Procurement sub-nature", "description": "List records only. Frequently an empty string upstream."},
+            "estimated_value": {"title": "Estimated value", "description": "List records only. Observed 0.0 on every record seen during recon -- not populated by NPTAB for these notices, not a parsing gap."},
+            "current_state": {"title": "Current state", "description": "List records only. Observed value: 'Bid Advertised' -- this platform's public API only surfaces currently-open opportunities, no historical/awarded states."},
+            "advertisement_date": {"title": "Advertisement date", "description": "List records only. ISO YYYY-MM-DD."},
+            "actual_bid_opening_date": {"title": "Actual bid opening date", "description": "ISO YYYY-MM-DD, or null before the opening has occurred. Present on both list and detail records."},
+            "projected_bid_opening_date": {"title": "Projected bid opening date", "description": "ISO YYYY-MM-DD (submission deadline). Present on both list and detail records."},
+            "regions": {"type": "array", "title": "Regions", "description": "List records only. Array of Guyana administrative region names, e.g. ['Region 04']."},
+            "advertisement_documents": {"type": "array", "title": "Advertisement documents", "description": "Array of {document_name, document_file, document_url}. document_file is NPTAB's raw relative path; document_url is this actor's derived absolute, percent-encoded, directly-downloadable link. Present on both list and detail records (no login required)."},
+
+            "ad_header": {"title": "Advertisement header (HTML)", "description": "Detail records only. Rich-text HTML fragment -- notice title block."},
+            "ad_scope": {"title": "Advertisement scope (HTML)", "description": "Detail records only. Rich-text HTML fragment -- project background/scope."},
+            "ad_instruction": {"title": "Advertisement instructions (HTML)", "description": "Detail records only. Rich-text HTML fragment -- bidding/submission instructions, qualification criteria."},
+            "ad_footer": {"title": "Advertisement footer (HTML)", "description": "Detail records only. Rich-text HTML fragment -- contact addresses (NPTAB and/or issuing agency), bid security requirements."}
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across list and detail records.",
+            "transformation": {
+                "fields": [
+                    "_source",
+                    "_scrapedAt",
+                    "project_id",
+                    "project_name",
+                    "agency",
+                    "procurement_method",
+                    "procurement_nature",
+                    "current_state",
+                    "advertisement_date",
+                    "projected_bid_opening_date",
+                    "actual_bid_opening_date",
+                    "regions",
+                    "advertisement_documents",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

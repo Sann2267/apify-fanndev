@@ -1,0 +1,154 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "CPBN bid record",
+        "description": "One record per bid/notice. Shape depends on recordType: BID_OPEN / BID_UNDEREVALUATION / BID_CANCELLED / BID_AWARDED / BID_CLARIFICATIONS / BID_OPENINGREGISTER / BID_NOTICES / BID_ALL (whichever listType mode=list produces) or BID_DETAIL (mode=detail, a raw label/value passthrough of the bid's own detail page -- field set varies per bid/procurement type, so extra fields beyond those listed below may appear). A single _error record is emitted instead of payload fields when a page/bid fails or is inaccessible.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "For list records: 'list:<listType>'. For detail records: the bidId or URL that was requested."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which extraction strategy emitted this record (S1-<listType>-listing, S1-detail, or 'none' on error)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed records (blocked_or_transient, not_found_or_restricted)."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "recordType": {
+                "type": "string",
+                "title": "Record type",
+                "description": "BID_OPEN, BID_UNDEREVALUATION, BID_CANCELLED, BID_AWARDED, BID_CLARIFICATIONS, BID_OPENINGREGISTER, BID_NOTICES, BID_ALL, or BID_DETAIL."
+            },
+            "_totalAvailable": {
+                "title": "Total available",
+                "description": "Total rows CPBN's listing page returned for this listType (all rows come back in one response), before any maxResults truncation. mode=list only."
+            },
+            "bidId": {
+                "title": "Bid ID",
+                "description": "CPBN's internal numeric bid id, when this bid has its own detail page. null for older PDF-only notices that predate the interactive bid-tracking system (see 'title'/'date' instead)."
+            },
+            "bidUrl": {
+                "title": "Bid URL",
+                "description": "Link to the bid's full detail page on CPBN, when it has one (null for PDF-only notices)."
+            },
+            "title": {
+                "title": "Bid title",
+                "description": "The bid/notice's title, usually including its own procurement reference number."
+            },
+            "referenceNumber": {
+                "title": "Reference number",
+                "description": "The procuring entity's own procurement reference number, when shown separately from the title (bids with a detail page)."
+            },
+            "closingDateAndTime": {
+                "title": "Closing date and time",
+                "description": "Bid submission deadline, CPBN's own free-text date format (e.g. '5th August, 2026 11:00')."
+            },
+            "date": {
+                "title": "Date",
+                "description": "For older PDF-only notices with no separate detail page -- the single date CPBN shows for that notice (meaning varies: issue date, cancellation date, clarification date, etc. depending on listType)."
+            },
+            "documents": {
+                "type": "array",
+                "title": "Documents",
+                "description": "PDF documents attached to this bid, as {label, downloadUrl}. Some downloadUrls are direct public PDF links (/uploads/files/...); others go through a CPBN 'request access' form (/ajax/download/...) that asks for name/phone/email/company before releasing the file -- this actor does not fill in that form or fetch the file, only records the link CPBN itself shows.",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "label": {"type": "string"},
+                        "downloadUrl": {"type": "string"}
+                    }
+                }
+            },
+            "pageTitle": {
+                "title": "Page title",
+                "description": "BID_DETAIL only -- the <title> of the bid's detail page."
+            },
+            "category": {
+                "title": "Category",
+                "description": "BID_DETAIL only -- e.g. Works, Goods, Services."
+            },
+            "institution": {
+                "title": "Institution",
+                "description": "BID_DETAIL only -- the public entity running this procurement."
+            },
+            "descriptionOfTheBid": {
+                "title": "Description of the bid",
+                "description": "BID_DETAIL only."
+            },
+            "procurementReferenceNumber": {
+                "title": "Procurement reference number",
+                "description": "BID_DETAIL only."
+            },
+            "bidDocumentPrice": {
+                "title": "Bid document price",
+                "description": "BID_DETAIL only -- fee and payment instructions for obtaining the full bidding document."
+            },
+            "addressForTheCollectionSubmissionOfDocuments": {
+                "title": "Address for collection/submission of documents",
+                "description": "BID_DETAIL only."
+            },
+            "dateOfIssue": {
+                "title": "Date of issue",
+                "description": "BID_DETAIL only."
+            },
+            "openingOfBids": {
+                "title": "Opening of bids",
+                "description": "BID_DETAIL only -- where/when bids are publicly opened."
+            },
+            "generalEnquiries": {
+                "title": "General enquiries",
+                "description": "BID_DETAIL only -- contact details."
+            },
+            "bidClarifications": {
+                "title": "Bid clarifications",
+                "description": "BID_DETAIL only -- how/when to request clarifications."
+            },
+            "nonCompulsoryPreBidMeetingSiteVisit": {
+                "title": "Pre-bid meeting / site visit",
+                "description": "BID_DETAIL only -- present only for bids that have one."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across all record types -- rows missing a given column render blank.",
+            "transformation": {
+                "fields": [
+                    "recordType",
+                    "bidId",
+                    "title",
+                    "institution",
+                    "referenceNumber",
+                    "closingDateAndTime",
+                    "date",
+                    "_totalAvailable",
+                    "_error",
+                    "_scrapedAt"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

@@ -1,0 +1,106 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "CIPO search-result record",
+        "description": "Raw-passthrough dataset envelope. Every record carries _input/_source/_scrapedAt (and _error/_errorDetail on failures). Field names and shape mirror CIPO's own NameSearchPage API response verbatim -- this is a free public name-search facility, not a full registry-detail API, so fields are limited to what that facility itself returns.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The exact query (name or registration number) that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "S1-namesearchpage (real match), or none (error record)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed extractions -- not_found (search matched nothing), invalid_query (blank query, or a query containing ' or -- which upstream mishandles), or blocked_or_transient (network issue)."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "EntityID": {
+                "title": "Entity ID",
+                "description": "CIPO's internal GUID for this entity."
+            },
+            "EntityName": {
+                "title": "Entity name",
+                "description": "Registered name of the company or business name."
+            },
+            "EntityNumber": {
+                "title": "Registration number",
+                "description": "CIPO registration/entity number (e.g. 109/2003)."
+            },
+            "DateOfIncorporation": {
+                "title": "Date of incorporation/registration",
+                "description": "Date the entity was incorporated or registered, as recorded by CIPO. Absent for some older/legacy entities."
+            },
+            "StatusName": {
+                "title": "Status",
+                "description": "Current register status, e.g. Active, Inactive."
+            },
+            "StatusReason": {
+                "title": "Status reason",
+                "description": "Reason for the current status when not Active, e.g. \"Amalgamated\". Null for active entities."
+            },
+            "TypeName": {
+                "title": "Entity type",
+                "description": "Type of registered entity, e.g. Private Ordinary Company."
+            },
+            "PrincipalOfficeAddress": {
+                "title": "Principal office address",
+                "description": "Registered/principal office address on file, when available."
+            },
+            "registry": {
+                "title": "Registry",
+                "description": "The register this entity is held on -- always \"Commerce and Intellectual Property Office (CIPO)\" for Saint Vincent and the Grenadines entities."
+            },
+            "CaricomStatus": {
+                "title": "CARICOM status",
+                "description": "CIPO's own CARICOM classification field for this entity, passed through verbatim (observed values on this deployment are status-like, e.g. \"Active\")."
+            },
+            "LoweredApplicationName": {
+                "title": "Application/jurisdiction tag",
+                "description": "Internal jurisdiction tag from the shared multi-country registry platform this search runs on -- always \"stvincent\" for this actor."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns for each search-result record.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "_source",
+                    "_scrapedAt",
+                    "EntityName",
+                    "EntityNumber",
+                    "TypeName",
+                    "StatusName",
+                    "StatusReason",
+                    "DateOfIncorporation",
+                    "PrincipalOfficeAddress",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

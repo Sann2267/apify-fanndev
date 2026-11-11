@@ -1,0 +1,22 @@
+{
+    "actorSpecification": 1,
+    "name": "facebook-group-posts-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Facebook Group Posts & Comments Scraper",
+    "description": "Read what a public Facebook group is talking about: every post with text, author, timestamp, reactions, comment count, shares and media, paginated past the handful Facebook renders by default. Private and missing groups are reported as such instead of returning empty successes. No login, no proxy.",
+    "categories": [
+        "SOCIAL_MEDIA"
+    ],
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json",
+    "defaultRunOptions": {
+        "build": "latest",
+        "timeoutSecs": 3600,
+        "memoryMbytes": 1024
+    }
+}

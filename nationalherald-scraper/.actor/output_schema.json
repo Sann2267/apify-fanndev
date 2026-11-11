@@ -1,0 +1,162 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Article / latest-headline record",
+        "description": "Raw-passthrough dataset envelope. Every record carries _input/_source/_scrapedAt (and _error/_errorDetail on failures). Article-mode records (S1-jsonld) are a near-verbatim spread of the page's NewsArticle JSON-LD block, so extra schema.org fields beyond those listed here may appear. Latest-mode records (S2-rss) carry title/link-style fields from the site-wide stories.rss feed.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The exact input value (URL, or 'latest') that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which extraction strategy emitted this record (S1-jsonld or S2-rss)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed extractions -- the error kind."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "headline": {
+                "title": "Headline",
+                "description": "Article headline (raw passthrough from JSON-LD NewsArticle, article-mode)."
+            },
+            "name": {
+                "title": "Name",
+                "description": "Duplicate of headline as emitted by the JSON-LD NewsArticle node (article-mode)."
+            },
+            "description": {
+                "title": "Description",
+                "description": "Short article description/dek (article-mode from JSON-LD; latest-mode from the RSS <description>)."
+            },
+            "alternativeHeadline": {
+                "title": "Alternative headline",
+                "description": "Alternate headline field from JSON-LD, observed empty on every sample (article-mode)."
+            },
+            "articleBody": {
+                "title": "Article body",
+                "description": "Full article content from the upstream JSON-LD NewsArticle node (article-mode). QUIRK: this HTML markup (<p> tags) is HTML-entity-escaped a second time by upstream, e.g. literal '&lt;p&gt;' instead of '<p>' -- passed through exactly as served; apply html.unescape() downstream if you want clean HTML/plain text."
+            },
+            "datePublished": {
+                "title": "Date published",
+                "description": "ISO 8601 publish date with +05:30 offset (article-mode)."
+            },
+            "dateModified": {
+                "title": "Date modified",
+                "description": "ISO 8601 last-modified date (article-mode)."
+            },
+            "dateCreated": {
+                "title": "Date created",
+                "description": "ISO 8601 creation date, as emitted by JSON-LD (article-mode)."
+            },
+            "author": {
+                "title": "Author",
+                "description": "Article-mode: list of Person object(s) as emitted by upstream JSON-LD (raw passthrough -- givenName/name/url; observed as a single desk byline like 'NH Political Bureau' or 'NH Digital', not always a named reporter). Latest-mode: plain byline name string from the RSS feed's atom:author/atom:name."
+            },
+            "authorUrl": {
+                "title": "Author URL",
+                "description": "Author profile path from the RSS feed's atom:author/atom:uri (latest-mode only)."
+            },
+            "publisher": {
+                "title": "Publisher",
+                "description": "QUIRK: on every sampled article this is a near-empty stub, {'@type': 'Organization', '@context': 'http://schema.org', 'id': ''} -- no real publisher name/logo. Passed through as-is (article-mode)."
+            },
+            "image": {
+                "title": "Image",
+                "description": "Article-mode: a single ImageObject dict (url/width/height) from JSON-LD -- NOT a list on this site. Latest-mode: single lead-image URL string from the RSS feed's media:content."
+            },
+            "thumbnailUrl": {
+                "title": "Thumbnail URL",
+                "description": "Thumbnail image URL (article-mode, from JSON-LD -- same URL as image.url on every sample)."
+            },
+            "thumbnail": {
+                "title": "Thumbnail",
+                "description": "Thumbnail image URL, smaller crop (latest-mode, from the RSS feed's media:thumbnail)."
+            },
+            "mainEntityOfPage": {
+                "title": "Main entity of page",
+                "description": "Canonical WebPage reference (article-mode)."
+            },
+            "isPartOf": {
+                "title": "Is part of",
+                "description": "Parent WebPage reference, including primaryImageOfPage (article-mode)."
+            },
+            "articleSection": {
+                "title": "Section",
+                "description": "Article section/category, e.g. 'POLITICS' (article-mode)."
+            },
+            "category": {
+                "title": "Category",
+                "description": "Section/category name from the RSS <category> tag (latest-mode)."
+            },
+            "keywords": {
+                "title": "Keywords",
+                "description": "Comma-separated keyword/tag string (article-mode from JSON-LD; latest-mode from the RSS feed's media:keywords)."
+            },
+            "url": {
+                "title": "URL",
+                "description": "Canonical article URL as emitted by JSON-LD (article-mode)."
+            },
+            "title": {
+                "title": "Title",
+                "description": "Headline from the RSS item (latest-mode)."
+            },
+            "link": {
+                "title": "Link",
+                "description": "Article URL (latest-mode)."
+            },
+            "guid": {
+                "title": "GUID",
+                "description": "RSS item guid, a UUID (latest-mode)."
+            },
+            "pubDate": {
+                "title": "Publish date",
+                "description": "RSS pubDate string (latest-mode)."
+            },
+            "contentEncoded": {
+                "title": "Content (encoded)",
+                "description": "Full article body as clean HTML markup (<p> tags, NOT double-escaped, unlike article-mode's articleBody), from the RSS feed's content:encoded element (latest-mode)."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across both article and latest-headline records.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "_source",
+                    "_scrapedAt",
+                    "headline",
+                    "title",
+                    "link",
+                    "datePublished",
+                    "pubDate",
+                    "author",
+                    "category",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

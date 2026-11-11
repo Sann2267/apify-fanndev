@@ -1,0 +1,43 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Article / latest-headline record",
+        "description": "Raw-passthrough dataset envelope. Every record carries _input/_source/_scrapedAt (and _error/_errorDetail on failures). Article-mode records (S1-jsonld) carry headline/articleBody-style fields spread verbatim from the page's NewsArticle JSON-LD block, so extra schema.org fields beyond those listed here may also appear. Latest-mode records (S2-sitemap, the Google News sitemap) carry title/link-style fields only.",
+        "properties": {
+            "_input": {"type": "string", "title": "Input", "description": "The exact input value (article URL, or 'latest') that produced this record."},
+            "_source": {"type": "string", "title": "Source strategy", "description": "Which extraction strategy emitted this record: S1-jsonld (article page NewsArticle block), S2-sitemap (Google News sitemap), or none (error record)."},
+            "_scrapedAt": {"type": "string", "format": "date-time", "title": "Scraped at", "description": "UTC ISO 8601 timestamp when this record was scraped."},
+            "_error": {"type": "string", "title": "Error", "description": "Present only on failed article extractions -- the error kind (e.g. not_found, http_500, blocked_or_transient)."},
+            "_errorDetail": {"type": "string", "title": "Error detail", "description": "Free-form diagnostic detail (e.g. exception repr), present only alongside _error."},
+            "headline": {"title": "Headline", "description": "Article headline (article mode; raw passthrough from JSON-LD NewsArticle)."},
+            "description": {"title": "Description", "description": "Short description/summary (article mode; raw passthrough from JSON-LD NewsArticle)."},
+            "articleBody": {"title": "Article body", "description": "Full plain-text article body (article mode; raw passthrough from JSON-LD NewsArticle). Absent/missing entirely on genuinely paywalled Moneycontrol PRO / moneycontrol-research articles -- see README for the paywall verdict."},
+            "keywords": {"title": "Keywords", "description": "Article keywords/tags, comma-separated string (article mode from JSON-LD NewsArticle, or latest mode from the sitemap's news:keywords)."},
+            "articleSection": {"title": "Article section", "description": "Site section/category the article belongs to (article mode; raw passthrough from JSON-LD NewsArticle)."},
+            "inLanguage": {"title": "Language", "description": "Article language code (article mode; raw passthrough from JSON-LD NewsArticle)."},
+            "datePublished": {"title": "Date published", "description": "Publish timestamp, ISO 8601 with IST offset (article mode; raw passthrough from JSON-LD NewsArticle)."},
+            "dateModified": {"title": "Date modified", "description": "Last-modified timestamp (article mode; raw passthrough from JSON-LD NewsArticle)."},
+            "author": {"title": "Author", "description": "Byline (article mode; raw passthrough object from JSON-LD -- {'@type':'Person','name':...,'url':...}. A wire-service byline like 'Bloomberg' or the generic staff byline 'Moneycontrol News' are both common."},
+            "publisher": {"title": "Publisher", "description": "Publisher organization object (article mode; raw passthrough from JSON-LD NewsArticle -- always Moneycontrol/NewsMediaOrganization)."},
+            "image": {"title": "Image(s)", "description": "Article image URL(s). A list of URL strings in article mode (JSON-LD), a single URL string in latest mode (sitemap image:loc)."},
+            "isAccessibleForFree": {"title": "Accessible for free", "description": "Only present on Moneycontrol PRO / moneycontrol-research paywalled content, as the literal string \"False\" (not a boolean) -- when present, articleBody is missing/truncated. Absent entirely on normal free articles."},
+            "url": {"title": "Canonical URL", "description": "Canonical article URL (article mode; raw passthrough from JSON-LD NewsArticle)."},
+            "title": {"title": "Title", "description": "Headline text (latest mode; from the Google News sitemap's news:title element)."},
+            "link": {"title": "Link", "description": "Article URL (latest mode; from the sitemap's <loc> element)."},
+            "pubDate": {"title": "Publish date", "description": "Publish timestamp, ISO 8601 with IST offset (latest mode; from the sitemap's news:publication_date element)."}
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across both article and latest-headline records.",
+            "transformation": {
+                "fields": ["_input", "_source", "_scrapedAt", "headline", "title", "link", "datePublished", "pubDate", "description", "articleSection", "isAccessibleForFree", "_error", "_errorDetail"]
+            },
+            "display": {"component": "table"}
+        }
+    }
+}

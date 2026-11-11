@@ -1,0 +1,14 @@
+{
+    "actorSpecification": 1,
+    "name": "meduza-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Meduza Scraper",
+    "description": "Extract full article text or the newest headlines from Meduza (meduza.io), an independent Russian-language press outlet operating in exile from Latvia -- covers both the original Russian edition and the English edition, no account or API key needed.",
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

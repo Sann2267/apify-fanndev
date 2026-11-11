@@ -1,0 +1,142 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Article / latest-headline record",
+        "description": "Raw-passthrough dataset envelope. Every record carries _input/_source/_scrapedAt (and _error/_errorDetail on failures). Article-mode records carry id/slug/headline-style fields, sourced primarily from the WordPress REST API (S1-wpapi) or, on API failure, ld+json + HTML (S2-jsonld+html). Latest-mode records (S3-rss, the site's RSS feed) carry title/link-style fields.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The exact input value (URL, or 'latest') that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which extraction strategy emitted this record: S1-wpapi (WordPress REST API, primary), S2-jsonld+html (fallback, used only if the REST API call fails), S3-rss (latest mode)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed extractions -- the error kind (e.g. not_found, http_500, blocked_or_transient)."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "id": {
+                "title": "Post ID",
+                "description": "Internal numeric WordPress post ID. S1-wpapi only."
+            },
+            "slug": {
+                "title": "Slug",
+                "description": "URL slug of the post. S1-wpapi only."
+            },
+            "link": {
+                "title": "Link",
+                "description": "Canonical article URL, as reported by the WordPress REST API."
+            },
+            "headline": {
+                "title": "Headline",
+                "description": "Article headline, HTML-entity-decoded and tag-stripped."
+            },
+            "description": {
+                "title": "Description",
+                "description": "Short article summary -- from the WordPress excerpt (S1) or ld+json description (S2)."
+            },
+            "articleBody": {
+                "title": "Article body",
+                "description": "Full article text, paragraphs joined with a blank line. Can be null/empty for 'Video'-category posts, whose real content is a video embed rather than text (genuine site shape, not a parse failure -- see CRAWLING_METHOD.md)."
+            },
+            "date": {
+                "title": "Date",
+                "description": "Publish date/time in the site's local timezone (Africa/Lusaka, UTC+2), as returned verbatim by WordPress -- no 'Z'/offset suffix. S1-wpapi only; use datePublished-equivalent 'date' from S2 for the fallback path."
+            },
+            "date_gmt": {
+                "title": "Date (UTC)",
+                "description": "Publish date/time in UTC, as returned verbatim by the WordPress REST API (field name kept as upstream: date_gmt). S1-wpapi only."
+            },
+            "modified": {
+                "title": "Modified",
+                "description": "Last-modified date/time in local timezone, verbatim from WordPress. S1-wpapi only (S2 reuses this field name for ld+json's dateModified)."
+            },
+            "modified_gmt": {
+                "title": "Modified (UTC)",
+                "description": "Last-modified date/time in UTC, verbatim from WordPress. S1-wpapi only."
+            },
+            "author": {
+                "title": "Author",
+                "description": "Byline name. Real individual/staff name on S1-wpapi and S3-rss (via the WP REST embedded author / RSS dc:creator); always the generic \"TIMES OF ZAMBIA\" organization on the S2 ld+json fallback, since ld+json does not expose the real per-article author on this site."
+            },
+            "authorSlug": {
+                "title": "Author slug",
+                "description": "WordPress author archive slug. S1-wpapi only."
+            },
+            "authorLink": {
+                "title": "Author link",
+                "description": "URL of the author's archive page on the site. S1-wpapi only."
+            },
+            "categories": {
+                "title": "Categories",
+                "description": "List of category names attached to the post (e.g. [\"Sport\"], [\"Business\"]). S1-wpapi only."
+            },
+            "tags": {
+                "title": "Tags",
+                "description": "List of tag names attached to the post. S1-wpapi only."
+            },
+            "featuredImage": {
+                "title": "Featured image",
+                "description": "Lead image object (url/width/height/altText on S1-wpapi; url only on the S2 fallback)."
+            },
+            "guid": {
+                "title": "GUID",
+                "description": "WordPress-internal GUID URL (e.g. https://times.co.zm/?p=236). S1-wpapi only; latest-mode records use the RSS feed's own 'guid' field of the same name."
+            },
+            "contentProtected": {
+                "title": "Content protected",
+                "description": "WordPress's own paywall/protected-content flag on the post body -- observed false on every sampled article (no paywall found on this site). S1-wpapi only."
+            },
+            "title": {
+                "title": "Title",
+                "description": "Headline text of a latest-mode (S3-rss) headline item."
+            },
+            "pubDate": {
+                "title": "Publish date",
+                "description": "RFC 822 publish date/time string, verbatim from the RSS feed. Latest mode only."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across both article and latest-headline records.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "_source",
+                    "_scrapedAt",
+                    "headline",
+                    "title",
+                    "link",
+                    "date",
+                    "pubDate",
+                    "categories",
+                    "author",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

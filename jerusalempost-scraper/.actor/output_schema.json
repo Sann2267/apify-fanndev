@@ -1,0 +1,121 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Article / latest-headline record",
+        "description": "Raw-passthrough dataset envelope. Every record carries _input/_source/_scrapedAt (and _error/_errorDetail on failures). Article-mode records (S1-html, NewsArticle ld+json which carries full articleBody inline) carry headline/articleBody-style fields; latest-mode records (S2-sitemap, Google News sitemap) carry title/link-style fields.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The exact input value (URL, or 'latest'/'latest:<section>') that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which extraction strategy emitted this record (e.g. S1-html, S2-sitemap)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed extractions -- the error kind."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "_paywalled": {
+                "title": "Paywalled",
+                "description": "True when isAccessibleForFree is explicitly false."
+            },
+            "headline": {
+                "title": "Headline",
+                "description": "Article headline, from the NewsArticle ld+json block."
+            },
+            "description": {
+                "title": "Description",
+                "description": "Short article description/dek, from the NewsArticle ld+json block."
+            },
+            "articleBody": {
+                "title": "Article body",
+                "description": "Full article text, carried inline in the NewsArticle ld+json block (no HTML fallback needed on this site)."
+            },
+            "author": {
+                "title": "Author",
+                "description": "Byline name(s), normalized to a list of names extracted from the ld+json author Person array."
+            },
+            "publisher": {
+                "title": "Publisher",
+                "description": "Publisher name, extracted from the ld+json NewsMediaOrganization publisher object."
+            },
+            "datePublished": {
+                "title": "Date published",
+                "description": "ISO 8601 publish date from ld+json."
+            },
+            "dateModified": {
+                "title": "Date modified",
+                "description": "ISO 8601 last-modified date from ld+json."
+            },
+            "articleSection": {
+                "title": "Section",
+                "description": "Article section/category from ld+json."
+            },
+            "keywords": {
+                "title": "Keywords",
+                "description": "Keywords as emitted upstream in ld+json."
+            },
+            "image": {
+                "title": "Image",
+                "description": "Lead image object from ld+json."
+            },
+            "title": {
+                "title": "Title",
+                "description": "Headline text of a latest-mode sitemap item (news:title)."
+            },
+            "link": {
+                "title": "Link",
+                "description": "Article URL (loc) from the Google News sitemap."
+            },
+            "pubDate": {
+                "title": "Publish date",
+                "description": "Publication date (news:publication_date) from the Google News sitemap."
+            },
+            "lastmod": {
+                "title": "Last modified",
+                "description": "Sitemap lastmod timestamp."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across both article and latest-headline records.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "_source",
+                    "_scrapedAt",
+                    "headline",
+                    "title",
+                    "link",
+                    "datePublished",
+                    "pubDate",
+                    "author",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

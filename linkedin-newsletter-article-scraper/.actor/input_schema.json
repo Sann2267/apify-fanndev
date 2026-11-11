@@ -1,0 +1,110 @@
+{
+    "title": "LinkedIn Newsletter & Article Scraper",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "articleUrls": {
+            "title": "Article URLs",
+            "type": "array",
+            "description": "LinkedIn long-form articles to read - linkedin.com/pulse/... links. Individual newsletter issues are /pulse/ links too, so paste those here.",
+            "editor": "stringList",
+            "prefill": ["https://www.linkedin.com/pulse/how-do-we-build-frontier-intelligence-ecosystem-satya-nadella-73jhc"]
+        },
+        "authorProfiles": {
+            "title": "Author profiles",
+            "type": "array",
+            "description": "Discover articles instead of listing them: give a member profile (a /in/ URL or a bare handle) and the actor reads the articles linked from their public profile page.",
+            "editor": "stringList"
+        },
+        "newsletterUrls": {
+            "title": "Newsletter series URLs",
+            "type": "array",
+            "description": "Accepted so a run does not fail on them, but LinkedIn answers HTTP 500 to logged-out visitors on every /newsletters/ series page - subscriber counts have no public surface at all. Anything passed here produces a NOTICE row explaining that. Pass the individual issue /pulse/ links in Article URLs instead; those are fully readable.",
+            "editor": "stringList"
+        },
+        "startUrls": {
+            "title": "Article URLs (request list)",
+            "type": "array",
+            "description": "The same article links in the request-list format, for callers that already keep one.",
+            "editor": "requestListSources"
+        },
+        "includeFullText": {
+            "title": "Include the full article text",
+            "type": "boolean",
+            "description": "Keep the complete body on each row. Turn off for a much smaller dataset when you only want titles, dates and engagement.",
+            "default": true
+        },
+        "includeComments": {
+            "title": "Include a sample of comments",
+            "type": "boolean",
+            "description": "Attach the commenters LinkedIn renders on the public page - roughly the first 8 - with their names, profile links and comment text. No extra requests: they arrive in the same page load.",
+            "default": false
+        },
+        "minReactions": {
+            "title": "Ignore articles below this many reactions",
+            "type": "integer",
+            "description": "Skip low performers, which is useful when discovering from an author profile and you only want what actually landed.",
+            "default": 0,
+            "minimum": 0,
+            "unit": "reactions"
+        },
+        "maxArticlesPerAuthor": {
+            "title": "Maximum articles per author",
+            "type": "integer",
+            "description": "Cap on articles discovered from each author profile.",
+            "default": 20,
+            "minimum": 1,
+            "maximum": 200,
+            "unit": "articles"
+        },
+        "maxArticles": {
+            "title": "Maximum articles in total",
+            "type": "integer",
+            "description": "Overall ceiling after de-duplication. Each article costs one request.",
+            "default": 50,
+            "minimum": 1,
+            "maximum": 500,
+            "unit": "articles"
+        },
+        "emitSummary": {
+            "title": "Emit a run summary row",
+            "type": "boolean",
+            "description": "Append a SUMMARY row with median reactions, median length and the most-used hashtags across everything read - a quick read on what topics and formats are working.",
+            "default": true
+        },
+        "minDelaySeconds": {
+            "title": "Minimum delay between requests",
+            "type": "integer",
+            "description": "LinkedIn answers request bursts with HTTP 999 and a near-empty page. A randomised gap is what keeps a run under that gate.",
+            "default": 3,
+            "minimum": 0,
+            "maximum": 60,
+            "unit": "seconds"
+        },
+        "maxDelaySeconds": {
+            "title": "Maximum delay between requests",
+            "type": "integer",
+            "description": "The ceiling of the randomised gap. Raise both bounds if the log shows rate-gate warnings.",
+            "default": 8,
+            "minimum": 0,
+            "maximum": 120,
+            "unit": "seconds"
+        },
+        "exportFormats": {
+            "title": "Extra export files",
+            "type": "array",
+            "description": "Besides the dataset, write ready-made files into this run's key-value store.",
+            "editor": "select",
+            "items": { "type": "string", "enum": ["json","ndjson","csv","excel"], "enumTitles": ["JSON","NDJSON","CSV","Excel (XLSX)"] },
+            "default": []
+        },
+        "proxyConfiguration": {
+            "title": "Proxy",
+            "type": "object",
+            "description": "Optional. Article pages carry no WAF and Apify's datacenter range reaches them; a proxy mainly helps on long runs where LinkedIn's per-IP rate gate becomes the bottleneck.",
+            "editor": "proxy",
+            "default": { "useApifyProxy": false }
+        }
+    },
+    "required": []
+}

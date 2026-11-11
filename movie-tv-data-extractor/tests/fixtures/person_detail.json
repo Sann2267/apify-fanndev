@@ -1,0 +1,89 @@
+{
+  "adult": false,
+  "also_known_as": [
+    "Chris Nolan",
+    "克里斯托弗·诺兰"
+  ],
+  "biography": "Christopher Edward Nolan is a British-American film director, producer, and screenwriter. His directorial efforts have grossed more than US$5 billion worldwide.",
+  "birthday": "1970-07-30",
+  "deathday": null,
+  "gender": 2,
+  "homepage": null,
+  "id": 525,
+  "imdb_id": "nm0634240",
+  "known_for_department": "Directing",
+  "name": "Christopher Nolan",
+  "place_of_birth": "London, England, UK",
+  "popularity": 12.4,
+  "profile_path": "/xuAIuYSmsUzKlUMBFGVZaWsY3DZ.jpg",
+  "external_ids": {
+    "imdb_id": "nm0634240",
+    "wikidata_id": "Q25191",
+    "facebook_id": null,
+    "instagram_id": "christophernolan.official",
+    "twitter_id": null,
+    "tiktok_id": null,
+    "youtube_id": null
+  },
+  "combined_credits": {
+    "cast": [
+      {
+        "adult": false,
+        "id": 27205,
+        "title": "Inception",
+        "original_title": "Inception",
+        "media_type": "movie",
+        "release_date": "2010-07-15",
+        "character": "Self",
+        "credit_id": "abc1",
+        "vote_average": 8.369,
+        "vote_count": 36258,
+        "popularity": 84.1,
+        "poster_path": "/oYuLEt3zVCKq57qu2F8dT7NIa6f.jpg"
+      },
+      {
+        "adult": false,
+        "id": 999999,
+        "title": "Obscure Documentary",
+        "media_type": "movie",
+        "release_date": "1998-01-01",
+        "character": "Himself",
+        "credit_id": "abc2",
+        "vote_average": 5.0,
+        "vote_count": 3,
+        "popularity": 0.6,
+        "poster_path": null
+      }
+    ],
+    "crew": [
+      {
+        "adult": false,
+        "id": 27205,
+        "title": "Inception",
+        "media_type": "movie",
+        "release_date": "2010-07-15",
+        "job": "Director",
+        "department": "Directing",
+        "credit_id": "abc3",
+        "vote_average": 8.369,
+        "vote_count": 36258,
+        "popularity": 84.1,
+        "poster_path": "/oYuLEt3zVCKq57qu2F8dT7NIa6f.jpg"
+      },
+      {
+        "adult": false,
+        "id": 155,
+        "title": "The Dark Knight",
+        "media_type": "movie",
+        "release_date": "2008-07-16",
+        "job": "Director",
+        "department": "Directing",
+        "credit_id": "abc4",
+        "vote_average": 8.5,
+        "vote_count": 32000,
+        "popularity": 96.3,
+        "poster_path": "/qJ2tW6WMUDux911r6m7haRef0WH.jpg"
+      }
+    ]
+  }
+}

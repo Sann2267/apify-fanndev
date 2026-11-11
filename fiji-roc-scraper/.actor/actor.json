@@ -1,0 +1,14 @@
+{
+    "actorSpecification": 1,
+    "name": "fiji-roc-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Fiji Registrar of Companies Search Scraper",
+    "description": "Search Fiji's official Registrar of Companies (ROC) business registry by entity number or name and pull entity name, number, type, and status. No account needed for search. Full profile (directors, shareholders, filings) needs a paid login and is out of scope.",
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

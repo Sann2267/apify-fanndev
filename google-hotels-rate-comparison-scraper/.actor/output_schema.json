@@ -1,0 +1,327 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Google Hotels rate record",
+        "description": "Every record carries _input, _source, _scrapedAt and recordType. recordType is HOTEL for a hotel (card or full detail), RATE for a single OTA quote, SPONSORED for a paid placement, SURFACE for a reference probe and ERROR for a failure. Prices are reported in the currency Google actually returned, which follows the proxy exit country and cannot be requested - and every price carries the stay window Google priced, which likewise cannot be chosen on this surface.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The search query or hotel ID that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source",
+                "description": "travel-search-ssr, travel-entity-prices-ssr, reference, error, or 'none'."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was emitted."
+            },
+            "recordType": {
+                "type": ["string", "null"],
+                "title": "Record type",
+                "description": "HOTEL | RATE | SPONSORED | SURFACE | ERROR."
+            },
+            "entityId": {
+                "type": ["string", "null"],
+                "title": "Hotel entity ID",
+                "description": "Google's opaque identifier for the hotel. Stable enough to re-query day after day, which is what makes rate tracking possible."
+            },
+            "name": {
+                "type": ["string", "null"],
+                "title": "Hotel name",
+                "description": "Hotel name as Google publishes it."
+            },
+            "hotelUrl": {
+                "type": ["string", "null"],
+                "title": "Hotel URL",
+                "description": "Public Google Hotels page for this hotel."
+            },
+            "searchQuery": {
+                "type": ["string", "null"],
+                "title": "Search query",
+                "description": "The query this hotel was discovered through (search mode)."
+            },
+            "address": {
+                "type": ["string", "null"],
+                "title": "Address",
+                "description": "Street address from the hotel's own header block."
+            },
+            "phone": {
+                "type": ["string", "null"],
+                "title": "Phone",
+                "description": "Phone number from the hotel's own header block."
+            },
+            "rating": {
+                "type": ["number", "null"],
+                "title": "Rating",
+                "description": "Guest rating out of 5."
+            },
+            "reviewCount": {
+                "type": ["integer", "null"],
+                "title": "Review count",
+                "description": "Number of reviews behind the rating. Exact on the hotel page; cards abbreviate large counts (2.9K), which are expanded here."
+            },
+            "starClass": {
+                "type": ["integer", "null"],
+                "title": "Star class",
+                "description": "Official star class, 1-5, where Google publishes one."
+            },
+            "propertyType": {
+                "type": ["string", "null"],
+                "title": "Property type",
+                "description": "House, Apartment, Villa, Hostel and similar, for non-hotel stays."
+            },
+            "priceRaw": {
+                "type": ["string", "null"],
+                "title": "Price as published",
+                "description": "Google's own price string, currency included."
+            },
+            "currency": {
+                "type": ["string", "null"],
+                "title": "Currency",
+                "description": "Currency Google returned. Decided by the proxy exit country, never by input."
+            },
+            "price": {
+                "type": ["number", "null"],
+                "title": "Price",
+                "description": "Numeric price parsed from priceRaw."
+            },
+            "priceIsTotal": {
+                "type": ["boolean", "null"],
+                "title": "Price is a stay total",
+                "description": "True when the figure is the total for the stay rather than a nightly rate."
+            },
+            "priceIncludesTaxes": {
+                "type": ["boolean", "null"],
+                "title": "Price includes taxes and fees",
+                "description": "True when Google marked the figure as including taxes and fees."
+            },
+            "nights": {
+                "type": ["integer", "null"],
+                "title": "Nights priced",
+                "description": "How many nights the price covers."
+            },
+            "stayWindow": {
+                "type": ["string", "null"],
+                "title": "Stay window Google priced",
+                "description": "The dates Google quoted, e.g. 'Sep 27 - 28'. This is Google's default window - it cannot be chosen on this surface, so it is reported rather than assumed."
+            },
+            "dealFlag": {
+                "type": ["string", "null"],
+                "title": "Deal flag",
+                "description": "Google's own verdict on the price: 'GREAT PRICE' or 'N% less than usual'."
+            },
+            "dealPercent": {
+                "type": ["integer", "null"],
+                "title": "Deal percent",
+                "description": "The numeric part of a 'N% less than usual' flag."
+            },
+            "amenities": {
+                "type": ["array", "null"],
+                "title": "Amenities",
+                "description": "Amenity list as Google lists it on the card."
+            },
+            "reviewThemes": {
+                "type": ["array", "null"],
+                "title": "Review themes",
+                "description": "Google's 'People often mention' themes."
+            },
+            "rateCount": {
+                "type": ["integer", "null"],
+                "title": "Number of OTA quotes",
+                "description": "How many booking sites quoted this hotel for this window."
+            },
+            "lowestRate": {
+                "type": ["number", "null"],
+                "title": "Lowest OTA rate",
+                "description": "Cheapest quote across all booking sites."
+            },
+            "highestRate": {
+                "type": ["number", "null"],
+                "title": "Highest OTA rate",
+                "description": "Dearest quote across all booking sites."
+            },
+            "rateSpread": {
+                "type": ["number", "null"],
+                "title": "Rate spread",
+                "description": "Highest minus lowest for the same room-night. The rate-parity number, computed so callers do not have to."
+            },
+            "cheapestProvider": {
+                "type": ["string", "null"],
+                "title": "Cheapest provider",
+                "description": "Which booking site holds the lowest quote."
+            },
+            "rates": {
+                "type": ["array", "null"],
+                "title": "OTA quotes",
+                "description": "Every booking site's quote for this hotel: provider, host, price, rate type, taxes, free cancellation and the booking deep link."
+            },
+            "provider": {
+                "type": ["string", "null"],
+                "title": "Provider",
+                "description": "Booking site name, as shown (rates and sponsored records)."
+            },
+            "providerHost": {
+                "type": ["string", "null"],
+                "title": "Provider host",
+                "description": "Hostname from the provider's own deep link - more reliable than the displayed brand, which is localised per country."
+            },
+            "partnerId": {
+                "type": ["string", "null"],
+                "title": "Partner ID",
+                "description": "Google's internal identifier for the booking partner."
+            },
+            "isOrganic": {
+                "type": ["boolean", "null"],
+                "title": "Is an organic quote",
+                "description": "True for a genuine rate for this hotel; paid placements are emitted separately under recordType SPONSORED."
+            },
+            "rateType": {
+                "type": ["string", "null"],
+                "title": "Rate type",
+                "description": "What the number means, e.g. 'Total per night' or 'Stay total with taxes + fees'."
+            },
+            "includesTaxes": {
+                "type": ["boolean", "null"],
+                "title": "Quote includes taxes",
+                "description": "True when the quote is marked as including taxes and fees."
+            },
+            "freeCancellation": {
+                "type": ["boolean", "null"],
+                "title": "Free cancellation",
+                "description": "True when the quote advertises free cancellation."
+            },
+            "bookingUrl": {
+                "type": ["string", "null"],
+                "title": "Booking URL",
+                "description": "The provider's own deep link for this quote, taken from Google's redirect."
+            },
+            "sourceEntityId": {
+                "type": ["string", "null"],
+                "title": "Source hotel",
+                "description": "For a sponsored record: the hotel whose page carried the placement. The placement itself is for a different hotel."
+            },
+            "placement": {
+                "type": ["string", "null"],
+                "title": "Placement",
+                "description": "'sponsored' for paid placements."
+            },
+            "features": {
+                "type": ["array", "null"],
+                "title": "Features",
+                "description": "Short feature list shown on a sponsored placement."
+            },
+            "probedUrl": {
+                "type": ["string", "null"],
+                "title": "Probed URL",
+                "description": "Reference mode: the URL that was checked."
+            },
+            "isAvailable": {
+                "type": ["boolean", "null"],
+                "title": "Source available",
+                "description": "Reference mode: whether the source returned parseable data."
+            },
+            "note": {
+                "type": ["string", "null"],
+                "title": "Note",
+                "description": "Reference mode: what happened, in words."
+            },
+            "winningTlsProfile": {
+                "type": ["string", "null"],
+                "title": "Winning TLS profile",
+                "description": "Reference mode: which browser fingerprint Google accepted from this IP."
+            },
+            "sample": {
+                "type": ["object", "null"],
+                "title": "Sample",
+                "description": "Reference mode: measured evidence - card count, returned currency, the stay window Google chose, OTA quote count and rate spread on a sample hotel."
+            },
+            "error": {
+                "type": ["string", "null"],
+                "title": "Error",
+                "description": "Failure reason: not_found, shape_changed, blocked_or_transient, no_rates_published, no_hotels_parsed, invalid_entity_id."
+            },
+            "errorDetail": {
+                "type": ["string", "null"],
+                "title": "Error detail",
+                "description": "Diagnostic text for the failure."
+            },
+            "_rateError": {
+                "type": ["string", "null"],
+                "title": "Rate fetch error",
+                "description": "Set when a hotel card was kept but its rate table could not be fetched."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Hotels with Google's price, rating and deal flag.",
+            "transformation": {
+                "fields": [
+                    "name",
+                    "priceRaw",
+                    "currency",
+                    "rating",
+                    "reviewCount",
+                    "starClass",
+                    "dealFlag",
+                    "stayWindow",
+                    "hotelUrl"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        },
+        "parity": {
+            "title": "Rate parity",
+            "description": "Cross-OTA spread per hotel - who is undercutting whom.",
+            "transformation": {
+                "fields": [
+                    "name",
+                    "rateCount",
+                    "lowestRate",
+                    "highestRate",
+                    "rateSpread",
+                    "cheapestProvider",
+                    "currency",
+                    "stayWindow",
+                    "entityId"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        },
+        "quotes": {
+            "title": "Individual OTA quotes",
+            "description": "One row per booking site quote, for mode 'rates'.",
+            "transformation": {
+                "fields": [
+                    "entityId",
+                    "provider",
+                    "providerHost",
+                    "priceRaw",
+                    "price",
+                    "currency",
+                    "rateType",
+                    "includesTaxes",
+                    "freeCancellation",
+                    "isOrganic",
+                    "bookingUrl"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

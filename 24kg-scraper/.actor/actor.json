@@ -1,0 +1,16 @@
+{
+    "actorSpecification": 1,
+    "name": "24kg-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "24.kg Scraper",
+    "description": "Extract full article text or the newest headlines from 24.kg, Kyrgyzstan's leading news agency -- no account or API key needed. Bilingual Russian/Kyrgyz content, passed through as published.",
+    "dockerfile": "./Dockerfile",
+    "minMemoryMbytes": 256,
+    "maxMemoryMbytes": 1024,
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

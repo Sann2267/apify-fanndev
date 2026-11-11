@@ -1,0 +1,15 @@
+{
+    "actorOutputSchemaVersion": 1,
+    "properties": {
+        "datasetOverview": {
+            "type": "string",
+            "title": "Tracked routes",
+            "template": "{{links.apifyConsoleUrl}}/storage/datasets/{{defaultDatasetId}}"
+        },
+        "faresView": {
+            "type": "string",
+            "title": "Fare series",
+            "template": "{{links.apifyConsoleUrl}}/storage/datasets/{{defaultDatasetId}}?view=fares"
+        }
+    }
+}

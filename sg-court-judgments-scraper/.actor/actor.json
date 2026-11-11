@@ -1,0 +1,15 @@
+{
+    "actorSpecification": 1,
+    "name": "sg-court-judgments-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Singapore Court Judgments Scraper",
+    "description": "Search Singapore's official free court-judgment archive (1965-present) by keyword or year and export full written judgments with citation, court, judge, catchwords and complete opinion text. No account or API key needed.",
+    "categories": ["BUSINESS", "OTHER"],
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

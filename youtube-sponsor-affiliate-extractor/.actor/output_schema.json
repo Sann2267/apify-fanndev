@@ -1,0 +1,208 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "additionalProperties": true,
+        "title": "YouTube sponsorship record",
+        "description": "One record per video. recordType tells you what you got: VIDEO is a parsed description, REDUCED means YouTube served a real 200 page without the player response on every attempt (NOT proof the video lacks a description), ERROR is a genuine failure, SURFACE is a reference probe. Always read _attempts alongside REDUCED.",
+        "properties": {
+            "_input": {
+                "type": ["string", "null"],
+                "title": "Input",
+                "description": "The video ID or channel handle that produced this record."
+            },
+            "_query": {
+                "type": ["string", "null"],
+                "title": "Query",
+                "description": "The exact input value this record answers."
+            },
+            "_source": {
+                "type": ["string", "null"],
+                "title": "Source",
+                "description": "youtube-watch | youtube-channel-videos | reference | none."
+            },
+            "_scrapedAt": {
+                "type": ["string", "null"],
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was emitted."
+            },
+            "_attempts": {
+                "type": ["integer", "null"],
+                "title": "Attempts",
+                "description": "How many page fetches it took before the payload appeared. 1 is normal; 4+ means the reduced page is being served often for this IP."
+            },
+            "_tlsProfile": {
+                "type": ["string", "null"],
+                "title": "TLS profile",
+                "description": "Which impersonation profile won."
+            },
+            "recordType": {
+                "type": ["string", "null"],
+                "title": "Record type",
+                "description": "VIDEO | REDUCED | ERROR | SURFACE."
+            },
+            "videoId": {
+                "type": ["string", "null"],
+                "title": "Video ID"
+            },
+            "title": {
+                "type": ["string", "null"],
+                "title": "Title"
+            },
+            "channelName": {
+                "type": ["string", "null"],
+                "title": "Channel"
+            },
+            "channelId": {
+                "type": ["string", "null"],
+                "title": "Channel ID"
+            },
+            "channelHandle": {
+                "type": ["string", "null"],
+                "title": "Channel handle",
+                "description": "Present in channel mode."
+            },
+            "publishDate": {
+                "type": ["string", "null"],
+                "title": "Published",
+                "description": "From the player microformat."
+            },
+            "viewCount": {
+                "type": ["integer", "null"],
+                "title": "Views"
+            },
+            "lengthSeconds": {
+                "type": ["integer", "null"],
+                "title": "Duration (s)"
+            },
+            "category": {
+                "type": ["string", "null"],
+                "title": "Category"
+            },
+            "keywords": {
+                "type": ["array", "null"],
+                "title": "Tags",
+                "description": "Creator-set video tags."
+            },
+            "captionLanguages": {
+                "type": ["array", "null"],
+                "title": "Caption languages",
+                "description": "Which subtitle tracks exist. The track TEXT is not readable without a token - see the README."
+            },
+            "description": {
+                "type": ["string", "null"],
+                "title": "Description",
+                "description": "The full description text, newlines included."
+            },
+            "descriptionLength": {
+                "type": ["integer", "null"],
+                "title": "Description length"
+            },
+            "links": {
+                "type": ["array", "null"],
+                "title": "All links",
+                "description": "Every URL with host, kind (affiliate | sponsor-landing | creator-platform | social | tracked | other), the network it belongs to, and any tracking parameters."
+            },
+            "linkCount": {
+                "type": ["integer", "null"],
+                "title": "Link count"
+            },
+            "affiliateLinks": {
+                "type": ["array", "null"],
+                "title": "Affiliate links",
+                "description": "Links matched against the affiliate-network table."
+            },
+            "affiliateLinkCount": {
+                "type": ["integer", "null"],
+                "title": "Affiliate link count"
+            },
+            "affiliateNetworks": {
+                "type": ["array", "null"],
+                "title": "Affiliate networks",
+                "description": "e.g. amazon-associates, impact, shareasale, awin, rakuten, genius-link, bitly."
+            },
+            "sponsorLandingLinks": {
+                "type": ["array", "null"],
+                "title": "Sponsor landing links",
+                "description": "Links to hosts that commonly run creator campaigns."
+            },
+            "promoCodes": {
+                "type": ["array", "null"],
+                "title": "Promo codes",
+                "description": "Codes extracted from phrasing like \"use code DAVE20\"."
+            },
+            "discountPercents": {
+                "type": ["array", "null"],
+                "title": "Discount percentages"
+            },
+            "sponsorMentions": {
+                "type": ["array", "null"],
+                "title": "Sponsor mentions",
+                "description": "Brand names from \"sponsored by X\", \"thanks to X for sponsoring\", \"in partnership with X\"."
+            },
+            "disclosureMarkers": {
+                "type": ["array", "null"],
+                "title": "Disclosure markers",
+                "description": "#ad, #sponsored, paid promotion, affiliate link, as an Amazon Associate, and similar."
+            },
+            "isMonetisedDescription": {
+                "type": ["boolean", "null"],
+                "title": "Monetised description",
+                "description": "True when any affiliate link, promo code, sponsor mention, sponsor landing link or disclosure marker was found."
+            },
+            "error": {
+                "type": ["string", "null"],
+                "title": "Error"
+            },
+            "message": {
+                "type": ["string", "null"],
+                "title": "Message"
+            },
+            "hint": {
+                "type": ["string", "null"],
+                "title": "Hint",
+                "description": "What to do about a REDUCED record."
+            }
+        }
+    },
+    "views": {
+        "overview": {
+            "title": "Sponsorship overview",
+            "transformation": {
+                "fields": [
+                    "recordType",
+                    "channelName",
+                    "title",
+                    "isMonetisedDescription",
+                    "affiliateLinkCount",
+                    "affiliateNetworks",
+                    "promoCodes",
+                    "sponsorMentions",
+                    "disclosureMarkers",
+                    "viewCount",
+                    "publishDate",
+                    "videoId"
+                ]
+            },
+            "display": {
+                "component": "table",
+                "properties": {
+                    "recordType": { "label": "Type" },
+                    "channelName": { "label": "Channel" },
+                    "title": { "label": "Video" },
+                    "isMonetisedDescription": { "label": "Paid?" },
+                    "affiliateLinkCount": { "label": "Aff." },
+                    "affiliateNetworks": { "label": "Networks" },
+                    "promoCodes": { "label": "Codes" },
+                    "sponsorMentions": { "label": "Sponsors" },
+                    "disclosureMarkers": { "label": "Disclosure" },
+                    "viewCount": { "label": "Views" },
+                    "publishDate": { "label": "Published" },
+                    "videoId": { "label": "Video ID" }
+                }
+            }
+        }
+    }
+}

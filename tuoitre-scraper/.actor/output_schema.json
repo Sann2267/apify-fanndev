@@ -1,0 +1,111 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Article / latest-headline record",
+        "description": "Raw-passthrough dataset envelope. Every record carries _input/_source/_scrapedAt (and _error/_errorDetail on failures). Article-mode records (S1-html) carry headline/articleBody-style fields extracted from ld+json NewsArticle plus HTML body text. Latest-mode records (S2-rss) carry title/link-style fields from the RSS feed. Upstream ld+json is passed through close to verbatim, so extra fields beyond those listed here may also appear.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The exact input value (article URL, or 'latest') that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which extraction strategy emitted this record (S1-html, S2-rss, or 'none' on error)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed extractions -- the error kind (e.g. not_found, http_4xx, blocked_or_transient)."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "headline": {
+                "title": "Headline",
+                "description": "Article headline, from the ld+json NewsArticle block (HTML entities unescaped). Article-mode only."
+            },
+            "description": {
+                "title": "Description",
+                "description": "Article-mode: short description/dek from the ld+json NewsArticle block. Latest-mode: short teaser text from the RSS item (not full article text)."
+            },
+            "articleBody": {
+                "title": "Article body",
+                "description": "Full article text, joined from div.detail-content paragraphs (excludes figcaption captions and related-news widget text). Article-mode only -- not present in the ld+json block itself."
+            },
+            "author": {
+                "title": "Author",
+                "description": "Article-mode: byline name from the ld+json Person author object. Latest-mode: author text from the RSS item."
+            },
+            "publisher": {
+                "title": "Publisher",
+                "description": "Publisher organization name from the ld+json Organization block. Article-mode only."
+            },
+            "datePublished": {
+                "title": "Date published",
+                "description": "ISO 8601 publish date from the ld+json NewsArticle block. Article-mode only."
+            },
+            "dateModified": {
+                "title": "Date modified",
+                "description": "ISO 8601 last-modified date from the ld+json NewsArticle block. Article-mode only."
+            },
+            "image": {
+                "title": "Image",
+                "description": "Lead image URL. Article-mode: from the ld+json image object. Latest-mode: from the RSS item's enclosure url attribute."
+            },
+            "title": {
+                "title": "Title",
+                "description": "Headline from the RSS item. Latest-mode only."
+            },
+            "link": {
+                "title": "Link",
+                "description": "Article URL from the RSS item. Latest-mode only."
+            },
+            "pubDate": {
+                "title": "Publish date",
+                "description": "RSS pubDate string. Latest-mode only."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across both article and latest-headline records.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "_source",
+                    "_scrapedAt",
+                    "headline",
+                    "title",
+                    "link",
+                    "description",
+                    "articleBody",
+                    "author",
+                    "publisher",
+                    "datePublished",
+                    "pubDate",
+                    "dateModified",
+                    "image",
+                    "_error",
+                    "_errorDetail"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

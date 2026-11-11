@@ -1,0 +1,48 @@
+{
+    "title": "Sri Lanka Government Tenders Scraper (Treasury)",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "mode": {
+            "title": "Mode",
+            "type": "string",
+            "editor": "select",
+            "description": "\"Latest\" scrapes the Ministry's current procurement-notices page (whatever is open right now, ~20 at a time). \"Archive\" walks the paginated historical archive of every notice ever published there (460+ going back to 2018).",
+            "enum": ["latest", "archive"],
+            "enumTitles": ["Latest (currently open notices)", "Archive (historical notices)"],
+            "default": "latest",
+            "prefill": "latest"
+        },
+        "maxResults": {
+            "title": "Max results",
+            "type": "integer",
+            "description": "Caps how many notices are returned. For mode=latest this is effectively capped by however many are currently posted (~20). For mode=archive, the actor fetches as many archive pages as needed (starting from archiveStartPage) until this many records are collected or the archive ends.",
+            "default": 50,
+            "minimum": 1,
+            "maximum": 5000,
+            "prefill": 50
+        },
+        "archiveStartPage": {
+            "title": "Archive start page (mode=archive only)",
+            "type": "integer",
+            "description": "Which archive page to start from (page 1 = most recent historical notices). Each page holds a variable number of notices (roughly 4-20).",
+            "default": 1,
+            "minimum": 1,
+            "prefill": 1
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "editor": "proxy",
+            "description": "Apify Proxy configuration.",
+            "default": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            },
+            "prefill": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            }
+        }
+    }
+}

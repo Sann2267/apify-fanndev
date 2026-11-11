@@ -1,0 +1,71 @@
+{
+    "title": "Twitch Email Finder",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "mode": {
+            "title": "Mode",
+            "type": "string",
+            "editor": "select",
+            "description": "\"channel\" looks up specific channel login(s). \"by-game\" discovers the top live channels in a game/category first, then looks up each one -- useful for finding sponsorship-outreach targets in a niche.",
+            "enum": ["channel", "by-game"],
+            "enumTitles": ["Specific channel(s)", "Top channels in a game/category"],
+            "default": "channel",
+            "prefill": "channel"
+        },
+        "login": {
+            "title": "Channel login",
+            "type": "string",
+            "editor": "textfield",
+            "description": "\"channel\" mode -- a single Twitch channel login.",
+            "prefill": "pokimane"
+        },
+        "logins": {
+            "title": "Channel logins",
+            "type": "array",
+            "editor": "stringList",
+            "description": "\"channel\" mode only -- multiple channel logins to look up in one run."
+        },
+        "gameName": {
+            "title": "Game/category name",
+            "type": "string",
+            "editor": "textfield",
+            "description": "\"by-game\" mode -- the exact game/category name as it appears on Twitch (e.g. \"Just Chatting\", \"League of Legends\"). The top live channels in this category (by current viewer count) will be looked up.",
+            "prefill": "Just Chatting"
+        },
+        "limit": {
+            "title": "Max channels to check",
+            "type": "integer",
+            "editor": "number",
+            "description": "\"by-game\" mode only -- how many of the top live channels in the category to look up. Capped at 30 (Twitch's own per-page ceiling for this connection).",
+            "default": 30,
+            "minimum": 1,
+            "maximum": 30,
+            "prefill": 30
+        },
+        "maxConcurrency": {
+            "title": "Max concurrent workers",
+            "type": "integer",
+            "description": "How many channels to look up in parallel.",
+            "default": 4,
+            "minimum": 1,
+            "maximum": 16,
+            "prefill": 4
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "editor": "proxy",
+            "description": "Apify Proxy configuration. Residential is on by default.",
+            "default": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            },
+            "prefill": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            }
+        }
+    },
+    "required": ["mode"]
+}

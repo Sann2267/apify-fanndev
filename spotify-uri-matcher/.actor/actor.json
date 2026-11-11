@@ -1,0 +1,23 @@
+{
+    "actorSpecification": 1,
+    "name": "spotify-uri-matcher",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Spotify Bulk Text-to-URI Matcher",
+    "description": "Paste a list of songs as plain text - 'Title - Artist', 'Artist - Title', 'Title by Artist' - and get the exact Spotify URI and URL for each, with a confidence score. Rejects bad matches instead of guessing, and writes a ready-to-import URI list. No Spotify account or API key needed.",
+    "categories": [
+        "ENTERTAINMENT",
+        "DEVELOPER_TOOLS"
+    ],
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json",
+    "defaultRunOptions": {
+        "build": "latest",
+        "memoryMbytes": 512,
+        "timeoutSecs": 3600
+    }
+}

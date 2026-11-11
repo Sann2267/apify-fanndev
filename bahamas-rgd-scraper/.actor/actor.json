@@ -1,0 +1,14 @@
+{
+    "actorSpecification": 1,
+    "name": "bahamas-rgd-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Bahamas RGD Company Registry Scraper",
+    "description": "Search the Bahamas' official Registrar General's Department (RGD) company registry by name and get the top matching entity names and internal registry IDs. No login needed -- free preview search; full paid reports are out of scope.",
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

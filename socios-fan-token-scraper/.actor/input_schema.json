@@ -1,0 +1,112 @@
+{
+    "title": "Socios.com Fan Token & Fan Vote Scraper",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "mode": {
+            "title": "What to scrape",
+            "type": "string",
+            "description": "Fan votes reads Socios' poll catalogue with every result already counted - question, options, votes cast per option and the winning percentage. Partner clubs lists all 231 teams, esports orgs and brands on the platform. Fan tokens lists the token catalogue with contract addresses. Vote tokens adds circulating supply and the token's own description. Reference tables are the leagues, sports and countries that the other modes reference by id. Everything runs all five in one go.",
+            "editor": "select",
+            "enum": ["polls", "partners", "fanTokens", "voteTokens", "reference", "all"],
+            "enumTitles": [
+                "Fan votes (polls with results)",
+                "Partner clubs & teams",
+                "Fan tokens",
+                "Vote tokens",
+                "Reference tables (leagues, sports, countries)",
+                "Everything"
+            ],
+            "default": "polls"
+        },
+        "partners": {
+            "title": "Limit to these clubs",
+            "type": "array",
+            "description": "Fan votes mode only. Club name, token symbol, short code or partner id - 'AC Milan', '$ACM' and 'ACM' all reach the same club. Leave empty for every club on the platform. Anything that matches no club produces one error row naming it, rather than being dropped in silence.",
+            "editor": "stringList",
+            "prefill": ["AC Milan"]
+        },
+        "pollStatuses": {
+            "title": "Poll status",
+            "type": "array",
+            "description": "Fan votes mode only. Closed polls are the ones with final results and there are about 8,100 of them; open is whatever is live right now, usually only one or two. Cancelled polls account for most of the rest. Leave empty for every status. Socios' API applies this filter itself, so narrowing here makes the run cheaper rather than just smaller.",
+            "editor": "select",
+            "items": {
+                "type": "string",
+                "enum": [
+                    "closed", "opened", "cancelled", "error", "suspended",
+                    "cancelling", "scheduled", "created", "processing",
+                    "closed-pending", "closed-release-wallet-limit",
+                    "closed-blockchain-pending"
+                ],
+                "enumTitles": [
+                    "Closed - final results (~8,100)",
+                    "Open now (~1)",
+                    "Cancelled (~1,690)",
+                    "Error (~13)",
+                    "Suspended (~5)",
+                    "Cancelling (~1)",
+                    "Scheduled (none today)",
+                    "Created (none today)",
+                    "Processing (none today)",
+                    "Closing (none today)",
+                    "Closed - wallet limit (none today)",
+                    "Closed - awaiting blockchain (none today)"
+                ]
+            },
+            "default": []
+        },
+        "pollTypes": {
+            "title": "Poll type",
+            "type": "array",
+            "description": "Fan votes mode only. Engagement polls are the fun ones clubs run for their fans, integrity polls are binding club decisions, and prediction polls are match forecasts. Socios' API ignores this filter, so the actor applies it after fetching - it trims the dataset but not the run time.",
+            "editor": "select",
+            "items": {
+                "type": "string",
+                "enum": ["engagement", "integrity", "prediction"],
+                "enumTitles": ["Engagement", "Integrity (binding)", "Prediction"]
+            },
+            "default": []
+        },
+        "pollOrderBy": {
+            "title": "Order fan votes by",
+            "type": "string",
+            "description": "Newest first in every case - Socios' API has no ascending option. Leave on Default unless you want the ordering pinned to a specific date field. Ordering by status groups the catalogue by state instead of by date.",
+            "editor": "select",
+            "enum": ["", "createdAt", "openAt", "closeAt", "publicationDate", "status"],
+            "enumTitles": [
+                "Default (newest first)",
+                "Created date",
+                "Opening date",
+                "Closing date",
+                "Publication date",
+                "Status"
+            ],
+            "default": ""
+        },
+        "activePartnersOnly": {
+            "title": "Active clubs only",
+            "type": "boolean",
+            "description": "Partner clubs mode only. 88 of the 231 partners are active; the rest are inactive clubs whose tokens and past polls still exist. Turn this on to list only the live ones.",
+            "default": false
+        },
+        "maxItems": {
+            "title": "Maximum rows",
+            "type": "integer",
+            "description": "Caps fan votes and partner clubs. The full poll catalogue is about 9,825 rows; the other modes are small enough that they always return in full.",
+            "default": 1000,
+            "minimum": 1,
+            "maximum": 100000,
+            "unit": "rows"
+        },
+        "proxyConfiguration": {
+            "title": "Proxy",
+            "type": "object",
+            "description": "Off by default and genuinely optional. Socios' API has no WAF, no IP gate and no rate limit that a normal run meets, and it answers identically from a datacenter and a residential address. Turn it on only if you are running this on a schedule from one IP all day.",
+            "editor": "proxy",
+            "default": {
+                "useApifyProxy": false
+            }
+        }
+    }
+}

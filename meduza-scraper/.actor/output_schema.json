@@ -1,0 +1,127 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Article / latest-headline record",
+        "description": "Raw-passthrough dataset envelope. Every record carries _input/_source/_scrapedAt (and _error/_errorDetail on failures, or _warning on a degraded-but-not-failed extraction). Article-mode records carry headline/articleBody-style fields from ld+json + HTML; latest-mode records (RSS) carry title/link-style fields. Covers both the Russian and English (meduza.io/en/...) editions with the same field shapes.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The exact input value (URL, or 'latest') that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which extraction strategy emitted this record (S1-html or S2-rss)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed extractions (e.g. not_found, http_500, blocked_or_transient)."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "_warning": {
+                "title": "Warning",
+                "description": "Present when the page was reached and parsed but had no extractable article body -- e.g. a /video/ (VideoObject) or /short/ page whose text lives outside the normal <p> body container. Metadata fields are still populated."
+            },
+            "headline": {
+                "title": "Headline",
+                "description": "Article headline, from ld+json."
+            },
+            "description": {
+                "title": "Description",
+                "description": "Short article description/dek, from ld+json."
+            },
+            "articleBody": {
+                "title": "Article body",
+                "description": "Full article text, reconstructed from div.GeneralMaterial-module-article > p. On English-edition articles that were AI-translated from Russian, the trailing AI-disclosure notice is stripped out. Null for content types (video, short) with no extractable paragraph body."
+            },
+            "author": {
+                "title": "Author",
+                "description": "Byline name -- \"Meduza\" (organization-level attribution) in every sample seen; a distinct individual journalist byline was not observed but the extractor reads whatever name ld+json provides."
+            },
+            "publisher": {
+                "title": "Publisher",
+                "description": "Publisher organization name (Meduza)."
+            },
+            "datePublished": {
+                "title": "Date published",
+                "description": "ISO 8601 publish date, from ld+json."
+            },
+            "dateModified": {
+                "title": "Date modified",
+                "description": "ISO 8601 last-modified date, from ld+json."
+            },
+            "image": {
+                "title": "Image",
+                "description": "Lead image, raw ld+json ImageObject (url/height/width) -- passed through as-is, not flattened to a URL string."
+            },
+            "inLanguage": {
+                "title": "Language",
+                "description": "BCP-47 language tag from ld+json (e.g. ru-RU, en-US) -- identifies which edition the article came from."
+            },
+            "contentType": {
+                "title": "Content type",
+                "description": "The page's schema.org @type: NewsArticle (news/short), Article (feature), or VideoObject (video)."
+            },
+            "title": {
+                "title": "Title",
+                "description": "RSS item title (latest mode)."
+            },
+            "link": {
+                "title": "Link",
+                "description": "Article URL (latest mode)."
+            },
+            "guid": {
+                "title": "GUID",
+                "description": "RSS item guid, same as link on this feed (latest mode)."
+            },
+            "teaser": {
+                "title": "Teaser",
+                "description": "Short RSS <description> summary, HTML-wrapped -- not the full article body (latest mode)."
+            },
+            "pubDate": {
+                "title": "Publish date",
+                "description": "RFC-822 publish timestamp as given by the feed (latest mode)."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across both article and latest-headline records.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "_source",
+                    "_scrapedAt",
+                    "headline",
+                    "title",
+                    "link",
+                    "datePublished",
+                    "pubDate",
+                    "author",
+                    "inLanguage",
+                    "_error",
+                    "_warning"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

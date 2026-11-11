@@ -1,0 +1,14 @@
+{
+    "actorSpecification": 1,
+    "name": "drcongo-tenders-scraper",
+    "version": "0.1",
+    "buildTag": "latest",
+    "title": "DR Congo Government Tenders Scraper (SIGMAP / ARMP)",
+    "description": "Scrapes the Democratic Republic of Congo's official public procurement notices from SIGMAP, the e-procurement platform run by ARMP -- procurement plans, calls for tenders, expressions of interest, non-objection notices, approvals, award decisions and more. No login needed.",
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

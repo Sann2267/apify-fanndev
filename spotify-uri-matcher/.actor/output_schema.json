@@ -1,0 +1,216 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Spotify URI match record",
+        "description": "Dataset envelope (_input / _source / _scrapedAt / recordType) on top of one match result per input line. MATCH rows carry either the matched track or the rejected best guess; ERROR rows cover lines that could not be searched at all. Spotify adds and removes fields without notice, so unlisted fields pass through rather than failing the run.",
+        "additionalProperties": true,
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The line that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "pathfinder-searchSuggestions, input-passthrough when the line was already a Spotify reference, or none on failure rows."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was emitted."
+            },
+            "recordType": {
+                "type": "string",
+                "title": "Record type",
+                "description": "MATCH or ERROR."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Failure rows only: empty_query or search_failed."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic accompanying _error."
+            },
+            "inputLine": {
+                "title": "Input line",
+                "description": "The original text, unchanged, so the output can be joined back to the source list."
+            },
+            "matched": {
+                "title": "Matched",
+                "description": "True when the best candidate cleared the minimum score."
+            },
+            "matchConfidence": {
+                "title": "Confidence",
+                "description": "exact, high, medium or low. A title-only query is capped at high however well it scores, because several recordings share a title and nothing corroborates which one is meant."
+            },
+            "matchScore": {
+                "title": "Match score",
+                "description": "0 to 1. A weighted blend of title and artist similarity, adjusted by duration when one was supplied."
+            },
+            "titleScore": {
+                "title": "Title score",
+                "description": "How closely the candidate's title matched, ignoring featured-artist and version suffixes."
+            },
+            "artistScore": {
+                "title": "Artist score",
+                "description": "How closely the candidate's artist matched. 0 when no artist was supplied and none appeared in the line."
+            },
+            "durationDeltaMs": {
+                "title": "Duration difference",
+                "description": "Milliseconds between the supplied duration and the candidate's, when a duration was given."
+            },
+            "queryTitle": {
+                "title": "Interpreted title",
+                "description": "Which part of the line was read as the title. Both orders are tried and the better-scoring reading is the one reported here."
+            },
+            "queryArtist": {
+                "title": "Interpreted artist",
+                "description": "Which part of the line was read as the artist."
+            },
+            "candidatesConsidered": {
+                "title": "Candidates considered",
+                "description": "How many track candidates Spotify returned for this line."
+            },
+            "trackName": {
+                "title": "Track name",
+                "description": "Matched rows: the song title as Spotify has it, version suffixes included."
+            },
+            "artistName": {
+                "title": "Artist",
+                "description": "Matched rows: first credited artist."
+            },
+            "artistNames": {
+                "title": "All artists",
+                "description": "Matched rows: every credited artist."
+            },
+            "albumName": {
+                "title": "Album",
+                "description": "Matched rows: the release the recording sits on."
+            },
+            "albumUrl": {
+                "title": "Album URL",
+                "description": "Matched rows: open.spotify.com link to the album."
+            },
+            "trackId": {
+                "title": "Track id",
+                "description": "Matched rows: Spotify track id."
+            },
+            "trackUri": {
+                "title": "Track URI",
+                "description": "Matched rows: the spotify:track: URI - the form Spotify's own import tools and API accept."
+            },
+            "trackUrl": {
+                "title": "Track URL",
+                "description": "Matched rows: open.spotify.com link to the track."
+            },
+            "duration": {
+                "title": "Duration",
+                "description": "Matched rows: track length as m:ss."
+            },
+            "durationMs": {
+                "title": "Duration (ms)",
+                "description": "Matched rows: track length in milliseconds."
+            },
+            "explicit": {
+                "title": "Explicit",
+                "description": "Matched rows: true when Spotify labels the recording explicit."
+            },
+            "unmatchedReason": {
+                "title": "Why unmatched",
+                "description": "Unmatched rows: what the best candidate was and the score it fell short by."
+            },
+            "bestGuessName": {
+                "title": "Best guess",
+                "description": "Unmatched rows: the closest candidate's title, for manual review."
+            },
+            "bestGuessArtist": {
+                "title": "Best guess artist",
+                "description": "Unmatched rows: the closest candidate's artist."
+            },
+            "bestGuessUri": {
+                "title": "Best guess URI",
+                "description": "Unmatched rows: the closest candidate's URI, so an accepted guess can be used without re-running."
+            },
+            "bestGuessUrl": {
+                "title": "Best guess URL",
+                "description": "Unmatched rows: open.spotify.com link to the closest candidate."
+            },
+            "note": {
+                "title": "Note",
+                "description": "Present when the line was already a Spotify reference and no search was performed."
+            }
+        }
+    },
+    "views": {
+        "overview": {
+            "title": "Matches",
+            "transformation": {
+                "fields": [
+                    "inputLine",
+                    "matched",
+                    "matchConfidence",
+                    "matchScore",
+                    "trackName",
+                    "artistName",
+                    "albumName",
+                    "duration",
+                    "trackUri",
+                    "trackUrl"
+                ]
+            },
+            "display": {
+                "component": "table",
+                "properties": {
+                    "inputLine": { "label": "Input" },
+                    "matched": { "label": "Matched" },
+                    "matchConfidence": { "label": "Confidence" },
+                    "matchScore": { "label": "Score" },
+                    "trackName": { "label": "Track" },
+                    "artistName": { "label": "Artist" },
+                    "albumName": { "label": "Album" },
+                    "duration": { "label": "Length" },
+                    "trackUri": { "label": "URI" },
+                    "trackUrl": { "label": "Link" }
+                }
+            }
+        },
+        "review": {
+            "title": "Needs review",
+            "transformation": {
+                "fields": [
+                    "inputLine",
+                    "matchScore",
+                    "titleScore",
+                    "artistScore",
+                    "queryTitle",
+                    "queryArtist",
+                    "bestGuessName",
+                    "bestGuessArtist",
+                    "bestGuessUrl",
+                    "unmatchedReason"
+                ]
+            },
+            "display": {
+                "component": "table",
+                "properties": {
+                    "inputLine": { "label": "Input" },
+                    "matchScore": { "label": "Score" },
+                    "titleScore": { "label": "Title" },
+                    "artistScore": { "label": "Artist" },
+                    "queryTitle": { "label": "Read as title" },
+                    "queryArtist": { "label": "Read as artist" },
+                    "bestGuessName": { "label": "Best guess" },
+                    "bestGuessArtist": { "label": "Guess artist" },
+                    "bestGuessUrl": { "label": "Guess link" },
+                    "unmatchedReason": { "label": "Reason" }
+                }
+            }
+        }
+    }
+}

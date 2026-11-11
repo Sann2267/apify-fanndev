@@ -1,0 +1,14 @@
+{
+    "actorSpecification": 1,
+    "name": "botswana-tenders-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Botswana Government Tenders Scraper (Ministry Websites)",
+    "description": "Pull public government tender/procurement notices published directly by Botswana ministries -- Ministry of Finance and Ministry of Health -- since Botswana decentralized procurement publication in 2022. No account or API key needed.",
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

@@ -1,0 +1,18 @@
+{
+    "actorSpecification": 1,
+    "name": "tech-stack-detector",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Tech Stack Detector - Website Technology Lookup",
+    "description": "Detect what a website runs - store platform, CMS, framework, analytics, marketing, chat, payments, CDN - across 87 fingerprints, with the exact header, cookie or script that proved each one. Filter a domain list to a stack, or find who is missing the tool you sell. One request per site.",
+    "categories": [
+        "LEAD_GENERATION",
+        "DEVELOPER_TOOLS"
+    ],
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

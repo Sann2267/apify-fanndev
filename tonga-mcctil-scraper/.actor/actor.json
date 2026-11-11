@@ -1,0 +1,15 @@
+{
+    "actorSpecification": 1,
+    "name": "tonga-mcctil-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Tonga Business Registry Scraper",
+    "description": "Search the Kingdom of Tonga's official Business Entities Registry (businessregistries.gov.to, run by the Ministry of Commerce, Consumer, Trade, Innovation and Labour) by company name and pull registration details, addresses, directors, shareholders, and filing history. No account needed.",
+    "categories": ["BUSINESS"],
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

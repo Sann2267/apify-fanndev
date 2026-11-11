@@ -1,0 +1,18 @@
+{
+    "actorSpecification": 1,
+    "name": "socialblade-creator-analytics-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Social Blade Creator Analytics Scraper",
+    "description": "Extract creator statistics from Social Blade for YouTube, TikTok, Twitch and Instagram -- subscribers/followers, views, video counts, country and category, Social Blade ranks, and 15 days of daily history. Plus the YouTube top-creator leaderboard. No account or API key needed.",
+    "categories": [
+        "SOCIAL_MEDIA",
+        "FOR_CREATORS"
+    ],
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

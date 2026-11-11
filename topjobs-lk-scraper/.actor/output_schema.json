@@ -1,0 +1,80 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Job search / detail record",
+        "description": "Raw-passthrough dataset envelope on top of topjobs.lk's own server-rendered HTML fields (the site has no JSON API -- see CRAWLING_METHOD.md). Every record carries _input/_source/_scrapedAt (and _error/_errorDetail on failures). Full-detail records (search mode with fetchFullDetails=true, or detail mode) carry the complete set of detail-page fields, including descriptionImageUrl -- topjobs.lk publishes the actual job description as an employer-uploaded image, not text, on every listing observed. Search-mode records with fetchFullDetails=false carry only the compact search-result-row fields (jobRefNo, position, employer, town, dates).",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The keyword/functionalArea search or job detail URL that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "S1-detail-html, S1-search-html, or none on failure."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed extractions (e.g. not_found, invalid_input, blocked_or_transient)."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "jobRefNo": { "title": "Job reference number", "description": "topjobs.lk's own numeric job reference (matches the site's \"Job Ref No\" label)." },
+            "position": { "title": "Job title", "description": "The job posting's title, as entered by the employer -- occasionally includes salary or extra context in the same string." },
+            "employer": { "title": "Employer name", "description": "May read as \"Company Name Withheld\" when the employer chose to stay anonymous -- not a login gate, just the employer's own choice." },
+            "town": { "title": "Town (search summary)", "description": "Search-summary record only -- the listing table's Town column." },
+            "location": { "title": "Location (full detail)", "description": "Full-detail record only -- town plus country, e.g. \"Kottawa, Sri Lanka\"." },
+            "openingDate": { "title": "Opening date (search summary)", "description": "Search-summary record only -- not shown on the detail page itself." },
+            "closingDate": { "title": "Closing date", "description": "The vacancy's application deadline, as displayed on site (not normalized -- date format varies between the search-summary and detail views)." },
+            "jobType": { "title": "Job type badges", "description": "Full-detail record only -- 0-3 dynamic badges as shown on the listing, e.g. [\"Full Time\", \"Permanent\", \"Onsite\"] or [\"Part Time\"]." },
+            "descriptionImageUrl": { "title": "Description image URL", "description": "Full-detail record only -- topjobs.lk renders the actual job description/requirements as an employer-uploaded image rather than text; this is that image's URL. Publicly fetchable, no login required." },
+            "companyLogoUrl": { "title": "Employer logo URL", "description": "Full-detail record only." },
+            "companyWebsite": { "title": "Employer website", "description": "Full-detail record only -- frequently empty/null when the employer didn't supply one." },
+            "companyEmail": { "title": "Employer contact email", "description": "Full-detail record only -- the \"Apply by email\" address shown on the public page, when supplied by the employer." },
+            "jobSpecCode": { "title": "Job spec code", "description": "Full-detail record only -- topjobs.lk's internal job-spec identifier, matches jobRefNo/jc without the leading zero-padding." },
+            "jc": { "title": "Job code", "description": "topjobs.lk's internal job code, required (with ac/ec) to fetch this job's detail page." },
+            "ac": { "title": "Agent code", "description": "topjobs.lk's internal agent code, required (with jc/ec) to fetch this job's detail page." },
+            "ec": { "title": "Employer code", "description": "topjobs.lk's internal employer code, required (with jc/ac) to fetch this job's detail page." },
+            "detailUrl": { "title": "Job detail URL", "description": "Canonical topjobs.lk detail-page URL for this job -- feed this back into \"detail\" mode's jobUrl/jobUrls input to re-fetch it directly." },
+            "jsonLd": { "title": "JSON-LD JobPosting (raw)", "description": "Full-detail record only, and only present on roughly half of pages observed (topjobs.lk quirk, not this actor's fault) -- the site's own schema.org JobPosting block, passed through verbatim." }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across search-summary and full-detail records.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "jobRefNo",
+                    "position",
+                    "employer",
+                    "town",
+                    "location",
+                    "closingDate",
+                    "jobType",
+                    "descriptionImageUrl",
+                    "detailUrl",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

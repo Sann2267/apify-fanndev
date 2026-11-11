@@ -1,0 +1,285 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Facebook Ad Library record",
+        "description": "Dataset envelope (_input / _source / _scrapedAt / recordType) on top of one ad per row. One AD row per ad, one RUN_SUMMARY row per run, ERROR rows when a search fails. Facebook changes its payload without notice, so unlisted fields pass through rather than failing the run.",
+        "additionalProperties": true,
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The search this record came from, as 'keyword:<term> @ <country>' or 'page:<id> @ <country>'."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source",
+                "description": "Always ad-library."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was emitted."
+            },
+            "recordType": {
+                "type": "string",
+                "title": "Record type",
+                "description": "AD, RUN_SUMMARY or ERROR."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Failure rows only: fetch_failed or unexpected_error."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic accompanying _error."
+            },
+            "adArchiveId": {
+                "title": "Ad archive ID",
+                "description": "Meta's permanent identifier for the ad."
+            },
+            "adLibraryUrl": {
+                "title": "Ad Library URL",
+                "description": "Direct link to this ad's page in the public Ad Library."
+            },
+            "isActive": {
+                "title": "Currently running",
+                "description": "Whether Meta reports the ad as still being delivered."
+            },
+            "pageId": {
+                "title": "Advertiser page ID",
+                "description": "Numeric id of the Facebook page paying for the ad. This is the id the 'advertisers' input accepts."
+            },
+            "pageName": {
+                "title": "Advertiser",
+                "description": "Display name of the advertising page."
+            },
+            "pageUrl": {
+                "title": "Advertiser page URL",
+                "description": "Profile URI of the advertising page."
+            },
+            "pageCategories": {
+                "title": "Advertiser categories",
+                "description": "Categories the advertiser page lists for itself."
+            },
+            "pageLikeCount": {
+                "title": "Advertiser likes",
+                "description": "Like count of the advertising page at the time of the fetch."
+            },
+            "startDate": {
+                "title": "First shown",
+                "description": "ISO 8601 UTC date the ad began running."
+            },
+            "endDate": {
+                "title": "Last shown",
+                "description": "ISO 8601 UTC end of the ad's flight. For an ad still running this is the current end, not a stop date -- read it together with isActive."
+            },
+            "runningDays": {
+                "title": "Days on air",
+                "description": "Whole days between startDate and endDate. Null when either date is missing."
+            },
+            "adText": {
+                "title": "Ad copy",
+                "description": "The ad's primary body text. Dynamic-creative ads legitimately contain Meta template tokens such as {{product.name}}; that is the real published text."
+            },
+            "title": {
+                "title": "Headline",
+                "description": "Headline shown with the link."
+            },
+            "linkDescription": {
+                "title": "Link description",
+                "description": "Secondary description under the headline."
+            },
+            "caption": {
+                "title": "Caption",
+                "description": "Display domain or caption line."
+            },
+            "linkUrl": {
+                "title": "Destination URL",
+                "description": "Where the ad sends the click."
+            },
+            "ctaText": {
+                "title": "CTA label",
+                "description": "Text on the call-to-action button, e.g. 'Shop now'."
+            },
+            "ctaType": {
+                "title": "CTA type",
+                "description": "Meta's internal CTA code, e.g. LEARN_MORE."
+            },
+            "displayFormat": {
+                "title": "Creative format",
+                "description": "VIDEO, IMAGE, DCO, CAROUSEL and similar."
+            },
+            "publisherPlatforms": {
+                "title": "Platforms",
+                "description": "Meta surfaces the ad is delivered on."
+            },
+            "imageUrls": {
+                "title": "Image URLs",
+                "description": "Every image creative, including carousel cards."
+            },
+            "videoUrls": {
+                "title": "Video URLs",
+                "description": "Direct HD and SD video files. These are signed CDN URLs and expire."
+            },
+            "thumbnailUrls": {
+                "title": "Video thumbnails",
+                "description": "Preview frames for the video creatives."
+            },
+            "cards": {
+                "title": "Carousel cards",
+                "description": "Per-card headline, body, caption, CTA and link for carousel ads."
+            },
+            "imageCount": {
+                "title": "Images",
+                "description": "How many image creatives the ad carries."
+            },
+            "videoCount": {
+                "title": "Videos",
+                "description": "How many video creatives the ad carries."
+            },
+            "adTextWordCount": {
+                "title": "Copy length (words)",
+                "description": "Word count of the ad body, for comparing copy length across a niche."
+            },
+            "collationCount": {
+                "title": "Grouped variants",
+                "description": "How many near-identical ads Meta collapsed into this entry."
+            },
+            "impressionsText": {
+                "title": "Impressions range",
+                "description": "Published only for political and issue ads. Empty for commercial ads by Meta policy."
+            },
+            "spendText": {
+                "title": "Spend range",
+                "description": "Published only for political and issue ads. Empty for commercial ads by Meta policy."
+            },
+            "targetedCountries": {
+                "title": "Targeted countries",
+                "description": "Published only for political and issue ads."
+            },
+            "byline": {
+                "title": "Byline",
+                "description": "'Paid for by' text, on ads that carry a disclaimer."
+            },
+            "searchCountry": {
+                "title": "Search country",
+                "description": "The Ad Library country this row was found in."
+            },
+            "searchTerm": {
+                "title": "Search term",
+                "description": "The keyword this row was found with, if the search was keyword-based."
+            },
+            "searchUrl": {
+                "title": "Search URL",
+                "description": "The Ad Library URL this row came from -- open it to see the same result set in a browser."
+            },
+            "totalMatchingAds": {
+                "title": "Total matching ads",
+                "description": "How many ads Facebook says match the search, which is usually far more than the run collected."
+            },
+            "isBrandedContent": {
+                "title": "Branded content",
+                "description": "True when a creator's page posted the ad and a brand paid for it. On an advertiser-scoped search these rows carry the creator in pageName and the paying brand in sponsorPageName."
+            },
+            "sponsorPageName": {
+                "title": "Paying brand",
+                "description": "The brand behind a branded-content ad. Null for ordinary ads."
+            },
+            "sponsorPageId": {
+                "title": "Paying brand page ID",
+                "description": "Numeric page id of the paying brand on branded-content ads."
+            }
+        }
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "One row per ad: who is running it, what it says and how long it has been up.",
+            "transformation": {
+                "fields": [
+                    "pageName",
+                    "adText",
+                    "ctaText",
+                    "displayFormat",
+                    "isActive",
+                    "runningDays",
+                    "startDate",
+                    "linkUrl",
+                    "adLibraryUrl",
+                    "recordType",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        },
+        "creative": {
+            "title": "Creative",
+            "description": "The copy and media of each ad, for a swipe file.",
+            "transformation": {
+                "fields": [
+                    "pageName",
+                    "title",
+                    "adText",
+                    "linkDescription",
+                    "caption",
+                    "ctaText",
+                    "displayFormat",
+                    "imageCount",
+                    "videoCount",
+                    "adLibraryUrl"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        },
+        "advertisers": {
+            "title": "Advertisers",
+            "description": "Who is advertising, and on which surfaces.",
+            "transformation": {
+                "fields": [
+                    "pageName",
+                    "pageId",
+                    "isBrandedContent",
+                    "sponsorPageName",
+                    "pageUrl",
+                    "pageLikeCount",
+                    "pageCategories",
+                    "publisherPlatforms",
+                    "isActive",
+                    "runningDays",
+                    "searchCountry"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        },
+        "transparency": {
+            "title": "Spend and impressions",
+            "description": "The fields Meta publishes for political and issue ads only.",
+            "transformation": {
+                "fields": [
+                    "pageName",
+                    "adText",
+                    "impressionsText",
+                    "spendText",
+                    "currency",
+                    "targetedCountries",
+                    "byline",
+                    "disclaimerLabel",
+                    "adLibraryUrl"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

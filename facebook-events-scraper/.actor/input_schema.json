@@ -1,0 +1,133 @@
+{
+    "title": "Facebook Events Scraper",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "searchTerms": {
+            "title": "Search terms",
+            "type": "array",
+            "description": "What to look for, e.g. 'yoga', 'live music', 'konser'. Combined with each location below.",
+            "editor": "stringList",
+            "prefill": [
+                "live music"
+            ]
+        },
+        "locations": {
+            "title": "Locations",
+            "type": "array",
+            "description": "City names, e.g. 'new york', 'jakarta', 'london'. Facebook's event search takes no location parameter a logged-out client can use, so the city is appended to the search term instead - which works: 'konser jakarta' returns Jakarta concerts. Supply locations on their own and each becomes a search in its own right.",
+            "editor": "stringList",
+            "prefill": [
+                "new york"
+            ]
+        },
+        "pages": {
+            "title": "Pages",
+            "type": "array",
+            "description": "Read a page's own events tab instead of searching. Vanity slugs ('MTV') or page URLs. Use this when you already know whose events you want.",
+            "editor": "stringList"
+        },
+        "startUrls": {
+            "title": "Start URLs",
+            "type": "array",
+            "description": "Page URLs, for pasting a list straight out of another actor's dataset.",
+            "editor": "requestListSources"
+        },
+        "maxEventsPerQuery": {
+            "title": "Max events per search or page",
+            "type": "integer",
+            "description": "Facebook renders roughly seven events per search page and this actor replays its pagination query for the rest.",
+            "default": 30,
+            "minimum": 1,
+            "maximum": 500,
+            "unit": "events"
+        },
+        "excludePast": {
+            "title": "Exclude past events",
+            "type": "boolean",
+            "description": "Drop events Facebook marks as finished.",
+            "default": true,
+            "groupCaption": "Filters",
+            "groupDescription": "Applied after fetching, so the run summary still counts everything read."
+        },
+        "excludeCanceled": {
+            "title": "Exclude cancelled events",
+            "type": "boolean",
+            "description": "Drop events Facebook marks as cancelled.",
+            "default": true
+        },
+        "onlyOnline": {
+            "title": "Only online events",
+            "type": "boolean",
+            "description": "Keep virtual events only. Cannot be combined with 'Only in-person events'.",
+            "default": false
+        },
+        "onlyInPerson": {
+            "title": "Only in-person events",
+            "type": "boolean",
+            "description": "Keep events with a physical venue only.",
+            "default": false
+        },
+        "nameContains": {
+            "title": "Event name contains",
+            "type": "string",
+            "description": "Case-insensitive substring match against the event name.",
+            "editor": "textfield"
+        },
+        "placeContains": {
+            "title": "Place contains",
+            "type": "string",
+            "description": "Case-insensitive substring match against the venue name, address and city - useful for narrowing a broad search to one neighbourhood.",
+            "editor": "textfield"
+        },
+        "startsAfter": {
+            "title": "Starts on or after",
+            "type": "string",
+            "description": "YYYY-MM-DD. Events from a page's events tab carry a date sentence but no exact timestamp, so a date filter drops them rather than guessing. The log says when that happens.",
+            "editor": "textfield"
+        },
+        "startsBefore": {
+            "title": "Starts on or before",
+            "type": "string",
+            "description": "YYYY-MM-DD.",
+            "editor": "textfield"
+        },
+        "emitSummary": {
+            "title": "Add a run summary record",
+            "type": "boolean",
+            "description": "Append one RUN_SUMMARY record: events collected, online vs in-person, how many carry a venue and an exact start time, and the date range covered.",
+            "default": true
+        },
+        "exportFormats": {
+            "title": "Extra export files",
+            "type": "array",
+            "description": "Also write the results to the key-value store in these formats. The dataset is always produced regardless.",
+            "editor": "select",
+            "items": {
+                "type": "string",
+                "enum": [
+                    "json",
+                    "ndjson",
+                    "csv",
+                    "xlsx"
+                ],
+                "enumTitles": [
+                    "JSON",
+                    "NDJSON",
+                    "CSV",
+                    "Excel (XLSX)"
+                ]
+            },
+            "default": []
+        },
+        "proxyConfiguration": {
+            "title": "Proxy",
+            "type": "object",
+            "description": "Recommended on the Apify platform if you want more than the events Facebook renders on the first page. Facebook serves the rendered first page fine from any IP, but on Apify's datacenter IPs it answers the very first pagination request with \"Rate limit exceeded\" - measured 2026-09-20. Switching the Apify proxy on with the RESIDENTIAL group restored full pagination in the same test (60 ads over 4 pages against 30). Running from your own machine, no proxy is needed at all. The actor logs a warning naming this when it happens, so a short run is never silently mistaken for a short result set.",
+            "editor": "proxy",
+            "default": {
+                "useApifyProxy": false
+            }
+        }
+    }
+}

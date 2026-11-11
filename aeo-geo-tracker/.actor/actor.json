@@ -1,0 +1,14 @@
+{
+    "actorSpecification": 1,
+    "name": "aeo-geo-tracker",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "AEO Bing Rank Tracker",
+    "description": "Track whether your brand/domain appears in Bing search results -- Answer-Engine Optimization rank tracking, no account or API key needed.",
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

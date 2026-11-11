@@ -1,0 +1,12 @@
+{
+    "actorOutputSchemaVersion": 1,
+    "title": "Twitch Streamer & Channel Analytics Results",
+    "properties": {
+        "results": {
+            "type": "string",
+            "title": "Dataset results",
+            "template": "{{links.apiDefaultDatasetUrl}}/items",
+            "description": "All scraped top-games / top-streams / game-streams / channel-rank records produced by this run."
+        }
+    }
+}

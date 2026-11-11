@@ -1,0 +1,123 @@
+{
+    "title": "Philippine Supreme Court Decisions Scraper",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "mode": {
+            "title": "Mode",
+            "type": "string",
+            "editor": "select",
+            "description": "\"search\" runs a full-text query against the Supreme Court E-Library's own dtSearch engine. \"browse\" walks the archive month by month for a year range. \"decision\" fetches the full text of specific document ID(s) directly.",
+            "enum": ["search", "browse", "decision"],
+            "enumTitles": ["Full-text search", "Browse by year", "Full decision (by document ID)"],
+            "default": "search",
+            "prefill": "search"
+        },
+        "searchPhrase": {
+            "title": "Search phrase",
+            "type": "string",
+            "editor": "textfield",
+            "description": "\"search\" mode -- the full-text query, e.g. \"malversation\", \"probable cause\", a party name or a doctrine. Required in this mode.",
+            "prefill": "malversation"
+        },
+        "searchCorpus": {
+            "title": "Corpus to search",
+            "type": "string",
+            "editor": "select",
+            "description": "\"search\" mode -- which of the E-Library's dtSearch indexes to query. NOTE: sc_resolution, administrative_matter and bar_matter were unreadable server-side at build time (the portal's own search returns \"$E 0001 Unable to access index\" for them); a run against one returns an explicit search_index_unavailable diagnostic rather than a silent zero.",
+            "enum": ["sc_decision", "sc_all", "case_index", "circular", "manual", "sc_resolution", "administrative_matter", "bar_matter"],
+            "enumTitles": [
+                "Decisions (recommended)",
+                "All documents",
+                "SC case index",
+                "Circulars",
+                "Manuals",
+                "Signed resolutions (broken upstream)",
+                "Administrative matters (broken upstream)",
+                "Bar matters (broken upstream)"
+            ],
+            "default": "sc_decision",
+            "prefill": "sc_decision"
+        },
+        "searchType": {
+            "title": "Search type",
+            "type": "string",
+            "editor": "select",
+            "description": "\"search\" mode -- how dtSearch interprets the phrase: any of the words, all of the words, the exact phrase, or a boolean expression (AND / OR / NOT / w-within).",
+            "enum": ["anywords", "allwords", "phrase", "bool"],
+            "enumTitles": ["Any of the words", "All of the words", "Exact phrase", "Boolean expression"],
+            "default": "anywords",
+            "prefill": "anywords"
+        },
+        "fromYear": {
+            "title": "From year",
+            "type": "integer",
+            "editor": "number",
+            "description": "\"browse\" mode -- earliest year to walk. The archive's monthly listing starts at 1996.",
+            "default": 2026,
+            "minimum": 1996,
+            "maximum": 2100,
+            "prefill": 2026
+        },
+        "toYear": {
+            "title": "To year",
+            "type": "integer",
+            "editor": "number",
+            "description": "\"browse\" mode -- latest year to walk. Years are visited newest-first, and each month is paged until it runs out.",
+            "default": 2026,
+            "minimum": 1996,
+            "maximum": 2100,
+            "prefill": 2026
+        },
+        "docIds": {
+            "title": "Document IDs",
+            "type": "array",
+            "editor": "stringList",
+            "description": "\"decision\" mode -- the numeric document ids from the portal's own /thebookshelf/showdocs/1/<id> URLs, e.g. \"70008\". A full URL may be pasted instead of the bare id. These appear as the \"docId\" field of any browse result.",
+            "prefill": ["70008"]
+        },
+        "maxResults": {
+            "title": "Max results",
+            "type": "integer",
+            "editor": "number",
+            "description": "\"search\" and \"browse\" modes -- maximum number of decisions to return. Pages are followed automatically until this cap or the end of the result set. dtSearch itself stops counting at 5,000 matches per query.",
+            "default": 50,
+            "minimum": 1,
+            "maximum": 20000,
+            "prefill": 50
+        },
+        "fetchFullText": {
+            "title": "Include full decision text",
+            "type": "boolean",
+            "editor": "checkbox",
+            "description": "\"search\" and \"browse\" modes -- when true, every result is additionally fetched for the complete opinion (division, ponente, document type, Philippine Reports citation and the full text, frequently 20,000-350,000 characters). When false (default), only the summary row is returned, which is far faster and cheaper for large result sets.",
+            "default": false,
+            "prefill": false
+        },
+        "maxConcurrency": {
+            "title": "Max concurrent workers",
+            "type": "integer",
+            "editor": "number",
+            "description": "How many decision pages to fetch in parallel when fetchFullText is on, or how many ids to fetch at once in \"decision\" mode. Kept deliberately low by default -- this is a small government library server.",
+            "default": 4,
+            "minimum": 1,
+            "maximum": 16,
+            "prefill": 4
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "editor": "proxy",
+            "description": "Apify Proxy configuration. Residential is on by default.",
+            "default": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            },
+            "prefill": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            }
+        }
+    },
+    "required": ["mode"]
+}

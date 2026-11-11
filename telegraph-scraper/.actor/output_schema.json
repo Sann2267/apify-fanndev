@@ -1,0 +1,122 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Article / latest-headline record",
+        "description": "Raw-passthrough dataset envelope. Every record carries _input/_source/_scrapedAt (failed URLs are not written to the dataset -- they are reported in the ERRORS record of the run's key-value store). Article-mode records (S1-html, articleBody pulled from HTML div.articleBodyText blocks since ld+json has no articleBody) carry headline/articleBody-style fields; latest-mode records (S2-rss, sitewide /rss.xml) carry title/link-style fields.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The exact input value (URL, or 'latest') that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which extraction strategy emitted this record (e.g. S1-html, S2-rss)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_paywalled": {
+                "type": "boolean",
+                "title": "Paywalled",
+                "description": "Honest per-article flag: true only when upstream marked the article isAccessibleForFree=false AND the scraped body looks like a short stub (<600 chars). Never fabricated -- in recon, every sampled article (including flagship columnists) was isAccessibleForFree=true with a full-length body, so this has not been observed to fire; see CRAWLING_METHOD.md."
+            },
+            "headline": {
+                "title": "Headline",
+                "description": "Article headline, from the NewsArticle ld+json block."
+            },
+            "articleBody": {
+                "title": "Article body",
+                "description": "Full article text, joined from <p> tags inside every div.articleBodyText block on the page (Telegraph splits the body across multiple sibling blocks, interleaved with inline images)."
+            },
+            "author": {
+                "title": "Author",
+                "description": "Comma-joined byline name(s), extracted from the ld+json author Person array."
+            },
+            "publisher": {
+                "title": "Publisher",
+                "description": "Publisher name from the ld+json publisher object."
+            },
+            "section": {
+                "title": "Section",
+                "description": "Best-effort section name derived from the first URL path segment (e.g. \"news\", \"business\", \"sport\") -- ld+json's own articleSection field is always empty on this site, so this is a fallback, not load-bearing."
+            },
+            "keywords": {
+                "title": "Keywords",
+                "description": "Comma-separated tag string from the ld+json keywords field, passed through verbatim."
+            },
+            "datePublished": {
+                "title": "Date published",
+                "description": "ISO 8601 publish date from ld+json."
+            },
+            "dateModified": {
+                "title": "Date modified",
+                "description": "ISO 8601 last-modified date from ld+json."
+            },
+            "image": {
+                "title": "Image",
+                "description": "Lead image object(s) from ld+json (article mode) or RSS <enclosure url> (latest mode)."
+            },
+            "isAccessibleForFree": {
+                "title": "Accessible for free",
+                "description": "Upstream paywall metering flag from ld+json, passed through as-is."
+            },
+            "title": {
+                "title": "Title",
+                "description": "Headline text of a latest-mode RSS item."
+            },
+            "link": {
+                "title": "Link",
+                "description": "Article URL from the RSS item."
+            },
+            "description": {
+                "title": "Description",
+                "description": "Short teaser text from the RSS item (latest mode only)."
+            },
+            "pubDate": {
+                "title": "Publish date",
+                "description": "RSS pubDate string."
+            },
+            "categories": {
+                "title": "Categories",
+                "description": "List of taxonomy-style <category> values from the RSS item (e.g. \"topics:places/middle-east\", \"structure:opinion\")."
+            },
+            "guid": {
+                "title": "GUID",
+                "description": "RSS item guid."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across both article and latest-headline records.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "_source",
+                    "_scrapedAt",
+                    "headline",
+                    "title",
+                    "link",
+                    "datePublished",
+                    "pubDate",
+                    "author",
+                    "section",
+                    "isAccessibleForFree",
+                    "_paywalled"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

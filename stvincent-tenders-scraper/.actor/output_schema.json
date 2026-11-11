@@ -1,0 +1,116 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "SVG procurement.gov.vc tender/award record",
+        "description": "One record per row. Shape depends on recordType: CURRENT_BID or CLOSED_BID (listType=current/closed, a bid-table row with reference number, title, PDF link, procuring entity, procurement type, tender type, submission deadline) or AWARD_DOCUMENT (listType=awards, one row per year+quarterly PDF document link). A single _error record is emitted instead of payload fields when a request fails or is unreachable.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "Which list this record came from: 'list:current', 'list:closed', or 'list:awards'."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which extraction strategy emitted this record, or 'none' on error."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on a failed run (blocked_or_transient)."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "recordType": {
+                "type": "string",
+                "title": "Record type",
+                "description": "CURRENT_BID, CLOSED_BID, or AWARD_DOCUMENT."
+            },
+            "no": {
+                "type": ["string", "null"],
+                "title": "Row number",
+                "description": "CURRENT_BID/CLOSED_BID only -- the portal's own row number within its table (not a stable ID across runs)."
+            },
+            "referenceNumber": {
+                "type": ["string", "null"],
+                "title": "Reference number",
+                "description": "CURRENT_BID/CLOSED_BID only -- the procuring entity's own bid reference code."
+            },
+            "title": {
+                "type": ["string", "null"],
+                "title": "Title",
+                "description": "What is being procured (CURRENT_BID/CLOSED_BID) or the document's quarter label (AWARD_DOCUMENT uses documentLabel instead)."
+            },
+            "pdfUrl": {
+                "type": ["string", "null"],
+                "title": "Document URL",
+                "description": "Direct link to the bid/ToR PDF (CURRENT_BID/CLOSED_BID) or the quarterly award-of-contracts PDF (AWARD_DOCUMENT)."
+            },
+            "procuringEntity": {
+                "type": ["string", "null"],
+                "title": "Procuring entity",
+                "description": "CURRENT_BID/CLOSED_BID only -- the ministry, project, or government body running this procurement."
+            },
+            "procurementType": {
+                "type": ["string", "null"],
+                "title": "Procurement type",
+                "description": "CURRENT_BID/CLOSED_BID only -- 'Goods', 'Services', or 'Works'."
+            },
+            "tenderType": {
+                "type": ["string", "null"],
+                "title": "Tender type",
+                "description": "CURRENT_BID/CLOSED_BID only -- e.g. 'Invitation to Bid', 'Request For Expressions of Interest', 'Request for Quotation'."
+            },
+            "submissionDeadline": {
+                "type": ["string", "null"],
+                "title": "Submission deadline",
+                "description": "CURRENT_BID/CLOSED_BID only -- upstream free-text deadline, usually 'Month DD, YYYY @ H:MM a.m./p.m.'; sometimes blank upstream (a linked Terms of Reference row sharing its parent bid's deadline)."
+            },
+            "year": {
+                "type": ["string", "null"],
+                "title": "Year",
+                "description": "AWARD_DOCUMENT only -- the calendar year this award document covers."
+            },
+            "documentLabel": {
+                "type": ["string", "null"],
+                "title": "Document label",
+                "description": "AWARD_DOCUMENT only -- which portion of the year this PDF covers, e.g. '1st Quarter', 'Full Year'."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across all record types -- rows missing a given column render blank.",
+            "transformation": {
+                "fields": [
+                    "recordType",
+                    "referenceNumber",
+                    "title",
+                    "procuringEntity",
+                    "tenderType",
+                    "submissionDeadline",
+                    "year",
+                    "pdfUrl",
+                    "_error",
+                    "_scrapedAt"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

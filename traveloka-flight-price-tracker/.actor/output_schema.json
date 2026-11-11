@@ -1,0 +1,199 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+            "recordType": {
+                "type": "string"
+            },
+            "route": {
+                "type": [
+                    "string",
+                    "null"
+                ]
+            },
+            "originQuery": {
+                "type": [
+                    "string",
+                    "null"
+                ]
+            },
+            "originCode": {
+                "type": [
+                    "string",
+                    "null"
+                ]
+            },
+            "originName": {
+                "type": [
+                    "string",
+                    "null"
+                ]
+            },
+            "originCountry": {
+                "type": [
+                    "string",
+                    "null"
+                ]
+            },
+            "destinationQuery": {
+                "type": [
+                    "string",
+                    "null"
+                ]
+            },
+            "destinationCode": {
+                "type": [
+                    "string",
+                    "null"
+                ]
+            },
+            "destinationName": {
+                "type": [
+                    "string",
+                    "null"
+                ]
+            },
+            "destinationCountry": {
+                "type": [
+                    "string",
+                    "null"
+                ]
+            },
+            "seatClass": {
+                "type": [
+                    "string",
+                    "null"
+                ]
+            },
+            "journeyType": {
+                "type": [
+                    "string",
+                    "null"
+                ]
+            },
+            "currency": {
+                "type": [
+                    "string",
+                    "null"
+                ]
+            },
+            "monthlyCurve": {
+                "type": [
+                    "array",
+                    "null"
+                ]
+            },
+            "dateGrid": {
+                "type": [
+                    "array",
+                    "null"
+                ]
+            },
+            "summary": {
+                "type": [
+                    "object",
+                    "null"
+                ]
+            },
+            "warnings": {
+                "type": [
+                    "array",
+                    "null"
+                ]
+            },
+            "error": {
+                "type": [
+                    "string",
+                    "null"
+                ]
+            },
+            "scrapedAt": {
+                "type": "string"
+            }
+        },
+        "required": [
+            "recordType",
+            "scrapedAt"
+        ]
+    },
+    "views": {
+        "overview": {
+            "title": "Routes",
+            "transformation": {
+                "fields": [
+                    "route",
+                    "originName",
+                    "destinationName",
+                    "seatClass",
+                    "journeyType",
+                    "currency",
+                    "summary",
+                    "recordType"
+                ]
+            },
+            "display": {
+                "component": "table",
+                "properties": {
+                    "route": {
+                        "label": "Route"
+                    },
+                    "originName": {
+                        "label": "From"
+                    },
+                    "destinationName": {
+                        "label": "To"
+                    },
+                    "seatClass": {
+                        "label": "Cabin"
+                    },
+                    "journeyType": {
+                        "label": "Trip"
+                    },
+                    "currency": {
+                        "label": "Currency"
+                    },
+                    "summary": {
+                        "label": "Price summary"
+                    },
+                    "recordType": {
+                        "label": "Status"
+                    }
+                }
+            }
+        },
+        "fares": {
+            "title": "Fare series",
+            "transformation": {
+                "fields": [
+                    "route",
+                    "currency",
+                    "monthlyCurve",
+                    "dateGrid",
+                    "recordType"
+                ]
+            },
+            "display": {
+                "component": "table",
+                "properties": {
+                    "route": {
+                        "label": "Route"
+                    },
+                    "currency": {
+                        "label": "Currency"
+                    },
+                    "monthlyCurve": {
+                        "label": "12-month cheapest"
+                    },
+                    "dateGrid": {
+                        "label": "Depart x return grid"
+                    },
+                    "recordType": {
+                        "label": "Status"
+                    }
+                }
+            }
+        }
+    }
+}

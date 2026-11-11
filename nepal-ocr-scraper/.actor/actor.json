@@ -1,0 +1,14 @@
+{
+    "actorSpecification": 1,
+    "name": "nepal-ocr-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Nepal Company Registrar (OCR) Scraper",
+    "description": "Search Nepal's official Office of the Company Registrar (OCR) database by company name (English or Nepali) or registration number and pull the basic registration record: registration number, registration date, company type, address, and legal-hold (Rokka) status. No account or API key needed.",
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

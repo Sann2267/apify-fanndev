@@ -1,0 +1,91 @@
+{
+    "title": "LinkedIn University Alumni Career Mapper",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "schoolUrls": {
+            "title": "School pages",
+            "type": "array",
+            "description": "Universities to map. A linkedin.com/school/... URL or a bare school slug both work; a bare slug is treated as a school, not a company.",
+            "editor": "stringList",
+            "prefill": ["stanford-university"]
+        },
+        "startUrls": {
+            "title": "School pages (request list)",
+            "type": "array",
+            "description": "The same school links in the request-list format, for callers that already keep one.",
+            "editor": "requestListSources"
+        },
+        "sessionCookie": {
+            "title": "Your li_at session cookie (required)",
+            "type": "string",
+            "description": "Mandatory, and LinkedIn is stricter about school pages than about anything else in this portfolio: /school/ answers HTTP 999 to logged-out visitors on every path, including the /company/ alias that redirects there, and unlike the ordinary rate gate it does not clear with delays. There is no public school record to fall back on. To get the cookie: sign in to LinkedIn in your browser, open DevTools > Application > Cookies > www.linkedin.com, copy the VALUE of li_at. This actor never asks for your password and never signs in on your behalf. Scraping while signed in breaches LinkedIn's User Agreement and accounts do get restricted - use one you are willing to risk. Without a cookie the run still finishes successfully and explains itself in the dataset.",
+            "editor": "textfield",
+            "isSecret": true
+        },
+        "filterKeywords": {
+            "title": "Narrow the alumni search",
+            "type": "string",
+            "description": "Passed to LinkedIn's own search box alongside the school filter - 'software engineer', 'product manager', 'Jakarta'. Narrowing server-side is much cheaper than reading every alumnus and filtering afterwards, and for large universities it is the only way to get a useful slice.",
+            "editor": "textfield"
+        },
+        "maxAlumniPerSchool": {
+            "title": "Maximum alumni per school",
+            "type": "integer",
+            "description": "Cap per school. LinkedIn's people search stops serving results past roughly 1,000 regardless, and large universities have far more alumni than that - so treat any result as a sample, not a census.",
+            "default": 200,
+            "minimum": 1,
+            "maximum": 1000,
+            "unit": "people"
+        },
+        "maxAlumni": {
+            "title": "Maximum alumni in total",
+            "type": "integer",
+            "description": "Overall ceiling across every school.",
+            "default": 1000,
+            "minimum": 1,
+            "maximum": 10000,
+            "unit": "people"
+        },
+        "emitSummary": {
+            "title": "Emit a summary row per school",
+            "type": "boolean",
+            "description": "Append a SUMMARY row per school with top employers, top locations, top roles and the graduation-year range - the aggregate a tracer study actually wants out of the individual rows.",
+            "default": true
+        },
+        "minDelaySeconds": {
+            "title": "Minimum delay between requests",
+            "type": "integer",
+            "description": "LinkedIn answers request bursts with HTTP 999. With a session cookie in play the randomised gap does double duty: it keeps the run under the rate gate and keeps it looking like a person rather than a script.",
+            "default": 3,
+            "minimum": 0,
+            "maximum": 60,
+            "unit": "seconds"
+        },
+        "maxDelaySeconds": {
+            "title": "Maximum delay between requests",
+            "type": "integer",
+            "description": "The ceiling of the randomised gap. Raise both bounds if the log shows rate-gate warnings.",
+            "default": 8,
+            "minimum": 0,
+            "maximum": 120,
+            "unit": "seconds"
+        },
+        "exportFormats": {
+            "title": "Extra export files",
+            "type": "array",
+            "description": "Besides the dataset, write ready-made files into this run's key-value store.",
+            "editor": "select",
+            "items": { "type": "string", "enum": ["json","ndjson","csv","excel"], "enumTitles": ["JSON","NDJSON","CSV","Excel (XLSX)"] },
+            "default": []
+        },
+        "proxyConfiguration": {
+            "title": "Proxy (strongly advised)",
+            "type": "object",
+            "description": "This actor always runs with your session cookie, so use RESIDENTIAL in your own country. LinkedIn scores the exit IP against where your account normally signs in, and an Apify datacenter IP is precisely the mismatch that gets a session flagged.",
+            "editor": "proxy",
+            "default": { "useApifyProxy": true, "apifyProxyGroups": ["RESIDENTIAL"] }
+        }
+    },
+    "required": []
+}

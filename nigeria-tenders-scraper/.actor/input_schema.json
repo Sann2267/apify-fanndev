@@ -1,0 +1,75 @@
+{
+    "title": "Nigeria Government Tenders Scraper (NOCOPO/BPP)",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "mode": {
+            "title": "Mode",
+            "type": "string",
+            "editor": "select",
+            "description": "\"List\" browses NOCOPO's public Published Records table (newest first, optionally filtered by keyword). \"Detail\" fetches full OCDS (Open Contracting Data Standard) release history for one or more specific OCIDs.",
+            "enum": ["list", "detail"],
+            "enumTitles": ["List (browse recent records)", "Detail (fetch specific OCIDs)"],
+            "default": "list",
+            "prefill": "list"
+        },
+        "searchQuery": {
+            "title": "Search keyword (mode=list only)",
+            "type": "string",
+            "editor": "textfield",
+            "description": "Optional free-text filter (matches NOCOPO's own site search across project title, procuring entity/buyer name, etc.). Leave blank to browse all records, newest DatePublished first."
+        },
+        "maxResults": {
+            "title": "Max results (mode=list only)",
+            "type": "integer",
+            "description": "Caps how many records this run returns. The listing endpoint is paged internally in batches, so this actor makes as many requests as needed up to this cap or until no further records are available.",
+            "default": 25,
+            "minimum": 1,
+            "maximum": 2000,
+            "prefill": 25
+        },
+        "fetchDetail": {
+            "title": "Fetch full OCDS detail for each list row (mode=list only)",
+            "type": "boolean",
+            "description": "When enabled, each list row is enriched with the same merged tender/award/contract summary fields and full 'releases' history as mode=detail -- one extra request per row, so runs take longer.",
+            "default": false,
+            "prefill": false
+        },
+        "ocid": {
+            "title": "OCID (mode=detail only)",
+            "type": "string",
+            "editor": "textfield",
+            "description": "A single NOCOPO record's OCID (Open Contracting ID), e.g. ocds-gyl66f-215050001-000418. Find OCIDs from a 'list' mode run's ocid field.",
+            "prefill": "ocds-gyl66f-215050001-000418"
+        },
+        "ocids": {
+            "title": "OCIDs (mode=detail only)",
+            "type": "array",
+            "editor": "stringList",
+            "description": "Multiple OCIDs to fetch full detail for in one run."
+        },
+        "maxConcurrency": {
+            "title": "Max concurrent workers (mode=detail only)",
+            "type": "integer",
+            "description": "How many OCID lookups to run in parallel.",
+            "default": 2,
+            "minimum": 1,
+            "maximum": 5,
+            "prefill": 2
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "editor": "proxy",
+            "description": "Apify Proxy configuration.",
+            "default": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            },
+            "prefill": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            }
+        }
+    }
+}

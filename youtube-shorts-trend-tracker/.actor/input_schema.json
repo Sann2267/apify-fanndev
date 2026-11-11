@@ -1,0 +1,76 @@
+{
+    "title": "YouTube Shorts Viral Trend Tracker",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "mode": {
+            "title": "Mode",
+            "type": "string",
+            "description": "hashtag = the ranked Shorts grid for each hashtag. video = figures for Shorts you already have IDs for. reference = probe both surfaces and report what they yielded.",
+            "editor": "select",
+            "enum": ["hashtag", "video", "reference"],
+            "enumTitles": [
+                "hashtag - trending Shorts per tag",
+                "video - specific Shorts",
+                "reference - measure the surfaces"
+            ],
+            "default": "hashtag"
+        },
+        "hashtags": {
+            "title": "Hashtags (mode: hashtag)",
+            "type": "array",
+            "description": "With or without the leading #. Full /hashtag/ URLs also work.",
+            "editor": "stringList",
+            "prefill": ["cooking", "fyp"]
+        },
+        "videos": {
+            "title": "Shorts (mode: video)",
+            "type": "array",
+            "description": "Video IDs, /shorts/ links or watch URLs.",
+            "editor": "stringList"
+        },
+        "shortsPerHashtag": {
+            "title": "Shorts per hashtag",
+            "type": "integer",
+            "description": "Capped at 36 because that is what one grid page lists. The grid exposes a single continuation token which this Actor does not follow - see the README.",
+            "default": 36,
+            "minimum": 1,
+            "maximum": 36
+        },
+        "detail": {
+            "title": "Fetch per-Short figures",
+            "type": "boolean",
+            "description": "On: one extra request per Short, giving exact views, likes, the like-to-view ratio, duration and sound. Off: grid only, which means ROUNDED views (\"3.3 million\") and no likes at all.",
+            "default": true
+        },
+        "exactLikes": {
+            "title": "Exact like counts",
+            "type": "boolean",
+            "description": "The /shorts/ page rounds likes to \"36 thousand\"; the watch page gives 36,212. Turning this on switches surface. It costs a second request per Short only when you also want the sound attribution, which the watch page does not carry.",
+            "default": false
+        },
+        "concurrency": {
+            "title": "Concurrent requests",
+            "type": "integer",
+            "description": "Parallel detail fetches.",
+            "default": 4,
+            "minimum": 1,
+            "maximum": 10
+        },
+        "tlsProfile": {
+            "title": "Preferred TLS profile",
+            "type": "string",
+            "description": "Optional. The hashtag grid answered identically on all four during recon; this is a tuning knob.",
+            "editor": "select",
+            "enum": ["chrome124", "chrome120", "safari17_0", "firefox133"],
+            "default": "chrome124"
+        },
+        "proxyConfiguration": {
+            "title": "Proxy",
+            "type": "object",
+            "description": "Optional. Useful if Shorts pages start coming back as REDUCED.",
+            "editor": "proxy"
+        }
+    },
+    "required": ["mode"]
+}

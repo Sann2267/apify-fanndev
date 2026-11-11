@@ -1,0 +1,15 @@
+{
+    "actorSpecification": 1,
+    "name": "shopify-store-analyzer",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Shopify Store Analyzer",
+    "description": "Analyze any Shopify store from just its URL: detect the theme it runs, export the full product catalogue with prices and variants, list newly added products, and track price, stock and catalogue changes between runs. No login or API key needed.",
+    "categories": ["ECOMMERCE", "LEAD_GENERATION"],
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

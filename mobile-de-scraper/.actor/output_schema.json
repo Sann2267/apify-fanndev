@@ -1,0 +1,109 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "mobile.de record",
+        "description": "Every record shares one envelope - item_type, id, data, metadata - so a single dataset can hold vehicle listings, full vehicle detail, dealer inventories, dealer imprints, market counts, reference data and diagnostics, and still be joined on id. For every vehicle-shaped record id is mobile.de's numeric ad id. The shape of data depends on item_type: listing, listing_detail, search_summary, similar_listing, dealer_summary, dealer_contact, market_count, reference_filters, reference_make, or error. mobile.de's JSON is passed through close to verbatim and the site ships changes without notice, so unlisted fields come through rather than failing the run.",
+        "additionalProperties": true,
+        "properties": {
+            "item_type": {
+                "type": "string",
+                "title": "Item type",
+                "description": "listing, listing_detail, search_summary, similar_listing, dealer_summary, dealer_contact, market_count, reference_filters, reference_make or error."
+            },
+            "id": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "ID",
+                "description": "mobile.de's numeric ad id on every vehicle-shaped record, the seller id on dealer_summary, the ad id the imprint was read through on dealer_contact, the searchId on search_summary, the make id on reference_make and the vehicle category on reference_filters. NULL on market_count and on error rows, which is why this field is nullable - a run that hits a dead ad id still writes a diagnostic row, and Apify validates a push batch as a whole, so a non-nullable id here would discard every good row pushed alongside it."
+            },
+            "data": {
+                "type": "object",
+                "title": "Data",
+                "description": "The record body, keyed by item_type. listing carries mobile.de's own search-result fields verbatim - id, title, shortTitle, subTitle, make, model, vc, category, segment, price (gross and net amounts, currency, VAT rate and the localized German text), priceRating (mobile.de's own VERY_GOOD_PRICE..VERY_HIGH_PRICE verdict, its label, the six price thresholds it was judged against and the percentage offset from the market), attr (a compact attribute block: cn country, z postcode, loc town, fr first registration, yc year of construction, pw power, ft fuel, ml mileage, cc capacity, tr transmission, gi next inspection, ecol colour, door, sc seats, c body type, emc emission class, pvo previous owners), attributes, sellerId, contactInfo, previewImage and previewThumbnails, numImages, threeSixty, isEyeCatcher, financePlans (a full representative credit example including APR, term, instalments and the statutory disclaimer), leasingRate, sealDetails, checkoutLink, relativeUrl and type. type matters: 'ad' is an organic result while 'topAd' is a paid placement, and mobile.de mixes both into the same list along with advertising slots that carry no vehicle at all and a nested page1Ads container - this actor flattens the container, drops the empty slots and keeps type so paid placements stay identifiable. listing_detail adds what only the vehicle page carries: htmlDescription (the seller's own free text), the complete features list, the full attributes table, mediaGallery and galleryImages, vehicleCondition, kba (the German type-approval key), carfaxEligible, serviceLinks, partnerLinks and the ratings block. search_summary carries numResultsTotal, reachableTotal, appliedFilters, droppedFilters, isSeoSrp, aggregations (facet counts per filter, which is a market breakdown in its own right) and metaData. droppedFilters is the one to check: mobile.de silently ignores filters it does not recognise and returns a broader result set with no error, so this field names any filter that had no effect. dealer_summary carries sellerId, adCount and vehicleCategory. dealer_contact carries imprint - the seller's legal disclosure as one pre-formatted German text block holding company name, street address, phone, fax, email, website, Handelsregister court and number, VAT id and named directors - plus moreServices. market_count carries count and the filters it was measured under. reference_filters carries every filter code mobile.de accepts for a vehicle category with its allowed values, including ms, the full make list as {i: id, n: name}. reference_make carries makeId, makeName, vehicleCategory, models (the model tree, grouped by series) and msExample, the ready-made ms filter value. error carries _error (not_found, bad_request, unsupported_input, fetch_failed, parse_failed, empty_payload, no_similar_ads, blocked, run_failed), _errorDetail and _input."
+            },
+            "metadata": {
+                "type": "object",
+                "title": "Metadata",
+                "description": "scrapedAt (UTC ISO 8601), sourceUrl (the public mobile.de page this row corresponds to), mode (which of the actor's seven modes produced it), query (the search path, ad reference or seller id that surfaced this row), rank (position within the whole query, continuing across requests), offset (the ps item offset the row was fetched at - mobile.de pages by item offset, not by page number) and parentId (the seller or ad the row was collected under)."
+            }
+        }
+    },
+    "views": {
+        "overview": {
+            "title": "All records",
+            "transformation": {
+                "fields": [
+                    "item_type",
+                    "id",
+                    "data",
+                    "metadata"
+                ]
+            },
+            "display": {
+                "component": "table",
+                "properties": {
+                    "item_type": {
+                        "label": "Type"
+                    },
+                    "id": {
+                        "label": "ID"
+                    },
+                    "data": {
+                        "label": "Data"
+                    },
+                    "metadata": {
+                        "label": "Metadata"
+                    }
+                }
+            }
+        },
+        "listings": {
+            "title": "Vehicles",
+            "transformation": {
+                "fields": [
+                    "id",
+                    "data.title",
+                    "data.price",
+                    "data.priceRating",
+                    "data.attr",
+                    "data.sellerId",
+                    "data.type",
+                    "metadata"
+                ]
+            },
+            "display": {
+                "component": "table",
+                "properties": {
+                    "id": {
+                        "label": "Ad ID"
+                    },
+                    "data.title": {
+                        "label": "Title"
+                    },
+                    "data.price": {
+                        "label": "Price"
+                    },
+                    "data.priceRating": {
+                        "label": "Price rating"
+                    },
+                    "data.attr": {
+                        "label": "Attributes"
+                    },
+                    "data.sellerId": {
+                        "label": "Seller ID"
+                    },
+                    "data.type": {
+                        "label": "Organic or paid"
+                    },
+                    "metadata": {
+                        "label": "Metadata"
+                    }
+                }
+            }
+        }
+    }
+}

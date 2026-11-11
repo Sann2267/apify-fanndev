@@ -1,0 +1,94 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Article / latest-headline record",
+        "description": "Raw-passthrough dataset envelope. Every record carries _input/_source/_scrapedAt (failed URLs are not written to the dataset -- they are reported in the ERRORS record of the run's key-value store). Article-mode records (S1-html) carry headline/articleBody-style fields extracted from ld+json NewsArticle plus the #Content HTML body; latest-mode records (S2-html-listing) carry title/link/urlDate, scraped from the homepage (day-precision date only, derived from the URL path).",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The exact input value (URL, or 'latest') that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which extraction strategy emitted this record (e.g. S1-html, S2-html-listing)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "headline": {
+                "title": "Headline",
+                "description": "Article headline (from ld+json NewsArticle node)."
+            },
+            "description": {
+                "title": "Description",
+                "description": "Short article description -- absent on wire-service/video-type content with no named byline."
+            },
+            "articleBody": {
+                "title": "Article body",
+                "description": "Full article text, joined from <p> tags inside the #Content element (stable id across multiple CMS template generations). Only page 1 is captured for paginated photo-essay articles."
+            },
+            "author": {
+                "title": "Author",
+                "description": "Author name, extracted from the ld+json author object's 'name' field when present (absent on wire-service/video-type content)."
+            },
+            "publisher": {
+                "title": "Publisher",
+                "description": "Publisher name, extracted from the ld+json publisher object's 'name' field -- inconsistently either 'China Daily' or 'chinadaily.com.cn' depending on which CMS template rendered the page, passed through raw (not normalized)."
+            },
+            "datePublished": {
+                "title": "Date published",
+                "description": "ISO 8601 publish date, from ld+json."
+            },
+            "dateModified": {
+                "title": "Date modified",
+                "description": "ISO 8601 last-modified date, from ld+json."
+            },
+            "image": {
+                "title": "Image",
+                "description": "Lead image value as emitted by upstream ld+json (raw passthrough, shape varies)."
+            },
+            "title": {
+                "title": "Title",
+                "description": "Headline text scraped from the homepage link (latest mode) -- the longest non-empty anchor text seen for that URL."
+            },
+            "link": {
+                "title": "Link",
+                "description": "Article URL (latest mode)."
+            },
+            "urlDate": {
+                "title": "URL date",
+                "description": "Day-precision date (YYYY-MM-DD) derived from the article URL path, not a true publish timestamp (latest mode only). Fetch the article for the exact datePublished."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across both article and latest-headline records.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "_source",
+                    "_scrapedAt",
+                    "headline",
+                    "title",
+                    "link",
+                    "datePublished",
+                    "urlDate",
+                    "author"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

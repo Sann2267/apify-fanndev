@@ -1,0 +1,23 @@
+{
+    "actorSpecification": 1,
+    "name": "facebook-ads-benchmarker",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Facebook Ads Performance Calculator & Benchmarker",
+    "description": "Benchmark a whole niche from Meta's public Ad Library: which CTAs, formats, headlines, landing domains, words and phrases dominate, and how long each choice stays on air. Longevity is the honest performance proxy - advertisers keep paying for creatives that work. Compares niches side by side.",
+    "categories": [
+        "SOCIAL_MEDIA",
+        "MARKETING"
+    ],
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json",
+    "defaultRunOptions": {
+        "build": "latest",
+        "timeoutSecs": 3600,
+        "memoryMbytes": 1024
+    }
+}

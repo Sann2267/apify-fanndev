@@ -1,0 +1,70 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Eswatini company search-result record",
+        "description": "Raw-passthrough dataset envelope. Every record carries _input/_source/_scrapedAt (and _error/_errorDetail on failures). Each successful record is one row from the official register's Company Name Search results table -- registered name, status, and registration date, exactly as the register itself displays them (no normalization).",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The exact query (company name) that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "S1-aspnet-gridview (a real result row) or none (error record)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed extractions -- not_found (search matched nothing), query_too_short (fewer than 3 characters), blocked_or_transient (network or session issue)."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "companyName": {
+                "title": "Company name",
+                "description": "Registered (or reserved) entity name exactly as shown on the register."
+            },
+            "companyStatus": {
+                "title": "Company status",
+                "description": "Current register status as displayed, e.g. \"COMPANY REGISTERED\" or \"RESERVED\" (a reserved name that has not yet completed incorporation)."
+            },
+            "dateRegistered": {
+                "title": "Date registered",
+                "description": "Registration (or name-reservation) date on file, as displayed by the register (MM/DD/YYYY, not normalized)."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns for every record.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "_source",
+                    "_scrapedAt",
+                    "companyName",
+                    "companyStatus",
+                    "dateRegistered",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

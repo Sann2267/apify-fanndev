@@ -1,0 +1,153 @@
+{
+    "title": "ESPN Betting Odds Scraper input",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "mode": {
+            "title": "Mode",
+            "type": "string",
+            "description": "odds = point spread, moneyline and total per sportsbook for each fixture, plus how far the line has moved since it opened. props = player prop markets (about 659 per NFL game). futures = season markets such as MVP and championship winner, with implied probability. events = the schedule only, no odds. predictor = ESPN's own win projection, to compare against the book. providers = the sportsbook catalogue for a league. reference = check the source is live and report what it returns today.",
+            "editor": "select",
+            "default": "odds",
+            "enum": [
+                "odds",
+                "props",
+                "futures",
+                "events",
+                "predictor",
+                "providers",
+                "reference"
+            ],
+            "enumTitles": [
+                "odds - spread, moneyline, total + line movement",
+                "props - player prop markets per game",
+                "futures - season markets (MVP, championship)",
+                "events - schedule only, no odds",
+                "predictor - ESPN win projection per fixture",
+                "providers - sportsbook catalogue",
+                "reference - is the source live, what does it return"
+            ]
+        },
+        "league": {
+            "title": "League",
+            "type": "string",
+            "description": "A short key (nfl, college-football, nba, wnba, ncaab, ncaaw, mlb, nhl, epl, laliga, seriea, bundesliga, ligue1, ucl, mls, ufc, pga, atp, wta, f1) or the source's own form 'sport/league' for anything else, e.g. 'soccer/ned.1'. There are 17 sports and 219 soccer competitions.",
+            "editor": "textfield",
+            "default": "nfl",
+            "prefill": "nfl"
+        },
+        "dates": {
+            "title": "Date window",
+            "type": "string",
+            "description": "One day (20260920), a whole season (2026) or a range (20260901-20261001). Leave empty and you get the current week only, which is a handful of fixtures.",
+            "editor": "textfield",
+            "prefill": ""
+        },
+        "dateFrom": {
+            "title": "From date",
+            "type": "string",
+            "description": "Start of the window, YYYY-MM-DD or YYYYMMDD. Used only when 'Date window' is empty.",
+            "editor": "textfield"
+        },
+        "dateTo": {
+            "title": "To date",
+            "type": "string",
+            "description": "End of the window, YYYY-MM-DD or YYYYMMDD. Used only when 'Date window' is empty.",
+            "editor": "textfield"
+        },
+        "eventId": {
+            "title": "Event ID",
+            "type": "string",
+            "description": "Scrape one fixture by its ESPN event id instead of a date window.",
+            "editor": "textfield"
+        },
+        "eventIds": {
+            "title": "Event IDs",
+            "type": "array",
+            "description": "Several fixtures by id. Overrides the date window.",
+            "editor": "stringList"
+        },
+        "season": {
+            "title": "Season (futures mode)",
+            "type": "integer",
+            "description": "Which season's futures board to read. Defaults to the current year.",
+            "editor": "number",
+            "minimum": 2000
+        },
+        "includeUnpricedEvents": {
+            "title": "Keep fixtures with no odds yet",
+            "type": "boolean",
+            "description": "Sportsbooks post lines close to start time, so a fixture weeks out returns an empty provider list. On, you get a row with hasOdds=false so you can tell 'not priced yet' from 'not fetched'. Off, those fixtures are skipped.",
+            "editor": "checkbox",
+            "default": true
+        },
+        "maxItems": {
+            "title": "Max items",
+            "type": "integer",
+            "description": "Maximum records per run. An NFL week is about 16 fixtures and 1-2 sportsbooks each in odds mode, but one game alone yields about 659 rows in props mode.",
+            "editor": "number",
+            "default": 500,
+            "minimum": 1
+        },
+        "maxEvents": {
+            "title": "Max fixtures",
+            "type": "integer",
+            "description": "How many fixtures the date window may expand to. The source returns pointers, so every fixture costs one extra request - a whole-season window is 320 NFL fixtures and this is what keeps that in hand.",
+            "editor": "number",
+            "default": 60,
+            "minimum": 1
+        },
+        "maxConcurrency": {
+            "title": "Max concurrency",
+            "type": "integer",
+            "description": "How many fixtures to work on in parallel.",
+            "editor": "number",
+            "default": 4,
+            "minimum": 1,
+            "maximum": 10
+        },
+        "maxNameLookups": {
+            "title": "Max name lookups",
+            "type": "integer",
+            "description": "The source returns ids and pointers, so athlete and team names cost one extra request each. They are cached (659 NFL props resolve from 47 athletes). Raise this for futures boards, which have far more distinct runners; past the budget records keep their ids and lose only the name.",
+            "editor": "number",
+            "default": 400,
+            "minimum": 0
+        },
+        "tlsProfile": {
+            "title": "TLS profile",
+            "type": "string",
+            "description": "Leave empty. The Actor tries a ladder of browser fingerprints and remembers the one that works, because the winner on a home connection is not always the winner from a datacenter.",
+            "editor": "select",
+            "default": "",
+            "enum": [
+                "",
+                "chrome124",
+                "firefox133",
+                "safari17_0",
+                "chrome99_android",
+                "edge101"
+            ],
+            "enumTitles": [
+                "auto - try the ladder (recommended)",
+                "chrome124",
+                "firefox133",
+                "safari17_0",
+                "chrome99_android",
+                "edge101"
+            ]
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "description": "Optional. The source answered plain requests from both a home connection and a datacenter address during testing, so no proxy is needed for ordinary runs. Turn one on if you are running large windows repeatedly.",
+            "editor": "proxy",
+            "default": {
+                "useApifyProxy": false
+            }
+        }
+    },
+    "required": [
+        "mode"
+    ]
+}

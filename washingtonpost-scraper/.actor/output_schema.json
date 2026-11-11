@@ -1,0 +1,126 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Article / latest-headline record",
+        "description": "Raw-passthrough dataset envelope. Every record carries _input/_source/_scrapedAt (failed URLs are not written to the dataset -- they are reported in the ERRORS record of the run's key-value store). Article-mode records carry headline/articleBody-style fields; latest-mode records (RSS or sitemap) carry title/link-style fields. Upstream JSON-LD is passed through close to verbatim, so extra schema.org fields beyond those listed here may also appear.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The exact input value (URL, or 'latest'/'latest:<section>') that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which extraction strategy emitted this record (e.g. S1-jsonld, S2-rss)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "headlines": {
+                "title": "Headlines",
+                "description": "Arc ANS headlines object ({basic: ...}), raw passthrough from __NEXT_DATA__."
+            },
+            "description": {
+                "title": "Description",
+                "description": "Arc ANS description object ({basic: ...})."
+            },
+            "content_elements": {
+                "title": "Content elements",
+                "description": "Ordered list of Arc ANS body blocks (paragraphs, images, etc.)."
+            },
+            "credits": {
+                "title": "Credits/byline",
+                "description": "Arc ANS byline/author credits object."
+            },
+            "publish_date": {
+                "title": "Publish date",
+                "description": "ISO 8601 publish date (Arc ANS)."
+            },
+            "last_updated_date": {
+                "title": "Last updated date",
+                "description": "ISO 8601 last-modified date (Arc ANS)."
+            },
+            "taxonomy": {
+                "title": "Taxonomy",
+                "description": "Arc ANS section/tag taxonomy object."
+            },
+            "canonical_url": {
+                "title": "Canonical URL",
+                "description": "Canonical article path."
+            },
+            "restricted": {
+                "title": "Restricted (paywalled)",
+                "description": "True when the metered paywall truncated content_elements to a teaser."
+            },
+            "headline": {
+                "title": "Headline (JSON-LD fallback)",
+                "description": "Only present on S2-jsonld fallback records."
+            },
+            "articleBody": {
+                "title": "Article body (JSON-LD fallback)",
+                "description": "Only present on S2-jsonld fallback records."
+            },
+            "datePublished": {
+                "title": "Date published (JSON-LD fallback)",
+                "description": "Only present on S2-jsonld fallback records."
+            },
+            "author": {
+                "title": "Author (JSON-LD fallback)",
+                "description": "Only present on S2-jsonld fallback records."
+            },
+            "title": {
+                "title": "Title",
+                "description": "Headline from the RSS item."
+            },
+            "link": {
+                "title": "Link",
+                "description": "Article URL."
+            },
+            "guid": {
+                "title": "GUID",
+                "description": "RSS item GUID."
+            },
+            "creator": {
+                "title": "Creator",
+                "description": "dc:creator byline."
+            },
+            "pubDate": {
+                "title": "Publish date",
+                "description": "RSS pubDate string."
+            },
+            "section": {
+                "title": "Section",
+                "description": "Requested RSS section name."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across both article and latest-headline records.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "_source",
+                    "_scrapedAt",
+                    "headlines",
+                    "title",
+                    "link",
+                    "publish_date",
+                    "pubDate",
+                    "restricted"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

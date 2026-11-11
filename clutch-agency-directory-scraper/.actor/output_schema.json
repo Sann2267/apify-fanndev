@@ -1,0 +1,516 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Clutch.co record",
+        "description": "Every record carries _input, _source, _scrapedAt and recordType. recordType is PROVIDER for an agency row in a category listing, PROFILE for a full agency profile, REVIEW for one client review, CATEGORY for a directory URL from the sitemap, SURFACE for a reference probe and ERROR for a failure. On a PROVIDER record, isRankedResult tells you whether the row is part of the category's ranked list at all: a page also carries sponsor rows (paid) and a Leaders Matrix block that repeats on every page.",
+        "additionalProperties": true,
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The category or profile you passed in that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source",
+                "description": "clutch-directory | clutch-profile-ldjson | clutch-profile-reviews | clutch-sitemap | reference | error."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was emitted."
+            },
+            "recordType": {
+                "type": ["string", "null"],
+                "title": "Record type",
+                "description": "PROVIDER | PROFILE | REVIEW | CATEGORY | SURFACE | ERROR."
+            },
+            "providerId": {
+                "type": ["string", "null"],
+                "title": "Provider ID",
+                "description": "Clutch's own numeric id for the agency, stable across categories and pages."
+            },
+            "providerUuid": {
+                "type": ["string", "null"],
+                "title": "Provider UUID",
+                "description": "The UUID Clutch uses in review share links, present on profile and review records."
+            },
+            "name": {
+                "type": ["string", "null"],
+                "title": "Agency name"
+            },
+            "profileUrl": {
+                "type": ["string", "null"],
+                "title": "Profile URL",
+                "description": "Canonical clutch.co profile page for the agency."
+            },
+            "profileSlug": {
+                "type": ["string", "null"],
+                "title": "Profile slug",
+                "description": "The slug you can pass back into the profile or reviews mode."
+            },
+            "website": {
+                "type": ["string", "null"],
+                "title": "Website",
+                "description": "The agency's own site. Clutch hides it behind a redirect; this is the real destination, UTM tags included as the source wrote them."
+            },
+            "websiteDomain": {
+                "type": ["string", "null"],
+                "title": "Website domain",
+                "description": "Host of the website with any leading www stripped - the join key for enrichment."
+            },
+            "logoUrl": {
+                "type": ["string", "null"],
+                "title": "Logo URL"
+            },
+            "tagline": {
+                "type": ["string", "null"],
+                "title": "Tagline"
+            },
+            "summary": {
+                "type": ["string", "null"],
+                "title": "Summary",
+                "description": "Clutch's own paragraph about the agency, as shown on the listing."
+            },
+            "description": {
+                "type": ["string", "null"],
+                "title": "Description",
+                "description": "The agency's own pitch, from the profile page."
+            },
+            "rowType": {
+                "type": ["string", "null"],
+                "title": "Row type",
+                "description": "Directory (the ranked list), Sponsor, featured, or Leaders Matrix - the source's own label for why the row is on the page."
+            },
+            "positionOnPage": {
+                "type": ["integer", "null"],
+                "title": "Position on page",
+                "description": "Position within its block on that page, not a global rank."
+            },
+            "pageNumber": {
+                "type": ["integer", "null"],
+                "title": "Page number",
+                "description": "Which page of the category the row came from. Page 1 is the bare URL."
+            },
+            "isPaidPlacement": {
+                "type": ["boolean", "null"],
+                "title": "Paid placement",
+                "description": "True for sponsor and featured rows. On page 1 of a busy category, half the rows are paid."
+            },
+            "isPinnedBlock": {
+                "type": ["boolean", "null"],
+                "title": "Pinned block",
+                "description": "True for rows that repeat identically on every page of the category (Leaders Matrix, featured). Deduplicated within a run."
+            },
+            "isRankedResult": {
+                "type": ["boolean", "null"],
+                "title": "Ranked result",
+                "description": "True only for rows that are part of the category's actual ranking, about 50 per page."
+            },
+            "rating": {
+                "type": ["number", "null"],
+                "title": "Rating",
+                "description": "Average review score out of 5."
+            },
+            "ratingValue": {
+                "type": ["number", "null"],
+                "title": "Rating (microdata)",
+                "description": "The same score as the page's structured data states it."
+            },
+            "reviewCount": {
+                "type": ["integer", "null"],
+                "title": "Review count"
+            },
+            "bestRating": {
+                "type": ["number", "null"],
+                "title": "Best possible rating"
+            },
+            "isVerified": {
+                "type": ["boolean", "null"],
+                "title": "Verified",
+                "description": "Whether the row carries a Clutch verification mark."
+            },
+            "verificationLabel": {
+                "type": ["string", "null"],
+                "title": "Verification label",
+                "description": "The verification mark's own class, which names the tier (for example premier)."
+            },
+            "certification": {
+                "type": ["string", "null"],
+                "title": "Certification",
+                "description": "Profile only, e.g. 'Clutch Premier Verified'."
+            },
+            "certificationStatus": {
+                "type": ["string", "null"],
+                "title": "Certification status"
+            },
+            "credentials": {
+                "type": ["array", "null"],
+                "title": "Credentials",
+                "description": "Per-service Clutch certifications with the dates they were issued and expire."
+            },
+            "minProjectSize": {
+                "type": ["string", "null"],
+                "title": "Min. project size",
+                "description": "The floor the agency will take on, e.g. '$10,000+'. The single most filtered attribute in this vein."
+            },
+            "hourlyRate": {
+                "type": ["string", "null"],
+                "title": "Hourly rate",
+                "description": "Rate band as shown, e.g. '$50 - $99 / hr'."
+            },
+            "priceRange": {
+                "type": ["string", "null"],
+                "title": "Price range",
+                "description": "The same band as the page's structured data states it, without the '/ hr' suffix."
+            },
+            "employees": {
+                "type": ["string", "null"],
+                "title": "Employees",
+                "description": "Headcount band as shown, e.g. '10 - 49'."
+            },
+            "location": {
+                "type": ["string", "null"],
+                "title": "Location",
+                "description": "Headquarters as printed on the row, e.g. 'Raleigh, NC'."
+            },
+            "locations": {
+                "type": ["string", "null"],
+                "title": "Locations",
+                "description": "Profile only - the locations line from the summary strip."
+            },
+            "addressLocality": {
+                "type": ["string", "null"],
+                "title": "City"
+            },
+            "addressRegion": {
+                "type": ["string", "null"],
+                "title": "Region"
+            },
+            "addressCountry": {
+                "type": ["string", "null"],
+                "title": "Country"
+            },
+            "postalCode": {
+                "type": ["string", "null"],
+                "title": "Postal code"
+            },
+            "streetAddress": {
+                "type": ["string", "null"],
+                "title": "Street address"
+            },
+            "telephone": {
+                "type": ["string", "null"],
+                "title": "Telephone",
+                "description": "Business switchboard as published by the agency on its own listing."
+            },
+            "foundingDate": {
+                "type": ["string", "null"],
+                "title": "Founding date"
+            },
+            "yearFounded": {
+                "type": ["string", "null"],
+                "title": "Year founded",
+                "description": "As printed on the profile summary strip."
+            },
+            "languages": {
+                "type": ["string", "null"],
+                "title": "Languages"
+            },
+            "timezones": {
+                "type": ["string", "null"],
+                "title": "Timezones"
+            },
+            "services": {
+                "type": ["array", "null"],
+                "title": "Service mix",
+                "description": "Service lines with the share of the agency's work each accounts for, e.g. [{service: 'Web Development', percent: 25}]."
+            },
+            "servicesOffered": {
+                "type": ["array", "null"],
+                "title": "Services offered",
+                "description": "Profile only - the service catalogue as the page's structured data lists it."
+            },
+            "serviceLines": {
+                "type": ["array", "null"],
+                "title": "Service lines",
+                "description": "Profile only - service split with percentages and the category URL for each line."
+            },
+            "focusAreas": {
+                "type": ["array", "null"],
+                "title": "Focus areas",
+                "description": "Profile only - the finer breakdown (frameworks, platforms, AI expertise) with percentages."
+            },
+            "industries": {
+                "type": ["array", "null"],
+                "title": "Industries",
+                "description": "Profile only - industry split with percentages."
+            },
+            "clientSizes": {
+                "type": ["array", "null"],
+                "title": "Client sizes",
+                "description": "Profile only - client-size split, when the profile publishes one."
+            },
+            "categoryUrl": {
+                "type": ["string", "null"],
+                "title": "Category URL",
+                "description": "The listing this row came from, or the directory URL itself on a CATEGORY record."
+            },
+            "totalCompaniesClaim": {
+                "type": ["integer", "null"],
+                "title": "Companies in category",
+                "description": "How many agencies the category page says it holds."
+            },
+            "lastPageInPager": {
+                "type": ["integer", "null"],
+                "title": "Last page",
+                "description": "Highest page number the pager links to - how deep this category goes."
+            },
+            "path": {
+                "type": ["string", "null"],
+                "title": "Path",
+                "description": "CATEGORY records - the directory path."
+            },
+            "countryCode": {
+                "type": ["string", "null"],
+                "title": "Country code",
+                "description": "CATEGORY records - set when the URL is a country cut such as /id/web-developers."
+            },
+            "categorySlug": {
+                "type": ["string", "null"],
+                "title": "Category slug",
+                "description": "CATEGORY records - the slug to pass into the directory mode."
+            },
+            "refinements": {
+                "type": ["array", "null"],
+                "title": "Refinements",
+                "description": "CATEGORY records - the extra path segments, such as a city or an industry."
+            },
+            "depth": {
+                "type": ["integer", "null"],
+                "title": "Depth",
+                "description": "CATEGORY records - number of path segments."
+            },
+            "isRootCategory": {
+                "type": ["boolean", "null"],
+                "title": "Root category",
+                "description": "CATEGORY records - true for a global category with no country or refinement."
+            },
+            "sitemapShard": {
+                "type": ["string", "null"],
+                "title": "Sitemap shard",
+                "description": "CATEGORY records - which sitemap file listed this URL."
+            },
+            "reviewId": {
+                "type": ["string", "null"],
+                "title": "Review ID",
+                "description": "Clutch's own id for the review, stable across pages."
+            },
+            "providerName": {
+                "type": ["string", "null"],
+                "title": "Agency name",
+                "description": "REVIEW records - the agency being reviewed."
+            },
+            "providerReviewCount": {
+                "type": ["integer", "null"],
+                "title": "Reviews on profile",
+                "description": "REVIEW records - how many reviews the profile claims in total, to check coverage."
+            },
+            "title": {
+                "type": ["string", "null"],
+                "title": "Review title",
+                "description": "REVIEW records - the project the review is about."
+            },
+            "isFeatured": {
+                "type": ["boolean", "null"],
+                "title": "Featured review",
+                "description": "REVIEW records - pinned to the top of the profile, and repeated on later pages."
+            },
+            "ratingQuality": {
+                "type": ["number", "null"],
+                "title": "Quality"
+            },
+            "ratingSchedule": {
+                "type": ["number", "null"],
+                "title": "Schedule"
+            },
+            "ratingCost": {
+                "type": ["number", "null"],
+                "title": "Cost"
+            },
+            "ratingWillingToRefer": {
+                "type": ["number", "null"],
+                "title": "Willing to refer"
+            },
+            "projectSize": {
+                "type": ["string", "null"],
+                "title": "Project size",
+                "description": "REVIEW records - what the client spent, e.g. '$50,000 to $199,999' or 'Confidential'."
+            },
+            "projectLength": {
+                "type": ["string", "null"],
+                "title": "Project length",
+                "description": "REVIEW records - e.g. 'Aug. 2019 - Ongoing'."
+            },
+            "quote": {
+                "type": ["string", "null"],
+                "title": "Quote"
+            },
+            "datePublished": {
+                "type": ["string", "null"],
+                "title": "Date published",
+                "description": "As the page prints it, e.g. 'Aug 12, 2024'."
+            },
+            "reviewerPosition": {
+                "type": ["string", "null"],
+                "title": "Reviewer role",
+                "description": "Role and company of the person who left the review, as published."
+            },
+            "reviewerName": {
+                "type": ["string", "null"],
+                "title": "Reviewer name",
+                "description": "Byline as published on the review, or absent when the client stayed anonymous."
+            },
+            "isVerifiedReviewer": {
+                "type": ["boolean", "null"],
+                "title": "Verified reviewer",
+                "description": "Whether Clutch marks the reviewer's identity and the project as confirmed."
+            },
+            "shareUrl": {
+                "type": ["string", "null"],
+                "title": "Review link"
+            },
+            "reviewsOnPage": {
+                "type": ["integer", "null"],
+                "title": "Reviews on page",
+                "description": "PROFILE records - how many review blocks the first page rendered."
+            },
+            "hasLdJson": {
+                "type": ["boolean", "null"],
+                "title": "Structured data present",
+                "description": "PROFILE records - false means the profile rendered without its structured-data block and the record fell back to HTML."
+            },
+            "check": {
+                "type": ["string", "null"],
+                "title": "Check",
+                "description": "SURFACE records - which assumption was re-tested."
+            },
+            "url": {
+                "type": ["string", "null"],
+                "title": "URL",
+                "description": "SURFACE records - the URL probed."
+            },
+            "error": {
+                "type": ["string", "null"],
+                "title": "Error",
+                "description": "ERROR records - what failed."
+            },
+            "where": {
+                "type": ["string", "null"],
+                "title": "Where",
+                "description": "ERROR records - the URL or step that failed."
+            }
+        }
+    },
+    "views": {
+        "overview": {
+            "title": "Agency leads",
+            "description": "The attributes a buyer filters on, one row per agency.",
+            "transformation": {
+                "fields": [
+                    "name",
+                    "minProjectSize",
+                    "hourlyRate",
+                    "employees",
+                    "location",
+                    "rating",
+                    "reviewCount",
+                    "website",
+                    "isRankedResult"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        },
+        "placement": {
+            "title": "Paid vs earned",
+            "description": "Which rows are bought placement and which are the category's actual ranking.",
+            "transformation": {
+                "fields": [
+                    "name",
+                    "rowType",
+                    "isPaidPlacement",
+                    "isRankedResult",
+                    "isPinnedBlock",
+                    "pageNumber",
+                    "positionOnPage",
+                    "categoryUrl"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        },
+        "contact": {
+            "title": "Contact & location",
+            "description": "Where each agency is and how to reach it.",
+            "transformation": {
+                "fields": [
+                    "name",
+                    "websiteDomain",
+                    "telephone",
+                    "streetAddress",
+                    "addressLocality",
+                    "addressRegion",
+                    "addressCountry",
+                    "postalCode"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        },
+        "reviews": {
+            "title": "Reviews",
+            "description": "Client reviews with the four sub-ratings and what the project cost.",
+            "transformation": {
+                "fields": [
+                    "providerName",
+                    "title",
+                    "rating",
+                    "ratingQuality",
+                    "ratingSchedule",
+                    "ratingCost",
+                    "ratingWillingToRefer",
+                    "projectSize",
+                    "projectLength",
+                    "datePublished"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        },
+        "categories": {
+            "title": "Directory index",
+            "description": "Valid directory URLs to feed back into the directory mode.",
+            "transformation": {
+                "fields": [
+                    "categoryUrl",
+                    "categorySlug",
+                    "countryCode",
+                    "refinements",
+                    "depth",
+                    "isRootCategory"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

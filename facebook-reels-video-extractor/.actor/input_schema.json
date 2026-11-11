@@ -1,0 +1,128 @@
+{
+    "title": "Facebook Reels & Video Extractor",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "pages": {
+            "title": "Pages",
+            "type": "array",
+            "description": "Vanity slugs ('dominos') or page URLs. Their reels and/or videos tabs are read in full.",
+            "editor": "stringList",
+            "prefill": [
+                "dominos"
+            ]
+        },
+        "videoUrls": {
+            "title": "Reel / video URLs",
+            "type": "array",
+            "description": "Individual videos: a reel URL (facebook.com/reel/<id>), a watch URL (facebook.com/watch/?v=<id>), a page video URL, or a bare numeric id. The watch URL is used as the resolver, so you do not need to know whether an id is a reel or a page video.",
+            "editor": "stringList"
+        },
+        "startUrls": {
+            "title": "Start URLs",
+            "type": "array",
+            "description": "Page or video URLs, for pasting a list straight out of another actor's dataset.",
+            "editor": "requestListSources"
+        },
+        "tabs": {
+            "title": "Which tabs to read",
+            "type": "array",
+            "description": "The reels tab carries abbreviated play counts ('292K'); the videos tab carries exact integers. Reading both gives you the widest coverage.",
+            "editor": "select",
+            "items": {
+                "type": "string",
+                "enum": [
+                    "reels",
+                    "videos"
+                ],
+                "enumTitles": [
+                    "Reels",
+                    "Videos"
+                ]
+            },
+            "default": [
+                "reels",
+                "videos"
+            ]
+        },
+        "maxVideosPerTab": {
+            "title": "Max videos per tab",
+            "type": "integer",
+            "description": "A reels tab renders about ten reels and weighs ~13 MB, so keep this modest while you are tuning a run.",
+            "default": 20,
+            "minimum": 1,
+            "maximum": 500,
+            "unit": "videos"
+        },
+        "fetchTranscripts": {
+            "title": "Download transcripts",
+            "type": "boolean",
+            "description": "When Facebook has captioned a video it publishes a .srt file; this downloads and parses it into plain text plus timed cues. One small extra request per captioned video. Videos with no captions get transcript: null rather than an invented one.",
+            "default": true
+        },
+        "onlyReels": {
+            "title": "Only reels",
+            "type": "boolean",
+            "description": "Drop ordinary page videos and keep short-form reels.",
+            "default": false,
+            "groupCaption": "Filters",
+            "groupDescription": "Applied after fetching, so the run summary still counts everything read."
+        },
+        "onlyWithCaptions": {
+            "title": "Only videos with captions",
+            "type": "boolean",
+            "description": "Keep only videos Facebook has captioned - the ones a transcript can be produced for.",
+            "default": false
+        },
+        "minPlays": {
+            "title": "Minimum plays",
+            "type": "integer",
+            "description": "Videos whose play count could not be read are dropped, since an unknown count cannot be shown to clear the bar.",
+            "minimum": 0,
+            "unit": "plays"
+        },
+        "captionContains": {
+            "title": "Caption or transcript contains",
+            "type": "string",
+            "description": "Case-insensitive substring match across the post caption, the video title and the transcript.",
+            "editor": "textfield"
+        },
+        "emitSummary": {
+            "title": "Add a run summary record",
+            "type": "boolean",
+            "description": "Append one RUN_SUMMARY record: videos collected, how many are reels, how many carry captions, median plays and median engagement rate.",
+            "default": true
+        },
+        "exportFormats": {
+            "title": "Extra export files",
+            "type": "array",
+            "description": "Also write the results to the key-value store in these formats. The dataset is always produced regardless.",
+            "editor": "select",
+            "items": {
+                "type": "string",
+                "enum": [
+                    "json",
+                    "ndjson",
+                    "csv",
+                    "xlsx"
+                ],
+                "enumTitles": [
+                    "JSON",
+                    "NDJSON",
+                    "CSV",
+                    "Excel (XLSX)"
+                ]
+            },
+            "default": []
+        },
+        "proxyConfiguration": {
+            "title": "Proxy",
+            "type": "object",
+            "description": "Recommended on the Apify platform if you want more than the videos Facebook renders in the tab. Facebook serves the rendered first page fine from any IP, but on Apify's datacenter IPs it answers the very first pagination request with \"Rate limit exceeded\" - measured 2026-09-20. Switching the Apify proxy on with the RESIDENTIAL group restored full pagination in the same test (60 ads over 4 pages against 30). Running from your own machine, no proxy is needed at all. The actor logs a warning naming this when it happens, so a short run is never silently mistaken for a short result set.",
+            "editor": "proxy",
+            "default": {
+                "useApifyProxy": false
+            }
+        }
+    }
+}

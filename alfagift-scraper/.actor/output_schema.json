@@ -1,0 +1,69 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Alfagift record",
+        "description": "Every record shares one envelope - item_type, id, data, metadata - so a single dataset can hold products, product detail, categories, brands, promotional campaigns and diagnostics and still be joined on id. For every product-shaped record id is Alfagift's numeric productId. The shape of data depends on item_type: product (a listing row), product_detail (the full product page payload), category, category_summary, brand, brand_summary, search_summary, search_suggestions, promo_banner, promo_campaign, or error. Alfagift's JSON is passed through close to verbatim and the site ships changes without notice, so unlisted fields come through rather than failing the run.",
+        "additionalProperties": true,
+        "properties": {
+            "item_type": {
+                "type": "string",
+                "title": "Item type",
+                "description": "product, product_detail, category, category_summary, brand, brand_summary, search_summary, search_suggestions, promo_banner, promo_campaign or error."
+            },
+            "id": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "ID",
+                "description": "Alfagift's numeric productId on every product-shaped record, the 24-character categoryId on categories, the numeric brandId on brands, the banner id on promo_banner and the promotion id on promo_campaign. NULL on error rows, which is why this field is nullable - a run that hits a dead product id or a broken brand letter still writes a diagnostic row, and Apify validates a push batch as a whole, so a non-nullable id here would discard every good row pushed alongside it."
+            },
+            "data": {
+                "type": "object",
+                "title": "Data",
+                "description": "The record body, keyed by item_type. product and product_detail carry Alfagift's own fields verbatim - productId, productName, sku, plu, basePrice, finalPrice, discountPercent, discountQty, discountPrice, discountValue, stock, validFlag, image, benefitImages, deliveryType/deliveryInfo, sellerId/sellerAlias, categoryIdLvl0..3 and categoryNameLvl0..3, ageRestriction, incrementQty, cart min/max quantities, and a status object (cycle, type, buttonLabel, infoLabel) - plus four fields this actor derives: productUrl (the public /p/ link), isBuyable, isDiscounted and discountAmount in rupiah. isBuyable matters: Alfagift leaves delisted and out-of-area products in every listing with validFlag false and every price at 0.0, so an average price computed without filtering on it is dragged toward zero by rows that are not for sale. product_detail adds barcode, brandId, brandName, images (Base Image / Small Image / Thumbnail / Media Gallery, each an array of URLs), longDescription and description as HTML, shortDescription as bullet points, discountEndDate, benefits, stockInfoMessage, emptyStockmessage, deliveryMessages and the SEO block - none of which appear in listing rows. category and category_summary carry categoryId, categoryName, categoryLevel, parentId, parentName, childCount, categoryImageFileName, categoryUrl, the SEO meta block, and totalData on summaries. brand carries id, name, imageUrl, alphabet, brandUrl, createdDate/updatedDate and the SEO meta; brand_summary adds totalData. search_summary carries totalData, totalPage, the SEO block and Alfagift's own spelling suggestions for the keyword. search_suggestions carries keyword, suggestions and suggestionCount. promo_banner carries bannerName, bannerImageFileName, startDate, endDate, bannerLocation, deepLink, bannerDeepLinkTap, bannerId and promotionId - and the two ids are genuinely different, since only the one extracted from the deep link works against the promotion endpoint. promo_campaign carries promotionId, campaignName, startDate, endDate, productCount. error carries _error (not_found, unsupported_input, upstream_index_broken, not_a_promotion, parse_failed, fetch_failed, gate_rejected, no_results, run_failed), _errorDetail and _input."
+            },
+            "metadata": {
+                "type": "object",
+                "title": "Metadata",
+                "description": "scrapedAt (UTC ISO 8601), sourceUrl (the public alfagift.id page this row corresponds to), mode, query (the keyword or brand letter that surfaced this row, when there was one), rank (position within the whole target, continuing across pages), page (the 0-based page index the row came from - Alfagift's start parameter is a page index, not an item offset), parentId (the category, brand or promotion the row was collected under) and campaignName on promotional product rows."
+            }
+        }
+    },
+    "views": {
+        "overview": {
+            "title": "All records",
+            "transformation": {
+                "fields": [
+                    "item_type",
+                    "id",
+                    "data",
+                    "metadata"
+                ]
+            },
+            "display": {
+                "component": "table",
+                "properties": {
+                    "item_type": {
+                        "label": "Type",
+                        "format": "text"
+                    },
+                    "id": {
+                        "label": "Product / Category / Brand ID",
+                        "format": "text"
+                    },
+                    "data": {
+                        "label": "Data",
+                        "format": "object"
+                    },
+                    "metadata": {
+                        "label": "Metadata",
+                        "format": "object"
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,189 @@
+{
+    "title": "Traveloka Hotel & Accommodation Scraper",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "hotelUrls": {
+            "title": "Property URLs",
+            "type": "array",
+            "description": "Traveloka hotel, villa or apartment page URLs, for example https://www.traveloka.com/id-id/hotel/indonesia/hotel-borobudur-jakarta-7584. The numeric ID at the end of the URL is what matters; the slug is ignored.",
+            "editor": "requestListSources",
+            "prefill": [
+                {
+                    "url": "https://www.traveloka.com/id-id/hotel/indonesia/hotel-indonesia-kempinski-jakarta-2000000113168"
+                }
+            ]
+        },
+        "hotelIds": {
+            "title": "Property IDs",
+            "type": "array",
+            "description": "Bare numeric Traveloka property IDs, if you already have them from a previous run.",
+            "editor": "stringList"
+        },
+        "searchQueries": {
+            "title": "Property name searches",
+            "type": "array",
+            "description": "Property names to look up, one per line, for building a competitor set. This matches PROPERTY NAMES, not cities: 'Kempinski Jakarta' works, 'hotels in Jakarta' does not. Listing every hotel in a city is not available (see README).",
+            "editor": "stringList",
+            "prefill": [
+                "Hotel Borobudur Jakarta"
+            ]
+        },
+        "maxPropertiesPerQuery": {
+            "title": "Max properties per search",
+            "type": "integer",
+            "description": "How many matching properties to keep from each entry in 'Property name searches'.",
+            "default": 10,
+            "minimum": 1,
+            "maximum": 50
+        },
+        "sitemapSweepLimit": {
+            "title": "Sitemap sweep size",
+            "type": "integer",
+            "description": "Collect this many property IDs from Traveloka's public hotel sitemaps for broad market sampling. Leave at 0 to skip. Each sitemap leaf holds 5,000 properties.",
+            "default": 0,
+            "minimum": 0,
+            "maximum": 5000
+        },
+        "sitemapSkipLeaves": {
+            "title": "Sitemap leaves to skip",
+            "type": "integer",
+            "description": "Start the sitemap sweep this many leaf files in, so repeat runs sample different properties instead of the same first page.",
+            "default": 0,
+            "minimum": 0,
+            "maximum": 500
+        },
+        "maxProperties": {
+            "title": "Max properties per run",
+            "type": "integer",
+            "description": "Hard cap on how many properties this run scrapes, across all input sources.",
+            "default": 50,
+            "minimum": 1,
+            "maximum": 2000
+        },
+        "checkInDate": {
+            "title": "Check-in date",
+            "type": "string",
+            "description": "Stay date in YYYY-MM-DD, used for the room list and as the first month of the price calendar. Defaults to 30 days from today.",
+            "editor": "datepicker"
+        },
+        "nights": {
+            "title": "Nights",
+            "type": "integer",
+            "description": "Length of stay used when requesting the room list.",
+            "default": 1,
+            "minimum": 1,
+            "maximum": 30
+        },
+        "adults": {
+            "title": "Adults",
+            "type": "integer",
+            "description": "Number of adult guests priced for. Rates change with occupancy.",
+            "default": 2,
+            "minimum": 1,
+            "maximum": 10
+        },
+        "rooms": {
+            "title": "Rooms",
+            "type": "integer",
+            "description": "Number of rooms priced for.",
+            "default": 1,
+            "minimum": 1,
+            "maximum": 8
+        },
+        "calendarMonths": {
+            "title": "Price calendar months",
+            "type": "integer",
+            "description": "How many consecutive months of nightly rates to pull per property, starting at the check-in month. One request per month; each returns up to 31 nightly prices.",
+            "default": 1,
+            "minimum": 1,
+            "maximum": 12
+        },
+        "includePriceCalendar": {
+            "title": "Include nightly price calendar",
+            "type": "boolean",
+            "description": "Pull nightly rates and the weekday-versus-weekend summary. Turn off for a faster profile-only run.",
+            "default": true,
+            "groupCaption": "What to collect",
+            "groupDescription": "Each section adds requests per property; switch off what you do not need."
+        },
+        "includeRooms": {
+            "title": "Include room inventory",
+            "type": "boolean",
+            "description": "Pull room names, photos, bedding, size and amenities. Note that per-room nightly rates are not available (see README); rates come from the price calendar.",
+            "default": true
+        },
+        "includeReviewSummary": {
+            "title": "Include review summary",
+            "type": "boolean",
+            "description": "Pull the overall guest rating and review count for each property.",
+            "default": true
+        },
+        "locale": {
+            "title": "Locale",
+            "type": "string",
+            "description": "Traveloka locale. This drives the language of facility names, room descriptions and labels.",
+            "editor": "select",
+            "enum": [
+                "en-id",
+                "id-id",
+                "en-sg",
+                "en-my",
+                "th-th",
+                "vi-vn"
+            ],
+            "enumTitles": [
+                "English (Indonesia)",
+                "Bahasa Indonesia",
+                "English (Singapore)",
+                "English (Malaysia)",
+                "Thai",
+                "Vietnamese"
+            ],
+            "default": "en-id"
+        },
+        "currency": {
+            "title": "Currency",
+            "type": "string",
+            "description": "Currency for all prices in the output.",
+            "editor": "select",
+            "enum": [
+                "IDR",
+                "USD",
+                "SGD",
+                "MYR",
+                "THB",
+                "VND",
+                "AUD",
+                "EUR"
+            ],
+            "default": "IDR"
+        },
+        "requestDelaySeconds": {
+            "title": "Delay between requests",
+            "type": "string",
+            "description": "Seconds to pause between API calls. Raise it if you see repeated 429 or 5xx responses.",
+            "editor": "textfield",
+            "default": "0.4"
+        },
+        "proxyConfiguration": {
+            "title": "Proxy",
+            "type": "object",
+            "description": "Proxy settings. Residential is the default: Traveloka's AWS WAF answers a captcha to the session bootstrap on most Apify datacenter IPs. If you pick a datacenter group, the actor tries it first and falls back to residential sessions when it is challenged.",
+            "editor": "proxy",
+            "default": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": [
+                    "RESIDENTIAL"
+                ]
+            },
+            "prefill": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": [
+                    "RESIDENTIAL"
+                ]
+            }
+        }
+    },
+    "required": []
+}

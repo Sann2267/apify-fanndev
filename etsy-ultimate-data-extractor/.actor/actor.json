@@ -1,0 +1,24 @@
+{
+    "actorSpecification": 1,
+    "name": "etsy-ultimate-data-extractor",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Etsy Ultimate Data Extractor (All-in-One)",
+    "description": "Five Etsy scrapers in one: keyword and category product search, shop analytics with the full catalogue, deep product detail with variants and stock, reviews with buyer photos and Etsy's AI sentiment tags, and a chained deep crawl that runs the lot from one keyword. Robots-compliant, no login, currency pinned per locale.",
+    "categories": [
+        "ECOMMERCE",
+        "BUSINESS",
+        "AGENTS"
+    ],
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json",
+    "defaultRunOptions": {
+        "build": "latest",
+        "memoryMbytes": 512,
+        "timeoutSecs": 3600
+    }
+}

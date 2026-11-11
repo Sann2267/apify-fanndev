@@ -1,0 +1,46 @@
+{
+    "title": "Blibli Homepage Recommendation & Ad Placement Tracker",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "tabs": {
+            "title": "Tabs",
+            "type": "array",
+            "description": "Which homepage feed tabs to sweep, by their short code (e.g. \"TAB_1\" for 'Untukmu'/For You, \"TAB_4\" for 'Zona affiliate'). Leave empty to auto-discover and sweep every tab Blibli currently exposes on the homepage -- the tab list itself (name/title/source) changes over time as Blibli adds seasonal or category tabs.",
+            "editor": "stringList",
+            "default": []
+        },
+        "maxPagesPerTab": {
+            "title": "Max pages per tab",
+            "type": "integer",
+            "description": "Hard cap on pages fetched per tab. This is a personalized, re-ranked recommendation feed, not a fixed catalogue -- Blibli's own paging metadata is unreliable here, so this cap (not an 'end of list' signal) is what actually stops a sweep. ~20 items per page.",
+            "editor": "number",
+            "minimum": 1,
+            "maximum": 200,
+            "default": 15
+        },
+        "maxItemsPerTab": {
+            "title": "Max items per tab",
+            "type": "integer",
+            "description": "Stop emitting records for a tab after this many. 0 means no limit beyond maxPagesPerTab.",
+            "editor": "number",
+            "minimum": 0,
+            "default": 0
+        },
+        "includeAdBanners": {
+            "title": "Include paid ad banners",
+            "type": "boolean",
+            "description": "Keep the paid brand-ad banner tiles that are interleaved with organic recommendations (they carry brandAdId/brandNames/redirectUrl instead of a product). These reveal which brands are buying homepage ad placement. Turn off to keep product recommendations only.",
+            "editor": "checkbox",
+            "default": true
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "description": "Blibli is behind Cloudflare. Apify Residential proxy with country 'ID' is recommended for long runs; short runs usually succeed without a proxy.",
+            "editor": "proxy",
+            "default": { "useApifyProxy": true, "apifyProxyGroups": ["RESIDENTIAL"] }
+        }
+    },
+    "required": []
+}

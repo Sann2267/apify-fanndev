@@ -1,0 +1,251 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Google Maps popular-times record",
+        "description": "Dataset envelope (_input / _source / _scrapedAt / recordType) on top of Google's foot-traffic data. In wide format one PLACE row per venue holds the whole weekly curve; in long format one POPULAR_TIMES_HOUR row per venue/day/hour. ERROR rows carry _error instead of a payload. Google adds and removes fields without notice, so unlisted fields pass through rather than failing the run.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The query or identifier that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "S1-preview-place, or none on failure rows."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was emitted."
+            },
+            "recordType": {
+                "type": "string",
+                "title": "Record type",
+                "description": "PLACE (wide format), POPULAR_TIMES_HOUR (long format), or ERROR."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Failure rows only: search_failed, unresolvable_input or detail_failed."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic accompanying _error."
+            },
+            "name": {
+                "title": "Venue name",
+                "description": "Business name as shown on Google Maps."
+            },
+            "primaryCategory": {
+                "title": "Primary category",
+                "description": "First category Google assigns, e.g. 'Gym'."
+            },
+            "categories": {
+                "title": "Categories",
+                "description": "All categories Google assigns."
+            },
+            "address": {
+                "title": "Address",
+                "description": "Single-line formatted address."
+            },
+            "latitude": {
+                "title": "Latitude",
+                "description": "Real GPS latitude of the venue."
+            },
+            "longitude": {
+                "title": "Longitude",
+                "description": "Real GPS longitude of the venue."
+            },
+            "timezone": {
+                "title": "Timezone",
+                "description": "IANA timezone -- needed to interpret the hourly curve locally."
+            },
+            "placeId": {
+                "title": "Place ID",
+                "description": "Google Place ID (ChIJ...)."
+            },
+            "featureId": {
+                "title": "Feature ID",
+                "description": "Google internal feature id, 0x...:0x..."
+            },
+            "googleMapsUrl": {
+                "title": "Google Maps URL",
+                "description": "Canonical Maps link for the venue."
+            },
+            "rating": {
+                "title": "Rating",
+                "description": "Average star rating."
+            },
+            "reviewsCount": {
+                "title": "Reviews count",
+                "description": "Total Google reviews -- a rough proxy for venue size."
+            },
+            "openingHours": {
+                "title": "Opening hours",
+                "description": "Weekly schedule, where Google supplied it."
+            },
+            "hasPopularTimes": {
+                "title": "Has popular times",
+                "description": "Whether Google returned a foot-traffic curve for this venue."
+            },
+            "popularTimes": {
+                "title": "Popular times",
+                "description": "Wide format: seven day objects, each with dayNumber (1=Monday), hasData, peakHour, peakOccupancyPercent and an hours list of {hour, occupancyPercent, label, displayHour}."
+            },
+            "daysWithData": {
+                "title": "Days with data",
+                "description": "How many of the seven days carry a curve."
+            },
+            "busiestDay": {
+                "title": "Busiest day",
+                "description": "Day containing the highest occupancy reading."
+            },
+            "busiestHour": {
+                "title": "Busiest hour",
+                "description": "Hour (0-23) of the weekly peak."
+            },
+            "peakOccupancyPercent": {
+                "title": "Peak occupancy %",
+                "description": "Highest occupancy reading across the week, 0-100."
+            },
+            "averageOccupancyPercent": {
+                "title": "Average occupancy %",
+                "description": "Mean occupancy across every hour Google reports."
+            },
+            "hasLiveData": {
+                "title": "Has live data",
+                "description": "True only for a real live measurement. A 'Now: ...' status line is a projection from the weekly curve and does not count."
+            },
+            "liveOccupancyPercent": {
+                "title": "Live occupancy %",
+                "description": "Current occupancy 0-100, when Google has a live reading."
+            },
+            "liveHour": {
+                "title": "Live hour",
+                "description": "Hour (0-23) the live reading refers to."
+            },
+            "liveStatusText": {
+                "title": "Live status text",
+                "description": "Google's wording, e.g. 'Less busy than usual' or 'Now: Usually as busy as it gets'."
+            },
+            "currentDay": {
+                "title": "Current day",
+                "description": "Day number (1=Monday) at scrape time, per the venue's own timezone."
+            },
+            "currentHour": {
+                "title": "Current hour",
+                "description": "Hour (0-23) at scrape time, per the venue's own timezone."
+            },
+            "day": {
+                "title": "Day",
+                "description": "Long format: day name for this row."
+            },
+            "dayNumber": {
+                "title": "Day number",
+                "description": "Long format: 1=Monday .. 7=Sunday."
+            },
+            "hour": {
+                "title": "Hour",
+                "description": "Long format: hour of day, 0-23."
+            },
+            "displayHour": {
+                "title": "Display hour",
+                "description": "Long format: Google's own label for the hour, e.g. '6 am'."
+            },
+            "occupancyPercent": {
+                "title": "Occupancy %",
+                "description": "Long format: busyness for this venue/day/hour, 0-100."
+            },
+            "label": {
+                "title": "Busyness label",
+                "description": "Long format: e.g. 'Usually a little busy'. Empty when the venue is closed that hour."
+            },
+            "isPeakHour": {
+                "title": "Is peak hour",
+                "description": "Long format: whether this hour is that day's peak."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across both output formats.",
+            "transformation": {
+                "fields": [
+                    "name",
+                    "primaryCategory",
+                    "busiestDay",
+                    "busiestHour",
+                    "peakOccupancyPercent",
+                    "averageOccupancyPercent",
+                    "hasLiveData",
+                    "liveOccupancyPercent",
+                    "day",
+                    "hour",
+                    "occupancyPercent",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        },
+        "weekly": {
+            "title": "Weekly curves (wide)",
+            "description": "One row per venue with its weekly foot-traffic summary.",
+            "transformation": {
+                "fields": [
+                    "name",
+                    "primaryCategory",
+                    "address",
+                    "latitude",
+                    "longitude",
+                    "timezone",
+                    "daysWithData",
+                    "busiestDay",
+                    "busiestHour",
+                    "peakOccupancyPercent",
+                    "averageOccupancyPercent",
+                    "hasLiveData",
+                    "liveOccupancyPercent",
+                    "liveStatusText",
+                    "rating",
+                    "reviewsCount",
+                    "googleMapsUrl"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        },
+        "hourly": {
+            "title": "Hourly rows (long)",
+            "description": "One row per venue/day/hour -- the analysis-ready shape.",
+            "transformation": {
+                "fields": [
+                    "name",
+                    "primaryCategory",
+                    "day",
+                    "dayNumber",
+                    "hour",
+                    "displayHour",
+                    "occupancyPercent",
+                    "label",
+                    "isPeakHour",
+                    "latitude",
+                    "longitude",
+                    "timezone",
+                    "placeId"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

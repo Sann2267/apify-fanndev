@@ -1,0 +1,120 @@
+{
+    "title": "Blibli Store Review & Sentiment Analyzer",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "storeUrls": {
+            "title": "Stores / products to analyze",
+            "type": "array",
+            "description": "What to pull reviews for. Accepts a store URL (https://www.blibli.com/merchant/<name>/COP-60023), a bare store code (COP-60023), a product URL (https://www.blibli.com/p/<name>/ps--COP-60023-00933), a bare product SKU, or 'brand:<name>'. Mix freely - your own store and competitors' in one run.",
+            "editor": "stringList",
+            "prefill": [
+                "https://www.blibli.com/merchant/colgate-palmolive-indonesia-flagship-store/COP-60023"
+            ],
+            "default": []
+        },
+        "coverage": {
+            "title": "Coverage depth",
+            "type": "string",
+            "description": "Blibli only exposes about 600 reviews per query. 'standard' does one sweep (fastest). 'deep' also sweeps each star rating separately, which usually captures nearly ALL 1- and 2-star reviews even on a store with tens of thousands - the setting to use for complaint analysis. 'maximum' additionally sweeps each review topic.",
+            "editor": "select",
+            "enum": [
+                "standard",
+                "deep",
+                "maximum"
+            ],
+            "enumTitles": [
+                "Standard - one sweep, up to ~600 reviews",
+                "Deep - per-rating sweeps, captures nearly all negatives (recommended)",
+                "Maximum - per-rating and per-topic sweeps"
+            ],
+            "default": "deep"
+        },
+        "sortBy": {
+            "title": "Sort order",
+            "type": "string",
+            "description": "Order Blibli returns reviews in. 'LATEST' is best for tracking sentiment over time; 'POPULAR' surfaces the reviews other shoppers found most helpful.",
+            "editor": "select",
+            "enum": [
+                "LATEST",
+                "POPULAR",
+                "OLDEST",
+                "HIGHEST",
+                "LOWEST"
+            ],
+            "enumTitles": [
+                "Newest first",
+                "Most helpful",
+                "Oldest first",
+                "Highest rating first",
+                "Lowest rating first"
+            ],
+            "default": "LATEST"
+        },
+        "maxReviewsPerTarget": {
+            "title": "Max reviews per target",
+            "type": "integer",
+            "description": "Stop after this many reviews per store/product. 0 means no limit - sweep until the coverage plan is exhausted.",
+            "editor": "number",
+            "minimum": 0,
+            "default": 0
+        },
+        "minRating": {
+            "title": "Minimum star rating",
+            "type": "integer",
+            "description": "Keep only reviews at or above this rating. 0 disables the filter. Set to 0 and use the ratingPolarity field to isolate complaints instead.",
+            "editor": "number",
+            "minimum": 0,
+            "maximum": 5,
+            "default": 0
+        },
+        "onlyWithText": {
+            "title": "Only reviews with written text",
+            "type": "boolean",
+            "description": "Skip star-only ratings that carry no words. About half of Blibli's reviews have no text at all, and they are useless for sentiment analysis - this is filtered server-side, so pagination is spent entirely on reviews you can actually feed to an AI. Turn off only if you want the raw rating stream.",
+            "default": true
+        },
+        "onlyWithMedia": {
+            "title": "Only reviews with photos/videos",
+            "type": "boolean",
+            "description": "Restrict to reviews that include buyer photos or videos - useful for spotting product defects that shoppers photographed.",
+            "default": false
+        },
+        "includeSummary": {
+            "title": "Include store summary row",
+            "type": "boolean",
+            "description": "Emit one STORE_SUMMARY record per target with the full rating histogram, average rating, negative/positive share, and Blibli's own topic counts (quality, price, shipping, packaging, service, authenticity) across the store's ENTIRE review base - not just the sampled reviews. Cheap and the single most useful row for sentiment analysis.",
+            "default": true
+        },
+        "productBreakdown": {
+            "title": "Also sweep each product separately",
+            "type": "boolean",
+            "description": "Expand a store into its individual products and sweep each one's reviews too. Each product has its own ~600-review window, so this greatly deepens coverage on large stores - at the cost of one request set per product.",
+            "default": false
+        },
+        "maxProductsPerStore": {
+            "title": "Max products per store",
+            "type": "integer",
+            "description": "Only used when 'Also sweep each product separately' is on. Caps how many of the store's products get their own review sweep.",
+            "editor": "number",
+            "minimum": 1,
+            "maximum": 800,
+            "default": 50
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "description": "Blibli is behind Cloudflare. Apify Residential proxy with country 'ID' is recommended for long runs; short runs usually succeed without a proxy.",
+            "editor": "proxy",
+            "default": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": [
+                    "RESIDENTIAL"
+                ]
+            }
+        }
+    },
+    "required": [
+        "storeUrls"
+    ]
+}

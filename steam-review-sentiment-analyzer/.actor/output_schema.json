@@ -1,0 +1,435 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Steam review & sentiment records",
+        "description": "Mixed record types told apart by recordType. REVIEW rows pass Steam's review object through verbatim, so extra upstream fields may appear.",
+        "properties": {
+            "_input": {
+                "title": "Input",
+                "description": "The game (app ID / URL / name) or Steam user exactly as given.",
+                "type": "string"
+            },
+            "_source": {
+                "title": "Source",
+                "description": "Endpoint that produced the record: S1-appreviews, S1-appreviewhistogram, S1-appreviews+histogram, S1-community-html, or none for errors.",
+                "type": "string"
+            },
+            "_scrapedAt": {
+                "title": "Scraped at",
+                "description": "UTC time the record was produced.",
+                "type": "string",
+                "format": "date-time"
+            },
+            "_error": {
+                "title": "Error",
+                "description": "Only on failed rows: not_found, private_profile, no_reviews, invalid_input, blocked, api_error, exception.",
+                "type": "string"
+            },
+            "_errorDetail": {
+                "title": "Error detail",
+                "description": "Human-readable reason for the error.",
+                "type": "string"
+            },
+            "recordType": {
+                "title": "Record type",
+                "description": "SUMMARY, REVIEW, HISTORY, LANGUAGE, USER_REVIEW or ERROR.",
+                "type": "string"
+            },
+            "appId": {
+                "title": "App ID",
+                "description": "Steam app ID."
+            },
+            "appName": {
+                "title": "Game",
+                "description": "Game name from the Steam store."
+            },
+            "appType": {
+                "title": "App type",
+                "description": "game, dlc, demo..."
+            },
+            "storeUrl": {
+                "title": "Store URL",
+                "description": "Steam store page."
+            },
+            "resolvedFrom": {
+                "title": "Resolved from",
+                "description": "appId, url or name (name = first Steam search hit)."
+            },
+            "appDetailsAvailable": {
+                "title": "Store details available",
+                "description": "False for delisted/region-locked apps that still have reviews."
+            },
+            "developers": {
+                "title": "Developers",
+                "description": ""
+            },
+            "publishers": {
+                "title": "Publishers",
+                "description": ""
+            },
+            "releaseDate": {
+                "title": "Release date",
+                "description": "As printed by Steam."
+            },
+            "comingSoon": {
+                "title": "Coming soon",
+                "description": ""
+            },
+            "isFree": {
+                "title": "Free to play",
+                "description": ""
+            },
+            "price": {
+                "title": "Price",
+                "description": "Formatted price in the chosen store country."
+            },
+            "priceCurrency": {
+                "title": "Currency",
+                "description": ""
+            },
+            "discountPercent": {
+                "title": "Discount %",
+                "description": ""
+            },
+            "genres": {
+                "title": "Genres",
+                "description": ""
+            },
+            "metacriticScore": {
+                "title": "Metacritic score",
+                "description": ""
+            },
+            "storeRecommendationsTotal": {
+                "title": "Store recommendation count",
+                "description": "appdetails' own counter (differs slightly from review totals)."
+            },
+            "steamScore": {
+                "title": "Steam score",
+                "description": "Official store score: Steam purchases, all languages (review_score, review_score_desc, totals, positiveRatio)."
+            },
+            "allPurchasesScore": {
+                "title": "All purchases score",
+                "description": "Same totals including key activations (purchase_type=all)."
+            },
+            "nonSteamPurchaseShare": {
+                "title": "Key-activation share",
+                "description": "Share of all reviews written by people who did not buy on Steam."
+            },
+            "trend": {
+                "title": "Trend",
+                "description": "Histogram-based: lifetime, last 30 days, last 3 / 12 months, recentVsLifetimeDelta. Histogram totals INCLUDE off-topic (review-bomb) periods that the store score excludes."
+            },
+            "reviewBombCandidates": {
+                "title": "Review-bomb candidates",
+                "description": "Months whose negative share and volume both spike far above the game's baseline."
+            },
+            "languageBreakdown": {
+                "title": "Language breakdown",
+                "description": "Score and share of reviews per language."
+            },
+            "recentSample": {
+                "title": "Recent review sample",
+                "description": "Analytics over the newest N reviews: positivity by playtime, Steam Deck, early access, free copies, refunds, language mix, text sentiment."
+            },
+            "complaintAnalysis": {
+                "title": "Complaint analysis",
+                "description": "Distinctive terms and top excerpts from the most helpful positive vs negative English reviews of the last 365 days."
+            },
+            "sampleFilters": {
+                "title": "Sample filters",
+                "description": "Filters applied to the recent sample."
+            },
+            "recommendationid": {
+                "title": "Review ID",
+                "description": ""
+            },
+            "reviewUrl": {
+                "title": "Review URL",
+                "description": ""
+            },
+            "review": {
+                "title": "Review text",
+                "description": "Can be empty: Steam allows thumb-only reviews."
+            },
+            "voted_up": {
+                "title": "Recommended",
+                "description": "True = thumbs up."
+            },
+            "votes_up": {
+                "title": "Helpful votes",
+                "description": ""
+            },
+            "votes_funny": {
+                "title": "Funny votes",
+                "description": ""
+            },
+            "weighted_vote_score": {
+                "title": "Helpfulness score",
+                "description": "Steam's weighted helpfulness (0-1)."
+            },
+            "comment_count": {
+                "title": "Comments",
+                "description": ""
+            },
+            "language": {
+                "title": "Language",
+                "description": "Steam language code."
+            },
+            "createdAt": {
+                "title": "Created at",
+                "description": "UTC."
+            },
+            "updatedAt": {
+                "title": "Updated at",
+                "description": "UTC."
+            },
+            "timestamp_created": {
+                "title": "Created (unix)",
+                "description": ""
+            },
+            "timestamp_updated": {
+                "title": "Updated (unix)",
+                "description": ""
+            },
+            "playtimeAtReviewHours": {
+                "title": "Playtime at review (h)",
+                "description": "author.playtime_at_review converted from minutes."
+            },
+            "author": {
+                "title": "Author",
+                "description": "Raw Steam author object: steamid, num_games_owned, num_reviews, playtime_forever / last_two_weeks / at_review (MINUTES), last_played."
+            },
+            "steam_purchase": {
+                "title": "Bought on Steam",
+                "description": ""
+            },
+            "received_for_free": {
+                "title": "Received for free",
+                "description": ""
+            },
+            "refunded": {
+                "title": "Refunded",
+                "description": ""
+            },
+            "written_during_early_access": {
+                "title": "Early access review",
+                "description": ""
+            },
+            "primarily_steam_deck": {
+                "title": "Played on Steam Deck",
+                "description": ""
+            },
+            "hardware": {
+                "title": "Hardware",
+                "description": "Present on some reviews."
+            },
+            "reactions": {
+                "title": "Reactions/awards",
+                "description": ""
+            },
+            "app_release_date": {
+                "title": "App release (unix)",
+                "description": ""
+            },
+            "textSentiment": {
+                "title": "Text sentiment",
+                "description": "VADER score of the review text (compound -1..1, label). English reviews only; null otherwise."
+            },
+            "sentimentMismatch": {
+                "title": "Text contradicts thumb",
+                "description": "True when a recommended review reads negative or a not-recommended one reads positive."
+            },
+            "period": {
+                "title": "Period",
+                "description": "month / week (histogram rollups) or day (last 30 days)."
+            },
+            "periodStart": {
+                "title": "Period start",
+                "description": "UTC."
+            },
+            "recommendations_up": {
+                "title": "Positive",
+                "description": ""
+            },
+            "recommendations_down": {
+                "title": "Negative",
+                "description": ""
+            },
+            "totalReviews": {
+                "title": "Total",
+                "description": ""
+            },
+            "positiveRatio": {
+                "title": "Positive ratio",
+                "description": "0-1."
+            },
+            "reviewScoreDesc": {
+                "title": "Score label",
+                "description": "Steam's rating ladder applied to this window."
+            },
+            "isReviewBombCandidate": {
+                "title": "Review-bomb candidate",
+                "description": ""
+            },
+            "purchase_type": {
+                "title": "Purchase type",
+                "description": ""
+            },
+            "review_score": {
+                "title": "Review score",
+                "description": "Steam's 0-9 score."
+            },
+            "review_score_desc": {
+                "title": "Score label",
+                "description": ""
+            },
+            "total_positive": {
+                "title": "Positive total",
+                "description": ""
+            },
+            "total_negative": {
+                "title": "Negative total",
+                "description": ""
+            },
+            "total_reviews": {
+                "title": "Total reviews",
+                "description": ""
+            },
+            "shareOfAllReviews": {
+                "title": "Share of all reviews",
+                "description": ""
+            },
+            "positiveRatioVsAllLanguages": {
+                "title": "Vs all languages",
+                "description": "positiveRatio minus the all-languages ratio."
+            },
+            "rank": {
+                "title": "Rank",
+                "description": "By review count."
+            },
+            "steamProfileUrl": {
+                "title": "Profile URL",
+                "description": ""
+            },
+            "personaName": {
+                "title": "User name",
+                "description": ""
+            },
+            "userTotalReviews": {
+                "title": "User's review count",
+                "description": ""
+            },
+            "appUrl": {
+                "title": "App URL",
+                "description": ""
+            },
+            "reviewTitle": {
+                "title": "Verdict",
+                "description": "Recommended / Not Recommended."
+            },
+            "hoursOnRecord": {
+                "title": "Hours on record",
+                "description": ""
+            },
+            "hoursAtReviewTime": {
+                "title": "Hours at review",
+                "description": ""
+            },
+            "postedDate": {
+                "title": "Posted",
+                "description": "YYYY-MM-DD."
+            },
+            "lastEditedDate": {
+                "title": "Last edited",
+                "description": "YYYY-MM-DD."
+            },
+            "postedText": {
+                "title": "Posted (raw)",
+                "description": ""
+            },
+            "awardsCount": {
+                "title": "Awards",
+                "description": ""
+            },
+            "countedInOverallScore": {
+                "title": "Counts toward score",
+                "description": "False for key activations."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Sentiment summary",
+            "description": "One row per game (summary mode).",
+            "transformation": {
+                "fields": [
+                    "appName",
+                    "appId",
+                    "steamScore",
+                    "allPurchasesScore",
+                    "trend",
+                    "reviewBombCandidates",
+                    "languageBreakdown",
+                    "complaintAnalysis",
+                    "price",
+                    "releaseDate",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        },
+        "reviews": {
+            "title": "Reviews",
+            "description": "reviews and userReviews modes.",
+            "transformation": {
+                "fields": [
+                    "appName",
+                    "voted_up",
+                    "review",
+                    "playtimeAtReviewHours",
+                    "hoursAtReviewTime",
+                    "votes_up",
+                    "language",
+                    "createdAt",
+                    "postedDate",
+                    "textSentiment",
+                    "sentimentMismatch",
+                    "reviewUrl",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        },
+        "history": {
+            "title": "History & languages",
+            "description": "history and languages modes.",
+            "transformation": {
+                "fields": [
+                    "appName",
+                    "period",
+                    "periodStart",
+                    "language",
+                    "recommendations_up",
+                    "recommendations_down",
+                    "total_reviews",
+                    "positiveRatio",
+                    "reviewScoreDesc",
+                    "review_score_desc",
+                    "isReviewBombCandidate",
+                    "shareOfAllReviews",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

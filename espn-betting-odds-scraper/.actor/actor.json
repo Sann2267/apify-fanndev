@@ -1,0 +1,18 @@
+{
+    "actorSpecification": 1,
+    "name": "espn-betting-odds-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Sports Betting Odds & Player Props Scraper",
+    "description": "Sportsbook lines for NFL, college football, NBA, MLB, NHL, soccer and UFC: spread, moneyline and total per book, how far each line moved since it opened, ~659 player props per game, season futures with implied probability, and the model win projection to compare against the price. No login.",
+    "categories": [
+        "SPORTS",
+        "OTHER"
+    ],
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

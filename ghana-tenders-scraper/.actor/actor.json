@@ -1,0 +1,14 @@
+{
+    "actorSpecification": 1,
+    "name": "ghana-tenders-scraper",
+    "version": "0.1",
+    "buildTag": "latest",
+    "title": "Ghana Government Tenders Scraper (GHANEPS)",
+    "description": "Scrapes Ghana's official Electronic Procurement System (GHANEPS) for current open tenders, opened-bid/evaluation status, and awarded contracts (with supplier name and award amount), plus full per-tender detail pages. No account or login needed.",
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

@@ -1,0 +1,169 @@
+{
+    "title": "Google Maps Business Verification & Status Monitoring",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "searchQueries": {
+            "title": "Business types to audit",
+            "type": "array",
+            "editor": "stringList",
+            "prefill": [
+                "dentist"
+            ],
+            "description": "Categories to sweep, e.g. 'dentist', 'salon', 'warung'. Each runs across the location below. A location is required with queries."
+        },
+        "areaName": {
+            "title": "Location - named area",
+            "type": "string",
+            "editor": "textfield",
+            "prefill": "jakarta",
+            "description": "Built-in city or country, e.g. 'jakarta', 'bali', 'london'. For anywhere else use a centre point with a radius, or a bounding box."
+        },
+        "centerLatitude": {
+            "title": "Location - centre latitude",
+            "type": "string",
+            "editor": "textfield",
+            "description": "Latitude of the centre point. Use with centre longitude and radius."
+        },
+        "centerLongitude": {
+            "title": "Location - centre longitude",
+            "type": "string",
+            "editor": "textfield",
+            "description": "Longitude of the centre point."
+        },
+        "radiusKm": {
+            "title": "Location - radius (km)",
+            "type": "string",
+            "editor": "textfield",
+            "description": "Audit businesses within this many kilometres of the centre point."
+        },
+        "boundingBox": {
+            "title": "Location - bounding box [south, west, north, east]",
+            "type": "array",
+            "editor": "json",
+            "description": "Most precise option. Tiled into several search points, then filtered to the box using each business's real coordinates."
+        },
+        "tileSizeKm": {
+            "title": "Search tile size (km)",
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 200,
+            "description": "Spacing of search points inside your area. Smaller = more thorough, more requests. Leave empty to choose automatically."
+        },
+        "maxResultsPerQuery": {
+            "title": "Max businesses per query",
+            "type": "integer",
+            "default": 100,
+            "minimum": 1,
+            "maximum": 5000,
+            "description": "Stop each query after this many businesses. Google returns 20 per request and every signal here comes from that one request."
+        },
+        "placeUrls": {
+            "title": "Specific Google Maps URLs",
+            "type": "array",
+            "editor": "requestListSources",
+            "description": "Optional. Audit named businesses directly instead of sweeping an area - this is also the only way to confirm a closed listing, since Google keeps closed businesses out of search results."
+        },
+        "placeIds": {
+            "title": "Specific Place IDs / CIDs / feature IDs",
+            "type": "array",
+            "editor": "stringList",
+            "description": "Optional. Accepts a Place ID (ChIJ...), a numeric CID, or a raw feature ID (0x...:0x...)."
+        },
+        "onlyUnclaimed": {
+            "title": "Only unclaimed listings",
+            "type": "boolean",
+            "default": false,
+            "description": "Keep only businesses that nobody has claimed on Google Business Profile - the core prospect list for a GMB claim service."
+        },
+        "onlyWithoutWebsite": {
+            "title": "Only businesses without a website",
+            "type": "boolean",
+            "default": false,
+            "description": "Keep only businesses with no website listed - the natural upsell after a profile claim."
+        },
+        "onlyWithoutPhone": {
+            "title": "Only businesses without a phone number",
+            "type": "boolean",
+            "default": false,
+            "description": "Keep only businesses with no phone number on their listing."
+        },
+        "onlyClosed": {
+            "title": "Only closed businesses",
+            "type": "boolean",
+            "default": false,
+            "description": "Keep only listings marked permanently or temporarily closed. Note Google excludes closed businesses from search results, so this realistically only returns anything for places you supply by URL or ID."
+        },
+        "excludePermanentlyClosed": {
+            "title": "Exclude permanently closed",
+            "type": "boolean",
+            "default": false,
+            "description": "Drop permanently closed listings - they are never a sales prospect."
+        },
+        "minOpportunityScore": {
+            "title": "Minimum opportunity score",
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 100,
+            "description": "Keep only businesses scoring at or above this. Unclaimed is worth 40, no website 25, no phone 10, no hours 10, few reviews 10, low rating 5. 65+ is a strong pitch."
+        },
+        "verifyWithPlaceDetails": {
+            "title": "Verify each listing against its detail page",
+            "type": "boolean",
+            "default": false,
+            "description": "Fetch each business's detail page for a second look. Needed to detect closures and to fill in gaps Google trims from search results. Costs one extra request per business, so leave it off for large sweeps."
+        },
+        "emitAreaSummary": {
+            "title": "Emit an area summary row",
+            "type": "boolean",
+            "default": true,
+            "description": "Add one AREA_SUMMARY record with market-level totals: how many listings are unclaimed, how many lack a website, and how many are both."
+        },
+        "exportFormats": {
+            "title": "Extra export files",
+            "type": "array",
+            "editor": "select",
+            "default": [],
+            "description": "Also write the results to the key-value store in these formats. The Apify dataset is always produced regardless.",
+            "items": {
+                "type": "string",
+                "enum": [
+                    "json",
+                    "csv",
+                    "excel",
+                    "ndjson"
+                ],
+                "enumTitles": [
+                    "JSON",
+                    "CSV",
+                    "Excel (.xlsx)",
+                    "NDJSON"
+                ]
+            }
+        },
+        "language": {
+            "title": "Language (hl)",
+            "type": "string",
+            "default": "en",
+            "editor": "textfield",
+            "description": "Google interface language. Keep as 'en' unless you need local category names - the closure wording this actor matches is English."
+        },
+        "region": {
+            "title": "Region (gl)",
+            "type": "string",
+            "default": "US",
+            "editor": "textfield",
+            "description": "Two-letter country code biasing Google's results, e.g. US, ID, GB. Set this to the market you are prospecting."
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "editor": "proxy",
+            "default": {
+                "useApifyProxy": false
+            },
+            "description": "Off by default and that is the right setting here: these endpoints have no WAF and the claim signal survives even Google's reduced record, so the platform's own IP works and costs nothing. RESIDENTIAL is not recommended for Google."
+        }
+    },
+    "required": []
+}

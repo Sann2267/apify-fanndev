@@ -1,0 +1,127 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "URSB registry search-result record",
+        "description": "Raw-passthrough dataset envelope. Every record carries _input/_source/_scrapedAt (and _error/_errorDetail on failures, or _warning if deep pagination was cut short). Each successful record is one matched entity from URSB's public name-search, with upstream's own field names passed through verbatim.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The exact query (name or registration number) that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "S1-nir-name-search (a matched entity), or none (error record)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed searches -- not_found (search matched nothing) or blocked_or_transient (network issue)."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "_warning": {
+                "type": "string",
+                "title": "Warning",
+                "description": "pagination_truncated_by_timeout if deeper pages stopped responding before maxResultsPerQuery was reached; the results collected before that point are still included."
+            },
+            "id": {
+                "title": "Internal ID",
+                "description": "URSB's internal UUID for this entity record."
+            },
+            "ern": {
+                "title": "Entity Registration Number (ERN)",
+                "description": "URSB's official public registration number for the entity."
+            },
+            "name": {
+                "title": "Name",
+                "description": "Registered business or company name."
+            },
+            "type": {
+                "title": "Entity type",
+                "description": "e.g. \"Company\" or \"Business Name\"."
+            },
+            "subType": {
+                "title": "Entity sub-type",
+                "description": "e.g. \"Private Company Limited by Shares\", \"Sole Proprietor\", \"General Partnership\"."
+            },
+            "status": {
+                "title": "Status",
+                "description": "Current register status, e.g. \"REGISTERED\"."
+            },
+            "registrationInstitution": {
+                "title": "Registration institution",
+                "description": "The registering authority (Uganda Registration Services Bureau)."
+            },
+            "duplicateAllowed": {
+                "title": "Duplicate allowed",
+                "description": "Whether this name is flagged as allowed to duplicate an existing one on file."
+            },
+            "createdAt": {
+                "title": "Created at",
+                "description": "Timestamp the record was created in URSB's system."
+            },
+            "deactivatedAt": {
+                "title": "Deactivated at",
+                "description": "Timestamp the entity was deactivated, if applicable."
+            },
+            "registrationDate": {
+                "title": "Registration date",
+                "description": "Date the entity was registered, where on file (often null on this public search -- see README)."
+            },
+            "affiliations": {
+                "title": "Affiliations",
+                "description": "Any related-entity affiliations on file (empty on every sample seen)."
+            },
+            "registrationType": {
+                "title": "Registration type",
+                "description": "Upstream registration-type tag, where set."
+            },
+            "recordStatus": {
+                "title": "Record status",
+                "description": "Upstream internal record-status tag, where set."
+            },
+            "complianceStatus": {
+                "title": "Compliance status",
+                "description": "e.g. \"COMPLIANT\"."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns for matched entities and error rows.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "_source",
+                    "_scrapedAt",
+                    "name",
+                    "ern",
+                    "type",
+                    "subType",
+                    "status",
+                    "complianceStatus",
+                    "_warning",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

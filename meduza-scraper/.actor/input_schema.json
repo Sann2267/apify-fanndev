@@ -1,0 +1,72 @@
+{
+    "title": "Meduza Scraper",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "mode": {
+            "title": "Mode",
+            "type": "string",
+            "editor": "select",
+            "description": "\"article\" extracts one or more article URLs (Russian or English edition). \"latest\" fetches the newest headlines from the RSS feed.",
+            "enum": ["article", "latest"],
+            "enumTitles": ["Article", "Latest headlines"],
+            "default": "article",
+            "prefill": "article"
+        },
+        "url": {
+            "title": "Article URL",
+            "type": "string",
+            "editor": "textfield",
+            "description": "A single meduza.io article URL to extract -- works for both the Russian edition (meduza.io/...) and the English edition (meduza.io/en/...). Used when mode is \"article\".",
+            "prefill": "https://meduza.io/en/feature/2026/08/25/cia-director-john-ratcliffe-made-an-unannounced-visit-to-moscow-here-s-what-we-know"
+        },
+        "urls": {
+            "title": "Article URLs",
+            "type": "array",
+            "editor": "stringList",
+            "description": "Multiple meduza.io article URLs to extract in one run. Used when mode is \"article\"."
+        },
+        "limit": {
+            "title": "Max headlines (latest mode)",
+            "type": "integer",
+            "description": "Maximum number of headlines to return in \"latest\" mode.",
+            "default": 10,
+            "minimum": 1,
+            "maximum": 50,
+            "prefill": 10
+        },
+        "language": {
+            "title": "Edition (latest mode)",
+            "type": "string",
+            "editor": "select",
+            "description": "Which edition's RSS feed to read in \"latest\" mode -- English (curated, partly AI-translated) or Russian (the original, full-volume feed).",
+            "enum": ["en", "ru"],
+            "enumTitles": ["English", "Russian"],
+            "default": "en",
+            "prefill": "en"
+        },
+        "maxConcurrency": {
+            "title": "Max concurrent workers",
+            "type": "integer",
+            "description": "How many article pages to fetch in parallel in \"article\" mode.",
+            "default": 4,
+            "minimum": 1,
+            "maximum": 16,
+            "prefill": 4
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "editor": "proxy",
+            "description": "Apify Proxy configuration. Residential is on by default.",
+            "default": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            },
+            "prefill": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            }
+        }
+    }
+}

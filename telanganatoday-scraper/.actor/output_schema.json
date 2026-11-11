@@ -1,0 +1,143 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Article / latest-headline record",
+        "description": "Raw-passthrough dataset envelope. Every record carries _input/_source/_scrapedAt (and _error/_errorDetail on failures). Article-mode records (S1-jsonld) are a near-verbatim spread of the page's NewsArticle JSON-LD block, so extra schema.org fields beyond those listed here may appear. Latest-mode records (S2-rss) carry title/link-style fields from the site-wide WordPress RSS feed.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The exact input value (URL, or 'latest') that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which extraction strategy emitted this record (S1-jsonld or S2-rss)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed extractions -- the error kind."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "headline": {
+                "title": "Headline",
+                "description": "Article headline (raw passthrough from JSON-LD NewsArticle)."
+            },
+            "description": {
+                "title": "Description",
+                "description": "Short article description/dek (article-mode from JSON-LD, or the RSS item description in latest-mode)."
+            },
+            "articleBody": {
+                "title": "Article body",
+                "description": "Full article text, present on every sampled article's JSON-LD NewsArticle node."
+            },
+            "keywords": {
+                "title": "Keywords",
+                "description": "Comma-separated keyword/tag string, as emitted upstream (article-mode only)."
+            },
+            "datePublished": {
+                "title": "Date published",
+                "description": "Publish date, format 'YYYY-MM-DD HH:MM:SS +05:30' (IST, space-separated -- not standard ISO 8601 T-separated, passed through as upstream emits it)."
+            },
+            "dateModified": {
+                "title": "Date modified",
+                "description": "Last-modified date, same non-standard space-separated IST format as datePublished."
+            },
+            "dateCreated": {
+                "title": "Date created",
+                "description": "Creation date, same non-standard space-separated IST format as datePublished."
+            },
+            "thumbnailUrl": {
+                "title": "Thumbnail URL",
+                "description": "Lead image URL (also duplicated inside the `image` object)."
+            },
+            "author": {
+                "title": "Author",
+                "description": "Author object as emitted by upstream JSON-LD (raw passthrough -- Person with name+url, e.g. a named byline or a wire-service credit like PTI/ANI)."
+            },
+            "publisher": {
+                "title": "Publisher",
+                "description": "Publisher organization object."
+            },
+            "image": {
+                "title": "Image",
+                "description": "Lead image object (url/width/height)."
+            },
+            "mainEntityOfPage": {
+                "title": "Main entity of page",
+                "description": "Canonical WebPage reference (with @id and image)."
+            },
+            "url": {
+                "title": "Canonical URL",
+                "description": "Canonical article URL as emitted in JSON-LD."
+            },
+            "title": {
+                "title": "Title",
+                "description": "Headline from the RSS item (latest-mode)."
+            },
+            "link": {
+                "title": "Link",
+                "description": "Article URL (latest-mode)."
+            },
+            "guid": {
+                "title": "GUID",
+                "description": "RSS item guid (latest-mode)."
+            },
+            "pubDate": {
+                "title": "Publish date",
+                "description": "RSS pubDate string, RFC 822 format (latest-mode)."
+            },
+            "category": {
+                "title": "Category",
+                "description": "RSS item category/section, when present (latest-mode)."
+            },
+            "creator": {
+                "title": "Creator",
+                "description": "RSS dc:creator byline, e.g. 'PTI', 'ANI', or 'Telangana Today' for staff-written pieces (latest-mode)."
+            },
+            "contentEncoded": {
+                "title": "Content (encoded)",
+                "description": "Full article HTML (lead image + paragraphs) from the RSS item's content:encoded element (latest-mode)."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across both article and latest-headline records.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "_source",
+                    "_scrapedAt",
+                    "headline",
+                    "title",
+                    "link",
+                    "category",
+                    "datePublished",
+                    "pubDate",
+                    "author",
+                    "creator",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

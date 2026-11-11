@@ -1,0 +1,14 @@
+# Exact pins for the known-good stack. Loose ranges let the Apify base image
+# resolve a MISMATCHED set on cloud: pydantic floats to 2.13 against an older
+# crawlee whose HttpHeaders RootModel then dies with "cannot specify both
+# default and default_factory", and an older crawlee also hits the browserforge
+# 1.2.4 `DATA_FILES` shim bug. crawlee 1.9.1 is compatible with both pydantic
+# 2.13 and browserforge 1.2.4, so pin the whole chain together.
+apify==4.0.1
+apify-client==3.1.1
+crawlee==1.9.1
+pydantic==2.13.4
+pydantic-settings==2.15.0
+browserforge==1.2.4
+curl_cffi>=0.16.0
+camoufox[geoip]>=0.5.0

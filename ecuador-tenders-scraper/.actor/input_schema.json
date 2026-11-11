@@ -1,0 +1,99 @@
+{
+    "title": "Ecuador Government Tenders Scraper (SERCOP OCDS)",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "mode": {
+            "title": "Mode",
+            "type": "string",
+            "editor": "select",
+            "description": "\"List\" searches SERCOP's public search_ocds API by keyword and year. \"Detail\" fetches full OCDS (Open Contracting Data Standard) release history for one or more specific OCIDs.",
+            "enum": ["list", "detail"],
+            "enumTitles": ["List (search by keyword + year)", "Detail (fetch specific OCIDs)"],
+            "default": "list",
+            "prefill": "list"
+        },
+        "searchQuery": {
+            "title": "Search keyword (mode=list only, required)",
+            "type": "string",
+            "editor": "textfield",
+            "description": "Free-text keyword, matched against titles/descriptions/buyer names (Spanish). At least 3 characters -- SERCOP's own API requires a keyword, there is no 'browse everything' call.",
+            "prefill": "hospital"
+        },
+        "year": {
+            "title": "Year (mode=list only)",
+            "type": "integer",
+            "description": "The procurement process year to search within (SERCOP's API requires one year per search). 2015 is the earliest year SERCOP's open-data platform covers.",
+            "default": 2026,
+            "minimum": 2015,
+            "prefill": 2026
+        },
+        "buyer": {
+            "title": "Buyer keyword (mode=list only, optional)",
+            "type": "string",
+            "editor": "textfield",
+            "description": "Optional keyword to narrow results to a specific purchasing government institution (buyer name), e.g. 'LOS RIOS'."
+        },
+        "supplier": {
+            "title": "Supplier keyword (mode=list only, optional)",
+            "type": "string",
+            "editor": "textfield",
+            "description": "Optional keyword to narrow results to a specific supplier/contractor name."
+        },
+        "maxResults": {
+            "title": "Max results (mode=list only)",
+            "type": "integer",
+            "description": "Caps how many records this run returns. The search endpoint is paged internally, so this actor makes as many requests as needed up to this cap or until no further pages are available.",
+            "default": 25,
+            "minimum": 1,
+            "maximum": 2000,
+            "prefill": 25
+        },
+        "fetchDetail": {
+            "title": "Fetch full OCDS detail for each list row (mode=list only)",
+            "type": "boolean",
+            "description": "When enabled, each list row is enriched with the same merged tender/award/contract summary fields and full 'releases' history as mode=detail -- one extra request per row, so runs take longer.",
+            "default": false,
+            "prefill": false
+        },
+        "ocid": {
+            "title": "OCID (mode=detail only)",
+            "type": "string",
+            "editor": "textfield",
+            "description": "A single procurement process's OCID (Open Contracting ID), e.g. ocds-5wno2w-001-LICO-GPLR-2020-2805. Find OCIDs from a 'list' mode run's ocid field.",
+            "prefill": "ocds-5wno2w-001-LICO-GPLR-2020-2805"
+        },
+        "ocids": {
+            "title": "OCIDs (mode=detail only)",
+            "type": "array",
+            "editor": "stringList",
+            "description": "Multiple OCIDs to fetch full detail for in one run."
+        },
+        "maxConcurrency": {
+            "title": "Max concurrent workers (mode=detail only)",
+            "type": "integer",
+            "description": "How many OCID lookups to run in parallel.",
+            "default": 2,
+            "minimum": 1,
+            "maximum": 5,
+            "prefill": 2
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "editor": "proxy",
+            "description": "Apify Proxy configuration. Residential proxies geolocated to Ecuador are recommended -- this target was unreachable from several outside networks during recon (see CRAWLING_METHOD.md), which is more consistent with regional/network routing limits than a deliberate anti-bot block.",
+            "default": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"],
+                "apifyProxyCountry": "EC"
+            },
+            "prefill": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"],
+                "apifyProxyCountry": "EC"
+            }
+        }
+    },
+    "required": ["mode"]
+}

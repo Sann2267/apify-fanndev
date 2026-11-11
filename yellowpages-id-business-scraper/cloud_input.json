@@ -1,0 +1,9 @@
+{
+  "mode": "search_businesses",
+  "queries": ["percetakan"],
+  "region": "Jawa Barat",
+  "maxItemsPerQuery": 25,
+  "enrichWithDetails": false,
+  "maxConcurrency": 4,
+  "proxyConfiguration": { "useApifyProxy": false }
+}

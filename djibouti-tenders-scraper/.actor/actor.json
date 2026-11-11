@@ -1,0 +1,14 @@
+{
+    "actorSpecification": 1,
+    "name": "djibouti-tenders-scraper",
+    "version": "0.1",
+    "buildTag": "latest",
+    "title": "Djibouti Government Tenders Scraper (Marches Publics)",
+    "description": "Scrapes Djibouti's national public procurement portal for currently listed tenders and this week's contract-award notices, including the winning supplier and awarded amount in Djibouti Francs (DJF). No account or login needed.",
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

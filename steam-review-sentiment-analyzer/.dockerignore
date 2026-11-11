@@ -1,0 +1,9 @@
+.git
+.venv
+__pycache__
+storage
+*.pyc
+tests
+test_local.py
+storage_last
+test_local.py

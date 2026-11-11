@@ -1,0 +1,14 @@
+{
+    "actorSpecification": 1,
+    "name": "asharqalawsat-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Asharq Al-Awsat Scraper",
+    "description": "Extract full article text or the newest headlines from the English edition of Asharq Al-Awsat (english.aawsat.com), the leading Pan-Arab daily -- no account or API key needed.",
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

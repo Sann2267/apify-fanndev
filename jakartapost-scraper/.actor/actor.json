@@ -1,0 +1,14 @@
+{
+    "actorSpecification": 1,
+    "name": "jakartapost-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "The Jakarta Post Scraper",
+    "description": "Extract full article text or the newest headlines from The Jakarta Post (thejakartapost.com) -- no account or API key needed.",
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

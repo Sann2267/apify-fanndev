@@ -1,0 +1,23 @@
+{
+    "actorSpecification": 1,
+    "name": "linkedin-post-engagers-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "LinkedIn Post Engagers Scraper",
+    "description": "Turn the people who engaged with a LinkedIn post into a lead list: name, headline, profile URL and their actual comment. Commenters need no login at all; reactor identities are read with your own li_at session cookie when you supply one.",
+    "categories": [
+        "LEAD_GENERATION",
+        "SOCIAL_MEDIA"
+    ],
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json",
+    "defaultRunOptions": {
+        "build": "latest",
+        "memoryMbytes": 1024,
+        "timeoutSecs": 3600
+    }
+}

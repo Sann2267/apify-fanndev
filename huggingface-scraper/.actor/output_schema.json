@@ -1,0 +1,80 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Model / dataset / space / creator record",
+        "description": "Raw-passthrough dataset envelope on top of Hugging Face's own official API JSON shape. Every record carries _input/_source/_scrapedAt (and _error/_errorDetail on failures). \"models\"/\"model-detail\" records carry the full upstream model object verbatim (id, tags, pipeline_tag, siblings file list, cardData, config). \"datasets\"/\"dataset-detail\" and \"spaces\"/\"space-detail\" are analogous. \"creator\" records carry the upstream user or organization overview object verbatim.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The search query, repo ID, or username that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which extraction strategy emitted this record (S1-api, S1-api-user, S1-api-organization, or none on failure)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed extractions (e.g. model_not_found, dataset_not_found, space_not_found, creator_not_found, invalid_request)."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "id": { "title": "ID", "description": "Upstream repo ID in \"namespace/name\" form (models/datasets/spaces modes)." },
+            "author": { "title": "Author", "description": "Username or organization that owns this repo." },
+            "downloads": { "title": "Downloads", "description": "Models/datasets mode." },
+            "likes": { "title": "Likes", "description": "Models/datasets/spaces mode." },
+            "tags": { "title": "Tags", "description": "List of tag strings (license, library, language, task, etc.)." },
+            "pipeline_tag": { "title": "Pipeline tag", "description": "Models mode -- the primary task this model is tagged for." },
+            "library_name": { "title": "Library", "description": "Models mode -- e.g. transformers, diffusers, sentence-transformers." },
+            "siblings": { "title": "Files", "description": "Model-detail/dataset-detail/space-detail mode -- full list of files in the repo, passed through as-is." },
+            "cardData": { "title": "Card metadata", "description": "Structured front-matter from the repo's README/model card, passed through as-is." },
+            "sha": { "title": "Commit SHA", "description": "The current default-branch commit hash." },
+            "lastModified": { "title": "Last modified", "description": "ISO 8601 timestamp." },
+            "createdAt": { "title": "Created at", "description": "ISO 8601 timestamp." },
+            "sdk": { "title": "SDK", "description": "Spaces mode -- gradio / streamlit / docker / static." },
+            "fullname": { "title": "Full name", "description": "Creator mode." },
+            "numModels": { "title": "Number of models", "description": "Creator mode." },
+            "numDatasets": { "title": "Number of datasets", "description": "Creator mode." },
+            "numSpaces": { "title": "Number of Spaces", "description": "Creator mode." },
+            "numFollowers": { "title": "Followers", "description": "Creator mode." }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across model / dataset / space / creator records.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "_source",
+                    "_scrapedAt",
+                    "id",
+                    "author",
+                    "downloads",
+                    "likes",
+                    "pipeline_tag",
+                    "sdk",
+                    "fullname",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

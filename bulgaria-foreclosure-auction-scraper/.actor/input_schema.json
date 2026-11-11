@@ -1,0 +1,109 @@
+{
+    "title": "Bulgaria Foreclosure Auction Scraper input",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "mode": {
+            "title": "Mode",
+            "type": "string",
+            "description": "list = every active sale, newest first, paged. property = full detail for specific sale IDs or URLs. range = walk a block of consecutive sale IDs, which reaches sales that already left the active list. reference = check the portal and report how many sales are live.",
+            "editor": "select",
+            "default": "list",
+            "enum": [
+                "list",
+                "property",
+                "range",
+                "reference"
+            ],
+            "enumTitles": [
+                "list - all active sales, paged",
+                "property - full detail for specific IDs",
+                "range - a block of consecutive sale IDs",
+                "reference - is the portal live, how many sales"
+            ]
+        },
+        "fetchDetails": {
+            "title": "Fetch full detail (list mode)",
+            "type": "boolean",
+            "description": "List cards already carry court, enforcement agent, bidding period and announcement date. Turn this on to also get the description, area, property type, starting price and the agent's contact details - one extra request per sale.",
+            "default": false
+        },
+        "perPage": {
+            "title": "Sales per page (list mode)",
+            "type": "integer",
+            "description": "How many sales to request per page. The portal accepts up to 100, which means fewer requests for a full sweep.",
+            "editor": "number",
+            "default": 48,
+            "minimum": 1,
+            "maximum": 100
+        },
+        "startPage": {
+            "title": "Start page (list mode)",
+            "type": "integer",
+            "description": "Which page to start from. Page 1 is the newest sales.",
+            "editor": "number",
+            "default": 1,
+            "minimum": 1
+        },
+        "propertyId": {
+            "title": "Sale ID or URL",
+            "type": "string",
+            "description": "A single sale ID (for example 92444) or a full sales.bcpea.org URL.",
+            "editor": "textfield",
+            "prefill": "92444"
+        },
+        "propertyIds": {
+            "title": "Sale IDs or URLs",
+            "type": "array",
+            "description": "Several sale IDs or URLs to fetch in one run.",
+            "editor": "stringList"
+        },
+        "startId": {
+            "title": "Start ID (range mode)",
+            "type": "string",
+            "description": "First sale ID of the block. IDs are issued sequentially, so a block covers sales published around the same time - including ones that have already closed.",
+            "editor": "textfield"
+        },
+        "rangeCount": {
+            "title": "How many (range mode)",
+            "type": "integer",
+            "description": "How many consecutive IDs to walk from 'startId'. Capped at 2000.",
+            "editor": "number",
+            "default": 50,
+            "minimum": 1,
+            "maximum": 2000
+        },
+        "maxItems": {
+            "title": "Max items",
+            "type": "integer",
+            "description": "Maximum records per run. The portal currently carries around 1,400 active sales.",
+            "editor": "number",
+            "default": 200,
+            "minimum": 1
+        },
+        "maxConcurrency": {
+            "title": "Max concurrency",
+            "type": "integer",
+            "description": "How many detail pages to fetch in parallel.",
+            "editor": "number",
+            "default": 4,
+            "minimum": 1,
+            "maximum": 10
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "description": "Residential proxy is on by default and is REQUIRED for the list mode. The portal serves its filtered list only to ordinary connections and answers 403 to datacenter addresses; individual sale pages work either way. Leave this as it is unless you supply your own residential proxy.",
+            "editor": "proxy",
+            "default": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": [
+                    "RESIDENTIAL"
+                ]
+            }
+        }
+    },
+    "required": [
+        "mode"
+    ]
+}

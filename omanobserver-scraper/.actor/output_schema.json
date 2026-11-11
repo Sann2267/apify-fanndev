@@ -1,0 +1,134 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Article / latest-headline record",
+        "description": "Raw-passthrough dataset envelope. Every record carries _input/_source/_scrapedAt (and _error/_errorDetail on failures). Article-mode records (S1-jsonld, from the page's single NewsArticle ld+json block, which carries articleBody directly) carry headline/articleBody-style fields; latest-mode records (S2-html-listing, homepage-scraped since no working RSS/sitemap exists) carry title/link/articleId-style fields.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The exact input value (URL, or 'latest') that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which extraction strategy emitted this record (e.g. S1-jsonld, S2-html-listing)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed extractions -- the error kind."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "headline": {
+                "title": "Headline",
+                "description": "Article headline, from the NewsArticle ld+json block (HTML-entity-unescaped)."
+            },
+            "description": {
+                "title": "Description",
+                "description": "Article summary/lede, from the NewsArticle ld+json block."
+            },
+            "articleBody": {
+                "title": "Article body",
+                "description": "Full article text, from the ld+json articleBody field directly (no HTML fallback needed on this site)."
+            },
+            "keywords": {
+                "title": "Keywords",
+                "description": "Comma-joined auto-generated SEO keyword string from ld+json (the headline's words, not curated topic tags) -- passed through as-is."
+            },
+            "author": {
+                "title": "Author",
+                "description": "Byline name from the ld+json author Person object (often the generic 'Observer Web Team' byline)."
+            },
+            "publisher": {
+                "title": "Publisher",
+                "description": "Publisher name from the ld+json publisher Organization object."
+            },
+            "copyrightHolder": {
+                "title": "Copyright holder",
+                "description": "Copyright holder name from the ld+json copyrightHolder Organization object."
+            },
+            "datePublished": {
+                "title": "Date published",
+                "description": "ISO 8601 publish date from ld+json."
+            },
+            "dateModified": {
+                "title": "Date modified",
+                "description": "ISO 8601 last-modified date from ld+json."
+            },
+            "dateCreated": {
+                "title": "Date created",
+                "description": "ISO 8601 creation date from ld+json."
+            },
+            "image": {
+                "title": "Image",
+                "description": "Lead image ImageObject (url/width/height) from ld+json, passed through raw."
+            },
+            "thumbnailUrl": {
+                "title": "Thumbnail URL",
+                "description": "Thumbnail image URL from ld+json."
+            },
+            "inLanguage": {
+                "title": "Language",
+                "description": "Content language code from ld+json (always 'en' on sampled articles)."
+            },
+            "url": {
+                "title": "Canonical URL",
+                "description": "The article's true canonical URL from ld+json -- resolved by numeric article ID regardless of what category/slug segments were requested."
+            },
+            "urlCategoryPath": {
+                "title": "URL category path",
+                "description": "Best-effort category/subcategory path segments parsed from the URL (e.g. ['business','energy']) -- not present in upstream ld+json, derived from the URL itself, absent if the URL doesn't match the expected pattern."
+            },
+            "title": {
+                "title": "Title",
+                "description": "Headline text of a latest-mode homepage-listing item."
+            },
+            "link": {
+                "title": "Link",
+                "description": "Article URL as scraped from the homepage listing."
+            },
+            "articleId": {
+                "title": "Article ID",
+                "description": "Numeric article ID parsed from the URL -- the only part of the path the server actually uses for routing. Latest-mode items are sorted newest-first by this ID descending."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across both article and latest-headline records.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "_source",
+                    "_scrapedAt",
+                    "headline",
+                    "title",
+                    "link",
+                    "datePublished",
+                    "author",
+                    "articleId",
+                    "urlCategoryPath",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

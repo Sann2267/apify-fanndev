@@ -1,0 +1,47 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+
+# Node
+node_modules/
+npm-debug.log*
+
+# Apify local storage
+storage/
+apify_storage/
+
+# Secrets / credentials
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+**/recon/*token*.txt
+**/minted_token.txt
+**/token.txt
+cookies*.json
+
+# Large generated data & scratch
+output/
+scratchpad/
+run-stats/
+*.har
+
+# Logs
+*.log
+*_log_*.txt
+
+# Editor / OS / tooling
+.claude/
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*Zone.Identifier
+nul

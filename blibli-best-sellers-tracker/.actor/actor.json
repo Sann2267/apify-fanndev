@@ -1,0 +1,19 @@
+{
+    "actorSpecification": 1,
+    "name": "blibli-best-sellers-tracker",
+    "title": "Blibli Best Sellers Tracker",
+    "description": "Memantau daftar \"Paling Laris\" Blibli per kategori dan melacak produk yang masuk, naik, turun, atau keluar dari daftar antar-run. Dibuat untuk penjual yang perlu tahu siapa menguasai kategorinya.",
+    "version": "1.0",
+    "meta": {
+        "templateId": "js-crawlee-http"
+    },
+    "input": "./input_schema.json",
+    "dockerfile": "./Dockerfile",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json",
+    "defaultMemoryMbytes": 1024,
+    "minMemoryMbytes": 512,
+    "maxMemoryMbytes": 4096
+}

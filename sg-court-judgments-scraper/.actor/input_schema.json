@@ -1,0 +1,100 @@
+{
+    "title": "Singapore Court Judgments Scraper",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "mode": {
+            "title": "Mode",
+            "type": "string",
+            "editor": "select",
+            "description": "\"search\" browses or keyword-searches Singapore court judgments, with automatic pagination. \"judgment\" fetches the full text of specific judgment ID(s) directly.",
+            "enum": ["search", "judgment"],
+            "enumTitles": ["Search judgments", "Full judgment (by ID)"],
+            "default": "search",
+            "prefill": "search"
+        },
+        "searchPhrase": {
+            "title": "Search phrase",
+            "type": "string",
+            "editor": "textfield",
+            "description": "\"search\" mode -- free-text search across the judgment archive, e.g. \"negligence\", \"minority oppression\", a party name, or a citation. Leave empty to browse everything newest-first.",
+            "prefill": "negligence"
+        },
+        "year": {
+            "title": "Year of decision",
+            "type": "string",
+            "editor": "textfield",
+            "description": "\"search\" mode -- restrict to a single year of decision (e.g. \"2025\"), or \"All\" for the entire archive, which reaches back to 1965.",
+            "default": "All",
+            "prefill": "All"
+        },
+        "sortBy": {
+            "title": "Sort by",
+            "type": "string",
+            "editor": "select",
+            "description": "\"search\" mode -- order results by decision date or by case title.",
+            "enum": ["DateOfDecision", "Title"],
+            "enumTitles": ["Decision date", "Case title"],
+            "default": "DateOfDecision",
+            "prefill": "DateOfDecision"
+        },
+        "sortAscending": {
+            "title": "Sort ascending",
+            "type": "boolean",
+            "editor": "checkbox",
+            "description": "\"search\" mode -- when false (default), newest/last judgments come first. Set true to start from the oldest.",
+            "default": false,
+            "prefill": false
+        },
+        "maxResults": {
+            "title": "Max results",
+            "type": "integer",
+            "editor": "number",
+            "description": "\"search\" mode -- maximum number of judgments to return. Results are paginated 10 per page and followed automatically until this cap or the end of the result set.",
+            "default": 50,
+            "minimum": 1,
+            "maximum": 20000,
+            "prefill": 50
+        },
+        "fetchFullText": {
+            "title": "Include full judgment text",
+            "type": "boolean",
+            "editor": "checkbox",
+            "description": "\"search\" mode -- when true, every result is additionally fetched for the complete written judgment (court, presiding judge, hearing dates and the full opinion text, often 100,000+ characters). When false (default), only the summary row is returned, which is far faster and cheaper for large result sets.",
+            "default": false,
+            "prefill": false
+        },
+        "judgmentIds": {
+            "title": "Judgment IDs",
+            "type": "array",
+            "editor": "stringList",
+            "description": "\"judgment\" mode -- judgment IDs to fetch full text for, in the portal's own format \"<year>_<court>_<number>\", e.g. \"2026_SGHC_175\" or \"2026_SGHCA_22\". These appear as the \"judgmentId\" field of any search result.",
+            "prefill": ["2026_SGHC_175"]
+        },
+        "maxConcurrency": {
+            "title": "Max concurrent workers",
+            "type": "integer",
+            "editor": "number",
+            "description": "How many judgment pages to fetch in parallel (\"search\" mode's full-text enrichment, or \"judgment\" mode's ID list).",
+            "default": 4,
+            "minimum": 1,
+            "maximum": 16,
+            "prefill": 4
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "editor": "proxy",
+            "description": "Apify Proxy configuration. Residential is on by default.",
+            "default": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            },
+            "prefill": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            }
+        }
+    },
+    "required": ["mode"]
+}

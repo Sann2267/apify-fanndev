@@ -1,0 +1,74 @@
+{
+    "title": "Zimbabwe Government Tenders Scraper",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "mode": {
+            "title": "Mode",
+            "type": "string",
+            "editor": "select",
+            "enum": ["latest", "former", "awards", "detail"],
+            "enumTitles": [
+                "Latest (currently open Live Tenders)",
+                "Former Tenders (historical/closed archive, 64,000+ records)",
+                "Award Notices (recent contract awards)",
+                "Detail lookup (specific tender/award ID(s) or URL(s))"
+            ],
+            "description": "'latest' = currently-open tenders from the Live Tenders bulletin board. 'former' = closed/historical tenders. 'awards' = recent contract award notices (awardee, contract amount -- only the most recent ~100 are reachable, see README). 'detail' = fetch specific tender/award ID(s) directly.",
+            "default": "latest",
+            "prefill": "latest"
+        },
+        "maxItems": {
+            "title": "Max items",
+            "type": "integer",
+            "description": "Applies to 'latest', 'former', and 'awards' -- how many listing rows to return (paginates 20 rows/page for latest+former; awards is capped at whatever the site's own most-recent page returns, see README).",
+            "default": 20,
+            "minimum": 1,
+            "maximum": 5000,
+            "prefill": 20
+        },
+        "fetchDetails": {
+            "title": "Fetch full detail per item",
+            "type": "boolean",
+            "description": "For 'latest'/'former'/'awards': also fetch each item's full detail page (all labeled fields, plus any line-item breakdown table) and merge it in as 'detail'. Slower but much richer output. Ignored by 'detail' mode (which always fetches full detail).",
+            "default": true,
+            "prefill": true
+        },
+        "tenderIds": {
+            "title": "Tender IDs or URLs",
+            "type": "array",
+            "editor": "stringList",
+            "description": "Mode 'detail' only. Numeric tender ID(s) (e.g. \"46190\") or full viewLiveTenderDetails URLs. Works for tenders in any status (live, closed, awarded).",
+            "prefill": ["46190"]
+        },
+        "awardIds": {
+            "title": "Award notice IDs or URLs",
+            "type": "array",
+            "editor": "stringList",
+            "description": "Mode 'detail' only. Numeric award notice ID(s) (e.g. \"8501\") or full viewAwardNotice URLs.",
+            "prefill": []
+        },
+        "maxConcurrency": {
+            "title": "Max concurrent workers",
+            "type": "integer",
+            "description": "How many detail-page lookups to run in parallel (used by all modes when fetching detail).",
+            "default": 4,
+            "minimum": 1,
+            "maximum": 16,
+            "prefill": 4
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "editor": "proxy",
+            "description": "Apify Proxy configuration. Off by default -- no WAF/CAPTCHA was found on this target (confirmed across multiple TLS/browser profiles), so a direct connection works reliably.",
+            "default": {
+                "useApifyProxy": false
+            },
+            "prefill": {
+                "useApifyProxy": false
+            }
+        }
+    },
+    "required": []
+}

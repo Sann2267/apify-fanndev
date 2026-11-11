@@ -1,0 +1,18 @@
+{
+    "actorSpecification": 1,
+    "name": "short-interest-filings-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Short Interest, Short Volume & SEC Filings Scraper",
+    "description": "Track short selling and SEC filings from three official sources: Nasdaq bi-monthly short interest, FINRA daily short-sale volume for every US symbol, and SEC EDGAR filing history plus full-text search. Tickers or CIKs in, clean rows out. No API key.",
+    "categories": [
+        "BUSINESS",
+        "OTHER"
+    ],
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

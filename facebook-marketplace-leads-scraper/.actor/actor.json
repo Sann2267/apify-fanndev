@@ -1,0 +1,23 @@
+{
+    "actorSpecification": 1,
+    "name": "facebook-marketplace-leads-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Facebook Marketplace Leads Scraper",
+    "description": "Scrape Facebook Marketplace listings by city and category or by search term: title, price, location, posting date, age, condition, photos, delivery options and vehicle or property attributes. Optionally opens each listing page for the description, coordinates and postal code. No login, no proxy.",
+    "categories": [
+        "ECOMMERCE",
+        "LEAD_GENERATION"
+    ],
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json",
+    "defaultRunOptions": {
+        "build": "latest",
+        "timeoutSecs": 3600,
+        "memoryMbytes": 1024
+    }
+}

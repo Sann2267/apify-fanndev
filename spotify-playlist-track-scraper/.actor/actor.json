@@ -1,0 +1,23 @@
+{
+    "actorSpecification": 1,
+    "name": "spotify-playlist-track-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Spotify Playlist & Track Metadata Scraper",
+    "description": "Export any Spotify playlist to JSON, CSV or Excel: every track with artists, album, release date, duration, cover art and Spotify's real lifetime PLAY COUNT - a number the official API never publishes. Optional ISRC and popularity lookup. No Spotify account or API key needed.",
+    "categories": [
+        "ENTERTAINMENT",
+        "OTHER"
+    ],
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json",
+    "defaultRunOptions": {
+        "build": "latest",
+        "memoryMbytes": 512,
+        "timeoutSecs": 3600
+    }
+}

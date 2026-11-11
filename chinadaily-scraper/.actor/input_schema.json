@@ -1,0 +1,62 @@
+{
+    "title": "China Daily Scraper",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "mode": {
+            "title": "Mode",
+            "type": "string",
+            "editor": "select",
+            "description": "\"article\" extracts one or more article URLs. \"latest\" fetches the newest headlines from the homepage.",
+            "enum": ["article", "latest"],
+            "enumTitles": ["Article", "Latest headlines"],
+            "default": "article",
+            "prefill": "article"
+        },
+        "url": {
+            "title": "Article URL",
+            "type": "string",
+            "editor": "textfield",
+            "description": "A single chinadaily.com.cn article URL to extract. Used when mode is \"article\".",
+            "prefill": "https://www.chinadaily.com.cn/a/202608/24/WS6a8c22eb45ce1d77cb5e1e70.html"
+        },
+        "urls": {
+            "title": "Article URLs",
+            "type": "array",
+            "editor": "stringList",
+            "description": "Multiple chinadaily.com.cn article URLs to extract in one run. Used when mode is \"article\"."
+        },
+        "limit": {
+            "title": "Max headlines (latest mode)",
+            "type": "integer",
+            "description": "Maximum number of headlines to return in \"latest\" mode. Sourced from the homepage (the site's RSS feed and sitemap are both stale/dead), so this is capped at 100.",
+            "default": 10,
+            "minimum": 1,
+            "maximum": 100,
+            "prefill": 10
+        },
+        "maxConcurrency": {
+            "title": "Max concurrent workers",
+            "type": "integer",
+            "description": "How many article pages to fetch in parallel in \"article\" mode.",
+            "default": 4,
+            "minimum": 1,
+            "maximum": 16,
+            "prefill": 4
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "editor": "proxy",
+            "description": "Apify Proxy configuration. Residential is on by default.",
+            "default": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            },
+            "prefill": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            }
+        }
+    }
+}

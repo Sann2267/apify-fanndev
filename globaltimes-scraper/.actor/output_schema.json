@@ -1,0 +1,82 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Article / latest-headline record",
+        "description": "Raw-passthrough dataset envelope. Every record carries _input/_source/_scrapedAt (failed URLs are not written to the dataset -- they are reported in the ERRORS record of the run's key-value store). Article-mode records carry headline/articleBody-style fields; latest-mode records (RSS or sitemap) carry title/link-style fields. Upstream JSON-LD is passed through close to verbatim, so extra schema.org fields beyond those listed here may also appear.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The exact input value (URL, or 'latest'/'latest:<section>') that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which extraction strategy emitted this record (e.g. S1-jsonld, S2-rss)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "headline": {
+                "title": "Headline",
+                "description": "Article headline, from <title> with the site-name suffix stripped."
+            },
+            "articleBody": {
+                "title": "Article body",
+                "description": "Full article text, re-grouped from <br>-separated text nodes."
+            },
+            "author": {
+                "title": "Author",
+                "description": "Byline text with the 'By ' prefix stripped."
+            },
+            "publishedRaw": {
+                "title": "Published (raw)",
+                "description": "Raw publish-time string as shown on the page (not parsed to ISO 8601 -- format is ambiguous)."
+            },
+            "title": {
+                "title": "Title",
+                "description": "Google News sitemap title."
+            },
+            "link": {
+                "title": "Link",
+                "description": "Article URL."
+            },
+            "publicationDate": {
+                "title": "Publication date",
+                "description": "Sitemap publication date (proper ISO 8601, unlike publishedRaw)."
+            },
+            "keywords": {
+                "title": "Keywords",
+                "description": "Sitemap keywords list."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across both article and latest-headline records.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "_source",
+                    "_scrapedAt",
+                    "headline",
+                    "title",
+                    "link",
+                    "publishedRaw",
+                    "publicationDate",
+                    "author"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

@@ -1,0 +1,15 @@
+{
+    "actorSpecification": 1,
+    "name": "palau-fic-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Palau Business Registry Scraper",
+    "description": "Search the Republic of Palau's official Business Entities Registry (palauregistries.pw, run by the Financial Institutions Commission) by company name and pull registration details, addresses, directors, officers, shareholders, and filing history. No account needed.",
+    "categories": ["BUSINESS"],
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

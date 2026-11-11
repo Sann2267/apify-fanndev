@@ -1,0 +1,15 @@
+{
+    "actorSpecification": 1,
+    "name": "haystack-tv-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Haystack News Scraper",
+    "description": "Scrape Haystack News (haystack.tv): video headlines by category, channel, topic or city, deep video metadata with AI topic tags and view analytics, the 483-channel directory, the full category taxonomy, news polls with live vote counts, and local events -- 8 modes, no login or API key needed.",
+    "categories": ["MEDIA_AND_NEWS", "DATA_PRODUCTS"],
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

@@ -1,0 +1,120 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Article / latest-headline record",
+        "description": "Raw-passthrough dataset envelope. Every record carries _input/_source/_scrapedAt (failed URLs are not written to the dataset -- they are reported in the ERRORS record of the run's key-value store). Article-mode records (S1-jsonld) carry headline/articleBody-style fields extracted from the NewsArticle ld+json node. Latest-mode records (S2-rss, from the Google Publisher feed) carry title/link-style fields, including the full article HTML body in contentHtml.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The exact input value (article URL, or 'latest') that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which extraction strategy emitted this record (S1-jsonld for articles, S2-rss for latest headlines, or 'none' on error)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "headline": {
+                "title": "Headline",
+                "description": "Article headline (article mode; raw passthrough from JSON-LD NewsArticle)."
+            },
+            "description": {
+                "title": "Description",
+                "description": "Short summary/dek. Present in article mode (NewsArticle.description) and latest mode (RSS <description>)."
+            },
+            "articleBody": {
+                "title": "Article body",
+                "description": "Full article text (article mode; raw passthrough from JSON-LD NewsArticle.articleBody)."
+            },
+            "articleSection": {
+                "title": "Article section",
+                "description": "Section/category the article belongs to (article mode; e.g. Politics, Media)."
+            },
+            "datePublished": {
+                "title": "Date published",
+                "description": "Original publish date/time (article mode; raw passthrough from JSON-LD, ISO 8601 string)."
+            },
+            "dateModified": {
+                "title": "Date modified",
+                "description": "Last-modified date/time (article mode; raw passthrough from JSON-LD, ISO 8601 string)."
+            },
+            "author": {
+                "title": "Author",
+                "description": "Article author's display name (article mode; extracted from JSON-LD NewsArticle.author.name)."
+            },
+            "keywords": {
+                "title": "Keywords",
+                "description": "Keywords/tags associated with the article (article mode; raw passthrough from JSON-LD, shape may vary -- string or array)."
+            },
+            "wordCount": {
+                "title": "Word count",
+                "description": "Article word count as reported by the CMS (article mode; raw passthrough from JSON-LD)."
+            },
+            "isAccessibleForFree": {
+                "title": "Is accessible for free",
+                "description": "Whether the article is free to read (article mode; raw passthrough boolean from JSON-LD NewsArticle)."
+            },
+            "image": {
+                "title": "Image URL",
+                "description": "Lead/hero image URL for the article (article mode; extracted from JSON-LD NewsArticle.image, which may be an object or a list of objects)."
+            },
+            "title": {
+                "title": "Title",
+                "description": "Headline of the latest-mode item (from RSS <title>)."
+            },
+            "link": {
+                "title": "Link",
+                "description": "Canonical article URL for the latest-mode item (from RSS <link>)."
+            },
+            "guid": {
+                "title": "GUID",
+                "description": "Feed-provided globally unique identifier for the latest-mode item (from RSS <guid>)."
+            },
+            "pubDate": {
+                "title": "Publish date",
+                "description": "Publish date/time of the latest-mode item as a raw RSS date string (from RSS <pubDate>)."
+            },
+            "contentHtml": {
+                "title": "Content HTML",
+                "description": "Full article body HTML inlined by the feed (latest mode; from RSS <content:encoded>, HTML-entity-escaped in the source)."
+            },
+            "categories": {
+                "title": "Categories",
+                "description": "List of category/taxonomy labels for the latest-mode item (from RSS <category> tags; mixes internal taxonomy IDs with human-readable labels)."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across both article and latest-headline records.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "_source",
+                    "_scrapedAt",
+                    "headline",
+                    "title",
+                    "link",
+                    "author",
+                    "datePublished",
+                    "pubDate",
+                    "articleSection",
+                    "description"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

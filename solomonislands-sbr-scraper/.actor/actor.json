@@ -1,0 +1,14 @@
+{
+    "actorSpecification": 1,
+    "name": "solomonislands-sbr-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Solomon Islands Business Registry Scraper",
+    "description": "Search the Solomon Islands' official company, business name, and foreign investment register by name or registration number and pull full public profiles: registration details, addresses, directors, shareholders (with share counts), and filing history. No account or API key needed.",
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

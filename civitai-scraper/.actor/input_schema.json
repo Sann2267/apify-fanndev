@@ -1,0 +1,127 @@
+{
+    "title": "Civitai Scraper",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "mode": {
+            "title": "Mode",
+            "type": "string",
+            "editor": "select",
+            "description": "\"models\" searches/lists AI models with filters. \"model-detail\" fetches full detail (all versions, files, download URLs) for specific model ID(s). \"images\" searches the image gallery. \"creators\" lists/searches usernames. \"tags\" lists/searches tags.",
+            "enum": ["models", "model-detail", "images", "creators", "tags"],
+            "enumTitles": ["Search models", "Model detail (by ID)", "Search images", "Creators", "Tags"],
+            "default": "models",
+            "prefill": "models"
+        },
+        "query": {
+            "title": "Search query",
+            "type": "string",
+            "editor": "textfield",
+            "description": "Free-text search term. Used by \"models\" mode (searches model names), \"creators\" mode (searches usernames), and \"tags\" mode (searches tag names)."
+        },
+        "tag": {
+            "title": "Tag filter",
+            "type": "string",
+            "editor": "textfield",
+            "description": "\"models\" mode only -- only return models with this exact tag."
+        },
+        "username": {
+            "title": "Username filter",
+            "type": "string",
+            "editor": "textfield",
+            "description": "\"models\" or \"images\" mode -- only return items created by this exact username."
+        },
+        "types": {
+            "title": "Model types",
+            "type": "array",
+            "editor": "select",
+            "description": "\"models\" mode only -- only return models of these type(s). Leave empty for all types.",
+            "items": {
+                "type": "string",
+                "enum": ["Checkpoint", "TextualInversion", "Hypernetwork", "AestheticGradient", "LORA", "LoCon", "DoRA", "Controlnet", "Upscaler", "MotionModule", "VAE", "TextEncoder", "UNet", "CLIPVision", "Poses", "Wildcards", "Workflows", "ComfyWorkflows", "Detection", "VisionLanguage", "CLIP", "LLM", "Other"]
+            }
+        },
+        "sort": {
+            "title": "Sort order",
+            "type": "string",
+            "editor": "select",
+            "description": "Order to return results in. \"models\" mode: Highest Rated / Most Downloaded / Most Liked / Most Discussed / Most Collected / Most Images / Newest / Oldest. \"images\" mode: Most Reactions / Most Comments / Most Collected / Newest / Oldest / Random.",
+            "enum": ["Highest Rated", "Most Downloaded", "Most Liked", "Most Discussed", "Most Collected", "Most Images", "Newest", "Oldest", "Most Reactions", "Most Comments", "Random"]
+        },
+        "period": {
+            "title": "Time window",
+            "type": "string",
+            "editor": "select",
+            "description": "\"models\" or \"images\" mode -- only consider items from this time window.",
+            "enum": ["Day", "Week", "Month", "Year", "AllTime"],
+            "default": "AllTime",
+            "prefill": "AllTime"
+        },
+        "nsfw": {
+            "title": "NSFW filter (images mode)",
+            "type": "string",
+            "editor": "select",
+            "description": "\"images\" mode only -- filter by content rating. Leave empty for the platform default (safe-for-work only, unauthenticated).",
+            "enum": ["None", "Soft", "Mature", "X", "Blocked"]
+        },
+        "modelId": {
+            "title": "Model ID",
+            "type": "integer",
+            "editor": "number",
+            "description": "\"model-detail\" mode: a single model ID. \"images\" mode: only return images generated with this model.",
+            "prefill": 4201
+        },
+        "modelIds": {
+            "title": "Model IDs",
+            "type": "array",
+            "editor": "stringList",
+            "description": "\"model-detail\" mode only -- multiple model IDs to fetch full detail for in one run."
+        },
+        "modelVersionId": {
+            "title": "Model version ID",
+            "type": "integer",
+            "editor": "number",
+            "description": "\"images\" mode only -- only return images generated with this specific model version."
+        },
+        "postId": {
+            "title": "Post ID",
+            "type": "integer",
+            "editor": "number",
+            "description": "\"images\" mode only -- only return images from this specific post."
+        },
+        "maxItems": {
+            "title": "Max items",
+            "type": "integer",
+            "editor": "number",
+            "description": "Maximum number of results to return (for \"models\"/\"images\"/\"creators\"/\"tags\" modes). Pagination is followed automatically until this cap or the end of the result set, whichever comes first.",
+            "default": 100,
+            "minimum": 1,
+            "maximum": 10000,
+            "prefill": 100
+        },
+        "maxConcurrency": {
+            "title": "Max concurrent workers",
+            "type": "integer",
+            "description": "\"model-detail\" mode only -- how many model IDs to fetch in parallel.",
+            "default": 4,
+            "minimum": 1,
+            "maximum": 16,
+            "prefill": 4
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "editor": "proxy",
+            "description": "Apify Proxy configuration. Residential is on by default. Not required for this endpoint (no WAF was found -- it is Civitai's own official public API), but kept on for production robustness.",
+            "default": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            },
+            "prefill": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            }
+        }
+    },
+    "required": ["mode"]
+}

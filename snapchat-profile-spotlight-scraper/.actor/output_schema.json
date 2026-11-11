@@ -1,0 +1,530 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Snapchat profile / spotlight / highlight / lens record",
+        "description": "Every record carries _input, _source, _scrapedAt and recordType. recordType discriminates the payload: PROFILE (public profile + related accounts), SPOTLIGHT_VIDEO (one Spotlight post with its view count), HIGHLIGHT (a Story/highlight with every snap), LENS (an AR lens), TRENDING_SPOTLIGHT (the public Spotlight feed), SURFACE (reference mode) and ERROR. Snapchat's untouched object always ships under _raw, because it adds and removes keys without notice.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The username or hub that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "S1-next-data when the record came from Snapchat's SSR payload, 'none' on failure rows."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was emitted."
+            },
+            "recordType": {
+                "type": ["string", "null"],
+                "title": "Record type",
+                "description": "PROFILE | SPOTLIGHT_VIDEO | HIGHLIGHT | LENS | TRENDING_SPOTLIGHT | SURFACE | ERROR."
+            },
+            "username": {
+                "type": ["string", "null"],
+                "title": "Username",
+                "description": "Snapchat handle, without the @."
+            },
+            "displayName": {
+                "type": ["string", "null"],
+                "title": "Display name",
+                "description": "Name shown on the profile, e.g. 'NASA'."
+            },
+            "profileUrl": {
+                "type": ["string", "null"],
+                "title": "Profile URL",
+                "description": "Public snapchat.com profile page."
+            },
+            "bio": {
+                "type": ["string", "null"],
+                "title": "Bio",
+                "description": "Profile description as written by the account."
+            },
+            "websiteUrl": {
+                "type": ["string", "null"],
+                "title": "Website",
+                "description": "Outbound link published on the profile."
+            },
+            "address": {
+                "type": ["string", "null"],
+                "title": "Address",
+                "description": "Address published by business profiles. Empty for most accounts."
+            },
+            "subscriberCount": {
+                "type": ["integer", "null"],
+                "title": "Subscribers",
+                "description": "Subscriber count as an integer. Snapchat publishes 0 for accounts that hide it, which is different from null (field absent)."
+            },
+            "badge": {
+                "type": ["integer", "null"],
+                "title": "Badge ID",
+                "description": "Raw badge integer from Snapchat."
+            },
+            "badgeName": {
+                "type": ["string", "null"],
+                "title": "Badge",
+                "description": "'official' for verified accounts, 'none' otherwise. Unrecognised badge IDs pass through as their number."
+            },
+            "isVerified": {
+                "type": ["boolean", "null"],
+                "title": "Verified",
+                "description": "True when the account carries an official badge."
+            },
+            "category": {
+                "type": ["string", "null"],
+                "title": "Category",
+                "description": "Profile category, e.g. 'business group'."
+            },
+            "subcategory": {
+                "type": ["string", "null"],
+                "title": "Subcategory",
+                "description": "Profile subcategory, e.g. 'government org'."
+            },
+            "profilePictureUrl": {
+                "type": ["string", "null"],
+                "title": "Profile picture",
+                "description": "Avatar image URL."
+            },
+            "squareHeroImageUrl": {
+                "type": ["string", "null"],
+                "title": "Hero image",
+                "description": "Square hero image published on the profile."
+            },
+            "snapcodeImageUrl": {
+                "type": ["string", "null"],
+                "title": "Snapcode",
+                "description": "SVG snapcode URL that opens the account in the app."
+            },
+            "hasStory": {
+                "type": ["boolean", "null"],
+                "title": "Has live story",
+                "description": "Whether the account had a public Story live at scrape time."
+            },
+            "hasCuratedHighlights": {
+                "type": ["boolean", "null"],
+                "title": "Has highlights",
+                "description": "Whether the account publishes curated highlights."
+            },
+            "hasSpotlightHighlights": {
+                "type": ["boolean", "null"],
+                "title": "Has Spotlight",
+                "description": "Whether the account publishes Spotlight videos."
+            },
+            "createdAt": {
+                "type": ["string", "null"],
+                "title": "Created at",
+                "description": "Profile creation time, when Snapchat publishes it."
+            },
+            "updatedAt": {
+                "type": ["string", "null"],
+                "title": "Updated at",
+                "description": "Last profile update time, when Snapchat publishes it."
+            },
+            "lensCount": {
+                "type": ["integer", "null"],
+                "title": "Lenses",
+                "description": "How many AR lenses the profile document carried."
+            },
+            "curatedHighlightCount": {
+                "type": ["integer", "null"],
+                "title": "Highlights",
+                "description": "How many curated highlights the profile document carried."
+            },
+            "spotlightCount": {
+                "type": ["integer", "null"],
+                "title": "Spotlight videos",
+                "description": "How many Spotlight videos the profile document carried."
+            },
+            "relatedAccountCount": {
+                "type": ["integer", "null"],
+                "title": "Related accounts",
+                "description": "How many related accounts Snapchat listed for this profile."
+            },
+            "relatedAccounts": {
+                "title": "Related accounts",
+                "description": "List of {username, title, badge, profilePictureUrl, profileUrl} that Snapchat itself links from this profile. Feed these back into 'related' mode to expand a niche."
+            },
+            "relatedDepth": {
+                "type": ["integer", "null"],
+                "title": "Related depth",
+                "description": "How many expansion levels away from your seed this profile was found (related mode)."
+            },
+            "spotlightIndex": {
+                "type": ["integer", "null"],
+                "title": "Spotlight index",
+                "description": "Position of the video in the account's Spotlight list, newest first."
+            },
+            "storyId": {
+                "type": ["string", "null"],
+                "title": "Story ID",
+                "description": "Snapchat's identifier for the story or Spotlight post."
+            },
+            "highlightId": {
+                "type": ["string", "null"],
+                "title": "Highlight ID",
+                "description": "Identifier for the highlight the snaps belong to."
+            },
+            "title": {
+                "type": ["string", "null"],
+                "title": "Title",
+                "description": "Post, highlight or lens title."
+            },
+            "subtitle": {
+                "type": ["string", "null"],
+                "title": "Subtitle",
+                "description": "Secondary label shown under the title."
+            },
+            "description": {
+                "type": ["string", "null"],
+                "title": "Description",
+                "description": "Video description published with the post."
+            },
+            "caption": {
+                "type": ["string", "null"],
+                "title": "Caption",
+                "description": "Text caption embedded in the video, when present."
+            },
+            "viewCount": {
+                "type": ["integer", "null"],
+                "title": "Views",
+                "description": "View count for the Spotlight video. This is the number Snapchat publishes on the public page."
+            },
+            "shareCount": {
+                "type": ["integer", "null"],
+                "title": "Shares",
+                "description": "Share count published with the post."
+            },
+            "durationMs": {
+                "type": ["integer", "null"],
+                "title": "Duration (ms)",
+                "description": "Video duration in milliseconds."
+            },
+            "width": {
+                "type": ["integer", "null"],
+                "title": "Width",
+                "description": "Video width in pixels."
+            },
+            "height": {
+                "type": ["integer", "null"],
+                "title": "Height",
+                "description": "Video height in pixels."
+            },
+            "uploadedAt": {
+                "type": ["string", "null"],
+                "title": "Uploaded at",
+                "description": "UTC upload time of the Spotlight video."
+            },
+            "videoUrl": {
+                "type": ["string", "null"],
+                "title": "Video URL",
+                "description": "Direct media URL for the post. Snapchat's CDN links are signed and expire."
+            },
+            "thumbnailUrl": {
+                "type": ["string", "null"],
+                "title": "Thumbnail",
+                "description": "Preview image for the post, highlight or lens."
+            },
+            "keywords": {
+                "title": "Keywords",
+                "description": "Keywords Snapchat attached to the video."
+            },
+            "hashtags": {
+                "title": "Hashtags",
+                "description": "Hashtags attached to the Spotlight post."
+            },
+            "contextCards": {
+                "title": "Context cards",
+                "description": "Attribution cards shown on the post: original sound, creator profile, lens used."
+            },
+            "creatorUsername": {
+                "type": ["string", "null"],
+                "title": "Creator username",
+                "description": "Account that published the post or lens."
+            },
+            "creatorName": {
+                "type": ["string", "null"],
+                "title": "Creator name",
+                "description": "Display name of the creator."
+            },
+            "creatorDisplayName": {
+                "type": ["string", "null"],
+                "title": "Lens creator",
+                "description": "Display name of the lens creator."
+            },
+            "creatorProfileUrl": {
+                "type": ["string", "null"],
+                "title": "Creator profile URL",
+                "description": "Profile page of the lens creator, when published."
+            },
+            "creatorFollowerCount": {
+                "type": ["integer", "null"],
+                "title": "Creator followers",
+                "description": "Follower count carried on the post's creator object. Often 0 on Spotlight payloads."
+            },
+            "creatorUrl": {
+                "type": ["string", "null"],
+                "title": "Creator URL",
+                "description": "Profile URL of the post's creator."
+            },
+            "highlightIndex": {
+                "type": ["integer", "null"],
+                "title": "Highlight index",
+                "description": "Position of the highlight within its list."
+            },
+            "highlightKind": {
+                "type": ["string", "null"],
+                "title": "Highlight kind",
+                "description": "curated | spotlight | live-story."
+            },
+            "storyType": {
+                "type": ["integer", "null"],
+                "title": "Story type ID",
+                "description": "Raw story type integer from Snapchat."
+            },
+            "storyTypeName": {
+                "type": ["string", "null"],
+                "title": "Story type",
+                "description": "CURATED_HIGHLIGHT | SPOTLIGHT_HIGHLIGHT, or the raw ID when Snapchat introduces a new one."
+            },
+            "emoji": {
+                "type": ["string", "null"],
+                "title": "Emoji",
+                "description": "Emoji label attached to the highlight."
+            },
+            "videoTrackUrl": {
+                "type": ["string", "null"],
+                "title": "Video track URL",
+                "description": "Combined video track for the highlight, when published."
+            },
+            "canonicalUrl": {
+                "type": ["string", "null"],
+                "title": "Canonical URL",
+                "description": "Public snapchat.com URL for the story."
+            },
+            "snapCount": {
+                "type": ["integer", "null"],
+                "title": "Snaps",
+                "description": "How many snaps this story or highlight contains."
+            },
+            "firstSnapAt": {
+                "type": ["string", "null"],
+                "title": "First snap at",
+                "description": "Timestamp of the earliest snap carrying one."
+            },
+            "snaps": {
+                "title": "Snaps",
+                "description": "List of {snapIndex, snapId, mediaType, mediaUrl, previewUrl, timestamp, isSponsored}. Media URLs are signed CDN links and expire."
+            },
+            "lensId": {
+                "type": ["string", "null"],
+                "title": "Lens ID",
+                "description": "Snapchat's numeric lens identifier."
+            },
+            "lensName": {
+                "type": ["string", "null"],
+                "title": "Lens name",
+                "description": "Public name of the AR lens."
+            },
+            "scannableUuid": {
+                "type": ["string", "null"],
+                "title": "Scannable UUID",
+                "description": "UUID used by snapcodes that unlock the lens."
+            },
+            "isOfficialSnapLens": {
+                "type": ["boolean", "null"],
+                "title": "Official lens",
+                "description": "True for lenses published by Snap itself rather than a community creator."
+            },
+            "category": {
+                "type": ["string", "null"],
+                "title": "Lens category",
+                "description": "Lens hub category the chart was read from (top-lenses mode)."
+            },
+            "searchTags": {
+                "title": "Search tags",
+                "description": "Tags the creator attached to the lens."
+            },
+            "previewImageUrl": {
+                "type": ["string", "null"],
+                "title": "Lens preview image",
+                "description": "Still preview of the lens."
+            },
+            "previewVideoUrl": {
+                "type": ["string", "null"],
+                "title": "Lens preview video",
+                "description": "Short preview video of the lens."
+            },
+            "iconUrl": {
+                "type": ["string", "null"],
+                "title": "Lens icon",
+                "description": "Icon shown in the lens carousel."
+            },
+            "scannableImageUrl": {
+                "type": ["string", "null"],
+                "title": "Snapcode image",
+                "description": "Snapcode image that unlocks the lens."
+            },
+            "unlockUrl": {
+                "type": ["string", "null"],
+                "title": "Unlock URL",
+                "description": "Deep link that opens the lens in the Snapchat app."
+            },
+            "lensResource": {
+                "title": "Lens resource",
+                "description": "Raw lens resource object, when Snapchat publishes one."
+            },
+            "lastUpdatedEpoch": {
+                "type": ["integer", "null"],
+                "title": "Lens updated (epoch)",
+                "description": "Last lens update as published by Snapchat. Often 0."
+            },
+            "feedIndex": {
+                "type": ["integer", "null"],
+                "title": "Feed position",
+                "description": "Rank of the post in the public Spotlight feed at scrape time (trending mode)."
+            },
+            "contentSource": {
+                "title": "Content source",
+                "description": "How the Spotlight hub sourced this post."
+            },
+            "surface": {
+                "type": ["string", "null"],
+                "title": "Surface",
+                "description": "Which public surface was probed (reference mode)."
+            },
+            "url": {
+                "type": ["string", "null"],
+                "title": "Probed URL",
+                "description": "Exact URL used for the probe (reference mode)."
+            },
+            "isAvailable": {
+                "type": ["boolean", "null"],
+                "title": "Available",
+                "description": "Whether that surface returned a usable payload right now."
+            },
+            "detail": {
+                "type": ["string", "null"],
+                "title": "Detail",
+                "description": "Human-readable probe result."
+            },
+            "sample": {
+                "title": "Sample",
+                "description": "Counts measured during the probe, as evidence the surface really carries data."
+            },
+            "_buildId": {
+                "type": ["string", "null"],
+                "title": "Frontend build ID",
+                "description": "Snapchat's deployed frontend build. Makes payload-shape drift diagnosable from the dataset."
+            },
+            "_raw": {
+                "title": "Raw upstream object",
+                "description": "Snapchat's untouched object for this record, so nothing is lost when upstream adds keys this Actor does not name yet."
+            },
+            "_error": {
+                "type": ["string", "null"],
+                "title": "Error kind",
+                "description": "invalid_username | not_found | empty_section | blocked_or_transient."
+            },
+            "_errorDetail": {
+                "type": ["string", "null"],
+                "title": "Error detail",
+                "description": "Human-readable detail for the failure."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across every record type.",
+            "transformation": {
+                "fields": [
+                    "recordType",
+                    "username",
+                    "displayName",
+                    "subscriberCount",
+                    "title",
+                    "viewCount",
+                    "snapCount",
+                    "lensName",
+                    "profileUrl",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        },
+        "profiles": {
+            "title": "Profiles",
+            "description": "Account-level columns for audience research.",
+            "transformation": {
+                "fields": [
+                    "username",
+                    "displayName",
+                    "subscriberCount",
+                    "isVerified",
+                    "category",
+                    "subcategory",
+                    "bio",
+                    "websiteUrl",
+                    "spotlightCount",
+                    "lensCount",
+                    "relatedAccountCount",
+                    "profileUrl"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        },
+        "spotlight": {
+            "title": "Spotlight videos",
+            "description": "Post-level performance columns.",
+            "transformation": {
+                "fields": [
+                    "username",
+                    "title",
+                    "viewCount",
+                    "shareCount",
+                    "durationMs",
+                    "uploadedAt",
+                    "hashtags",
+                    "videoUrl",
+                    "thumbnailUrl",
+                    "canonicalUrl"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        },
+        "lenses": {
+            "title": "Lenses",
+            "description": "AR lens columns.",
+            "transformation": {
+                "fields": [
+                    "lensName",
+                    "creatorUsername",
+                    "creatorDisplayName",
+                    "isOfficialSnapLens",
+                    "category",
+                    "searchTags",
+                    "unlockUrl",
+                    "previewVideoUrl",
+                    "lensId"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

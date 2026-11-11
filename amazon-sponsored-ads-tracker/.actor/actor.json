@@ -1,0 +1,22 @@
+{
+    "actorSpecification": 1,
+    "name": "amazon-sponsored-ads-tracker",
+    "version": "0.1",
+    "buildTag": "latest",
+    "title": "Amazon Sponsored Ads Intelligence",
+    "description": "Extract every Sponsored placement on page one of Amazon search for your keywords, with slot positions and a per-keyword advertiser roll-up. Shows which competitors bid hardest on which terms. Samples each keyword repeatedly. No login needed.",
+    "categories": ["ECOMMERCE", "MARKETING"],
+    "minMemoryMbytes": 256,
+    "maxMemoryMbytes": 4096,
+    "defaultRunOptions": {
+        "build": "latest",
+        "memoryMbytes": 1024,
+        "timeoutSecs": 3600
+    },
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

@@ -1,0 +1,240 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Facebook business contact record",
+        "description": "Dataset envelope (_input / _source / _scrapedAt / recordType) on top of one business per row. One BUSINESS row per page, one RUN_SUMMARY per run, ERROR rows when a page cannot be read. A null contact field means the business publishes none, not that the parser missed it. Facebook changes its payload without notice, so unlisted fields pass through rather than failing the run.",
+        "additionalProperties": true,
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The page slug this record answers for."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source",
+                "description": "Always page-about-tab."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was emitted."
+            },
+            "recordType": {
+                "type": "string",
+                "title": "Record type",
+                "description": "BUSINESS, RUN_SUMMARY or ERROR."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Failure rows only: page_not_found, fetch_failed or unexpected_error."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Why the page could not be read."
+            },
+            "slug": {
+                "title": "Slug",
+                "description": "The page's vanity slug."
+            },
+            "pageName": {
+                "title": "Business name",
+                "description": "Display name of the page."
+            },
+            "pageUrl": {
+                "title": "Page URL",
+                "description": "Canonical page URL."
+            },
+            "pageId": {
+                "title": "Page ID",
+                "description": "Numeric page id, decoded from the about section's node id."
+            },
+            "primaryCategory": {
+                "title": "Category",
+                "description": "The page's first self-declared category, e.g. 'Italian restaurant'."
+            },
+            "categories": {
+                "title": "All categories",
+                "description": "Every category the page lists."
+            },
+            "email": {
+                "title": "Email",
+                "description": "First published email address. Null means the business publishes none - not that it was missed."
+            },
+            "emails": {
+                "title": "All emails",
+                "description": "Every email in the structured contact section."
+            },
+            "emailsFromDescription": {
+                "title": "Emails in the description",
+                "description": "Addresses found in the page's own description text rather than in the contact fields. Kept separate so a declared contact can be told apart from a scraped one."
+            },
+            "phone": {
+                "title": "Phone",
+                "description": "First published phone number, in the format the business entered it."
+            },
+            "phones": {
+                "title": "All phones",
+                "description": "Every phone number published."
+            },
+            "website": {
+                "title": "Website",
+                "description": "First published website, unwrapped from Facebook's l.facebook.com redirect."
+            },
+            "websites": {
+                "title": "All websites",
+                "description": "Every website published."
+            },
+            "address": {
+                "title": "Address",
+                "description": "First published street address."
+            },
+            "addresses": {
+                "title": "All addresses",
+                "description": "Every address published."
+            },
+            "hoursLabel": {
+                "title": "Open now?",
+                "description": "'Open now' or 'Closed now'. Facebook does not publish the weekly schedule to logged-out visitors, so this is a status at fetch time, not a set of opening hours."
+            },
+            "priceRange": {
+                "title": "Price range",
+                "description": "e.g. 'Price range · ££'."
+            },
+            "services": {
+                "title": "Services",
+                "description": "e.g. ['Delivery', 'Takeaway', 'Dine in']."
+            },
+            "socialHandles": {
+                "title": "Social handles",
+                "description": "Other-network usernames the page lists."
+            },
+            "followers": {
+                "title": "Followers",
+                "description": "Follower count. Facebook abbreviates large numbers, so this is approximate and the raw label is kept beside it."
+            },
+            "ratingSummaryText": {
+                "title": "Rating",
+                "description": "Facebook's own line, e.g. '94% recommend (1,236 reviews)'."
+            },
+            "recommendPercent": {
+                "title": "Recommend (%)",
+                "description": "Parsed from the rating line. Facebook retired star ratings for pages, so this is the rating."
+            },
+            "reviewCount": {
+                "title": "Reviews",
+                "description": "Total reviews the page has."
+            },
+            "hasEmail": {
+                "title": "Has email",
+                "description": "Whether the business publishes an email."
+            },
+            "hasPhone": {
+                "title": "Has phone",
+                "description": "Whether the business publishes a phone number."
+            },
+            "hasWebsite": {
+                "title": "Has website",
+                "description": "Whether the business publishes a website."
+            },
+            "hasAddress": {
+                "title": "Has address",
+                "description": "Whether the business publishes a street address."
+            },
+            "contactScore": {
+                "title": "Contact score",
+                "description": "How many of the four channels (email, phone, website, address) the business publishes, 0-4. It ranks a lead list; it does not claim to measure lead quality."
+            },
+            "discoveredVia": {
+                "title": "Discovered via",
+                "description": "'input' when you supplied the page, 'ad-library' when the actor found it by keyword."
+            },
+            "discoveryQuery": {
+                "title": "Discovery query",
+                "description": "The keyword and country that surfaced this page."
+            },
+            "pageCreationDate": {
+                "title": "Page created",
+                "description": "From the page transparency tab, when that option is on. Useful for telling an established business from a week-old one."
+            },
+            "isRunningAds": {
+                "title": "Currently advertising",
+                "description": "From the page transparency tab. A business already buying ads is a different kind of lead from one that is not."
+            },
+            "adStatusText": {
+                "title": "Ad status (as shown)",
+                "description": "Facebook's own sentence about the page's advertising."
+            }
+        }
+    },
+    "views": {
+        "overview": {
+            "title": "Contacts",
+            "description": "One row per business, ready to work.",
+            "transformation": {
+                "fields": [
+                    "pageName",
+                    "primaryCategory",
+                    "email",
+                    "phone",
+                    "website",
+                    "address",
+                    "followers",
+                    "contactScore",
+                    "pageUrl",
+                    "recordType",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        },
+        "qualified": {
+            "title": "Qualified leads",
+            "description": "Sort by contact score to put the fully reachable businesses first.",
+            "transformation": {
+                "fields": [
+                    "pageName",
+                    "contactScore",
+                    "hasEmail",
+                    "hasPhone",
+                    "hasWebsite",
+                    "hasAddress",
+                    "followers",
+                    "recommendPercent",
+                    "reviewCount",
+                    "primaryCategory",
+                    "pageUrl"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        },
+        "discovery": {
+            "title": "Discovery",
+            "description": "Where each business came from.",
+            "transformation": {
+                "fields": [
+                    "pageName",
+                    "slug",
+                    "discoveredVia",
+                    "discoveryQuery",
+                    "primaryCategory",
+                    "followers",
+                    "pageCreationDate",
+                    "isRunningAds",
+                    "pageUrl"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

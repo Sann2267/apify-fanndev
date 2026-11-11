@@ -1,0 +1,284 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Baris peringkat \"Paling Laris\" Blibli",
+        "description": "Satu baris per produk berperingkat per kategori, plus satu baris tambahan untuk tiap produk yang keluar dari daftar sejak run sebelumnya (status DROPPED_OUT). Peringkat diambil dari halaman produk — satu-satunya tempat Blibli menyebut posisi \"Paling Laris\" resmi — sehingga field produk (harga, stok, rating) selalu terisi untuk baris berperingkat. Baris DROPPED_OUT direkonstruksi dari snapshot run lalu, jadi hanya memuat field yang ikut disimpan di snapshot: rank/previousRank, productSku, name, url, merchantCode, merchantName, salePrice, categoryCode, categoryName; sisanya null. Semua tipe nullable karena alasan itu.",
+        "properties": {
+            "rank": {
+                "type": ["number", "null"],
+                "title": "Peringkat kini",
+                "description": "Posisi di daftar \"Paling Laris\" kategori pada run ini, 1 = teratas. Null pada baris DROPPED_OUT, karena produk itu sudah tidak ada di daftar."
+            },
+            "previousRank": {
+                "type": ["number", "null"],
+                "title": "Peringkat sebelumnya",
+                "description": "Posisi produk ini pada snapshot run terakhir. Null kalau produk baru masuk (NEW) atau kalau belum ada snapshot pembanding."
+            },
+            "rankChange": {
+                "type": ["number", "null"],
+                "title": "Perubahan peringkat",
+                "description": "previousRank dikurangi rank. Positif = naik (peringkat mengecil), negatif = turun. Null untuk BASELINE, NEW, dan DROPPED_OUT."
+            },
+            "status": {
+                "type": ["string", "null"],
+                "title": "Status pergerakan",
+                "description": "BASELINE (belum ada run pembanding), NEW (baru masuk daftar), UP, DOWN, SAME, atau DROPPED_OUT (keluar dari daftar sejak run lalu). Selalu BASELINE kalau trackChanges dimatikan."
+            },
+            "productSku": {
+                "type": ["string", "null"],
+                "title": "SKU produk",
+                "description": "SKU produk Blibli. Kunci yang dipakai untuk mencocokkan produk antar-run."
+            },
+            "itemSku": {
+                "type": ["string", "null"],
+                "title": "SKU varian",
+                "description": "SKU tingkat varian, kalau ada."
+            },
+            "name": {
+                "type": ["string", "null"],
+                "title": "Nama produk",
+                "description": "Judul produk seperti yang ditampilkan Blibli."
+            },
+            "brand": {
+                "type": ["string", "null"],
+                "title": "Merek",
+                "description": "Merek produk."
+            },
+            "url": {
+                "type": ["string", "null"],
+                "title": "Tautan produk",
+                "description": "URL absolut blibli.com, tanpa query string pelacakan."
+            },
+            "imageUrl": {
+                "type": ["string", "null"],
+                "title": "Gambar",
+                "description": "Gambar utama produk, diambil dari hasil kandidat."
+            },
+            "salePrice": {
+                "type": ["number", "null"],
+                "title": "Harga jual (Rp)",
+                "description": "Harga yang dibayar pembeli sekarang, dalam rupiah."
+            },
+            "listPrice": {
+                "type": ["number", "null"],
+                "title": "Harga normal (Rp)",
+                "description": "Harga sebelum diskon (harga coret)."
+            },
+            "discountPercentage": {
+                "type": ["number", "null"],
+                "title": "Diskon (%)",
+                "description": "Potongan terhadap harga normal, dalam persen — titik harga yang dipakai pemuncak daftar."
+            },
+            "currency": {
+                "type": ["string", "null"],
+                "title": "Mata uang",
+                "description": "Selalu IDR."
+            },
+            "rating": {
+                "type": ["number", "null"],
+                "title": "Rating",
+                "description": "Rating desimal produk, mis. 4.8."
+            },
+            "reviewCount": {
+                "type": ["number", "null"],
+                "title": "Jumlah ulasan",
+                "description": "Berapa ulasan yang diterima produk ini."
+            },
+            "stockQuantity": {
+                "type": ["number", "null"],
+                "title": "Sisa stok",
+                "description": "Jumlah unit tersisa menurut halaman produk."
+            },
+            "inStock": {
+                "type": ["boolean", "null"],
+                "title": "Tersedia",
+                "description": "Apakah masih ada stok. Produk terlaris yang kehabisan stok biasanya segera turun peringkat."
+            },
+            "soldCount": {
+                "type": ["number", "null"],
+                "title": "Terjual",
+                "description": "Total unit terjual. Perhatikan: peringkat \"Paling Laris\" Blibli tidak sejalan dengan angka ini, jadi urutan berdasarkan soldCount tidak akan sama dengan rank."
+            },
+            "seenCount": {
+                "type": ["number", "null"],
+                "title": "Dilihat",
+                "description": "Berapa kali halaman produk dilihat."
+            },
+            "merchantCode": {
+                "type": ["string", "null"],
+                "title": "Kode penjual",
+                "description": "Kode merchant Blibli, mis. BLL-70058."
+            },
+            "merchantName": {
+                "type": ["string", "null"],
+                "title": "Penjual",
+                "description": "Nama toko yang menguasai posisi ini."
+            },
+            "merchantBadge": {
+                "type": ["string", "null"],
+                "title": "Badge penjual",
+                "description": "Tingkat badge penjual, mis. Diamond."
+            },
+            "merchantIsOfficial": {
+                "type": ["boolean", "null"],
+                "title": "Official store",
+                "description": "Apakah penjualnya official store merek."
+            },
+            "isWatched": {
+                "type": ["boolean", "null"],
+                "title": "Disorot",
+                "description": "True kalau merchantCode baris ini ada di daftar watchMerchantCodes — cara cepat menyaring posisi toko sendiri di antara pesaing."
+            },
+            "categoryCode": {
+                "type": ["string", "null"],
+                "title": "Kode kategori",
+                "description": "Kode kategori Blibli yang daftarnya sedang dipantau, mis. ME-1000006."
+            },
+            "categoryName": {
+                "type": ["string", "null"],
+                "title": "Kategori",
+                "description": "Nama kategori penjualan tempat peringkat ini berlaku."
+            },
+            "topSellingPageUrl": {
+                "type": ["string", "null"],
+                "title": "Tautan daftar",
+                "description": "URL halaman \"Paling Laris\" Blibli untuk kategori ini."
+            },
+            "leaderboardSize": {
+                "type": ["number", "null"],
+                "title": "Isi daftar",
+                "description": "Berapa produk berperingkat yang berhasil dipulihkan untuk kategori ini pada run ini. Sama untuk semua baris satu kategori."
+            },
+            "leaderboardComplete": {
+                "type": ["boolean", "null"],
+                "title": "Daftar lengkap",
+                "description": "True kalau peringkat 1..N tersusun rapat tanpa nomor bolong. False berarti sebagian pemegang peringkat berada di luar kandidat yang dipindai — naikkan candidatesPerCategory. Ditandai apa adanya supaya snapshot parsial tidak tersamar sebagai snapshot penuh."
+            },
+            "candidatesScanned": {
+                "type": ["number", "null"],
+                "title": "Kandidat dipindai",
+                "description": "Berapa halaman produk yang benar-benar dibuka untuk kategori ini. Sebagian besar kandidat memang tidak berperingkat — itu normal."
+            },
+            "candidatesFailed": {
+                "type": ["number", "null"],
+                "title": "Kandidat gagal",
+                "description": "Berapa halaman produk gagal diambil. Angka besar berarti daftar mungkin tidak lengkap karena pemblokiran, bukan karena kandidat kurang."
+            },
+            "previousRunAt": {
+                "type": ["string", "null"],
+                "format": "date-time",
+                "title": "Run sebelumnya",
+                "description": "Timestamp UTC ISO 8601 snapshot yang dipakai sebagai pembanding. Null pada run pertama atau kalau trackChanges dimatikan."
+            },
+            "runStartedAt": {
+                "type": ["string", "null"],
+                "format": "date-time",
+                "title": "Run ini",
+                "description": "Timestamp UTC ISO 8601 saat run ini dimulai. Sama untuk semua baris, jadi cocok sebagai sumbu waktu deret berkala."
+            },
+            "scrapedAt": {
+                "type": ["string", "null"],
+                "format": "date-time",
+                "title": "Waktu ambil",
+                "description": "Timestamp UTC ISO 8601 pengambilan data produk. Null pada baris DROPPED_OUT."
+            }
+        }
+    },
+    "views": {
+        "leaderboard": {
+            "title": "Daftar Paling Laris",
+            "description": "Daftar per kategori, urut peringkat: siapa yang menguasai kategori dan dengan harga berapa.",
+            "transformation": {
+                "fields": [
+                    "categoryName",
+                    "rank",
+                    "name",
+                    "brand",
+                    "salePrice",
+                    "soldCount",
+                    "rating",
+                    "reviewCount",
+                    "merchantName",
+                    "url"
+                ]
+            },
+            "display": {
+                "component": "table",
+                "properties": {
+                    "categoryName": { "label": "Kategori" },
+                    "rank": { "label": "Peringkat" },
+                    "name": { "label": "Produk" },
+                    "brand": { "label": "Merek" },
+                    "salePrice": { "label": "Harga" },
+                    "soldCount": { "label": "Terjual" },
+                    "rating": { "label": "Rating" },
+                    "reviewCount": { "label": "Ulasan" },
+                    "merchantName": { "label": "Penjual" },
+                    "url": { "label": "Tautan" }
+                }
+            }
+        },
+        "movement": {
+            "title": "Pergerakan sejak run lalu",
+            "description": "Produk yang masuk, naik, turun, atau keluar dari daftar. Hanya berisi status BASELINE kalau ini run pertama atau trackChanges dimatikan.",
+            "transformation": {
+                "fields": [
+                    "categoryName",
+                    "status",
+                    "rank",
+                    "previousRank",
+                    "rankChange",
+                    "name",
+                    "merchantName",
+                    "isWatched",
+                    "previousRunAt"
+                ]
+            },
+            "display": {
+                "component": "table",
+                "properties": {
+                    "categoryName": { "label": "Kategori" },
+                    "status": { "label": "Status" },
+                    "rank": { "label": "Peringkat kini" },
+                    "previousRank": { "label": "Peringkat lalu" },
+                    "rankChange": { "label": "Perubahan" },
+                    "name": { "label": "Produk" },
+                    "merchantName": { "label": "Penjual" },
+                    "isWatched": { "label": "Disorot" },
+                    "previousRunAt": { "label": "Run sebelumnya" }
+                }
+            }
+        },
+        "coverage": {
+            "title": "Kelengkapan data",
+            "description": "Seberapa utuh daftar tiap kategori dipulihkan — periksa di sini sebelum menyimpulkan sebuah produk tidak berperingkat.",
+            "transformation": {
+                "fields": [
+                    "categoryCode",
+                    "categoryName",
+                    "leaderboardSize",
+                    "leaderboardComplete",
+                    "candidatesScanned",
+                    "candidatesFailed",
+                    "rank",
+                    "name"
+                ]
+            },
+            "display": {
+                "component": "table",
+                "properties": {
+                    "categoryCode": { "label": "Kode" },
+                    "categoryName": { "label": "Kategori" },
+                    "leaderboardSize": { "label": "Isi daftar" },
+                    "leaderboardComplete": { "label": "Lengkap" },
+                    "candidatesScanned": { "label": "Kandidat dipindai" },
+                    "candidatesFailed": { "label": "Kandidat gagal" },
+                    "rank": { "label": "Peringkat" },
+                    "name": { "label": "Produk" }
+                }
+            }
+        }
+    }
+}

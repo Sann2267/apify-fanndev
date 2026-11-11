@@ -1,0 +1,77 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Listing / seller record",
+        "description": "Raw-passthrough dataset envelope on top of Poshmark's own Vuex state shape. Every record carries _input/_source/_scrapedAt (and _error/_errorDetail on failures). \"browse\"/\"listing\" mode records carry the full upstream listing object verbatim (title, price, brand, condition, size, pictures, creator_username, aggregates, ...). \"seller\" mode records carry the full upstream closet-user object verbatim (username, profile_v2, aggregates with followers/posts/items-sold/ratings, ...).",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The brand:value / listing ID / username that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "S1-html, or none on failure."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed extractions (e.g. listing_not_found, seller_not_found)."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "_gridTotal": { "title": "Grid total", "description": "browse mode -- Poshmark's own reported total match count for this brand/category (capped around 5000)." },
+            "id": { "title": "ID", "description": "browse/listing mode -- the listing's 24-character ID." },
+            "title": { "title": "Title", "description": "browse/listing mode." },
+            "price": { "title": "Price", "description": "browse/listing mode -- current asking price." },
+            "original_price": { "title": "Original price", "description": "browse/listing mode." },
+            "brand": { "title": "Brand", "description": "browse/listing mode." },
+            "size": { "title": "Size", "description": "browse/listing mode." },
+            "condition": { "title": "Condition", "description": "browse/listing mode." },
+            "description": { "title": "Description", "description": "browse/listing mode -- full listing description text." },
+            "pictures": { "title": "Pictures", "description": "browse/listing mode -- full list of photo objects." },
+            "creator_username": { "title": "Seller username", "description": "browse/listing mode." },
+            "like_count": { "title": "Like count", "description": "browse/listing mode." },
+            "comment_count": { "title": "Comment count", "description": "browse/listing mode." },
+            "lister": { "title": "Lister profile", "description": "listing mode only -- the seller's basic profile object, embedded on the listing detail page." },
+            "username": { "title": "Username", "description": "seller mode." },
+            "full_name": { "title": "Full name", "description": "seller mode." },
+            "profile_v2": { "title": "Profile", "description": "seller mode -- bio, city, state." },
+            "aggregates": { "title": "Aggregates", "description": "seller mode -- followers, following, posts, items sold, 5-star rating counts, share/like/comment totals." }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across browse / listing / seller records.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "title",
+                    "price",
+                    "brand",
+                    "creator_username",
+                    "username",
+                    "full_name",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

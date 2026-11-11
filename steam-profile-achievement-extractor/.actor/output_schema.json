@@ -1,0 +1,567 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Steam profile / achievement record",
+        "description": "recordType tells which shape a row has. Fields without a value are null; extra fields may appear (raw passthrough).",
+        "additionalProperties": true,
+        "properties": {
+            "_input": {
+                "title": "Input",
+                "description": "The profile, game or group value that produced this record.",
+                "type": "string"
+            },
+            "_source": {
+                "title": "Source",
+                "description": "Surface that produced the record, e.g. S1-community-profile-xml+S1-community-profile-html, S1-community-stats-xml+S1-api-game-achievements, or 'none' for errors.",
+                "type": "string"
+            },
+            "_scrapedAt": {
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 time the record was produced.",
+                "type": "string"
+            },
+            "recordType": {
+                "title": "Record type",
+                "description": "PROFILE, PLAYER_GAME_ACHIEVEMENTS, PLAYER_ACHIEVEMENT, GAME_ACHIEVEMENTS, GAME_ACHIEVEMENT, FRIEND, BADGE, GROUP_MEMBER or ERROR.",
+                "type": "string"
+            },
+            "_error": {
+                "title": "Error",
+                "description": "ERROR rows only: invalid_input, profile_not_found, profile_private, game_details_private, no_achievements, no_recent_games, stats_unavailable, friends_private, no_friends, badges_private, no_badges, group_not_found, blocked, unexpected_shape."
+            },
+            "_errorDetail": {
+                "title": "Error detail",
+                "description": "ERROR rows only: what went wrong."
+            },
+            "steamId64": {
+                "title": "SteamID64",
+                "description": "64-bit Steam id of the user (as a string)."
+            },
+            "accountId": {
+                "title": "Account id",
+                "description": "32-bit Steam account id."
+            },
+            "steamId2": {
+                "title": "SteamID",
+                "description": "Legacy STEAM_1:Y:Z form."
+            },
+            "steamId3": {
+                "title": "SteamID3",
+                "description": "[U:1:N] form."
+            },
+            "personaName": {
+                "title": "Name",
+                "description": "Current Steam display name."
+            },
+            "customURL": {
+                "title": "Custom URL",
+                "description": "Vanity URL name, if set."
+            },
+            "profileUrl": {
+                "title": "Profile URL",
+                "description": "Steam Community profile link."
+            },
+            "privacyState": {
+                "title": "Privacy",
+                "description": "public, friendsonly or private."
+            },
+            "isPublic": {
+                "title": "Public",
+                "description": "Profile is public."
+            },
+            "onlineState": {
+                "title": "Online state",
+                "description": "online, offline or in-game."
+            },
+            "vacBanned": {
+                "title": "VAC banned",
+                "description": "True when the account has a VAC ban on record."
+            },
+            "tradeBanState": {
+                "title": "Trade ban",
+                "description": "None, Probation or Banned."
+            },
+            "isLimitedAccount": {
+                "title": "Limited account",
+                "description": "True for limited accounts."
+            },
+            "memberSince": {
+                "title": "Member since",
+                "description": "As shown by Steam."
+            },
+            "memberSinceDate": {
+                "title": "Member since date",
+                "description": "YYYY-MM-DD."
+            },
+            "realname": {
+                "title": "Real name",
+                "description": "User-entered real name."
+            },
+            "location": {
+                "title": "Location",
+                "description": "User-entered location."
+            },
+            "summary": {
+                "title": "Summary",
+                "description": "Profile summary as plain text (summaryHtml has the HTML)."
+            },
+            "avatarFull": {
+                "title": "Avatar",
+                "description": "Full-size avatar URL."
+            },
+            "profilePagePrivate": {
+                "title": "Page private",
+                "description": "PROFILE: the profile page renders as private even though privacyState may still say public (Steam's privacy flag can lag); level, counts and recent games are then empty."
+            },
+            "level": {
+                "title": "Steam level",
+                "description": "PROFILE: Steam level from the profile page."
+            },
+            "counts": {
+                "title": "Counts",
+                "description": "PROFILE: {badges, games, screenshots, videos, workshopItems, reviews, guides, artwork, groups, friends} as shown on the profile."
+            },
+            "gameDetailsPublic": {
+                "title": "Game details public",
+                "description": "Whether the user's game details (playtime, achievements) are public."
+            },
+            "hoursPlayedLast2Weeks": {
+                "title": "Hours, last 2 weeks",
+                "description": "PROFILE: total hours played in the last 2 weeks."
+            },
+            "recentGames": {
+                "title": "Recent games",
+                "description": "PROFILE: [{appid, name, hoursOnRecord, lastPlayedDate, currentlyInGame, achievementsUnlocked, achievementsTotal}] from the profile page."
+            },
+            "recentGamesXml": {
+                "title": "Recent games (XML)",
+                "description": "PROFILE: [{appid, name, statsName, hoursLast2Weeks, hoursOnRecord}]."
+            },
+            "showcaseStats": {
+                "title": "Showcase stats",
+                "description": "PROFILE: numbers from the user's showcases (Games, DLC, Achievements, Perfect Games, Avg. Game Completion Rate...), when shown."
+            },
+            "groups": {
+                "title": "Groups",
+                "description": "PROFILE: group memberships (first few with details)."
+            },
+            "equippedItems": {
+                "title": "Equipped items",
+                "description": "PROFILE: equipped profile background, avatar frame, animated avatar (Steam API, verbatim with absolute URLs)."
+            },
+            "appid": {
+                "title": "App ID",
+                "description": "Steam application id."
+            },
+            "gameName": {
+                "title": "Game",
+                "description": "Game name."
+            },
+            "totalAchievements": {
+                "title": "Achievements",
+                "description": "Number of achievements in the game."
+            },
+            "unlockedAchievements": {
+                "title": "Unlocked",
+                "description": "PLAYER_GAME_ACHIEVEMENTS: achievements the player unlocked."
+            },
+            "completionPct": {
+                "title": "Completion %",
+                "description": "PLAYER_GAME_ACHIEVEMENTS: unlocked / total * 100."
+            },
+            "isPerfect": {
+                "title": "Perfect",
+                "description": "PLAYER_GAME_ACHIEVEMENTS: every achievement unlocked."
+            },
+            "firstUnlockAt": {
+                "title": "First unlock",
+                "description": "PLAYER_GAME_ACHIEVEMENTS: UTC time of the earliest unlock."
+            },
+            "lastUnlockAt": {
+                "title": "Last unlock",
+                "description": "PLAYER_GAME_ACHIEVEMENTS: UTC time of the latest unlock."
+            },
+            "rarestUnlocked": {
+                "title": "Rarest unlocked",
+                "description": "PLAYER_GAME_ACHIEVEMENTS: {apiname, name, globalPercent} of the rarest unlocked achievement."
+            },
+            "hoursLast2Weeks": {
+                "title": "Hours in game, last 2 weeks",
+                "description": "PLAYER_GAME_ACHIEVEMENTS: hours in this game in the last 2 weeks."
+            },
+            "hoursOnRecord": {
+                "title": "Hours on record",
+                "description": "PLAYER_GAME_ACHIEVEMENTS: lifetime hours, only known for recently played games."
+            },
+            "ownershipConfirmed": {
+                "title": "Ownership confirmed",
+                "description": "PLAYER_GAME_ACHIEVEMENTS: false when the player has 0 unlocks and 0 recent hours - Steam answers the same for games the user does not own."
+            },
+            "achievements": {
+                "title": "Achievements list",
+                "description": "Per achievement: apiname, name, description, achieved, unlockedAt, hidden, globalPercent, iconUrl."
+            },
+            "apiname": {
+                "title": "API name",
+                "description": "Achievement API name."
+            },
+            "name": {
+                "title": "Achievement",
+                "description": "Achievement display name."
+            },
+            "description": {
+                "title": "Description",
+                "description": "Achievement description."
+            },
+            "achieved": {
+                "title": "Achieved",
+                "description": "PLAYER_ACHIEVEMENT: unlocked by the player."
+            },
+            "unlockedAt": {
+                "title": "Unlocked at",
+                "description": "PLAYER_ACHIEVEMENT: UTC unlock time."
+            },
+            "hidden": {
+                "title": "Hidden",
+                "description": "Achievement is hidden until unlocked."
+            },
+            "globalPercent": {
+                "title": "Global %",
+                "description": "Share of the game's players who unlocked the achievement."
+            },
+            "rank": {
+                "title": "Rank",
+                "description": "GAME_ACHIEVEMENT: position from most to least common."
+            },
+            "rarestAchievement": {
+                "title": "Rarest achievement",
+                "description": "GAME_ACHIEVEMENTS: {apiname, name, globalPercent}."
+            },
+            "averageGlobalPercent": {
+                "title": "Average global %",
+                "description": "GAME_ACHIEVEMENTS: mean unlock % across achievements."
+            },
+            "ownerSteamId64": {
+                "title": "Owner SteamID64",
+                "description": "FRIEND / BADGE: the user whose list this row belongs to."
+            },
+            "ownerFriendCount": {
+                "title": "Owner friend count",
+                "description": "FRIEND: total friends of the owner."
+            },
+            "title": {
+                "title": "Badge",
+                "description": "BADGE: badge title (game name for game badges)."
+            },
+            "badgeType": {
+                "title": "Badge type",
+                "description": "BADGE: community or game."
+            },
+            "levelName": {
+                "title": "Badge level name",
+                "description": "BADGE: name of the current badge level."
+            },
+            "xp": {
+                "title": "XP",
+                "description": "BADGE: XP the badge gives."
+            },
+            "unlockedDate": {
+                "title": "Unlocked date",
+                "description": "BADGE: YYYY-MM-DD."
+            },
+            "profileLevel": {
+                "title": "Profile level",
+                "description": "BADGE: owner's Steam level."
+            },
+            "groupId64": {
+                "title": "Group id",
+                "description": "GROUP_MEMBER: 64-bit group id."
+            },
+            "groupName": {
+                "title": "Group",
+                "description": "GROUP_MEMBER: group name."
+            },
+            "memberCount": {
+                "title": "Members",
+                "description": "GROUP_MEMBER: total group members."
+            }
+        }
+    },
+    "views": {
+        "profiles": {
+            "title": "Profiles",
+            "transformation": {
+                "fields": [
+                    "personaName",
+                    "steamId64",
+                    "profileUrl",
+                    "privacyState",
+                    "level",
+                    "vacBanned",
+                    "tradeBanState",
+                    "memberSinceDate",
+                    "location",
+                    "hoursPlayedLast2Weeks",
+                    "gameDetailsPublic",
+                    "avatarFull",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table",
+                "properties": {
+                    "personaName": {
+                        "label": "Name",
+                        "format": "text"
+                    },
+                    "steamId64": {
+                        "label": "SteamID64",
+                        "format": "text"
+                    },
+                    "profileUrl": {
+                        "label": "Profile URL",
+                        "format": "link"
+                    },
+                    "privacyState": {
+                        "label": "Privacy",
+                        "format": "text"
+                    },
+                    "level": {
+                        "label": "Steam level",
+                        "format": "number"
+                    },
+                    "vacBanned": {
+                        "label": "VAC banned",
+                        "format": "boolean"
+                    },
+                    "tradeBanState": {
+                        "label": "Trade ban",
+                        "format": "text"
+                    },
+                    "memberSinceDate": {
+                        "label": "Member since date",
+                        "format": "text"
+                    },
+                    "location": {
+                        "label": "Location",
+                        "format": "text"
+                    },
+                    "hoursPlayedLast2Weeks": {
+                        "label": "Hours, last 2 weeks",
+                        "format": "number"
+                    },
+                    "gameDetailsPublic": {
+                        "label": "Game details public",
+                        "format": "boolean"
+                    },
+                    "avatarFull": {
+                        "label": "Avatar",
+                        "format": "image"
+                    },
+                    "_error": {
+                        "label": "Error",
+                        "format": "text"
+                    }
+                }
+            }
+        },
+        "playerAchievements": {
+            "title": "Player achievements",
+            "transformation": {
+                "fields": [
+                    "personaName",
+                    "appid",
+                    "gameName",
+                    "unlockedAchievements",
+                    "totalAchievements",
+                    "completionPct",
+                    "isPerfect",
+                    "lastUnlockAt",
+                    "hoursLast2Weeks",
+                    "ownershipConfirmed",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table",
+                "properties": {
+                    "personaName": {
+                        "label": "Name",
+                        "format": "text"
+                    },
+                    "appid": {
+                        "label": "App ID",
+                        "format": "number"
+                    },
+                    "gameName": {
+                        "label": "Game",
+                        "format": "text"
+                    },
+                    "unlockedAchievements": {
+                        "label": "Unlocked",
+                        "format": "number"
+                    },
+                    "totalAchievements": {
+                        "label": "Achievements",
+                        "format": "number"
+                    },
+                    "completionPct": {
+                        "label": "Completion %",
+                        "format": "number"
+                    },
+                    "isPerfect": {
+                        "label": "Perfect",
+                        "format": "boolean"
+                    },
+                    "lastUnlockAt": {
+                        "label": "Last unlock",
+                        "format": "date"
+                    },
+                    "hoursLast2Weeks": {
+                        "label": "Hours in game, last 2 weeks",
+                        "format": "number"
+                    },
+                    "ownershipConfirmed": {
+                        "label": "Ownership confirmed",
+                        "format": "boolean"
+                    },
+                    "_error": {
+                        "label": "Error",
+                        "format": "text"
+                    }
+                }
+            }
+        },
+        "achievementRows": {
+            "title": "Achievement rows",
+            "transformation": {
+                "fields": [
+                    "appid",
+                    "gameName",
+                    "rank",
+                    "apiname",
+                    "name",
+                    "description",
+                    "globalPercent",
+                    "hidden",
+                    "achieved",
+                    "unlockedAt"
+                ]
+            },
+            "display": {
+                "component": "table",
+                "properties": {
+                    "appid": {
+                        "label": "App ID",
+                        "format": "number"
+                    },
+                    "gameName": {
+                        "label": "Game",
+                        "format": "text"
+                    },
+                    "rank": {
+                        "label": "Rank",
+                        "format": "number"
+                    },
+                    "apiname": {
+                        "label": "API name",
+                        "format": "text"
+                    },
+                    "name": {
+                        "label": "Achievement",
+                        "format": "text"
+                    },
+                    "description": {
+                        "label": "Description",
+                        "format": "text"
+                    },
+                    "globalPercent": {
+                        "label": "Global %",
+                        "format": "number"
+                    },
+                    "hidden": {
+                        "label": "Hidden",
+                        "format": "boolean"
+                    },
+                    "achieved": {
+                        "label": "Achieved",
+                        "format": "boolean"
+                    },
+                    "unlockedAt": {
+                        "label": "Unlocked at",
+                        "format": "date"
+                    }
+                }
+            }
+        },
+        "friendsBadgesMembers": {
+            "title": "Friends, badges & group members",
+            "transformation": {
+                "fields": [
+                    "recordType",
+                    "ownerSteamId64",
+                    "groupName",
+                    "steamId64",
+                    "personaName",
+                    "profileUrl",
+                    "title",
+                    "badgeType",
+                    "xp",
+                    "unlockedDate",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table",
+                "properties": {
+                    "recordType": {
+                        "label": "Record type",
+                        "format": "text"
+                    },
+                    "ownerSteamId64": {
+                        "label": "Owner SteamID64",
+                        "format": "text"
+                    },
+                    "groupName": {
+                        "label": "Group",
+                        "format": "text"
+                    },
+                    "steamId64": {
+                        "label": "SteamID64",
+                        "format": "text"
+                    },
+                    "personaName": {
+                        "label": "Name",
+                        "format": "text"
+                    },
+                    "profileUrl": {
+                        "label": "Profile URL",
+                        "format": "link"
+                    },
+                    "title": {
+                        "label": "Badge",
+                        "format": "text"
+                    },
+                    "badgeType": {
+                        "label": "Badge type",
+                        "format": "text"
+                    },
+                    "xp": {
+                        "label": "XP",
+                        "format": "number"
+                    },
+                    "unlockedDate": {
+                        "label": "Unlocked date",
+                        "format": "text"
+                    },
+                    "_error": {
+                        "label": "Error",
+                        "format": "text"
+                    }
+                }
+            }
+        }
+    }
+}

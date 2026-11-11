@@ -1,0 +1,12 @@
+{
+    "actorOutputSchemaVersion": 1,
+    "title": "Socios.com Fan Token & Fan Vote Results",
+    "properties": {
+        "results": {
+            "type": "string",
+            "title": "Dataset results",
+            "template": "{{links.apiDefaultDatasetUrl}}/items",
+            "description": "Every poll, partner club, fan token, vote token and reference row from this run, plus any error records."
+        }
+    }
+}

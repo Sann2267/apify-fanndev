@@ -1,0 +1,156 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "EGP Uganda tender notice record",
+        "description": "Raw-passthrough dataset envelope. Every record carries _mode/_source/_scrapedAt (plus _error/_errorDetail on failures, or _warning on partial results). Field set differs slightly by mode -- 'latest' and 'archived' notices carry listing fields (and, if fetchDetails was on, the enriched description/bid_opening_result); 'detail' records carry only the per-notice detail fields for the requested notice IDs.",
+        "properties": {
+            "_mode": {
+                "type": "string",
+                "title": "Mode",
+                "description": "Which run mode produced this record: latest, archived, or detail."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "S1-bid-notices-live-tab (currently open notice), S1-public-bids-archived-ajax (archived notice), S1-notice-detail-page (direct detail-mode fetch), or none (error record)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed fetches -- not_found, invalid_notice_id, or blocked_or_transient."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "notice_id": {
+                "title": "Notice ID",
+                "description": "EGP Uganda's internal numeric notice ID, parsed from the notice's own detail link."
+            },
+            "detail_url": {
+                "title": "Detail page URL",
+                "description": "The universal public notice-detail page for this notice ID (https://egpuganda.go.ug/index/<id>_egp)."
+            },
+            "procurement_ref": {
+                "title": "Procurement reference number",
+                "description": "The procuring entity's own tender reference code, e.g. \"UCAA/NCONS/2026-2027/00001\" (present on 'latest' records; the equivalent field on 'archived' records has the same name)."
+            },
+            "procuring_entity": {
+                "title": "Procuring entity",
+                "description": "The government ministry/agency/authority running this tender ('latest' records only -- the equivalent field on 'archived' records is upstream's own \"procurement_name\")."
+            },
+            "procurement_name": {
+                "title": "Procuring entity (archived records)",
+                "description": "Upstream's own field name for the procuring entity on 'archived' records -- not a typo in this actor, passed through as returned."
+            },
+            "category": {
+                "title": "Category",
+                "description": "Procurement category as shown in the listing, e.g. \"Non Consultancy Services\", \"Works\", \"Supplies\", \"Consultancy Services\" ('latest' records)."
+            },
+            "subject_of_procurement": {
+                "title": "Subject of procurement (listing, possibly truncated)",
+                "description": "The tender's subject/title as shown in the listing table -- upstream itself truncates long subjects here with \"...\"; see full_subject_of_procurement for the untruncated version when fetchDetails is on."
+            },
+            "subject_procurement": {
+                "title": "Subject of procurement (archived records)",
+                "description": "Upstream's own field name for the tender subject on 'archived' records."
+            },
+            "published_date": {
+                "title": "Published date",
+                "description": "Date this notice was published ('latest' records)."
+            },
+            "deadline_date": {
+                "title": "Submission deadline",
+                "description": "Bid/quotation submission deadline date ('latest' records)."
+            },
+            "submission_deadline": {
+                "title": "Submission deadline (archived records)",
+                "description": "Upstream's own field name for the submission deadline on 'archived' records."
+            },
+            "bid_opening_date": {
+                "title": "Bid opening date",
+                "description": "Date bids were/are scheduled to be opened (archived records)."
+            },
+            "bid_opening_time": {
+                "title": "Bid opening time",
+                "description": "Time bids were/are scheduled to be opened (archived records)."
+            },
+            "financial_year": {
+                "title": "Financial year",
+                "description": "Ugandan government financial year this notice belongs to, e.g. \"2025-2026\" (archived records, where populated by upstream)."
+            },
+            "body": {
+                "title": "Notice body (archived records)",
+                "description": "Full boilerplate-wrapped invitation text, as returned by the archived-notices API."
+            },
+            "notice_type": {
+                "title": "Notice type",
+                "description": "The notice-detail page's own heading (e.g. \"Request for Quotation Notice\") when fetchDetails is on -- upstream's internal `notice_type` tag (e.g. \"bid_notice\") on 'archived' listing records shares this same field name."
+            },
+            "procurement_ref_detail": {
+                "title": "Procurement reference (from detail page)",
+                "description": "Reference number as shown on the notice's own detail page, present when fetchDetails is on or in mode='detail'."
+            },
+            "full_subject_of_procurement": {
+                "title": "Full subject of procurement",
+                "description": "The untruncated tender subject/title, read from the notice's own detail page (fetchDetails on, or mode='detail')."
+            },
+            "description": {
+                "title": "Full description",
+                "description": "The notice's full invitation-to-bid text, read from its detail page (fetchDetails on, or mode='detail')."
+            },
+            "bid_opening_result": {
+                "title": "Bid opening result",
+                "description": "Opportunistic enrichment, present only once a bid-opening event has been recorded for this notice: procurement_method, bid_opening_datetime, bids_received, and a bidders[] list of {bidder_name_address, submission_date, amount}. Genuinely public transparency data -- who bid, when, and for how much.",
+                "type": "object"
+            },
+            "_detailError": {
+                "title": "Detail fetch error",
+                "description": "Present if fetchDetails was on but the per-notice detail page could not be fetched/parsed -- listing fields are still included."
+            },
+            "_warning": {
+                "title": "Warning",
+                "description": "Set on partial results, e.g. if archived pagination stopped early after a transient error."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across all modes.",
+            "transformation": {
+                "fields": [
+                    "_mode",
+                    "_source",
+                    "_scrapedAt",
+                    "notice_id",
+                    "procurement_ref",
+                    "procuring_entity",
+                    "procurement_name",
+                    "category",
+                    "subject_of_procurement",
+                    "subject_procurement",
+                    "published_date",
+                    "deadline_date",
+                    "submission_deadline",
+                    "financial_year",
+                    "_error",
+                    "_warning"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

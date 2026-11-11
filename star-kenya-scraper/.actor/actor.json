@@ -1,0 +1,14 @@
+{
+    "actorSpecification": 1,
+    "name": "star-kenya-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "The Star (Kenya) Scraper",
+    "description": "Extract full article text or the newest headlines from The Star (the-star.co.ke), a leading Kenyan daily newspaper -- no account or API key needed.",
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

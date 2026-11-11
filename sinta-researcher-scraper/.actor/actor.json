@@ -1,0 +1,18 @@
+{
+    "actorSpecification": 1,
+    "name": "sinta-researcher-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Indonesia Researcher Index Scraper (SINTA)",
+    "description": "Extract Indonesian researcher and institution records from SINTA, the national Science and Technology Index: national SINTA scores, Scopus / Web of Science / Google Scholar metrics, affiliation, department and subject areas. 335,000+ researchers, 5,500+ affiliations.",
+    "categories": [
+        "EDUCATION",
+        "BUSINESS"
+    ],
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

@@ -1,0 +1,140 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "ZPPA tender record",
+        "description": "Raw-passthrough dataset envelope. Record shape depends on 'mode': 'list' rows come from ZPPA's paginated 'Opened Bid Details' table (list-level fields only); 'latest' rows come from the homepage's currently-open tenders, each enriched with the full detail page; 'detail' rows are a single on-demand tender lookup. Every record carries _input/_source/_scrapedAt (and _error/_errorDetail on failures).",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "'latest' / 'list' for those modes, or the exact resourceId/URL requested in 'detail' mode."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which extraction strategy emitted this record (S1-opened-tenders-html, S1-latest-widget-html, S1-detail-html, or 'none' on failure)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed/degraded records: http_<code>, unexpected_shape, blocked_or_transient, invalid_input, or login_required (expected once a tender's bid submission deadline has passed -- see README)."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "resourceId": {
+                "title": "Tender resource ID",
+                "description": "ZPPA's internal numeric tender identifier, used to build the detail page URL."
+            },
+            "position": {
+                "title": "Row position",
+                "description": "(list mode) 1-10 position within its result page (not a stable global rank)."
+            },
+            "tenderTitle": {
+                "title": "Tender title",
+                "description": "(list mode) Tender title, from the 'Tender Title' column."
+            },
+            "title": {
+                "title": "Tender title",
+                "description": "(latest/detail mode) Tender title, from the widget/detail page heading."
+            },
+            "referenceNumber": {
+                "title": "Reference number",
+                "description": "(list mode) ZPPA's tender reference number, from the 'Reference number' column, e.g. '23698/2/521/2026'."
+            },
+            "pe": {
+                "title": "Procuring entity",
+                "description": "(list mode) The government body/parastatal running this tender, from the 'PE' column."
+            },
+            "bidsSubmissionDeadline": {
+                "title": "Bid submission deadline",
+                "description": "(list mode) Raw deadline string as shown on the site, e.g. 'Wed Aug 26 16:00:00 CAT 2026'."
+            },
+            "procurementMethod": {
+                "title": "Procurement method",
+                "description": "(list mode) e.g. 'Direct Bidding', 'Simplified Bidding', 'Open Bidding National'."
+            },
+            "openedBids": {
+                "title": "Opened bids label",
+                "description": "(list mode) Raw text of the 'Opened Bids' column link, usually 'View Opened Bids'."
+            },
+            "openedBidsUrl": {
+                "title": "Opened bids URL",
+                "description": "(list mode) Link to the bid-opening detail page for this tender (may itself require a ZPPA account login to view)."
+            },
+            "awardDate": {
+                "title": "Award date",
+                "description": "(list mode) Contract award date, when already awarded; often blank while a tender is still in evaluation."
+            },
+            "status": {
+                "title": "Status",
+                "description": "(list mode) e.g. 'Evaluation', 'Approval', 'Awarded', 'Cancelled'."
+            },
+            "detailUrl": {
+                "title": "Detail page URL",
+                "description": "Full URL of this tender's detail page on eprocure.zppa.org.zm."
+            },
+            "publishedDateParts": {
+                "title": "Published date parts",
+                "description": "(latest mode) [day, month-abbrev, 2-digit-year] as displayed on the homepage widget, e.g. ['26','Aug','26']."
+            },
+            "detail": {
+                "title": "Full tender detail",
+                "description": "(latest mode) The enriched detail-page object (title/fields/rawFields/procuringEntityUrl) for this tender, present only when the detail page was accessible (see detailError otherwise)."
+            },
+            "detailError": {
+                "title": "Detail fetch error",
+                "description": "(latest mode) Set instead of 'detail' when the detail page could not be fetched, e.g. 'login_required'."
+            },
+            "fields": {
+                "title": "Detail fields",
+                "description": "(latest/detail mode) All tender detail-page fields as a flat object, keyed by a camelCase version of the site's own field label (e.g. 'nameOfProcuringEntity', 'deadlineForBidSubmission', 'paymentAmountZmw'). Field set varies by tender type -- this is not a fixed schema."
+            },
+            "rawFields": {
+                "title": "Detail fields (raw label/value pairs)",
+                "description": "(latest/detail mode) The same detail-page fields as an ordered array of {label, value}, preserving the exact on-site label text verbatim."
+            },
+            "procuringEntityUrl": {
+                "title": "Procuring entity URL",
+                "description": "(latest/detail mode) Link to the procuring entity's organisation page on the e-GP portal, when the detail page links one."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across list/latest/detail records.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "resourceId",
+                    "title",
+                    "tenderTitle",
+                    "referenceNumber",
+                    "pe",
+                    "bidsSubmissionDeadline",
+                    "procurementMethod",
+                    "status",
+                    "awardDate",
+                    "detailUrl",
+                    "detailError",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

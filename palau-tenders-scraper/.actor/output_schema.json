@@ -1,0 +1,95 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "palaugov.pw ROP Procurement tender record",
+        "description": "One record per row across all three procurement category tables (BHR, CIP, Other Organizations). A single _error record is emitted instead of payload fields when a request fails or is unreachable.",
+        "properties": {
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which extraction strategy emitted this record, or 'none' on error."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on a failed run (blocked_or_transient)."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "recordType": {
+                "type": "string",
+                "title": "Record type",
+                "description": "Always CURRENT_TENDER -- this site publishes only currently-open tenders, no historical archive."
+            },
+            "category": {
+                "type": ["string", "null"],
+                "title": "Category",
+                "description": "Which of the three upstream tables this came from: 'BHR' (routine procurement), 'CIP' (Capital Improvement Projects), or 'Other Organizations'."
+            },
+            "ministryOrDepartment": {
+                "type": ["string", "null"],
+                "title": "Ministry or department",
+                "description": "The procuring government body."
+            },
+            "description": {
+                "type": ["string", "null"],
+                "title": "Description",
+                "description": "What is being procured."
+            },
+            "referenceNumber": {
+                "type": ["string", "null"],
+                "title": "Bid/RFP number",
+                "description": "The government's own reference code for this solicitation."
+            },
+            "noticeUrl": {
+                "type": ["string", "null"],
+                "title": "Notice PDF URL",
+                "description": "Direct link to the tender's official PDF notice."
+            },
+            "openingDate": {
+                "type": ["string", "null"],
+                "title": "Opening date",
+                "description": "Upstream free-text date the solicitation opened."
+            },
+            "closingDate": {
+                "type": ["string", "null"],
+                "title": "Closing date",
+                "description": "Upstream free-text bid submission deadline."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns -- rows missing a given column render blank.",
+            "transformation": {
+                "fields": [
+                    "category",
+                    "ministryOrDepartment",
+                    "description",
+                    "referenceNumber",
+                    "openingDate",
+                    "closingDate",
+                    "noticeUrl",
+                    "_error",
+                    "_scrapedAt"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

@@ -1,0 +1,14 @@
+{
+    "actorSpecification": 1,
+    "name": "theprint-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "ThePrint India Scraper",
+    "description": "Extract full article text or the newest headlines from The Print (theprint.in), an Indian digital news outlet -- no account or subscription needed.",
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

@@ -1,0 +1,14 @@
+{
+    "actorSpecification": 1,
+    "name": "cameroon-tenders-scraper",
+    "version": "0.1",
+    "buildTag": "latest",
+    "title": "Cameroon Government Tenders Scraper (ARMP)",
+    "description": "Scrapes Cameroon's official public procurement notices from ARMP -- national/international tenders, quotations, proposals, expressions of interest, award decisions and communiques, plus full per-publication detail. No login needed.",
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

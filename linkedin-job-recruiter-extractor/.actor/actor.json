@@ -1,0 +1,23 @@
+{
+    "actorSpecification": 1,
+    "name": "linkedin-job-recruiter-extractor",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "LinkedIn Smart Job Description & Recruiter Extractor",
+    "description": "Read LinkedIn job postings in full and turn each description into structured data: the tech stack named, certifications and clearances demanded, the pay range, seniority and the applicant count. No login required. Recruiter profiles are added when you supply your own li_at cookie.",
+    "categories": [
+        "JOBS",
+        "LEAD_GENERATION"
+    ],
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json",
+    "defaultRunOptions": {
+        "build": "latest",
+        "memoryMbytes": 1024,
+        "timeoutSecs": 7200
+    }
+}

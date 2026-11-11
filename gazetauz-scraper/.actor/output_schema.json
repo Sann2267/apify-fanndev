@@ -1,0 +1,110 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Article / latest-headline record",
+        "description": "Raw-passthrough dataset envelope. Every record carries _input/_source/_scrapedAt (and _error/_errorDetail on failures). Article-mode records carry headline/articleBody-style fields; latest-mode records (site RSS feed) carry title/link-style fields. Upstream HTML microdata is passed through close to verbatim, so extra fields beyond those listed here may also appear.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The exact input value (URL, or 'latest') that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which extraction strategy emitted this record (e.g. S1-microdata+html, S2-rss)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed extractions -- the error kind (e.g. not_found, unexpected_shape)."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "headline": {
+                "title": "Headline",
+                "description": "Article headline (article mode)."
+            },
+            "dek": {
+                "title": "Dek",
+                "description": "Sub-headline / lede sentence shown under the headline (article mode only)."
+            },
+            "description": {
+                "title": "Description",
+                "description": "Short article description/summary from meta tags (article mode)."
+            },
+            "articleBody": {
+                "title": "Article body",
+                "description": "Full article text, reconstructed from paragraph tags with inline ad widgets stripped out (article mode)."
+            },
+            "author": {
+                "title": "Author",
+                "description": "Byline -- observed as always institutional (\"Gazeta\" / \"Gazeta.uz\"), even on guest op-eds, never a personal name (both modes)."
+            },
+            "section": {
+                "title": "Section",
+                "description": "Site section from the breadcrumb (e.g. \"Economy\", \"Politics\") (article mode only)."
+            },
+            "tags": {
+                "title": "Tags",
+                "description": "Article topic tags (article mode only)."
+            },
+            "datePublished": {
+                "title": "Date published",
+                "description": "ISO 8601 publish date with UTC+5 offset (article mode only)."
+            },
+            "image": {
+                "title": "Image",
+                "description": "Lead image URL, from og:image (article mode only)."
+            },
+            "title": {
+                "title": "Title",
+                "description": "Feed item title (latest mode)."
+            },
+            "link": {
+                "title": "Link",
+                "description": "Article URL (latest mode)."
+            },
+            "pubDate": {
+                "title": "Publish date",
+                "description": "RFC 822 publish timestamp as given by the feed (latest mode)."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across both article and latest-headline records.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "_source",
+                    "_scrapedAt",
+                    "headline",
+                    "title",
+                    "link",
+                    "datePublished",
+                    "pubDate",
+                    "author",
+                    "section",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

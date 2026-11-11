@@ -1,0 +1,76 @@
+{
+    "title": "Liberia Government Tenders Scraper (e-GP)",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "mode": {
+            "title": "Mode",
+            "type": "string",
+            "editor": "select",
+            "description": "\"List\" scrapes one of the e-GP platform's public listing pages (paginated). \"Detail\" fetches the full per-tender detail page for specific tender IDs/URLs.",
+            "enum": ["list", "detail"],
+            "enumTitles": ["List (browse a listing page)", "Detail (fetch specific tenders)"],
+            "default": "list",
+            "prefill": "list"
+        },
+        "listType": {
+            "title": "List type (mode=list only)",
+            "type": "string",
+            "editor": "select",
+            "description": "Which e-GP listing to scrape. \"Current\" = still accepting bids (small, ~30 live at a time). \"Opened\" = bid submission closed, in evaluation/awarding (large, 900+). \"Awarded\" = finished contracts with supplier name and award amount (350+).",
+            "enum": ["current", "opened", "awarded"],
+            "enumTitles": [
+                "Current Opportunities (open for bidding)",
+                "Opened Bids (in evaluation)",
+                "Awarded Contracts (supplier + amount)"
+            ],
+            "default": "current",
+            "prefill": "current"
+        },
+        "maxResults": {
+            "title": "Max results (mode=list only)",
+            "type": "integer",
+            "description": "Caps how many rows are scraped for this run, across as many pages as needed (10 rows per page server-side). \"Opened\" listings can have 900+ total rows -- raise this only as high as you actually need.",
+            "default": 50,
+            "minimum": 1,
+            "maximum": 5000,
+            "prefill": 50
+        },
+        "resourceId": {
+            "title": "Tender ID or URL (mode=detail only)",
+            "type": "string",
+            "editor": "textfield",
+            "description": "A single tender's numeric resourceId (e.g. 250740), or its full tender URL. Find IDs from a 'list' mode run's tenderUrl/resourceId fields.",
+            "prefill": "250740"
+        },
+        "resourceIds": {
+            "title": "Tender IDs or URLs (mode=detail only)",
+            "type": "array",
+            "editor": "stringList",
+            "description": "Multiple tender resourceIds (or full tender URLs) to fetch full detail for in one run."
+        },
+        "maxConcurrency": {
+            "title": "Max concurrent workers (mode=detail only)",
+            "type": "integer",
+            "description": "How many tender detail pages to fetch in parallel.",
+            "default": 3,
+            "minimum": 1,
+            "maximum": 5,
+            "prefill": 3
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "editor": "proxy",
+            "description": "Apify Proxy configuration.",
+            "default": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            },
+            "prefill": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            }
+        }
+    }
+}

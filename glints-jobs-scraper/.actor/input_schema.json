@@ -1,0 +1,306 @@
+{
+    "title": "Glints Jobs Scraper",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "mode": {
+            "title": "Mode",
+            "type": "string",
+            "description": "What to scrape. 'search' runs keyword searches and returns job cards. 'jobDetail' fetches full postings (description, benefits, interview process) for job URLs or ids. 'company' returns an employer profile plus every open vacancy there. 'similarJobs' returns Glints' related-jobs list for a posting. 'sitemapCrawl' walks the public sitemaps to reach the whole corpus, past the 50-row search ceiling. 'filters' returns the facet rail for a keyword: top employers, cities and roles that actually have postings. 'suggestions' returns autocomplete job titles and company names. 'skills' returns the skill taxonomy with the ids the search filter accepts.",
+            "editor": "select",
+            "default": "search",
+            "enum": [
+                "search",
+                "jobDetail",
+                "company",
+                "similarJobs",
+                "sitemapCrawl",
+                "filters",
+                "suggestions",
+                "skills"
+            ],
+            "enumTitles": [
+                "Search jobs by keyword and filters",
+                "Job detail (full posting)",
+                "Company profile + its open jobs",
+                "Similar jobs for a posting",
+                "Sitemap crawl (whole corpus)",
+                "Search facets / market structure",
+                "Keyword suggestions (titles + companies)",
+                "Skill taxonomy"
+            ]
+        },
+        "countryCode": {
+            "title": "Market",
+            "type": "string",
+            "description": "Which Glints market to query. Glints operates six Southeast Asian markets from one API; Indonesia carries by far the largest job corpus.",
+            "editor": "select",
+            "default": "ID",
+            "enum": ["ID", "SG", "VN", "MY", "PH", "TW"],
+            "enumTitles": [
+                "Indonesia",
+                "Singapore",
+                "Vietnam",
+                "Malaysia",
+                "Philippines",
+                "Taiwan"
+            ]
+        },
+        "searchTerms": {
+            "title": "Search terms",
+            "type": "array",
+            "description": "Keywords to run. Used by the 'search', 'filters', 'suggestions' and 'skills' modes. Each term is a separate query, and results are deduplicated across all of them. Because anonymous access returns at most 50 jobs per query, several narrow terms reach far more of the market than one broad one. Leave empty in 'search' to get the market's newest postings.",
+            "editor": "stringList",
+            "prefill": ["data analyst", "software engineer"]
+        },
+        "jobUrlsOrIds": {
+            "title": "Job URLs or ids",
+            "type": "array",
+            "description": "Glints job links or bare UUIDs, for the 'jobDetail' and 'similarJobs' modes. Any public job URL shape works, including the /opportunities/s/ links used for postings aggregated from other boards.",
+            "editor": "stringList",
+            "prefill": []
+        },
+        "companyUrlsOrIds": {
+            "title": "Company URLs or ids",
+            "type": "array",
+            "description": "Glints company links or bare UUIDs, for the 'company' mode. Both /companies/ and /company/ URL shapes are accepted.",
+            "editor": "stringList",
+            "prefill": []
+        },
+        "maxItems": {
+            "title": "Maximum items",
+            "type": "integer",
+            "description": "Stop after this many records. Applies to the 'search', 'sitemapCrawl' and 'skills' modes. Set 0 in 'search' for no cap.",
+            "editor": "number",
+            "default": 100,
+            "minimum": 0
+        },
+        "pageSize": {
+            "title": "Results per search",
+            "type": "integer",
+            "description": "Jobs requested per search query. Glints silently caps anonymous callers at 50 and returns exactly 50 for any larger value, so 50 is both the default and the practical maximum.",
+            "editor": "number",
+            "default": 50,
+            "minimum": 1,
+            "maximum": 50
+        },
+        "sortBy": {
+            "title": "Sort by",
+            "type": "string",
+            "description": "Result ordering for the 'search' mode. Since anonymous access only reaches the first page, switching between RELEVANCY and LATEST is an easy way to surface a different 50 jobs for the same keyword.",
+            "editor": "select",
+            "default": "RELEVANCY",
+            "enum": ["RELEVANCY", "LATEST", "SALARY"],
+            "enumTitles": ["Relevance", "Newest first", "Salary"]
+        },
+        "jobTypes": {
+            "title": "Employment types",
+            "type": "array",
+            "description": "Restrict the search to these employment types. Leave empty for all types.",
+            "editor": "select",
+            "default": [],
+            "items": {
+                "type": "string",
+                "enum": [
+                    "FULL_TIME",
+                    "PART_TIME",
+                    "INTERNSHIP",
+                    "CONTRACT",
+                    "TEMPORARY",
+                    "FREELANCE",
+                    "DAILY",
+                    "PROJECT_BASED"
+                ]
+            }
+        },
+        "workArrangements": {
+            "title": "Work arrangements",
+            "type": "array",
+            "description": "Restrict the search to on-site, hybrid or remote postings. Leave empty for all.",
+            "editor": "select",
+            "default": [],
+            "items": {
+                "type": "string",
+                "enum": ["ONSITE", "HYBRID", "REMOTE"]
+            }
+        },
+        "educationLevels": {
+            "title": "Education levels",
+            "type": "array",
+            "description": "Restrict the search to postings asking for these education levels. Leave empty for all.",
+            "editor": "select",
+            "default": [],
+            "items": {
+                "type": "string",
+                "enum": [
+                    "PRIMARY_SCHOOL",
+                    "SECONDARY_SCHOOL",
+                    "HIGH_SCHOOL",
+                    "DIPLOMA",
+                    "COLLEGE_DEGREE",
+                    "BACHELOR_DEGREE",
+                    "MASTER_DEGREE",
+                    "DOCTORATE",
+                    "PROFESSIONAL_EDUCATION"
+                ]
+            }
+        },
+        "lastUpdatedRange": {
+            "title": "Posted within",
+            "type": "string",
+            "description": "Only return postings updated inside this window. Pairing a narrow window with a daily schedule is the reliable way to track new vacancies despite the 50-row search ceiling.",
+            "editor": "select",
+            "default": "ANY_TIME",
+            "enum": ["ANY_TIME", "PAST_24_HOURS", "PAST_WEEK", "PAST_MONTH"],
+            "enumTitles": ["Any time", "Past 24 hours", "Past week", "Past month"]
+        },
+        "salaryMin": {
+            "title": "Minimum salary",
+            "type": "integer",
+            "description": "Only return postings whose published pay range reaches this figure. Note Glints matches on overlap, not on the floor: a job advertised at 3,500,000-5,000,000 still matches a minimum of 5,000,000 because its ceiling touches it. Setting any salary filter also drops postings that hide their pay. Most Indonesian salaries are monthly figures.",
+            "editor": "number",
+            "minimum": 0
+        },
+        "salaryMax": {
+            "title": "Maximum salary",
+            "type": "integer",
+            "description": "Only return postings whose published pay range stays at or below this figure. Like the minimum, this matches on overlap rather than strictly.",
+            "editor": "number",
+            "minimum": 0
+        },
+        "salaryCurrency": {
+            "title": "Salary currency",
+            "type": "string",
+            "description": "Currency for the salary filter above. Must match the market: IDR for Indonesia, SGD for Singapore, VND for Vietnam.",
+            "editor": "textfield",
+            "default": "IDR"
+        },
+        "minYearsOfExperience": {
+            "title": "Minimum years of experience",
+            "type": "integer",
+            "description": "Only return postings whose required experience starts at or above this number of years.",
+            "editor": "number",
+            "minimum": 0
+        },
+        "maxYearsOfExperience": {
+            "title": "Maximum years of experience",
+            "type": "integer",
+            "description": "Only return postings whose required experience tops out at or below this number of years.",
+            "editor": "number",
+            "minimum": 0
+        },
+        "locationIds": {
+            "title": "Location ids",
+            "type": "array",
+            "description": "Glints hierarchical location UUIDs to filter by. Run the 'filters' mode first to discover the ids that have postings for your keyword.",
+            "editor": "stringList",
+            "prefill": []
+        },
+        "categoryIds": {
+            "title": "Job category ids",
+            "type": "array",
+            "description": "Glints hierarchical job-category UUIDs to filter by. The 'filters' mode returns these as jobRoles.",
+            "editor": "stringList",
+            "prefill": []
+        },
+        "companyIds": {
+            "title": "Company ids",
+            "type": "array",
+            "description": "Restrict the search to these employer UUIDs. For a complete vacancy list at one employer, the 'company' mode is cheaper and is not subject to the 50-row ceiling.",
+            "editor": "stringList",
+            "prefill": []
+        },
+        "skillIds": {
+            "title": "Skill ids",
+            "type": "array",
+            "description": "Restrict the search to postings requiring these skill UUIDs. The 'skills' mode returns the ids.",
+            "editor": "stringList",
+            "prefill": []
+        },
+        "includeExternalJobs": {
+            "title": "Include aggregated postings",
+            "type": "boolean",
+            "description": "Include postings Glints aggregates from other job boards. These carry an externalApplyURL instead of an on-site application and are a large share of the corpus.",
+            "editor": "checkbox",
+            "default": true
+        },
+        "includeCompanyJobs": {
+            "title": "Include company vacancies",
+            "type": "boolean",
+            "description": "In 'company' mode, also emit one row per open vacancy at the employer, alongside the company profile row.",
+            "editor": "checkbox",
+            "default": true
+        },
+        "sitemapFetchDetails": {
+            "title": "Fetch full detail in sitemap crawl",
+            "type": "boolean",
+            "description": "In 'sitemapCrawl' mode, fetch the full posting for every id found. Turn this off to emit ids and URLs only, which costs one request per sitemap instead of one per job.",
+            "editor": "checkbox",
+            "default": true
+        },
+        "similarJobsLimit": {
+            "title": "Similar jobs per posting",
+            "type": "integer",
+            "description": "How many related jobs to request per posting. Glints often returns fewer than asked; it serves what its recommender has.",
+            "editor": "number",
+            "default": 20,
+            "minimum": 1,
+            "maximum": 100
+        },
+        "suggestionLimit": {
+            "title": "Suggestions per keyword",
+            "type": "integer",
+            "description": "How many autocomplete suggestions to request per keyword in 'suggestions' mode.",
+            "editor": "number",
+            "default": 20,
+            "minimum": 1,
+            "maximum": 50
+        },
+        "facetLimit": {
+            "title": "Facet entries per group",
+            "type": "integer",
+            "description": "How many employers, cities and roles to return per facet group in 'filters' mode.",
+            "editor": "number",
+            "default": 20,
+            "minimum": 1,
+            "maximum": 100
+        },
+        "maxConcurrency": {
+            "title": "Concurrent requests",
+            "type": "integer",
+            "description": "Parallel requests for the detail, company and sitemap modes. Glints showed no rate limiting during testing, but keeping this modest is the neighbourly default.",
+            "editor": "number",
+            "default": 5,
+            "minimum": 1,
+            "maximum": 20
+        },
+        "maxRetries": {
+            "title": "Retries per request",
+            "type": "integer",
+            "description": "How many times to retry a failed request, with exponential backoff and a TLS profile rotation between attempts.",
+            "editor": "number",
+            "default": 4,
+            "minimum": 1,
+            "maximum": 10
+        },
+        "requestTimeoutSecs": {
+            "title": "Request timeout (seconds)",
+            "type": "integer",
+            "description": "How long to wait for a single HTTP response before treating it as failed.",
+            "editor": "number",
+            "default": 45,
+            "minimum": 10,
+            "maximum": 180
+        },
+        "proxyConfiguration": {
+            "title": "Proxy",
+            "type": "object",
+            "description": "Optional. Glints showed no IP gate during testing, so runs work fine without a proxy and that is the default. Enable Apify Proxy if you need a specific exit country or start seeing rate limits; RESIDENTIAL is the group to pick if so.",
+            "editor": "proxy",
+            "default": {
+                "useApifyProxy": false
+            }
+        }
+    },
+    "required": ["mode"]
+}

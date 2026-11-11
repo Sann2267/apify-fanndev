@@ -1,0 +1,14 @@
+{
+    "actorSpecification": 1,
+    "name": "99co-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "99.co Property Scraper (Indonesia & Singapore)",
+    "description": "Scrape property listings, prices and agents from 99.co across Indonesia and Singapore. Six modes: Indonesian search with price history and coordinates, full listing detail with POI and Q&A, location facets, Singapore search and detail, and median HDB resale prices. No login needed.",
+    "categories": ["REAL_ESTATE", "ECOMMERCE", "BUSINESS"],
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": { "dataset": "./output_schema.json" },
+    "output": "./actor_output_links.json",
+    "defaultRunOptions": { "build": "latest", "memoryMbytes": 1024, "timeoutSecs": 3600 }
+}

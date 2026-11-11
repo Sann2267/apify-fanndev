@@ -1,0 +1,82 @@
+"""HTTP client for CIPO's public `NameSearchPage/search` endpoint.
+
+No WAF, no CAPTCHA, no TLS-fingerprint gate observed anywhere on
+`ecipo.gov.vc` during recon -- `curl_cffi` impersonating chrome124,
+chrome131, safari17_0, and edge101 all returned byte-identical 200 JSON
+responses from the same IP. `curl_cffi` `chrome124` is used anyway for
+portfolio-wide consistency.
+
+The retry loop wraps request calls in a broad exception tuple: `curl_cffi`'s
+own `ConnectionError` (parallel MRO under `CurlError` -> `OSError`) does NOT
+inherit from Python's builtin `ConnectionError` despite sharing the class
+name, so a narrower except list would silently miss real transient failures
+and let them crash the whole run instead of retrying/degrading to a
+per-item error record.
+"""
+
+import asyncio
+
+from curl_cffi.requests import AsyncSession
+from curl_cffi.requests.exceptions import RequestException
+
+from src.constants import DEFAULT_HEADERS, ISLAND_ID, MAX_RETRIES, RETRY_DELAY_BASE, SEARCH_URL, TLS_PROFILE
+
+BLOCK_MARKERS = [
+    b"Just a moment",
+    b"challenge-platform",
+    b"cf-mitigated",
+    b"captcha-delivery.com",
+    b"Attention Required",
+    b"Pardon Our Interruption",
+]
+
+
+def is_blocked(response) -> bool:
+    if response.status_code in (403, 407, 429, 503):
+        return True
+    head = response.content[:8192] if response.content else b""
+    return any(m in head for m in BLOCK_MARKERS)
+
+
+class CIPOClient:
+    def __init__(self, proxy_url: str | None = None, profile: str = TLS_PROFILE):
+        self.session = AsyncSession(
+            impersonate=profile,
+            proxies={"http": proxy_url, "https": proxy_url} if proxy_url else None,
+            timeout=30,
+        )
+        self.session.headers.update(DEFAULT_HEADERS)
+
+    async def _with_retry(self, method: str, url: str, **kwargs):
+        last_exc = None
+        for attempt in range(MAX_RETRIES):
+            try:
+                r = await self.session.request(method, url, **kwargs)
+                if is_blocked(r):
+                    await asyncio.sleep(RETRY_DELAY_BASE * (2**attempt))
+                    continue
+                return r
+            except (RuntimeError, ConnectionError, RequestException) as e:
+                last_exc = e
+                await asyncio.sleep(RETRY_DELAY_BASE * (2**attempt))
+        raise RuntimeError(f"Exhausted {MAX_RETRIES} retries for {url}: {last_exc!r}")
+
+    async def search(self, query: str) -> list[dict]:
+        """GET `NameSearchPage/search?query=<query>&app=<ISLAND_ID>`.
+
+        `query` must already be validated (see `extractor.validate_query`) --
+        this method does not re-check for the known '/`--` upstream-500
+        triggers. Returns the raw JSON array (already parsed), max 50 items,
+        `[]` for a genuine no-match. Raises `RuntimeError` for non-200/
+        malformed responses.
+        """
+        r = await self._with_retry("GET", SEARCH_URL, params={"query": query, "app": ISLAND_ID})
+        if r.status_code != 200:
+            raise RuntimeError(f"GET {SEARCH_URL}?query={query!r} -> HTTP {r.status_code}: {r.text[:300]!r}")
+        data = r.json()
+        if not isinstance(data, list):
+            raise RuntimeError(f"Unexpected NameSearchPage/search response shape: {data!r:.300}")
+        return data
+
+    async def close(self):
+        await self.session.close()

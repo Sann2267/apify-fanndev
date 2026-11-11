@@ -1,0 +1,158 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Article / latest-headline record",
+        "description": "Raw-passthrough dataset envelope. Every record carries _input/_source/_scrapedAt (and _error/_errorDetail on failures). Article-mode records (S1-jsonld, from the ld+json @graph's NewsArticle node) carry headline/articleBody-style fields; latest-mode records (S2-rss, front-page /feed/portada.xml) carry title/link-style fields plus a full articleBody parsed from the feed's own CDATA HTML.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The exact input value (URL, or 'latest') that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which extraction strategy emitted this record (S1-jsonld, S1-jsonld+meta-fallback, S2-rss, or none on failure)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed extractions -- the error kind."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "headline": {
+                "title": "Headline",
+                "description": "Article headline, from the NewsArticle ld+json node (article mode only)."
+            },
+            "alternativeHeadline": {
+                "title": "Alternative headline",
+                "description": "Secondary/shorter headline variant from ld+json (article mode only)."
+            },
+            "description": {
+                "title": "Description",
+                "description": "Short article summary from the ld+json `description` field (article mode only)."
+            },
+            "articleBody": {
+                "title": "Article body",
+                "description": "Full article text. Article mode: from the ld+json `articleBody` field (HTML-entity-unescaped), falling back to the meta[name=ArticleText] tag if ever absent. Latest mode: paragraphs parsed out of the RSS item's own CDATA-wrapped HTML description, which already carries the complete story."
+            },
+            "author": {
+                "title": "Author",
+                "description": "Byline name. Article mode: from the ld+json author Person node. Latest mode: from the RSS item's category tagged vn=\"Autores\"."
+            },
+            "publisher": {
+                "title": "Publisher",
+                "description": "Publisher name from the ld+json publisher object (article mode only, always \"Diario Libre\")."
+            },
+            "articleSection": {
+                "title": "Article section",
+                "description": "Comma-joined section/subsection path from ld+json, e.g. \"actualidad,educacion\" (article mode only)."
+            },
+            "keywords": {
+                "title": "Keywords",
+                "description": "List of keyword tags, split from the ld+json comma-separated `keywords` string (article mode only)."
+            },
+            "datePublished": {
+                "title": "Date published",
+                "description": "ISO 8601 publish date from ld+json (article mode only)."
+            },
+            "dateModified": {
+                "title": "Date modified",
+                "description": "ISO 8601 last-modified date from ld+json (article mode only)."
+            },
+            "inLanguage": {
+                "title": "Language",
+                "description": "ld+json inLanguage code, always \"es\" (article mode only)."
+            },
+            "canonicalUrl": {
+                "title": "Canonical URL",
+                "description": "mainEntityOfPage @id from ld+json, the canonical article URL (article mode only)."
+            },
+            "title": {
+                "title": "Title",
+                "description": "Headline text of a latest-mode RSS item."
+            },
+            "link": {
+                "title": "Link",
+                "description": "Article URL from the RSS item (latest mode only)."
+            },
+            "guid": {
+                "title": "GUID",
+                "description": "RSS item guid -- a UUID, not the numeric id in the article URL (latest mode only)."
+            },
+            "pubDate": {
+                "title": "Publish date",
+                "description": "RSS pubDate string, in the feed's own (non-standard, Spanish month abbreviation) format (latest mode only)."
+            },
+            "category": {
+                "title": "Category",
+                "description": "Section name, from the RSS item's category tagged vn=\"Categorias\" (latest mode only)."
+            },
+            "subcategory": {
+                "title": "Subcategory",
+                "description": "Subsection name, from the RSS item's category tagged vn=\"Subcategorias\" (latest mode only)."
+            },
+            "place": {
+                "title": "Place",
+                "description": "Place tag, from the RSS item's category tagged vn=\"Lugares\" (latest mode only)."
+            },
+            "topics": {
+                "title": "Topics",
+                "description": "List of topic tags, from the RSS item's repeated category entries tagged vn=\"Temas\" (latest mode only)."
+            },
+            "principalTopic": {
+                "title": "Principal topic",
+                "description": "Lead topic tag, from the RSS item's category tagged vn=\"PrincipalTema\" (latest mode only)."
+            },
+            "readingTime": {
+                "title": "Reading time",
+                "description": "Estimated reading time in minutes, from the RSS item's <description readingtime=\"N\"> attribute (latest mode only)."
+            },
+            "image": {
+                "title": "Image",
+                "description": "Lead image URL. Article mode: from the ld+json ImageObject. Latest mode: from the RSS item's media:content url."
+            },
+            "imageCaption": {
+                "title": "Image caption",
+                "description": "Lead image caption, from the RSS item's media:title (latest mode only)."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across both article and latest-headline records.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "_source",
+                    "_scrapedAt",
+                    "headline",
+                    "title",
+                    "link",
+                    "datePublished",
+                    "pubDate",
+                    "author",
+                    "category",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

@@ -1,0 +1,160 @@
+{
+    "title": "Hugging Face Scraper",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "mode": {
+            "title": "Mode",
+            "type": "string",
+            "editor": "select",
+            "description": "\"models\"/\"datasets\"/\"spaces\" search/list with filters. \"model-detail\"/\"dataset-detail\"/\"space-detail\" fetch full detail for specific repo ID(s). \"creator\" fetches a user or organization profile.",
+            "enum": ["models", "model-detail", "datasets", "dataset-detail", "spaces", "space-detail", "creator"],
+            "enumTitles": ["Search models", "Model detail (by ID)", "Search datasets", "Dataset detail (by ID)", "Search Spaces", "Space detail (by ID)", "Creator (user/org profile)"],
+            "default": "models",
+            "prefill": "models"
+        },
+        "search": {
+            "title": "Search query",
+            "type": "string",
+            "editor": "textfield",
+            "description": "\"models\"/\"datasets\"/\"spaces\" mode only -- free-text search term."
+        },
+        "author": {
+            "title": "Author filter",
+            "type": "string",
+            "editor": "textfield",
+            "description": "\"models\"/\"datasets\"/\"spaces\" mode only -- only return repos published by this exact username or organization."
+        },
+        "filter": {
+            "title": "Tag filter(s)",
+            "type": "array",
+            "editor": "stringList",
+            "description": "\"models\"/\"datasets\"/\"spaces\" mode only -- only return repos matching ALL of these tags (e.g. \"license:mit\", \"dataset:squad\", \"pytorch\")."
+        },
+        "pipelineTag": {
+            "title": "Pipeline tag",
+            "type": "string",
+            "editor": "textfield",
+            "description": "\"models\" mode only -- filter by task, e.g. \"text-generation\", \"text-classification\", \"image-classification\"."
+        },
+        "library": {
+            "title": "Library",
+            "type": "string",
+            "editor": "textfield",
+            "description": "\"models\" mode only -- filter by library, e.g. \"transformers\", \"sentence-transformers\", \"diffusers\"."
+        },
+        "sort": {
+            "title": "Sort by",
+            "type": "string",
+            "editor": "select",
+            "description": "\"models\"/\"datasets\"/\"spaces\" mode only -- field to sort results by.",
+            "enum": ["downloads", "likes", "createdAt", "lastModified", "trendingScore"],
+            "default": "downloads",
+            "prefill": "downloads"
+        },
+        "direction": {
+            "title": "Sort direction",
+            "type": "string",
+            "editor": "select",
+            "description": "\"models\"/\"datasets\"/\"spaces\" mode only -- descending (highest first) or ascending. Note: the platform only supports ascending order for \"createdAt\" -- other sort fields (downloads/likes/lastModified/trendingScore) are descending-only and will return a clear _error record if you request ascending.",
+            "enum": ["-1", "1"],
+            "enumTitles": ["Descending (highest first)", "Ascending (lowest first)"],
+            "default": "-1",
+            "prefill": "-1"
+        },
+        "modelId": {
+            "title": "Model ID",
+            "type": "string",
+            "editor": "textfield",
+            "description": "\"model-detail\" mode -- a single model ID in \"namespace/name\" form.",
+            "prefill": "google-bert/bert-base-uncased"
+        },
+        "modelIds": {
+            "title": "Model IDs",
+            "type": "array",
+            "editor": "stringList",
+            "description": "\"model-detail\" mode only -- multiple model IDs to fetch full detail for in one run."
+        },
+        "datasetId": {
+            "title": "Dataset ID",
+            "type": "string",
+            "editor": "textfield",
+            "description": "\"dataset-detail\" mode -- a single dataset ID in \"namespace/name\" form (or a bare name for legacy canonical datasets).",
+            "prefill": "rajpurkar/squad"
+        },
+        "datasetIds": {
+            "title": "Dataset IDs",
+            "type": "array",
+            "editor": "stringList",
+            "description": "\"dataset-detail\" mode only -- multiple dataset IDs to fetch full detail for in one run."
+        },
+        "spaceId": {
+            "title": "Space ID",
+            "type": "string",
+            "editor": "textfield",
+            "description": "\"space-detail\" mode -- a single Space ID in \"namespace/name\" form.",
+            "prefill": "enzostvs/deepsite"
+        },
+        "spaceIds": {
+            "title": "Space IDs",
+            "type": "array",
+            "editor": "stringList",
+            "description": "\"space-detail\" mode only -- multiple Space IDs to fetch full detail for in one run."
+        },
+        "username": {
+            "title": "Username",
+            "type": "string",
+            "editor": "textfield",
+            "description": "\"creator\" mode -- a single user or organization name."
+        },
+        "usernames": {
+            "title": "Usernames",
+            "type": "array",
+            "editor": "stringList",
+            "description": "\"creator\" mode only -- multiple user/organization names to fetch in one run."
+        },
+        "accountType": {
+            "title": "Account type",
+            "type": "string",
+            "editor": "select",
+            "description": "\"creator\" mode only -- users and organizations are different endpoints on Hugging Face. \"auto\" tries user first, then falls back to organization.",
+            "enum": ["auto", "user", "organization"],
+            "default": "auto",
+            "prefill": "auto"
+        },
+        "maxItems": {
+            "title": "Max items",
+            "type": "integer",
+            "editor": "number",
+            "description": "\"models\"/\"datasets\"/\"spaces\" mode only -- maximum number of results to return. Pagination is followed automatically (via the platform's Link header) until this cap or the end of the result set.",
+            "default": 100,
+            "minimum": 1,
+            "maximum": 10000,
+            "prefill": 100
+        },
+        "maxConcurrency": {
+            "title": "Max concurrent workers",
+            "type": "integer",
+            "description": "\"model-detail\"/\"dataset-detail\"/\"space-detail\"/\"creator\" mode only -- how many IDs to fetch in parallel.",
+            "default": 4,
+            "minimum": 1,
+            "maximum": 16,
+            "prefill": 4
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "editor": "proxy",
+            "description": "Apify Proxy configuration. Residential is on by default. Not required for this endpoint (no WAF was found -- it is Hugging Face's own official public API), but kept on for production robustness.",
+            "default": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            },
+            "prefill": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            }
+        }
+    },
+    "required": ["mode"]
+}

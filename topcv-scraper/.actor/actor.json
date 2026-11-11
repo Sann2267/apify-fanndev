@@ -1,0 +1,14 @@
+{
+    "actorSpecification": 1,
+    "name": "topcv-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "TopCV Scraper",
+    "description": "Search Vietnamese job listings on TopCV.vn by keyword and/or city and pull full job details (description, requirements, benefits, salary, employer info) -- no account or API key needed.",
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

@@ -1,0 +1,222 @@
+{
+    "title": "Facebook Ad Library Full Scraper",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "searchTerms": {
+            "title": "Keywords",
+            "type": "array",
+            "description": "One keyword or phrase per line. Each is searched in every country you list below, so 3 keywords x 2 countries = 6 searches.",
+            "editor": "stringList",
+            "prefill": [
+                "running shoes"
+            ]
+        },
+        "advertisers": {
+            "title": "Advertisers (Ad Library page URLs or page ids)",
+            "type": "array",
+            "description": "Pull every ad from a specific advertiser. Paste the Ad Library URL of the advertiser (the one containing view_all_page_id=...) or just the numeric page id. A plain facebook.com/<slug> URL will NOT work here: the Ad Library addresses advertisers by numeric id only, and this actor tells you rather than silently returning nothing.",
+            "editor": "stringList"
+        },
+        "countries": {
+            "title": "Countries",
+            "type": "array",
+            "description": "ISO country codes to search. The Ad Library is country-scoped, so a term with no ads in one country legitimately returns zero there.",
+            "editor": "stringList",
+            "default": [
+                "US"
+            ],
+            "prefill": [
+                "US"
+            ]
+        },
+        "adType": {
+            "title": "Ad category",
+            "type": "string",
+            "description": "'All ads' covers commercial advertising. The political & issue category is the only one where Facebook publishes spend and impression ranges - for every other category those fields come back empty, by Meta's policy and not because they were missed.",
+            "editor": "select",
+            "enum": [
+                "all",
+                "political_and_issue_ads",
+                "employment_ads",
+                "housing_ads",
+                "credit_ads",
+                "financial_products_and_services_ads"
+            ],
+            "enumTitles": [
+                "All ads",
+                "Political and issue ads (has spend + impressions)",
+                "Employment ads",
+                "Housing ads",
+                "Credit ads",
+                "Financial products and services ads"
+            ],
+            "default": "all"
+        },
+        "activeStatus": {
+            "title": "Active status",
+            "type": "string",
+            "description": "Whether to return ads currently running, ads that have stopped, or both.",
+            "editor": "select",
+            "enum": [
+                "active",
+                "inactive",
+                "all"
+            ],
+            "enumTitles": [
+                "Currently running",
+                "Stopped",
+                "Both"
+            ],
+            "default": "active"
+        },
+        "searchType": {
+            "title": "Keyword match",
+            "type": "string",
+            "description": "Unordered matches the words in any order; exact phrase matches the phrase as typed.",
+            "editor": "select",
+            "enum": [
+                "keyword_unordered",
+                "keyword_exact_phrase"
+            ],
+            "enumTitles": [
+                "Words in any order",
+                "Exact phrase"
+            ],
+            "default": "keyword_unordered"
+        },
+        "mediaType": {
+            "title": "Creative type",
+            "type": "string",
+            "description": "Restrict to image, video or meme creatives.",
+            "editor": "select",
+            "enum": [
+                "all",
+                "image",
+                "video",
+                "meme",
+                "image_and_meme",
+                "none"
+            ],
+            "enumTitles": [
+                "Any",
+                "Image",
+                "Video",
+                "Meme",
+                "Image and meme",
+                "No media"
+            ],
+            "default": "all"
+        },
+        "publisherPlatforms": {
+            "title": "Platforms",
+            "type": "array",
+            "description": "Restrict to ads delivered on these Meta surfaces. Leave empty for all of them.",
+            "editor": "select",
+            "items": {
+                "type": "string",
+                "enum": [
+                    "FACEBOOK",
+                    "INSTAGRAM",
+                    "AUDIENCE_NETWORK",
+                    "MESSENGER",
+                    "WHATSAPP",
+                    "THREADS"
+                ]
+            },
+            "default": []
+        },
+        "contentLanguages": {
+            "title": "Ad languages",
+            "type": "array",
+            "description": "Two-letter language codes, e.g. en, id, es. Leave empty for any language.",
+            "editor": "stringList",
+            "default": []
+        },
+        "startDateFrom": {
+            "title": "First shown on or after",
+            "type": "string",
+            "description": "YYYY-MM-DD. Filters on the day the ad started running.",
+            "editor": "textfield"
+        },
+        "startDateTo": {
+            "title": "First shown on or before",
+            "type": "string",
+            "description": "YYYY-MM-DD.",
+            "editor": "textfield"
+        },
+        "maxAdsPerQuery": {
+            "title": "Max ads per search",
+            "type": "integer",
+            "description": "Facebook server-renders the first 30 ads; anything beyond that is fetched by replaying its own pagination query, 30 at a time. Keep this low while you are tuning a search.",
+            "default": 60,
+            "minimum": 1,
+            "maximum": 5000,
+            "unit": "ads"
+        },
+        "onlyActive": {
+            "title": "Only ads still running",
+            "type": "boolean",
+            "description": "Drop ads Facebook reports as no longer active.",
+            "default": false,
+            "groupCaption": "Filters",
+            "groupDescription": "Applied to what Facebook returned, after fetching, so the run summary still counts everything."
+        },
+        "onlyWithVideo": {
+            "title": "Only ads with video",
+            "type": "boolean",
+            "description": "Keep only creatives that carry at least one video file.",
+            "default": false
+        },
+        "minRunningDays": {
+            "title": "Minimum days on air",
+            "type": "integer",
+            "description": "Long-running ads are the ones an advertiser kept paying for. Ads with no usable flight dates are dropped rather than admitted on a guess.",
+            "minimum": 0,
+            "unit": "days"
+        },
+        "adTextContains": {
+            "title": "Ad copy contains",
+            "type": "string",
+            "description": "Case-insensitive substring match across the ad body, headline, caption and link description.",
+            "editor": "textfield"
+        },
+        "emitSummary": {
+            "title": "Add a run summary record",
+            "type": "boolean",
+            "description": "Append one RUN_SUMMARY record: ads collected, how many are active, how many advertisers and the median days on air.",
+            "default": true
+        },
+        "exportFormats": {
+            "title": "Extra export files",
+            "type": "array",
+            "description": "Also write the results to the key-value store in these formats. The dataset is always produced regardless.",
+            "editor": "select",
+            "items": {
+                "type": "string",
+                "enum": [
+                    "json",
+                    "ndjson",
+                    "csv",
+                    "xlsx"
+                ],
+                "enumTitles": [
+                    "JSON",
+                    "NDJSON",
+                    "CSV",
+                    "Excel (XLSX)"
+                ]
+            },
+            "default": []
+        },
+        "proxyConfiguration": {
+            "title": "Proxy",
+            "type": "object",
+            "description": "Recommended on the Apify platform if you want more than the first 30 ads of each search. Facebook serves the rendered first page fine from any IP, but on Apify's datacenter IPs it answers the very first pagination request with \"Rate limit exceeded\" - measured 2026-09-20. Switching the Apify proxy on with the RESIDENTIAL group restored full pagination in the same test (60 ads over 4 pages against 30). Running from your own machine, no proxy is needed at all. The actor logs a warning naming this when it happens, so a short run is never silently mistaken for a short result set.",
+            "editor": "proxy",
+            "default": {
+                "useApifyProxy": false
+            }
+        }
+    }
+}

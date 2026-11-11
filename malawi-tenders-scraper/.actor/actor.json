@@ -1,0 +1,14 @@
+{
+    "actorSpecification": 1,
+    "name": "malawi-tenders-scraper",
+    "version": "0.1",
+    "buildTag": "latest",
+    "title": "Malawi Government Tenders Scraper",
+    "description": "Scrapes Malawi's official Public Procurement and Disposal of Assets Authority (PPDA) notice boards -- open tenders, award notices, intentions to award, and debarred suppliers -- for current and historical government procurement notices. No account or login needed.",
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

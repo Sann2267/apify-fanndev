@@ -1,0 +1,14 @@
+{
+    "actorSpecification": 1,
+    "name": "dominica-cipo-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Dominica CIPO Business Registry Scraper",
+    "description": "Search the Commonwealth of Dominica's official company register (CIPO, via its e-Filing/OCRS portal) by entity name/number, director surname, or shareholder name, and pull registration details plus directors/secretary/shareholders on file. No account or API key needed.",
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

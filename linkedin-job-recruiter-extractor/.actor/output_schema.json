@@ -1,0 +1,69 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "LinkedIn job posting record",
+        "description": "Dataset envelope (_input / _source / _scrapedAt / recordType) on top of LinkedIn's public job posting data, plus fields parsed out of the description text. One JOB row per posting, NOTICE rows when filters removed everything and ERROR rows on failure. LinkedIn changes its markup without notice, so unlisted fields pass through rather than failing the run.",
+        "additionalProperties": true,
+        "properties": {
+            "_input": { "type": "string", "title": "Input", "description": "The search query or job id that produced this record." },
+            "_source": { "type": "string", "title": "Source surface", "description": "jobs-guest-jobPosting, voyager-jobPosting when a recruiter was read, or none on NOTICE and ERROR rows." },
+            "_scrapedAt": { "type": "string", "title": "Scraped at", "description": "UTC ISO 8601 timestamp when this record was emitted." },
+            "recordType": { "type": "string", "title": "Record type", "description": "JOB, NOTICE or ERROR." },
+            "_error": { "type": "string", "title": "Error", "description": "Failure rows only: search_failed or detail_failed." },
+            "_errorDetail": { "type": "string", "title": "Error detail", "description": "Free-form diagnostic accompanying _error." },
+            "_notice": { "type": "string", "title": "Notice", "description": "Explains a non-failure empty result, such as all_filtered_out." },
+            "_noticeDetail": { "type": "string", "title": "Notice detail", "description": "What the notice means and what to change." },
+            "jobTitle": { "title": "Job title", "description": "The posting's title as published." },
+            "companyName": { "title": "Company", "description": "Hiring employer." },
+            "companyUrl": { "title": "Company URL", "description": "The employer's LinkedIn page, tracking parameters stripped." },
+            "companySlug": { "title": "Company slug", "description": "Handle out of the company URL - the stable key to join employers on." },
+            "companyDomain": { "title": "Company domain", "description": "The employer's own web domain, only when domain resolution was enabled. Bare domain only: no email address is guessed from it." },
+            "location": { "title": "Location", "description": "Location as stated on the posting." },
+            "workplaceType": { "title": "Workplace type", "description": "REMOTE, HYBRID or ONSITE, inferred from the description wording. Null when the description says nothing either way - which is common, so absence is not evidence of on-site." },
+            "employmentType": { "title": "Employment type", "description": "Full-time, Contract and so on, from LinkedIn's own criteria grid." },
+            "seniorityLevel": { "title": "Seniority level", "description": "From the criteria grid. Employers fill this in loosely; 'Not Applicable' is frequent." },
+            "jobFunction": { "title": "Job function", "description": "From the criteria grid." },
+            "industries": { "title": "Industries", "description": "From the criteria grid." },
+            "techStack": { "title": "Tech stack", "description": "Technologies named in the description, matched as whole words against a curated list so 'R' does not match 'R&D' and 'React' is not double-counted inside 'React Native'. This is the field that makes skill-trend analysis possible." },
+            "certifications": { "title": "Certifications & clearances", "description": "Credentials the posting demands - PMP, CISSP, AWS Certified, TS/SCI, security clearance and similar." },
+            "salaryMin": { "title": "Salary minimum", "description": "Low end of the pay range, with both thousand-separator conventions handled so 'Rp 8.000.000' and '$120,000' both parse." },
+            "salaryMax": { "title": "Salary maximum", "description": "High end of the pay range." },
+            "salaryCurrency": { "title": "Currency", "description": "Currency symbol or code as written in the posting." },
+            "salaryPeriod": { "title": "Pay period", "description": "per hour, per year, per month and so on. Captured separately because a bare 45,000 means very different things by period." },
+            "salarySource": { "title": "Salary source", "description": "employer-provided when LinkedIn rendered a structured pay block, parsed-from-description when it was mined out of the prose. The first is far more trustworthy." },
+            "salaryRaw": { "title": "Salary as written", "description": "The matched text, so you can audit the parse." },
+            "applicants": { "title": "Applicants", "description": "How many people LinkedIn says applied - a direct read on how contested the role is." },
+            "postedAgo": { "title": "Posted", "description": "LinkedIn's relative posting age, such as '2 months ago'." },
+            "postedDate": { "title": "Posted date", "description": "Absolute posting date from the search card, when LinkedIn supplied one." },
+            "description": { "title": "Full description", "description": "The complete description as plain text, unless you turned it off." },
+            "descriptionLength": { "title": "Description length", "description": "Characters of description - a quick proxy for how detailed a posting is." },
+            "jobId": { "title": "Job id", "description": "LinkedIn's numeric posting id." },
+            "jobUrl": { "title": "Job URL", "description": "Canonical link to the posting." },
+            "recruiterName": { "title": "Recruiter", "description": "Who posted the job. Cookie-only: empty on anonymous runs." },
+            "recruiterHeadline": { "title": "Recruiter headline", "description": "Their LinkedIn headline. Cookie-only." },
+            "recruiterProfileUrl": { "title": "Recruiter profile", "description": "Their profile link - the back channel a candidate can use instead of the application portal. Cookie-only." }
+        }
+    },
+    "views": {
+        "jobs": {
+            "title": "Jobs",
+            "transformation": {
+                "fields": ["jobTitle","companyName","location","workplaceType","seniorityLevel","techStack","certifications","salaryMin","salaryMax","salaryCurrency","applicants","jobUrl","recruiterName"]
+            },
+            "display": {
+                "component": "table",
+                "properties": {
+                    "jobTitle": { "label": "Title" },
+                    "companyName": { "label": "Company" },
+                    "techStack": { "label": "Tech" },
+                    "salaryMin": { "label": "Pay min" },
+                    "salaryMax": { "label": "Pay max" },
+                    "applicants": { "label": "Applicants" },
+                    "jobUrl": { "label": "Job" }
+                }
+            }
+        }
+    }
+}

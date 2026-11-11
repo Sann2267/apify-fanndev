@@ -1,0 +1,23 @@
+{
+    "actorSpecification": 1,
+    "name": "steam-profile-achievement-extractor",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Steam Profile & Achievement Extractor",
+    "description": "Extract public Steam profiles (level, bans, counts, recent games), per-player achievements with unlock times and global rarity, game achievement lists, friends, badges and group members. No login, no API key.",
+    "categories": [
+        "SOCIAL_MEDIA",
+        "DEVELOPER_TOOLS"
+    ],
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json",
+    "defaultRunOptions": {
+        "build": "latest",
+        "memoryMbytes": 256,
+        "timeoutSecs": 3600
+    }
+}

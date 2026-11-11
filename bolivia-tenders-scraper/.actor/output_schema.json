@@ -1,0 +1,108 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "SICOES tender record",
+        "description": "One record per Bolivia SICOES tender/procurement process (Convocatoria). A single _error record is emitted instead of payload fields when a page can't be fetched or a session handshake fails.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "'list:tipo=<convNacional|convInternacional>' for the search run that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which strategy emitted this record (S1-operacion-php, or 'none' on error)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed records (handshake_failed, blocked_or_transient)."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "cuce": {
+                "title": "CUCE",
+                "description": "Codigo Unico de Contratacion Estatal -- SICOES's unique identifier for this procurement process."
+            },
+            "entidad": {
+                "title": "Entity",
+                "description": "The purchasing government entity/institution running this process."
+            },
+            "tipoContratacion": {
+                "title": "Contracting type",
+                "description": "Bienes, Obras, Servicios Generales, or Servicios de Consultoria."
+            },
+            "modalidad": {
+                "title": "Modality code",
+                "description": "SICOES's own modality/procedure code (e.g. ANPP, OF)."
+            },
+            "objetoContratacion": {
+                "title": "Object of contracting",
+                "description": "The tender's free-text object/description, as published (Spanish)."
+            },
+            "subastaElectronica": {
+                "title": "Electronic auction",
+                "description": "'Si' or 'No' -- whether this process runs as an electronic reverse auction."
+            },
+            "fechaPublicacion": {
+                "title": "Publication date",
+                "description": "Date this tender was published on SICOES, dd/mm/yyyy."
+            },
+            "fechaPresentacionPropuestas": {
+                "title": "Proposal deadline",
+                "description": "Deadline date for submitting proposals, dd/mm/yyyy."
+            },
+            "estado": {
+                "title": "Status",
+                "description": "e.g. Vigente (open), Adjudicado (awarded), Desierto (void)."
+            },
+            "documentLabels": {
+                "title": "Available documents",
+                "description": "Labels of the supporting documents SICOES lists for this process (e.g. 'Convocatoria', 'Documento Base de Contratacion'). The PDFs themselves require a CAPTCHA to download directly from the portal -- not fetched by this actor, see CRAWLING_METHOD.md."
+            },
+            "tipo": {
+                "title": "Tender scope",
+                "description": "convNacional or convInternacional, matching this run's input."
+            },
+            "sourceUrl": {
+                "title": "Source URL",
+                "description": "The SICOES search page this record came from -- open it in a browser and search by CUCE to view/download the full process file."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns for each tender record -- rows missing a given column render blank.",
+            "transformation": {
+                "fields": [
+                    "cuce",
+                    "entidad",
+                    "tipoContratacion",
+                    "objetoContratacion",
+                    "fechaPublicacion",
+                    "fechaPresentacionPropuestas",
+                    "estado",
+                    "_error",
+                    "_scrapedAt"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

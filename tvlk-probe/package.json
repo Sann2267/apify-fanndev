@@ -1,0 +1,5 @@
+{
+  "name": "tvlk-probe",
+  "private": true,
+  "dependencies": { "jsdom": "^25.0.0" }
+}

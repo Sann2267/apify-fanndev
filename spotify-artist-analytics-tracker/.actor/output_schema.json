@@ -1,0 +1,280 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Spotify artist analytics record",
+        "description": "Dataset envelope (_input / _source / _scrapedAt / recordType) on top of Spotify's public artist metrics, plus growth deltas computed against the previous run. One ARTIST row per artist, optional TOP_TRACK rows, ERROR rows on failure. Spotify adds and removes fields without notice, so unlisted fields pass through rather than failing the run.",
+        "additionalProperties": true,
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The URL or name that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "pathfinder-queryArtistOverview, pathfinder-searchSuggestions, or none on failure rows."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was emitted."
+            },
+            "recordType": {
+                "type": "string",
+                "title": "Record type",
+                "description": "ARTIST, TOP_TRACK or ERROR."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Failure rows only: not_found or fetch_failed."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic accompanying _error."
+            },
+            "artistName": {
+                "title": "Artist",
+                "description": "Artist name as Spotify shows it."
+            },
+            "artistId": {
+                "title": "Artist id",
+                "description": "Spotify artist id."
+            },
+            "artistUrl": {
+                "title": "Artist URL",
+                "description": "open.spotify.com link to the artist."
+            },
+            "monthlyListeners": {
+                "title": "Monthly listeners",
+                "description": "Unique listeners in the last 28 days, the headline number on a Spotify artist page."
+            },
+            "followers": {
+                "title": "Followers",
+                "description": "Accounts following the artist."
+            },
+            "listenersPerFollower": {
+                "title": "Listeners per follower",
+                "description": "Monthly listeners divided by followers. A high ratio means reach that has not converted into a following yet."
+            },
+            "worldRank": {
+                "title": "World rank",
+                "description": "Spotify's global artist rank, or null for the great majority of artists who are not in the published ranking. Spotify sends 0 for unranked; that is normalised to null here so it cannot read as first place."
+            },
+            "topCities": {
+                "title": "Top cities",
+                "description": "The five cities with the most listeners: city, country, region and listener count."
+            },
+            "topCityNames": {
+                "title": "Top city names",
+                "description": "Just the city names, in Spotify's own order."
+            },
+            "listenersInTopCities": {
+                "title": "Listeners in top cities",
+                "description": "Sum of the five city listener counts."
+            },
+            "monthlyListenersPrevious": {
+                "title": "Monthly listeners (previous run)",
+                "description": "The reading this run was compared against."
+            },
+            "monthlyListenersChange": {
+                "title": "Monthly listeners change",
+                "description": "Absolute change since the previous reading."
+            },
+            "monthlyListenersChangePercent": {
+                "title": "Monthly listeners change (%)",
+                "description": "Percentage change since the previous reading."
+            },
+            "monthlyListenersChangePerDay": {
+                "title": "Monthly listeners change per day",
+                "description": "Change normalised by elapsed days, so readings taken at different intervals are comparable. Only present when at least half a day separates the readings."
+            },
+            "followersChange": {
+                "title": "Followers change",
+                "description": "Absolute follower change since the previous reading."
+            },
+            "trend": {
+                "title": "Trend",
+                "description": "up, down or flat, based on the monthly listener change."
+            },
+            "isFirstReading": {
+                "title": "First reading",
+                "description": "True when there was no previous reading to compare against."
+            },
+            "previousReadingAt": {
+                "title": "Previous reading at",
+                "description": "UTC timestamp of the reading this one was compared against."
+            },
+            "daysSincePreviousReading": {
+                "title": "Days since previous reading",
+                "description": "Elapsed days between the two readings."
+            },
+            "topTrackName": {
+                "title": "Top track",
+                "description": "The artist's most-played track."
+            },
+            "topTrackPlaycount": {
+                "title": "Top track play count",
+                "description": "Lifetime streams of that track. Spotify's official API never publishes this."
+            },
+            "topTracksTotalPlaycount": {
+                "title": "Top 10 total play count",
+                "description": "Combined lifetime streams across the ten listed top tracks."
+            },
+            "topTracks": {
+                "title": "Top tracks",
+                "description": "The ten most-played tracks, each with rank, play count, duration and links."
+            },
+            "albumCount": {
+                "title": "Albums",
+                "description": "Number of albums in the artist's discography."
+            },
+            "singleCount": {
+                "title": "Singles and EPs",
+                "description": "Number of singles and EPs in the artist's discography."
+            },
+            "compilationCount": {
+                "title": "Compilations",
+                "description": "Number of compilations in the artist's discography."
+            },
+            "latestReleaseName": {
+                "title": "Latest release",
+                "description": "Most recent release across albums, singles and compilations."
+            },
+            "latestReleaseDate": {
+                "title": "Latest release date",
+                "description": "Release date of that title. Spotify sometimes only publishes the year, in which case that is what appears."
+            },
+            "discoveredOnPlaylists": {
+                "title": "Discovered on",
+                "description": "Playlists Spotify says are bringing the artist new listeners, with owner and follower-facing links."
+            },
+            "discoveredOnCount": {
+                "title": "Discovery playlist count",
+                "description": "How many such playlists Spotify returned, after dropping the placeholder entries it pads the list with."
+            },
+            "featuredInPlaylists": {
+                "title": "Featured in",
+                "description": "Spotify playlists that feature the artist, including its own This Is series."
+            },
+            "relatedArtists": {
+                "title": "Related artists",
+                "description": "Artists Spotify considers similar, with ids and links."
+            },
+            "relatedArtistNames": {
+                "title": "Related artist names",
+                "description": "Just the names, for quick scanning."
+            },
+            "upcomingConcerts": {
+                "title": "Upcoming concerts",
+                "description": "Dates Spotify lists for the artist: title, start time, city, venue and whether it is a festival."
+            },
+            "upcomingConcertCount": {
+                "title": "Upcoming concert count",
+                "description": "How many upcoming dates were listed."
+            },
+            "socialLinks": {
+                "title": "Social links",
+                "description": "The artist's own Facebook, Instagram, Twitter, TikTok, YouTube and Wikipedia links, as published on their Spotify page."
+            },
+            "biography": {
+                "title": "Biography",
+                "description": "Artist biography, HTML stripped."
+            },
+            "avatarImage": {
+                "title": "Avatar image",
+                "description": "Largest artist portrait Spotify offers."
+            },
+            "headerImage": {
+                "title": "Header image",
+                "description": "Largest artist page banner Spotify offers."
+            },
+            "rank": {
+                "title": "Track rank",
+                "description": "TOP_TRACK rows: 1-10 position among the artist's most-played tracks."
+            },
+            "trackName": {
+                "title": "Track name",
+                "description": "TOP_TRACK rows: the song title."
+            },
+            "playcount": {
+                "title": "Play count",
+                "description": "TOP_TRACK rows: lifetime streams for that recording."
+            },
+            "duration": {
+                "title": "Duration",
+                "description": "TOP_TRACK rows: track length as m:ss."
+            },
+            "trackUrl": {
+                "title": "Track URL",
+                "description": "TOP_TRACK rows: open.spotify.com link to the track."
+            }
+        }
+    },
+    "views": {
+        "overview": {
+            "title": "Artists",
+            "transformation": {
+                "fields": [
+                    "artistName",
+                    "monthlyListeners",
+                    "monthlyListenersChange",
+                    "monthlyListenersChangePercent",
+                    "trend",
+                    "followers",
+                    "followersChange",
+                    "worldRank",
+                    "topCityNames",
+                    "latestReleaseName",
+                    "discoveredOnCount",
+                    "artistUrl"
+                ]
+            },
+            "display": {
+                "component": "table",
+                "properties": {
+                    "artistName": { "label": "Artist" },
+                    "monthlyListeners": { "label": "Monthly listeners" },
+                    "monthlyListenersChange": { "label": "Change" },
+                    "monthlyListenersChangePercent": { "label": "Change %" },
+                    "trend": { "label": "Trend" },
+                    "followers": { "label": "Followers" },
+                    "followersChange": { "label": "Follower change" },
+                    "worldRank": { "label": "World rank" },
+                    "topCityNames": { "label": "Top cities" },
+                    "latestReleaseName": { "label": "Latest release" },
+                    "discoveredOnCount": { "label": "Discovery lists" },
+                    "artistUrl": { "label": "Link" }
+                }
+            }
+        },
+        "tracks": {
+            "title": "Top tracks",
+            "transformation": {
+                "fields": [
+                    "artistName",
+                    "rank",
+                    "trackName",
+                    "playcount",
+                    "duration",
+                    "trackUrl"
+                ]
+            },
+            "display": {
+                "component": "table",
+                "properties": {
+                    "artistName": { "label": "Artist" },
+                    "rank": { "label": "#" },
+                    "trackName": { "label": "Track" },
+                    "playcount": { "label": "Plays" },
+                    "duration": { "label": "Length" },
+                    "trackUrl": { "label": "Link" }
+                }
+            }
+        }
+    }
+}

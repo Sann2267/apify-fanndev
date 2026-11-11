@@ -1,0 +1,209 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Creator record",
+        "description": "One record per creator. Fields are passed through from the source verbatim, so the exact metric set differs per platform (YouTube has subscribers/views/videos, TikTok has followers/likes/videos, Twitch has followers, Instagram has followers/engagement rate). Every record carries _input/_source/_scrapedAt, and _error/_errorDetail on failures. recordType discriminates CREATOR_PROFILE from TOP_CREATOR.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The handle, URL or leaderboard that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "S1-ssr, or none on failure."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp."
+            },
+            "recordType": {
+                "title": "Record type",
+                "description": "CREATOR_PROFILE | TOP_CREATOR."
+            },
+            "platform": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Platform",
+                "description": "youtube | tiktok | twitch | instagram."
+            },
+            "id": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Platform ID",
+                "description": "The creator's native platform ID (e.g. a YouTube channel ID)."
+            },
+            "displayName": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Display name",
+                "description": "Creator name as published."
+            },
+            "profileUrl": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Social Blade URL",
+                "description": "The page this record was read from."
+            },
+            "createdAt": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Created at",
+                "description": "When the channel/account was created."
+            },
+            "country": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Country",
+                "description": "Two-letter country code, when published."
+            },
+            "channelType": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Category",
+                "description": "Content category, e.g. entertainment."
+            },
+            "subscribers": {
+                "type": [
+                    "integer",
+                    "null"
+                ],
+                "title": "Subscribers",
+                "description": "YouTube -- subscriber count (rounded upstream)."
+            },
+            "views": {
+                "title": "Views",
+                "description": "YouTube -- lifetime view count."
+            },
+            "videos": {
+                "type": [
+                    "integer",
+                    "null"
+                ],
+                "title": "Videos",
+                "description": "Video/upload count."
+            },
+            "ranks": {
+                "title": "Ranks",
+                "description": "Social Blade rank object -- overall (sb) plus per-metric ranks, which differ per platform (subscribers/views/country/category on YouTube; followers/likes/videos on TikTok; followers on Twitch; followers/engagementRate on Instagram)."
+            },
+            "socials": {
+                "title": "Other socials",
+                "description": "Links the creator lists to their other platforms."
+            },
+            "description": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Description",
+                "description": "Channel description."
+            },
+            "avatar": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Avatar",
+                "description": "Profile image URL."
+            },
+            "banner": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Banner",
+                "description": "Channel banner URL."
+            },
+            "madeForKids": {
+                "type": [
+                    "boolean",
+                    "null"
+                ],
+                "title": "Made for kids",
+                "description": "YouTube -- kids-content flag."
+            },
+            "history": {
+                "title": "Daily history",
+                "description": "Up to 15 recent daily rows. Metrics per row follow the platform (subscribers/views/videos, or followers/likes, ...). Instagram profiles carry no history in the public payload."
+            },
+            "historyDays": {
+                "type": [
+                    "integer",
+                    "null"
+                ],
+                "title": "History days",
+                "description": "How many daily rows were returned."
+            },
+            "listRank": {
+                "type": [
+                    "integer",
+                    "null"
+                ],
+                "title": "Leaderboard rank",
+                "description": "top mode -- position in the returned leaderboard."
+            },
+            "_error": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Error",
+                "description": "Present only on failures (not_found, unsupported_platform, blocked_or_transient)."
+            },
+            "_errorDetail": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across profile and leaderboard records.",
+            "transformation": {
+                "fields": [
+                    "recordType",
+                    "platform",
+                    "displayName",
+                    "country",
+                    "channelType",
+                    "subscribers",
+                    "views",
+                    "videos",
+                    "ranks",
+                    "historyDays",
+                    "listRank",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

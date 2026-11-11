@@ -1,0 +1,14 @@
+{
+    "actorSpecification": 1,
+    "name": "twitch-analytics-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Twitch Streamer & Channel Analytics",
+    "description": "Trending games/categories, global top live streams, top channels within a category, and per-channel trending-rank lookup -- no account or API key needed.",
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

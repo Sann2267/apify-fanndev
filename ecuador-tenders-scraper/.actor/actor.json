@@ -1,0 +1,14 @@
+{
+    "actorSpecification": 1,
+    "name": "ecuador-tenders-scraper",
+    "version": "0.1",
+    "buildTag": "latest",
+    "title": "Ecuador Government Tenders Scraper (SERCOP OCDS)",
+    "description": "Scrapes Ecuador's official Servicio Nacional de Contratacion Publica (SERCOP) open-data OCDS platform -- search public procurement processes by keyword and year, and fetch full OCDS (Open Contracting Data Standard) release history for any record. No account or login needed.",
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

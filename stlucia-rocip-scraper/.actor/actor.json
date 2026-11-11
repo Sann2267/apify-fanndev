@@ -1,0 +1,14 @@
+{
+    "actorSpecification": 1,
+    "name": "stlucia-rocip-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Saint Lucia ROCIP Business Registry Scraper",
+    "description": "Search Saint Lucia's official Registry of Companies and Intellectual Property (ROCIP) by company/business name, registration number, or director/shareholder surname. Returns registration status, dates, address, directors, and secretaries for every match. No account or API key needed.",
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

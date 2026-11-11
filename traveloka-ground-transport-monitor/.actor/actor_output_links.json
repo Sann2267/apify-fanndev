@@ -1,0 +1,15 @@
+{
+    "actorOutputSchemaVersion": 1,
+    "properties": {
+        "departuresView": {
+            "type": "string",
+            "title": "Departures",
+            "template": "{{links.apifyConsoleUrl}}/storage/datasets/{{defaultDatasetId}}?view=departures"
+        },
+        "routesView": {
+            "type": "string",
+            "title": "Route summaries",
+            "template": "{{links.apifyConsoleUrl}}/storage/datasets/{{defaultDatasetId}}?view=routes"
+        }
+    }
+}

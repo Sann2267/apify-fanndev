@@ -1,0 +1,14 @@
+{
+    "actorSpecification": 1,
+    "name": "png-tenders-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Papua New Guinea Government Tenders Scraper",
+    "description": "Scrapes Papua New Guinea's official National Procurement Commission (NPC) site for open tenders, asset-disposal notices, and awarded-contract records -- reference numbers, closing dates, procuring agencies, contract values, and PDF advert links. No account or API key needed.",
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

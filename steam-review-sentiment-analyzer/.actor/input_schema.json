@@ -1,0 +1,247 @@
+{
+    "title": "Steam Review & Sentiment Analyzer",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "mode": {
+            "title": "What to extract",
+            "type": "string",
+            "editor": "select",
+            "default": "summary",
+            "enum": [
+                "summary",
+                "reviews",
+                "history",
+                "languages",
+                "userReviews"
+            ],
+            "enumTitles": [
+                "Sentiment report per game (score, trend, review bombs, languages, playtime, keywords)",
+                "Individual reviews (full text + text sentiment)",
+                "Review history over time (monthly + last 30 days)",
+                "Sentiment by language (all 30 Steam languages)",
+                "Reviews written by a Steam user"
+            ],
+            "description": "<b>summary</b>: one sentiment report per game. <b>reviews</b>: every review with its text. <b>history</b>: positive/negative counts per month and per day for the last 30 days, with review-bomb flags. <b>languages</b>: score per review language. <b>userReviews</b>: all reviews a Steam user has published."
+        },
+        "apps": {
+            "title": "Games",
+            "type": "array",
+            "editor": "stringList",
+            "prefill": [
+                "1091500",
+                "https://store.steampowered.com/app/553850/HELLDIVERS_2/",
+                "Stardew Valley"
+            ],
+            "description": "Steam app IDs, store/community URLs, or game names (a name is matched to the first Steam search result). Used by summary, reviews, history and languages."
+        },
+        "steamUsers": {
+            "title": "Steam users",
+            "type": "array",
+            "editor": "stringList",
+            "prefill": [
+                "https://steamcommunity.com/profiles/76561198112703551"
+            ],
+            "description": "Profile URLs (steamcommunity.com/id/... or /profiles/...), SteamID64s or custom URL names. Used by userReviews. Private profiles return a 'private_profile' row."
+        },
+        "maxReviewsPerApp": {
+            "title": "Max reviews per game / user",
+            "type": "integer",
+            "default": 500,
+            "minimum": 1,
+            "prefill": 200,
+            "description": "Cap for the reviews and userReviews modes. Steam serves 100 reviews per request, so 1,000 reviews = 10 requests."
+        },
+        "sortBy": {
+            "title": "Review order",
+            "type": "string",
+            "editor": "select",
+            "default": "recent",
+            "enum": [
+                "recent",
+                "updated",
+                "all"
+            ],
+            "enumTitles": [
+                "Newest first (complete - reaches every review)",
+                "Recently updated first",
+                "Most helpful (only reviews from the last 1-365 days)"
+            ],
+            "description": "Newest first is the only order that walks the WHOLE review history. 'Most helpful' is limited by Steam to reviews posted in the last <i>Most-helpful window</i> days."
+        },
+        "language": {
+            "title": "Review language",
+            "type": "string",
+            "editor": "select",
+            "default": "all",
+            "enum": [
+                "all",
+                "english",
+                "schinese",
+                "tchinese",
+                "russian",
+                "brazilian",
+                "portuguese",
+                "spanish",
+                "latam",
+                "german",
+                "french",
+                "japanese",
+                "koreana",
+                "polish",
+                "turkish",
+                "italian",
+                "ukrainian",
+                "czech",
+                "thai",
+                "vietnamese",
+                "indonesian",
+                "dutch",
+                "swedish",
+                "danish",
+                "finnish",
+                "norwegian",
+                "hungarian",
+                "romanian",
+                "greek",
+                "bulgarian",
+                "arabic"
+            ],
+            "description": "Only reviews written in this language (reviews mode and the summary's review sample). Text sentiment is computed for English reviews only."
+        },
+        "purchaseType": {
+            "title": "Purchase type",
+            "type": "string",
+            "editor": "select",
+            "default": "all",
+            "enum": [
+                "all",
+                "steam",
+                "non_steam_purchase"
+            ],
+            "enumTitles": [
+                "All (Steam + key activations)",
+                "Steam purchases only (what the store score counts)",
+                "Key activations only"
+            ],
+            "description": "Steam's store score counts Steam purchases only; key buyers can add 10-40% more reviews."
+        },
+        "reviewType": {
+            "title": "Positive / negative",
+            "type": "string",
+            "editor": "select",
+            "default": "all",
+            "enum": [
+                "all",
+                "positive",
+                "negative"
+            ],
+            "description": "Reviews mode only."
+        },
+        "startDate": {
+            "title": "Reviews posted from",
+            "type": "string",
+            "editor": "datepicker",
+            "dateType": "absolute",
+            "description": "YYYY-MM-DD. With 'Newest first' the scan stops as soon as it passes this date, so incremental runs are cheap."
+        },
+        "endDate": {
+            "title": "Reviews posted until",
+            "type": "string",
+            "editor": "datepicker",
+            "dateType": "absolute",
+            "description": "YYYY-MM-DD, inclusive."
+        },
+        "minPlaytimeHours": {
+            "title": "Min playtime (hours)",
+            "type": "integer",
+            "minimum": 0,
+            "description": "Only reviews whose author had at least this many hours in the game when reviewing."
+        },
+        "maxPlaytimeHours": {
+            "title": "Max playtime (hours)",
+            "type": "integer",
+            "minimum": 0,
+            "description": "Only reviews written with at most this many hours played."
+        },
+        "helpfulDayRange": {
+            "title": "Most-helpful window (days)",
+            "type": "integer",
+            "default": 365,
+            "minimum": 1,
+            "maximum": 365,
+            "description": "Only for 'Most helpful' order. Steam caps it at 365."
+        },
+        "includeOffTopicReviews": {
+            "title": "Include off-topic review activity",
+            "type": "boolean",
+            "default": false,
+            "description": "Steam hides reviews from periods it flagged as off-topic (review bombs). Turn on to include them."
+        },
+        "textSentiment": {
+            "title": "Text sentiment score",
+            "type": "boolean",
+            "default": true,
+            "description": "Adds a VADER sentiment score to each English review and flags reviews whose text contradicts their thumbs up/down."
+        },
+        "sampleSize": {
+            "title": "Summary: reviews to analyse",
+            "type": "integer",
+            "default": 300,
+            "minimum": 0,
+            "maximum": 5000,
+            "description": "Summary mode reads this many newest reviews to compute playtime, Steam Deck, refund and keyword breakdowns. 0 = totals and trend only."
+        },
+        "languages": {
+            "title": "Summary / languages: language list",
+            "type": "array",
+            "editor": "stringList",
+            "description": "Languages to break down. Empty = 11 biggest languages for summary, all 30 for the languages mode."
+        },
+        "country": {
+            "title": "Store country",
+            "type": "string",
+            "default": "us",
+            "description": "Two-letter country code for prices and name search.",
+            "editor": "textfield"
+        },
+        "maxConcurrency": {
+            "title": "Parallel games",
+            "type": "integer",
+            "default": 3,
+            "minimum": 1,
+            "maximum": 10,
+            "sectionCaption": "Advanced",
+            "description": "How many games/users are processed in parallel. Without a proxy they share one IP and one rate-limit budget, so more parallelism does not speed things up."
+        },
+        "maxRetries": {
+            "title": "Max retries per request",
+            "type": "integer",
+            "default": 8,
+            "minimum": 1,
+            "maximum": 20,
+            "description": "Retries per request on rate limits, server errors or network failures, with exponential backoff."
+        },
+        "proxyConfiguration": {
+            "title": "Proxy",
+            "type": "object",
+            "editor": "proxy",
+            "default": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": [
+                    "RESIDENTIAL"
+                ]
+            },
+            "prefill": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": [
+                    "RESIDENTIAL"
+                ]
+            },
+            "description": "Steam has no bot wall but rate-limits each IP (~46 review requests/min). A proxy gives every game its own IP and swaps it on a rate limit, so big jobs finish much faster. Without one the actor still works, just paced."
+        }
+    },
+    "required": [
+        "mode"
+    ]
+}

@@ -1,0 +1,17 @@
+{
+    "actorSpecification": 1,
+    "name": "traveloka-flight-price-tracker",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Traveloka Flight Price Tracker",
+    "description": "Track Traveloka flight fares for any route: the cheapest fare per month for the next 12 months plus a departure-by-return date grid, with a price-alert threshold flag for webhooks. HTTP-only, no browser.",
+    "categories": [
+        "TRAVEL"
+    ],
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

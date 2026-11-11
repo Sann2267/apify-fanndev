@@ -1,0 +1,23 @@
+{
+    "title": "Traveloka Surface Probe",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "proxyMode": {
+            "title": "Proxy mode",
+            "type": "string",
+            "description": "Which proxy configuration to probe Traveloka through.",
+            "editor": "select",
+            "enum": ["residential-id", "residential-sg", "none"],
+            "default": "residential-id"
+        },
+        "rounds": {
+            "title": "Rounds",
+            "type": "integer",
+            "description": "How many independent proxy sessions to probe with.",
+            "default": 2,
+            "minimum": 1,
+            "maximum": 5
+        }
+    }
+}

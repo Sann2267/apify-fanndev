@@ -1,0 +1,62 @@
+{
+    "title": "Malay Mail Scraper",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "mode": {
+            "title": "Mode",
+            "type": "string",
+            "editor": "select",
+            "description": "\"article\" extracts one or more article URLs. \"latest\" fetches the newest headlines from the site-wide RSS feed.",
+            "enum": ["article", "latest"],
+            "enumTitles": ["Article", "Latest headlines"],
+            "default": "article",
+            "prefill": "article"
+        },
+        "url": {
+            "title": "Article URL",
+            "type": "string",
+            "editor": "textfield",
+            "description": "A single malaymail.com article URL to extract. Used when mode is \"article\".",
+            "prefill": "https://www.malaymail.com/news/malaysia/2026/08/26/bmw-driver-dies-after-crashing-into-parked-cars-in-bukit-mertajam-two-others-hurt/232658"
+        },
+        "urls": {
+            "title": "Article URLs",
+            "type": "array",
+            "editor": "stringList",
+            "description": "Multiple malaymail.com article URLs to extract in one run. Used when mode is \"article\"."
+        },
+        "limit": {
+            "title": "Max headlines (latest mode)",
+            "type": "integer",
+            "description": "Maximum number of headlines to return in \"latest\" mode. The feed carries 50 items per fetch.",
+            "default": 10,
+            "minimum": 1,
+            "maximum": 50,
+            "prefill": 10
+        },
+        "maxConcurrency": {
+            "title": "Max concurrent workers",
+            "type": "integer",
+            "description": "How many article pages to fetch in parallel in \"article\" mode.",
+            "default": 4,
+            "minimum": 1,
+            "maximum": 16,
+            "prefill": 4
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "editor": "proxy",
+            "description": "Apify Proxy configuration. Residential is on by default.",
+            "default": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            },
+            "prefill": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            }
+        }
+    }
+}

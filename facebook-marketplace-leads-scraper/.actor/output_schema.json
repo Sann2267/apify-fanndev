@@ -1,0 +1,248 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Facebook Marketplace listing record",
+        "description": "Dataset envelope (_input / _source / _scrapedAt / recordType) on top of one listing per row. One LISTING row per listing, one RUN_SUMMARY per run, ERROR rows when a query returns nothing. Facebook changes its payload without notice, so unlisted fields pass through rather than failing the run.",
+        "additionalProperties": true,
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The query this record came from, as '<city> / <category>' or '<city> / search:<term>'."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source",
+                "description": "Always marketplace."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was emitted."
+            },
+            "recordType": {
+                "type": "string",
+                "title": "Record type",
+                "description": "LISTING, RUN_SUMMARY or ERROR."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Failure rows only: feed_unavailable, listing_unavailable or unexpected_error."
+            },
+            "listingId": {
+                "title": "Listing ID",
+                "description": "Facebook's id for the listing."
+            },
+            "listingUrl": {
+                "title": "Listing URL",
+                "description": "Direct link to the Marketplace item."
+            },
+            "title": {
+                "title": "Title",
+                "description": "The listing title as Facebook renders it."
+            },
+            "customTitle": {
+                "title": "Seller's title",
+                "description": "The title the seller typed, where it differs from the rendered one."
+            },
+            "priceText": {
+                "title": "Price (as shown)",
+                "description": "Formatted price, e.g. '$200,000'."
+            },
+            "priceAmount": {
+                "title": "Price",
+                "description": "Numeric price, for sorting and filtering."
+            },
+            "currency": {
+                "title": "Currency",
+                "description": "ISO currency code. Published on the listing page only, so it requires 'Also open each listing page'."
+            },
+            "city": {
+                "title": "City",
+                "description": "City the listing is posted in."
+            },
+            "state": {
+                "title": "State / region",
+                "description": "State or region, where Facebook publishes one."
+            },
+            "locationText": {
+                "title": "Location",
+                "description": "Human-readable location, e.g. 'Hayward, California'."
+            },
+            "postalCode": {
+                "title": "Postal code",
+                "description": "Detail pages only."
+            },
+            "latitude": {
+                "title": "Latitude",
+                "description": "Detail pages only. Facebook publishes an approximate point, not the seller's address."
+            },
+            "longitude": {
+                "title": "Longitude",
+                "description": "Detail pages only."
+            },
+            "createdAtIso": {
+                "title": "Listed at",
+                "description": "ISO 8601 UTC timestamp the listing was created."
+            },
+            "ageDays": {
+                "title": "Age (days)",
+                "description": "How long the listing has been up."
+            },
+            "condition": {
+                "title": "Condition",
+                "description": "NEW / USED / and similar. Detail pages only."
+            },
+            "description": {
+                "title": "Description",
+                "description": "The seller's description. Detail pages only - the feed carries none at all."
+            },
+            "sellerName": {
+                "title": "Seller name",
+                "description": "Always null on a logged-out request: Facebook withholds the seller's identity from signed-out visitors, on both the feed and the listing page. Reported as null rather than omitted so the absence is visible."
+            },
+            "sellerId": {
+                "title": "Seller ID",
+                "description": "Always null on a logged-out request, for the same reason as sellerName."
+            },
+            "subtitles": {
+                "title": "Attributes",
+                "description": "Facebook's free-text attribute line, e.g. ['50K miles'] or ['3 beds', '2 bathrooms']."
+            },
+            "vehicleMileage": {
+                "title": "Mileage",
+                "description": "Parsed from the attribute line, which is the only place the feed publishes it."
+            },
+            "vehicleYear": {
+                "title": "Vehicle year",
+                "description": "Parsed from the listing title."
+            },
+            "vehicleMake": {
+                "title": "Make",
+                "description": "Detail pages only."
+            },
+            "vehicleModel": {
+                "title": "Model",
+                "description": "Detail pages only."
+            },
+            "bedrooms": {
+                "title": "Bedrooms",
+                "description": "Parsed from the attribute line on property listings."
+            },
+            "bathrooms": {
+                "title": "Bathrooms",
+                "description": "Parsed from the attribute line on property listings."
+            },
+            "deliveryTypes": {
+                "title": "Delivery",
+                "description": "IN_PERSON, SHIPPING and similar."
+            },
+            "isSold": {
+                "title": "Sold",
+                "description": "Whether Facebook marks the listing as sold."
+            },
+            "photoUrl": {
+                "title": "Photo URL",
+                "description": "Primary listing photo. A signed CDN link that expires."
+            },
+            "queryCity": {
+                "title": "Query city",
+                "description": "The city slug this row was found under."
+            },
+            "querySearch": {
+                "title": "Query search",
+                "description": "The search term this row was found with, if any."
+            },
+            "searchUrl": {
+                "title": "Search URL",
+                "description": "The Marketplace URL this row came from - open it to see the same results in a browser."
+            }
+        }
+    },
+    "views": {
+        "overview": {
+            "title": "Listings",
+            "description": "One row per listing: what, how much, where and how old.",
+            "transformation": {
+                "fields": [
+                    "title",
+                    "priceText",
+                    "city",
+                    "state",
+                    "ageDays",
+                    "createdAtIso",
+                    "isSold",
+                    "listingUrl",
+                    "recordType",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        },
+        "vehicles": {
+            "title": "Vehicles",
+            "description": "Vehicle-specific columns for car and motorcycle listings.",
+            "transformation": {
+                "fields": [
+                    "title",
+                    "vehicleYear",
+                    "vehicleMake",
+                    "vehicleModel",
+                    "vehicleMileage",
+                    "condition",
+                    "priceAmount",
+                    "city",
+                    "ageDays",
+                    "listingUrl"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        },
+        "property": {
+            "title": "Property",
+            "description": "Bedrooms, bathrooms and location for property listings.",
+            "transformation": {
+                "fields": [
+                    "title",
+                    "bedrooms",
+                    "bathrooms",
+                    "priceAmount",
+                    "locationText",
+                    "postalCode",
+                    "ageDays",
+                    "listingUrl"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        },
+        "detail": {
+            "title": "With descriptions",
+            "description": "The fields that only exist on the listing page.",
+            "transformation": {
+                "fields": [
+                    "title",
+                    "priceText",
+                    "currency",
+                    "condition",
+                    "description",
+                    "latitude",
+                    "longitude",
+                    "postalCode",
+                    "listingUrl"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

@@ -1,0 +1,110 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Article / latest-headline record",
+        "description": "Every record carries _input/_source/_scrapedAt (failed URLs are not written to the dataset -- they are reported in the ERRORS record of the run's key-value store). Article-mode records (S1-html) spread the page's NewsArticle JSON-LD block verbatim (headline, description, datePublished, dateModified, author, publisher, image, url, mainEntityOfPage, copyrightYear) but that block carries no articleBody, so articleBody is scraped separately from div.story__content paragraphs and added on top. Latest-mode records (S2-sitemap) come from the Google-News-flavored XML sitemap at /feeds/sitemap (brecorder.com has no RSS/Atom feed) -- only title/link/publicationDate/language, re-sorted newest-first by the numeric article ID in the URL since sitemap order isn't strictly chronological. Upstream JSON-LD is passed through close to verbatim, so extra schema.org fields beyond those listed here may also appear.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The exact input value (URL, or 'latest'/'latest:<section>') that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which extraction strategy emitted this record (S1-html or S2-sitemap)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "headline": {
+                "title": "Headline",
+                "description": "Article headline (raw passthrough from JSON-LD NewsArticle; HTML entities unescaped)."
+            },
+            "description": {
+                "title": "Description",
+                "description": "Short article description/dek (HTML entities unescaped)."
+            },
+            "articleBody": {
+                "title": "Article body",
+                "description": "Full article text, scraped separately from div.story__content > p paragraphs (not present in the JSON-LD block)."
+            },
+            "datePublished": {
+                "title": "Date published",
+                "description": "ISO 8601 publish date."
+            },
+            "dateModified": {
+                "title": "Date modified",
+                "description": "ISO 8601 last-modified date."
+            },
+            "author": {
+                "title": "Author",
+                "description": "List of Person objects as emitted by upstream JSON-LD (raw passthrough)."
+            },
+            "publisher": {
+                "title": "Publisher",
+                "description": "Publisher Organization object."
+            },
+            "image": {
+                "title": "Image",
+                "description": "Lead image object."
+            },
+            "url": {
+                "title": "URL",
+                "description": "Canonical article URL, as emitted upstream."
+            },
+            "mainEntityOfPage": {
+                "title": "Main entity of page",
+                "description": "Canonical WebPage reference."
+            },
+            "copyrightYear": {
+                "title": "Copyright year",
+                "description": "Copyright year, as emitted upstream."
+            },
+            "title": {
+                "title": "Title",
+                "description": "Article title from the sitemap's news:title field (latest mode)."
+            },
+            "link": {
+                "title": "Link",
+                "description": "Article URL, from the sitemap's <loc> (latest mode)."
+            },
+            "publicationDate": {
+                "title": "Publication date",
+                "description": "Date-only publish date from the sitemap's news:publication_date field, no time component (latest mode)."
+            },
+            "language": {
+                "title": "Language",
+                "description": "Article language code from the sitemap's news:language field (latest mode)."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across both article and latest-headline records.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "_source",
+                    "_scrapedAt",
+                    "headline",
+                    "title",
+                    "link",
+                    "datePublished",
+                    "publicationDate",
+                    "author"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

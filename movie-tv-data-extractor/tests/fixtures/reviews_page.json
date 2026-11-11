@@ -1,0 +1,36 @@
+{
+  "id": 27205,
+  "page": 1,
+  "results": [
+    {
+      "author": "Cat Ellington",
+      "author_details": {
+        "name": "Cat Ellington",
+        "username": "CatEllington",
+        "avatar_path": "/xy7Fm5Ivy5fIbEHfGJXSCZvWXVT.jpg",
+        "rating": 9
+      },
+      "content": "<em>Inception</em> is a film that&#39;s as clever as it is beautiful.\r\n\r\nNolan built a heist movie out of dream logic.",
+      "created_at": "2018-06-24T17:45:00.746Z",
+      "id": "5b2fc1dcc3a3683d9c00cd4e",
+      "updated_at": "2021-06-23T15:58:08.905Z",
+      "url": "https://www.themoviedb.org/review/5b2fc1dcc3a3683d9c00cd4e"
+    },
+    {
+      "author": "gravatar_user",
+      "author_details": {
+        "name": "",
+        "username": "gravatar_user",
+        "avatar_path": "/https://secure.gravatar.com/avatar/abc123.jpg",
+        "rating": null
+      },
+      "content": "Overrated.",
+      "created_at": "2020-01-02T10:00:00.000Z",
+      "id": "5e0dc0b4c3a3683d9c00cd99",
+      "updated_at": "2020-01-02T10:00:00.000Z",
+      "url": "https://www.themoviedb.org/review/5e0dc0b4c3a3683d9c00cd99"
+    }
+  ],
+  "total_pages": 1,
+  "total_results": 2
+}

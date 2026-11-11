@@ -1,0 +1,174 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Facebook page review record",
+        "description": "Dataset envelope (_input / _source / _scrapedAt / recordType) on top of the page's rating and its reviews. One PAGE_RATING row per page, one REVIEW row per review, one RUN_SUMMARY per run, ERROR rows when a page cannot be read. Facebook changes its payload without notice, so unlisted fields pass through rather than failing the run.",
+        "additionalProperties": true,
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The page slug this record answers for."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source",
+                "description": "Always page-reviews-tab."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was emitted."
+            },
+            "recordType": {
+                "type": "string",
+                "title": "Record type",
+                "description": "PAGE_RATING, REVIEW, RUN_SUMMARY or ERROR."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Failure rows only: page_unavailable or unexpected_error."
+            },
+            "slug": {
+                "title": "Slug",
+                "description": "The page's vanity slug."
+            },
+            "pageName": {
+                "title": "Page name",
+                "description": "Display name of the page."
+            },
+            "pageUrl": {
+                "title": "Page URL",
+                "description": "Canonical page URL."
+            },
+            "ratingSummaryText": {
+                "title": "Rating summary",
+                "description": "Facebook's own sentence, e.g. '30% recommend (12,651 reviews)'. Kept verbatim next to the parsed numbers."
+            },
+            "recommendPercent": {
+                "title": "Recommend (%)",
+                "description": "Percentage of reviewers who recommend the page. Facebook retired star ratings for pages, so this IS the rating - there is no 4.3-out-of-5 to report and this actor does not invent one."
+            },
+            "reviewCount": {
+                "title": "Total reviews",
+                "description": "How many reviews the page has in total, which is usually far more than a run collects."
+            },
+            "reviewsEnabled": {
+                "title": "Reviews switched on",
+                "description": "False when the page shows no recommendation summary, i.e. reviews are turned off. The run then legitimately collects nothing."
+            },
+            "reviewsCollected": {
+                "title": "Reviews collected",
+                "description": "How many reviews this run kept for the page, after filters."
+            },
+            "reviewId": {
+                "title": "Review ID",
+                "description": "REVIEW rows: the review's post id."
+            },
+            "reviewerName": {
+                "title": "Reviewer",
+                "description": "Name of the person who left the review."
+            },
+            "reviewerId": {
+                "title": "Reviewer ID",
+                "description": "Facebook id of the reviewer. Newer accounts appear as an opaque pfbid token rather than a number."
+            },
+            "isRecommended": {
+                "title": "Recommends",
+                "description": "True, false, or null when the sentence Facebook rendered could not be read. Null is never silently turned into false."
+            },
+            "reviewTitle": {
+                "title": "Recommend sentence",
+                "description": "Facebook's own line above the review, e.g. \"Mike Phipps doesn't recommend Domino's Pizza.\" - the only place the vote appears in the payload."
+            },
+            "reviewText": {
+                "title": "Review text",
+                "description": "The written review. Null when the reviewer voted without writing anything."
+            },
+            "tags": {
+                "title": "Experience tags",
+                "description": "Facebook's structured tags on the review, e.g. ['Disappointing food', 'Casual']."
+            },
+            "createdAtIso": {
+                "title": "Posted at",
+                "description": "ISO 8601 UTC timestamp of the review."
+            },
+            "reactionCount": {
+                "title": "Reactions",
+                "description": "Reactions on the review post."
+            },
+            "commentCount": {
+                "title": "Comments",
+                "description": "Comments on the review post, including any reply from the business."
+            },
+            "reviewUrl": {
+                "title": "Review URL",
+                "description": "Permalink to the review post."
+            }
+        }
+    },
+    "views": {
+        "overview": {
+            "title": "Reviews",
+            "description": "One row per review: who, what, when and which way they voted.",
+            "transformation": {
+                "fields": [
+                    "pageName",
+                    "reviewerName",
+                    "isRecommended",
+                    "reviewText",
+                    "tags",
+                    "createdAtIso",
+                    "reactionCount",
+                    "commentCount",
+                    "reviewUrl",
+                    "recordType",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        },
+        "ratings": {
+            "title": "Page ratings",
+            "description": "One row per page: the headline rating and how much of it this run sampled.",
+            "transformation": {
+                "fields": [
+                    "slug",
+                    "pageName",
+                    "ratingSummaryText",
+                    "recommendPercent",
+                    "reviewCount",
+                    "reviewsCollected",
+                    "reviewsEnabled",
+                    "pageUrl"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        },
+        "complaints": {
+            "title": "Complaints",
+            "description": "Negative reviews with their text and tags - the view a brand manager wants.",
+            "transformation": {
+                "fields": [
+                    "pageName",
+                    "reviewerName",
+                    "reviewText",
+                    "tags",
+                    "createdAtIso",
+                    "commentCount",
+                    "reviewUrl"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

@@ -1,0 +1,174 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "ARMP Madagascar tender record",
+        "description": "One record per row. Shape depends on recordType: TENDER_AVIS (listType=avis, a live call for tender), TENDER_DOSSIER (listType=dossiers, an archived procurement dossier), or TENDER_CONTRAT (listType=contrats, an awarded contract -- raw passthrough of upstream's own field names/casing). A single _error record is emitted instead of payload fields when a page/query fails or is unreachable.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "Which list this record came from: 'list:avis', 'list:dossiers', or 'list:contrats'."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which extraction strategy emitted this record (S1-index-by-region, S1-dossier-archive-search, S1-contrat-action-json, or 'none' on error)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on a failed run (blocked_or_transient)."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "recordType": {
+                "type": "string",
+                "title": "Record type",
+                "description": "TENDER_AVIS, TENDER_DOSSIER, or TENDER_CONTRAT."
+            },
+            "region": {
+                "title": "Region",
+                "description": "TENDER_AVIS only -- one of Madagascar's administrative regions, e.g. 'CENTRALE', 'ANALAMANGA'."
+            },
+            "entite": {
+                "title": "Procuring entity",
+                "description": "TENDER_AVIS only -- the government body running this procurement."
+            },
+            "reference": {
+                "title": "Reference",
+                "description": "TENDER_AVIS / TENDER_DOSSIER -- the procuring entity's own tender reference number."
+            },
+            "modePassation": {
+                "title": "Procurement mode (code)",
+                "description": "TENDER_AVIS only -- short procurement-mode code, e.g. 'ACO', 'CPX'."
+            },
+            "numero": {
+                "title": "Dossier number",
+                "description": "TENDER_AVIS / TENDER_DOSSIER -- ARMP's internal dossier number, e.g. '2600188-3CPX001'."
+            },
+            "objet": {
+                "title": "Objet (title)",
+                "description": "TENDER_AVIS / TENDER_DOSSIER -- what is being procured."
+            },
+            "dateDu": {
+                "title": "Open date",
+                "description": "TENDER_AVIS only -- bid submission opening date (YYYY-MM-DD)."
+            },
+            "dateAu": {
+                "title": "Close date",
+                "description": "TENDER_AVIS only -- bid submission deadline (YYYY-MM-DD)."
+            },
+            "noticePdfUrl": {
+                "title": "Notice PDF URL",
+                "description": "TENDER_AVIS only -- link to the official 'avis' notice document (ASAPC PDF)."
+            },
+            "institution": {
+                "title": "Institution",
+                "description": "TENDER_DOSSIER only -- the procuring government body."
+            },
+            "modePassationLabel": {
+                "title": "Procurement mode (label)",
+                "description": "TENDER_DOSSIER only -- full French procurement-mode label, e.g. 'Consultation de Prix par voie d`affichage'."
+            },
+            "natureMarche": {
+                "title": "Nature of contract",
+                "description": "TENDER_DOSSIER only -- e.g. 'Fournitures', 'Prestations de service', 'Travaux'."
+            },
+            "dateDossier": {
+                "title": "Dossier date",
+                "description": "TENDER_DOSSIER only -- the dossier's own registration date (dd/mm/yyyy), from its detail view."
+            },
+            "financement": {
+                "title": "Financing source",
+                "description": "TENDER_DOSSIER only -- e.g. 'RPI' (Ressources Propres Internes/domestic budget), from the dossier's detail view."
+            },
+            "prmpNom": {
+                "title": "PRMP officer name",
+                "description": "TENDER_DOSSIER / TENDER_CONTRAT (as PRMP_NOM) -- name of the Personne Responsable des Marches Publics (procurement officer) overseeing this dossier/contract."
+            },
+            "ENTITE_LIBELLE": {
+                "title": "Entity name",
+                "description": "TENDER_CONTRAT only -- name of the procuring government body."
+            },
+            "ENT_CAT_LIBELLE": {
+                "title": "Entity category",
+                "description": "TENDER_CONTRAT only -- e.g. 'MINISTERE', 'ETABLISSEMENT PUBLIC', 'SOCIETE D'ETAT'."
+            },
+            "TYPE_MARCHE_LIBELLE": {
+                "title": "Contract type",
+                "description": "TENDER_CONTRAT only -- e.g. 'Fournitures', 'Travaux'."
+            },
+            "MODE_PASS_LIBELLE": {
+                "title": "Procurement mode",
+                "description": "TENDER_CONTRAT only -- e.g. 'APPEL D'OFFRE OUVERT INTERNATIONAL'."
+            },
+            "CONTRAT_CODE": {
+                "title": "Contract number",
+                "description": "TENDER_CONTRAT only -- ARMP's internal contract number."
+            },
+            "CONTRAT_OBJET": {
+                "title": "Contract object",
+                "description": "TENDER_CONTRAT only -- what was procured."
+            },
+            "MTT_TTC": {
+                "title": "Contract amount",
+                "description": "TENDER_CONTRAT only -- total contract amount (tax included), raw text as returned upstream, e.g. '848113200.00'."
+            },
+            "UNITE_MONNAIE": {
+                "title": "Currency",
+                "description": "TENDER_CONTRAT only -- almost always 'MGA' (Malagasy ariary)."
+            },
+            "TITULAIRE_NIF": {
+                "title": "Supplier tax ID (NIF)",
+                "description": "TENDER_CONTRAT only -- the winning supplier's Malagasy tax identification number."
+            },
+            "TITULAIRE_NOM": {
+                "title": "Supplier name",
+                "description": "TENDER_CONTRAT only -- the winning bidder's name."
+            },
+            "BENEFICIAIRE_EFFECTIF": {
+                "title": "Declared beneficial owner(s)",
+                "description": "TENDER_CONTRAT only -- the supplier's declared beneficial owner(s), semicolon-separated when more than one."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across all record types -- rows missing a given column render blank.",
+            "transformation": {
+                "fields": [
+                    "recordType",
+                    "numero",
+                    "CONTRAT_CODE",
+                    "objet",
+                    "CONTRAT_OBJET",
+                    "entite",
+                    "institution",
+                    "ENTITE_LIBELLE",
+                    "TITULAIRE_NOM",
+                    "MTT_TTC",
+                    "UNITE_MONNAIE",
+                    "dateAu",
+                    "_error",
+                    "_scrapedAt"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

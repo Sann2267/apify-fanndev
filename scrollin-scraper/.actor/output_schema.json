@@ -1,0 +1,113 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Article / latest-headline record",
+        "description": "Raw-passthrough dataset envelope. Every record carries _input/_source/_scrapedAt (and _error/_errorDetail on failures). Article-mode records (S1-jsonld+html) are a near-verbatim spread of the page's NewsArticle JSON-LD block plus an articleBody field assembled from the page's HTML body container (scroll.in's JSON-LD never carries articleBody itself), so extra schema.org fields beyond those listed here may appear. Latest-mode records (S2-sitemap) carry title/link-style fields from the Google News sitemap.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The exact input value (URL, or 'latest') that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which extraction strategy emitted this record (S1-jsonld+html or S2-sitemap)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed extractions -- the error kind."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "headline": {
+                "title": "Headline",
+                "description": "Article headline (raw passthrough from JSON-LD NewsArticle)."
+            },
+            "description": {
+                "title": "Description",
+                "description": "Short article description/dek (article-mode from JSON-LD)."
+            },
+            "articleBody": {
+                "title": "Article body",
+                "description": "Full article text, assembled from the page's HTML article-body container (direct-child <p> tags) since scroll.in's JSON-LD NewsArticle block does not carry articleBody."
+            },
+            "datePublished": {
+                "title": "Date published",
+                "description": "ISO 8601 publish date, with IST (+05:30) offset."
+            },
+            "dateModified": {
+                "title": "Date modified",
+                "description": "ISO 8601 last-modified timestamp -- observed to be CMS-generated at render time (microsecond precision) rather than a genuine editorial edit date on most articles."
+            },
+            "author": {
+                "title": "Author",
+                "description": "Byline as emitted by upstream JSON-LD -- a single Person object with name/sameAs (raw passthrough; observed as always a dict, never a list, across all 4 content types sampled). Often 'Scroll Staff' for unbylined wire/desk items."
+            },
+            "publisher": {
+                "title": "Publisher",
+                "description": "Publisher Organization object (name, url, logo, sameAs)."
+            },
+            "image": {
+                "title": "Image",
+                "description": "Lead image object (url, width, height)."
+            },
+            "mainEntityOfPage": {
+                "title": "Main entity of page",
+                "description": "Canonical WebPage reference."
+            },
+            "keywords": {
+                "title": "Keywords",
+                "description": "Comma-separated topic tags, as emitted upstream (article-mode from JSON-LD; latest-mode from the sitemap's news:keywords)."
+            },
+            "title": {
+                "title": "Title",
+                "description": "Headline from the sitemap entry (latest-mode)."
+            },
+            "link": {
+                "title": "Link",
+                "description": "Article URL (latest-mode)."
+            },
+            "publication_date": {
+                "title": "Publication date",
+                "description": "ISO 8601 publish date with IST offset, from the sitemap's news:publication_date (latest-mode)."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across both article and latest-headline records.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "_source",
+                    "_scrapedAt",
+                    "headline",
+                    "title",
+                    "link",
+                    "datePublished",
+                    "publication_date",
+                    "author",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

@@ -1,0 +1,121 @@
+{
+    "title": "Indonesia Government Auction (Lelang DJKN) Scraper",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "mode": {
+            "title": "Mode",
+            "type": "string",
+            "editor": "select",
+            "description": "\"catalog\" browses/searches every live auction lot nationwide. \"kpknl\" scopes the same catalogue to one or more KPKNL offices (this is the ONLY way to filter geographically -- the catalogue endpoint silently ignores province/city params). \"detail\" fetches full detail for specific lot IDs/URLs. \"feed\" pulls a curated feed (hot / ending soon / live now). \"reference\" lists the live category and KPKNL office tables you need to drive the other modes.",
+            "enum": ["catalog", "kpknl", "detail", "feed", "reference"],
+            "enumTitles": [
+                "Catalogue (search all live lots)",
+                "By KPKNL office (geographic scope)",
+                "Lot detail (by ID or URL)",
+                "Curated feed (hot / ending soon / live)",
+                "Reference tables (categories + offices)"
+            ],
+            "default": "catalog",
+            "prefill": "catalog"
+        },
+        "search": {
+            "title": "Search text",
+            "type": "string",
+            "editor": "textfield",
+            "description": "\"catalog\" / \"kpknl\" mode: free-text search over lot names (e.g. \"toyota\", \"rumah jakarta\"). Leave blank to list everything.",
+            "prefill": "toyota"
+        },
+        "categories": {
+            "title": "Categories",
+            "type": "array",
+            "editor": "select",
+            "description": "\"catalog\" / \"kpknl\" mode: restrict to one or more asset categories. Multi-select is supported (the filter is OR'ed upstream). Run mode=reference for the live list.",
+            "items": {
+                "type": "string",
+                "enum": [
+                    "Tanah", "Rumah", "Ruko", "Pabrik", "Hotel dan Villa", "Mobil", "Motor",
+                    "Bongkaran", "Kapal", "Besi Tua", "Elektronik", "Kayu", "Inventaris",
+                    "UMKM", "Gudang", "Toko", "Apartemen", "Lain-lain"
+                ]
+            }
+        },
+        "umkmOnly": {
+            "title": "UMKM lots only (catalog mode)",
+            "type": "boolean",
+            "editor": "checkbox",
+            "description": "\"catalog\" mode only -- use the portal's separate UMKM (small-business asset) catalogue instead of the general one.",
+            "default": false
+        },
+        "office": {
+            "title": "KPKNL office",
+            "type": "string",
+            "editor": "textfield",
+            "description": "\"kpknl\" mode: a KPKNL office name (partial, case-insensitive -- e.g. \"Denpasar\") or its UUID. Run mode=reference to see all 71 offices with their province and city.",
+            "prefill": "Denpasar"
+        },
+        "offices": {
+            "title": "KPKNL offices",
+            "type": "array",
+            "editor": "stringList",
+            "description": "\"kpknl\" mode: several offices to process in one run."
+        },
+        "lotId": {
+            "title": "Lot ID or URL",
+            "type": "string",
+            "editor": "textfield",
+            "description": "\"detail\" mode: a lot UUID, or any lelang.go.id URL containing one (the UUID is extracted automatically)."
+        },
+        "lotIds": {
+            "title": "Lot IDs or URLs",
+            "type": "array",
+            "editor": "stringList",
+            "description": "\"detail\" mode: several lot IDs/URLs to fetch in one run."
+        },
+        "feed": {
+            "title": "Feed (feed mode)",
+            "type": "string",
+            "editor": "select",
+            "description": "\"feed\" mode only -- which curated feed to pull.",
+            "enum": ["hot", "ending-soon", "live"],
+            "enumTitles": ["Hot lots", "Ending soon", "Live / running now"],
+            "default": "hot",
+            "prefill": "hot"
+        },
+        "maxItems": {
+            "title": "Max items",
+            "type": "integer",
+            "editor": "number",
+            "description": "Max lots to return per catalogue/office/feed. Pagination is followed automatically until this cap or the end of the result set. The portal carried ~11,900 live lots at build time, so raise this to pull the whole country.",
+            "default": 200,
+            "minimum": 1,
+            "maximum": 50000,
+            "prefill": 200
+        },
+        "maxConcurrency": {
+            "title": "Max concurrent workers",
+            "type": "integer",
+            "editor": "number",
+            "description": "\"detail\" mode only -- how many lot IDs to fetch in parallel.",
+            "default": 4,
+            "minimum": 1,
+            "maximum": 16,
+            "prefill": 4
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "editor": "proxy",
+            "description": "Apify Proxy configuration. Not required -- api.lelang.go.id returned clean 200s with no WAF, no TLS impersonation and no headers during recon (see CRAWLING_METHOD.md) -- but kept on by default for production robustness against rate limiting on a government host.",
+            "default": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            },
+            "prefill": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            }
+        }
+    },
+    "required": ["mode"]
+}

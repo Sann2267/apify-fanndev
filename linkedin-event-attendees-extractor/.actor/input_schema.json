@@ -1,0 +1,79 @@
+{
+    "title": "LinkedIn Event Attendees Extractor",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "eventUrls": {
+            "title": "Event URLs",
+            "type": "array",
+            "description": "LinkedIn events to read. A full linkedin.com/events/... link or a bare 19-digit event id both work.",
+            "editor": "stringList",
+            "prefill": ["https://www.linkedin.com/events/7178068349686366208/"]
+        },
+        "startUrls": {
+            "title": "Event URLs (request list)",
+            "type": "array",
+            "description": "The same event links in the request-list format, for callers that already keep one.",
+            "editor": "requestListSources"
+        },
+        "sessionCookie": {
+            "title": "Your li_at session cookie (required)",
+            "type": "string",
+            "description": "Mandatory. LinkedIn redirects /events/ straight to the login wall for logged-out visitors - there is no guest view of an event at all, let alone its attendees. To get it: sign in to LinkedIn in your browser, open DevTools > Application > Cookies > www.linkedin.com, copy the VALUE of li_at. This actor never asks for your password and never signs in on your behalf. Scraping while signed in breaches LinkedIn's User Agreement and accounts do get restricted - use one you are willing to risk, pair it with a residential proxy, and keep the caps low. Without a cookie the run still finishes successfully and explains itself in the dataset.",
+            "editor": "textfield",
+            "isSecret": true
+        },
+        "maxAttendeesPerEvent": {
+            "title": "Maximum attendees per event",
+            "type": "integer",
+            "description": "Cap per event. Keeping this modest is the best protection for your session cookie - long, greedy runs are what LinkedIn's abuse scoring reacts to.",
+            "default": 200,
+            "minimum": 1,
+            "maximum": 5000,
+            "unit": "people"
+        },
+        "maxAttendees": {
+            "title": "Maximum attendees in total",
+            "type": "integer",
+            "description": "Overall ceiling across every event.",
+            "default": 1000,
+            "minimum": 1,
+            "maximum": 20000,
+            "unit": "people"
+        },
+        "minDelaySeconds": {
+            "title": "Minimum delay between requests",
+            "type": "integer",
+            "description": "LinkedIn answers request bursts with HTTP 999 and a near-empty page. With a session cookie in play the randomised gap does double duty: it keeps the run under the rate gate and keeps it looking like a person rather than a script.",
+            "default": 3,
+            "minimum": 0,
+            "maximum": 60,
+            "unit": "seconds"
+        },
+        "maxDelaySeconds": {
+            "title": "Maximum delay between requests",
+            "type": "integer",
+            "description": "The ceiling of the randomised gap. Raise both bounds if the log shows rate-gate warnings.",
+            "default": 8,
+            "minimum": 0,
+            "maximum": 120,
+            "unit": "seconds"
+        },
+        "exportFormats": {
+            "title": "Extra export files",
+            "type": "array",
+            "description": "Besides the dataset, write ready-made files into this run's key-value store.",
+            "editor": "select",
+            "items": { "type": "string", "enum": ["json","ndjson","csv","excel"], "enumTitles": ["JSON","NDJSON","CSV","Excel (XLSX)"] },
+            "default": []
+        },
+        "proxyConfiguration": {
+            "title": "Proxy (strongly advised)",
+            "type": "object",
+            "description": "This actor always runs with your session cookie, so use RESIDENTIAL in your own country. LinkedIn scores the exit IP against where your account normally signs in, and an Apify datacenter IP is precisely the mismatch that gets a session flagged.",
+            "editor": "proxy",
+            "default": { "useApifyProxy": true, "apifyProxyGroups": ["RESIDENTIAL"] }
+        }
+    },
+    "required": []
+}

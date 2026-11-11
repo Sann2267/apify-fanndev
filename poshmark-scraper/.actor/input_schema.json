@@ -1,0 +1,104 @@
+{
+    "title": "Poshmark Scraper",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "mode": {
+            "title": "Mode",
+            "type": "string",
+            "editor": "select",
+            "description": "\"browse\" lists listings for a brand or category. \"listing\" fetches full detail for specific listing ID(s)/URL(s). \"seller\" fetches a closet/seller profile by username.",
+            "enum": ["browse", "listing", "seller"],
+            "enumTitles": ["Browse by brand/category", "Listing detail (by ID/URL)", "Seller/closet profile"],
+            "default": "browse",
+            "prefill": "browse"
+        },
+        "browseBy": {
+            "title": "Browse by",
+            "type": "string",
+            "editor": "select",
+            "description": "\"browse\" mode -- whether \"value\" below is a brand name or a category slug.",
+            "enum": ["brand", "category"],
+            "enumTitles": ["Brand", "Category"],
+            "default": "brand",
+            "prefill": "brand"
+        },
+        "value": {
+            "title": "Brand name or category slug",
+            "type": "string",
+            "editor": "textfield",
+            "description": "\"browse\" mode -- a brand name exactly as shown on Poshmark (e.g. \"Nike\", \"lululemon athletica\") when browseBy is \"brand\", or a \"Department-Category\" slug (e.g. \"Women-Dresses\", \"Men-Shoes\") when browseBy is \"category\".",
+            "prefill": "Nike"
+        },
+        "sortBy": {
+            "title": "Sort order",
+            "type": "string",
+            "editor": "select",
+            "description": "\"browse\" mode -- order to return listings in.",
+            "enum": ["added_desc", "price_asc", "price_desc", "like_count", "relevance"],
+            "enumTitles": ["Newest first", "Price: low to high", "Price: high to low", "Most liked", "Relevance"],
+            "default": "added_desc",
+            "prefill": "added_desc"
+        },
+        "maxItems": {
+            "title": "Max items",
+            "type": "integer",
+            "editor": "number",
+            "description": "\"browse\" mode -- maximum number of listings to return. Pagination is followed automatically (48 items/page) until this cap or the end of the result set (Poshmark itself caps total matches around 5,000 per brand/category).",
+            "default": 100,
+            "minimum": 1,
+            "maximum": 5000,
+            "prefill": 100
+        },
+        "listingId": {
+            "title": "Listing ID or URL",
+            "type": "string",
+            "editor": "textfield",
+            "description": "\"listing\" mode -- a single listing's 24-character ID (found in any poshmark.com/listing/... URL) or the full URL itself.",
+            "prefill": "https://poshmark.com/listing/Nike-Mens-Jacket-6a8e29a7571a7e204b947d4f"
+        },
+        "listingIds": {
+            "title": "Listing IDs or URLs",
+            "type": "array",
+            "editor": "stringList",
+            "description": "\"listing\" mode only -- multiple listing IDs/URLs to fetch full detail for in one run."
+        },
+        "username": {
+            "title": "Seller username",
+            "type": "string",
+            "editor": "textfield",
+            "description": "\"seller\" mode -- a single Poshmark username (the part after poshmark.com/closet/ in their profile URL).",
+            "prefill": "shophopeful"
+        },
+        "usernames": {
+            "title": "Seller usernames",
+            "type": "array",
+            "editor": "stringList",
+            "description": "\"seller\" mode only -- multiple usernames to fetch in one run."
+        },
+        "maxConcurrency": {
+            "title": "Max concurrent workers",
+            "type": "integer",
+            "description": "\"listing\"/\"seller\" mode -- how many IDs/usernames to fetch in parallel.",
+            "default": 4,
+            "minimum": 1,
+            "maximum": 16,
+            "prefill": 4
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "editor": "proxy",
+            "description": "Apify Proxy configuration. Residential is on by default.",
+            "default": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            },
+            "prefill": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            }
+        }
+    },
+    "required": ["mode"]
+}

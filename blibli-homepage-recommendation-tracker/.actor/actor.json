@@ -1,0 +1,22 @@
+{
+    "actorSpecification": 1,
+    "name": "blibli-homepage-recommendation-tracker",
+    "version": "0.1",
+    "buildTag": "latest",
+    "title": "Blibli Homepage Recommendation & Ad Placement Tracker",
+    "description": "Snapshot what Blibli's algorithm places on its homepage tabs right now: 'Untukmu' picks, the 'Zona affiliate' feed, and category tabs -- product recommendations with rank order plus paid ad-banner slots. For visibility monitoring and ad intelligence. No login needed.",
+    "categories": ["ECOMMERCE"],
+    "dockerfile": "./Dockerfile",
+    "minMemoryMbytes": 256,
+    "maxMemoryMbytes": 4096,
+    "defaultRunOptions": {
+        "build": "latest",
+        "memoryMbytes": 1024,
+        "timeoutSecs": 3600
+    },
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

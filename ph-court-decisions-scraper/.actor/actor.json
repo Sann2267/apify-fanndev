@@ -1,0 +1,15 @@
+{
+    "actorSpecification": 1,
+    "name": "ph-court-decisions-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Philippine Supreme Court Decisions Scraper",
+    "description": "Full-text search and bulk export of Philippine Supreme Court decisions from the Judiciary's official free E-Library (1996-present). Returns case number, parties, division, ponente, promulgation date, Philippine Reports citation and the complete opinion text. No account needed.",
+    "categories": ["BUSINESS", "OTHER"],
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

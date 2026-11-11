@@ -1,0 +1,229 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Tech stack record",
+        "description": "Dataset envelope (_input / _source / _scrapedAt / recordType) on top of the technologies detected on one site, matched against 87 fingerprints. One SITE row per domain, one RUN_SUMMARY per run, ERROR rows for domains that could not be fetched. Unlisted fields pass through rather than failing the run.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The normalised URL this record answers for."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source",
+                "description": "Always homepage-fingerprint."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "title": "Checked at",
+                "description": "UTC ISO 8601 timestamp when this record was emitted."
+            },
+            "recordType": {
+                "type": "string",
+                "title": "Record type",
+                "description": "SITE, RUN_SUMMARY or ERROR."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Failure rows only: dns_failure, tls_failure, timeout, connection_failed, http_error, unreachable or unexpected_error. Each is a fact about the prospect, not about the run."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic accompanying _error."
+            },
+            "domain": {
+                "title": "Domain",
+                "description": "The hostname as supplied, normalised to lowercase."
+            },
+            "url": {
+                "title": "URL",
+                "description": "The https URL that was requested."
+            },
+            "finalUrl": {
+                "title": "Final URL",
+                "description": "Where the request ended after redirects."
+            },
+            "finalDomain": {
+                "title": "Final domain",
+                "description": "Hostname after redirects."
+            },
+            "redirected": {
+                "title": "Redirected",
+                "description": "True when the site redirected to a different hostname - the detected stack then belongs to that host, not the one supplied."
+            },
+            "reachable": {
+                "title": "Reachable",
+                "description": "Whether the site answered at all."
+            },
+            "statusCode": {
+                "title": "Status code",
+                "description": "Final HTTP status."
+            },
+            "pageBytes": {
+                "title": "Page bytes",
+                "description": "Size of the HTML that was analysed."
+            },
+            "technologies": {
+                "title": "Technologies",
+                "description": "Every technology detected, confirmed ones first."
+            },
+            "technologiesConfirmed": {
+                "title": "Confirmed technologies",
+                "description": "Only those proven by an unforgeable signal such as a vendor cookie or vendor CDN host."
+            },
+            "technologyCount": {
+                "title": "Technology count",
+                "description": "How many technologies were detected."
+            },
+            "confirmedCount": {
+                "title": "Confirmed count",
+                "description": "How many of those are confirmed rather than likely."
+            },
+            "categoriesDetected": {
+                "title": "Categories detected",
+                "description": "Which technology categories this site has anything in."
+            },
+            "detections": {
+                "title": "Detections",
+                "description": "Per technology: category, confidence, which signal types matched and the exact evidence string for each. Omit with includeEvidence=false."
+            },
+            "sitesChecked": {
+                "title": "Sites checked",
+                "description": "RUN_SUMMARY only."
+            },
+            "sitesReachable": {
+                "title": "Sites reachable",
+                "description": "RUN_SUMMARY only."
+            },
+            "sitesWithNoDetections": {
+                "title": "Sites with no detections",
+                "description": "RUN_SUMMARY only: reachable sites where nothing in the table matched - usually plain static sites or holding pages."
+            },
+            "technologyRanking": {
+                "title": "Technology ranking",
+                "description": "RUN_SUMMARY only: the top 40 technologies across the list with a site count and share."
+            },
+            "stackEcommerce": {
+                "title": "Ecommerce",
+                "description": "Store platform detected on this site, comma separated. Empty when none."
+            },
+            "stackCMS": {
+                "title": "CMS",
+                "description": "Content management detected on this site, comma separated. Empty when none."
+            },
+            "stackFramework": {
+                "title": "Framework",
+                "description": "Frontend or app framework detected on this site, comma separated. Empty when none."
+            },
+            "stackHosting": {
+                "title": "Hosting",
+                "description": "Host, CDN or edge network detected on this site, comma separated. Empty when none."
+            },
+            "stackAnalytics": {
+                "title": "Analytics",
+                "description": "Traffic and product analytics detected on this site, comma separated. Empty when none."
+            },
+            "stackTagManager": {
+                "title": "Tag Manager",
+                "description": "Tag and script management detected on this site, comma separated. Empty when none."
+            },
+            "stackMarketing": {
+                "title": "Marketing",
+                "description": "Marketing automation, email and ads detected on this site, comma separated. Empty when none."
+            },
+            "stackSupport": {
+                "title": "Support",
+                "description": "Live chat and helpdesk detected on this site, comma separated. Empty when none."
+            },
+            "stackPayments": {
+                "title": "Payments",
+                "description": "Checkout and payment processing detected on this site, comma separated. Empty when none."
+            },
+            "stackReviews": {
+                "title": "Reviews",
+                "description": "Ratings and user reviews detected on this site, comma separated. Empty when none."
+            },
+            "stackSearch": {
+                "title": "Search",
+                "description": "On-site search and discovery detected on this site, comma separated. Empty when none."
+            },
+            "stackMonitoring": {
+                "title": "Monitoring",
+                "description": "Error and performance monitoring detected on this site, comma separated. Empty when none."
+            },
+            "stackExperimentation": {
+                "title": "Experimentation",
+                "description": "A/B testing and personalisation detected on this site, comma separated. Empty when none."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "One row per site with the headline stack.",
+            "transformation": {
+                "fields": [
+                    "domain",
+                    "reachable",
+                    "technologyCount",
+                    "stackEcommerce",
+                    "stackCMS",
+                    "stackFramework",
+                    "stackHosting",
+                    "stackAnalytics",
+                    "recordType",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        },
+        "martech": {
+            "title": "Marketing stack",
+            "description": "The columns an agency prospects on.",
+            "transformation": {
+                "fields": [
+                    "domain",
+                    "stackEcommerce",
+                    "stackMarketing",
+                    "stackAnalytics",
+                    "stackTagManager",
+                    "stackSupport",
+                    "stackReviews",
+                    "stackPayments",
+                    "technologyCount"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        },
+        "infrastructure": {
+            "title": "Infrastructure",
+            "description": "Framework, hosting and monitoring.",
+            "transformation": {
+                "fields": [
+                    "domain",
+                    "stackFramework",
+                    "stackHosting",
+                    "stackMonitoring",
+                    "stackSearch",
+                    "stackExperimentation",
+                    "statusCode",
+                    "finalDomain",
+                    "redirected"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

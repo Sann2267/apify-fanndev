@@ -1,0 +1,115 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "ODPIC registry filing record",
+        "description": "Raw-passthrough dataset envelope. Every record carries _input/_source/_scrapedAt (and _error/_errorDetail on failures). A successful record is one filing from ODPIC's public 'publication_registre' Registre du Commerce et des Societes feed, with WordPress CMS/hypermedia scaffolding stripped and title.rendered unwrapped -- see CRAWLING_METHOD.md.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The exact query (name) that produced this record, or '(latest)' when browsing the register without a name filter."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "S1-odpic-rest (the only strategy this actor uses), or 'none' on an error record."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed extractions -- not_found (query/date range matched no filings) or blocked_or_transient (network/upstream issue)."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "id": {
+                "title": "WordPress post ID",
+                "description": "ODPIC's internal numeric ID for this filing publication."
+            },
+            "title": {
+                "title": "Filing title",
+                "description": "The registered company/establishment name as published (e.g. 'ETABLISSEMENT TAREK WAGDALLE'). Unwrapped from upstream's title.rendered."
+            },
+            "slug": {
+                "title": "URL slug",
+                "description": "The filing's WordPress URL slug."
+            },
+            "link": {
+                "title": "Public URL",
+                "description": "The public, bookmarkable ODPIC page for this filing publication."
+            },
+            "date": {
+                "title": "Publication date",
+                "description": "The date ODPIC published this filing (confirmed on samples to match registration_date/filing_date)."
+            },
+            "file_nbr": {
+                "title": "File number",
+                "description": "ODPIC's RCS file number for this filing."
+            },
+            "file_ser": {
+                "title": "File series (year)",
+                "description": "The filing year/series the file number belongs to."
+            },
+            "registration_date": {
+                "title": "Registration date",
+                "description": "The date this entity/name was registered on the RCS."
+            },
+            "filing_date": {
+                "title": "Filing date",
+                "description": "The date this specific filing was recorded."
+            },
+            "main_owner_person_nbr": {
+                "title": "Owner person number",
+                "description": "ODPIC's internal person number for the filing's main owner."
+            },
+            "person_name": {
+                "title": "Owner name",
+                "description": "Full name of the filing's main owner/proprietor."
+            },
+            "addresses": {
+                "title": "Address",
+                "description": "Free-text address on file for this filing. Often empty -- reflects what ODPIC has on record, not a scraping gap."
+            },
+            "disclaimers": {
+                "title": "Disclaimers / declared capital",
+                "description": "Free-text field that in practice holds the declared share capital for company filings (e.g. '10 000 FDJ'). Often empty for sole-trader filings -- upstream's own field name, kept verbatim."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns for browsing registry filings.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "_source",
+                    "_scrapedAt",
+                    "title",
+                    "person_name",
+                    "file_nbr",
+                    "file_ser",
+                    "registration_date",
+                    "addresses",
+                    "disclaimers",
+                    "link",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

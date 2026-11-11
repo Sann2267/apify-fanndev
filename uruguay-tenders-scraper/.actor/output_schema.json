@@ -1,0 +1,163 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "ARCE (Uruguay) tender/purchase record",
+        "description": "One record per Uruguay ARCE release event (mode=list, one row per RSS entry, optionally enriched with full merged detail) or per purchase (mode=detail, one specific idCompra's full merged tender/buyer/award record). A single _error record is emitted instead of payload fields when a record can't be fetched.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "For list records: 'list:idCompra=<id>'. For detail records: the idCompra that was requested."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which strategy emitted this record (S1-ocds-rss, S1-record-plus-followed-releases, or 'none' on error)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed records (blocked_or_transient, not_found)."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "_detailError": {
+                "type": "string",
+                "title": "Detail enrichment error",
+                "description": "Present only on a list-mode row when fetchDetail=true and that row's own detail fetch failed -- the rest of the row's list fields are still valid."
+            },
+            "idCompra": {
+                "title": "Purchase ID",
+                "description": "ARCE's own internal purchase identifier -- stable across a purchase's whole lifecycle (tender -> amendments -> award)."
+            },
+            "releaseId": {
+                "title": "Release ID",
+                "description": "The specific release event's identifier, e.g. 'llamado-1314718', 'adjudicacion-1367020' (list rows only)."
+            },
+            "eventType": {
+                "title": "Event type",
+                "description": "The RSS feed's own event category: tender, tenderUpdate, tenderAmendment, tenderCancellation, award, or awardUpdate (list rows only)."
+            },
+            "pubDate": {
+                "title": "Published date",
+                "description": "This release event's publish date/time, as shown in the RSS feed (list rows only)."
+            },
+            "releaseUrl": {
+                "title": "Release URL",
+                "description": "Direct link to this specific release event's full JSON (list rows only)."
+            },
+            "guid": {
+                "title": "GUID",
+                "description": "The RSS item's guid, same as releaseId (list rows only)."
+            },
+            "ocid": {
+                "title": "OCID",
+                "description": "The Open Contracting ID for this purchase, e.g. ocds-yfs5dr-1314718. Only present once a real release has actually been fetched (detail records, or list rows with fetchDetail=true) -- never fabricated on a bare list row."
+            },
+            "buyerId": {
+                "title": "Buyer ID",
+                "description": "The purchasing government institution's ARCE identifier."
+            },
+            "buyerName": {
+                "title": "Buyer name",
+                "description": "The purchasing government institution's name."
+            },
+            "tenderId": {
+                "title": "Tender ID",
+                "description": "The buyer's own tender reference number, when a tender release exists for this purchase."
+            },
+            "tenderTitle": {
+                "title": "Tender title",
+                "description": "The tender's title or description, e.g. 'Concurso de Precios 6870/2026'."
+            },
+            "tenderStatus": {
+                "title": "Tender status",
+                "description": "e.g. active, complete, cancelled."
+            },
+            "procurementMethod": {
+                "title": "Procurement method",
+                "description": "e.g. open, limited, direct."
+            },
+            "procurementMethodDetails": {
+                "title": "Procurement method details",
+                "description": "Spanish-language procurement modality, e.g. 'Concurso de Precios', 'Compra Directa', 'Licitacion Publica'."
+            },
+            "tenderStartDate": {
+                "title": "Tender start date",
+                "description": "The tender period's start date, when present."
+            },
+            "tenderEndDate": {
+                "title": "Tender end date (bid opening)",
+                "description": "The tender period's end date (bid submission/opening deadline), when present."
+            },
+            "tags": {
+                "title": "Tags",
+                "description": "Union of OCDS release tags seen across this purchase's followed release links (e.g. ['tender', 'award'])."
+            },
+            "awardsCount": {
+                "title": "Awards count",
+                "description": "Number of award entries across this purchase's followed release links."
+            },
+            "totalAwardAmount": {
+                "title": "Total award amount",
+                "description": "This actor's own sum of (unit price * quantity) across every awarded line item seen -- ARCE's award releases carry price only per line item, with no upstream award-level total."
+            },
+            "awardCurrency": {
+                "title": "Award currency",
+                "description": "Currency code for totalAwardAmount, e.g. UYU (Uruguayan peso)."
+            },
+            "suppliers": {
+                "title": "Suppliers",
+                "description": "Names of all winning suppliers across this purchase's awards."
+            },
+            "latestReleaseDate": {
+                "title": "Latest release date",
+                "description": "The date of the most recent followed release for this purchase."
+            },
+            "releaseLinks": {
+                "title": "Release links (raw)",
+                "description": "The upstream record endpoint's own list of {url, date, tag} references that were followed to build this detail record -- present on detail records and list rows fetched with fetchDetail=true."
+            },
+            "releases": {
+                "title": "Release history (full detail)",
+                "description": "The complete followed release objects, verbatim, one entry per tender/amendment/award/awardUpdate event -- present on detail records and list rows fetched with fetchDetail=true."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across list and detail records -- rows missing a given column render blank.",
+            "transformation": {
+                "fields": [
+                    "idCompra",
+                    "buyerName",
+                    "tenderTitle",
+                    "eventType",
+                    "pubDate",
+                    "procurementMethodDetails",
+                    "tenderStatus",
+                    "totalAwardAmount",
+                    "awardCurrency",
+                    "_error",
+                    "_scrapedAt"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

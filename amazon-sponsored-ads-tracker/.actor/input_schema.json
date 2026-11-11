@@ -1,0 +1,73 @@
+{
+    "title": "Amazon Sponsored Ads Intelligence",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "keywords": {
+            "title": "Keywords to monitor",
+            "type": "array",
+            "description": "Search terms to watch, e.g. [\"wireless earbuds\", \"yoga mat\"]. Each is searched on Amazon and every Sponsored placement on page one is extracted with its slot position.",
+            "editor": "stringList",
+            "prefill": ["wireless earbuds"],
+            "default": []
+        },
+        "marketplace": {
+            "title": "Marketplace",
+            "type": "string",
+            "description": "Amazon domain to search. Prices are forced into this marketplace's currency regardless of where the actor runs from.",
+            "editor": "select",
+            "enum": ["com", "co.uk", "de", "fr", "it", "es", "ca", "com.au", "co.jp", "in"],
+            "enumTitles": [
+                "amazon.com (US)", "amazon.co.uk", "amazon.de", "amazon.fr", "amazon.it",
+                "amazon.es", "amazon.ca", "amazon.com.au", "amazon.co.jp", "amazon.in"
+            ],
+            "default": "com"
+        },
+        "samplesPerKeyword": {
+            "title": "Samples per keyword",
+            "type": "integer",
+            "description": "How many times to search each keyword. Amazon auctions ad slots per impression, so one fetch is a single sample - measured density ranged from 0% to 21.7% of page-one slots across keywords. Sampling 3-5 times gives a far more reliable picture of who is bidding persistently rather than who won one impression.",
+            "editor": "number",
+            "minimum": 1,
+            "maximum": 5,
+            "default": 3
+        },
+        "includeOrganic": {
+            "title": "Include organic results",
+            "type": "boolean",
+            "description": "Also emit the non-sponsored results, so you can compare an advertiser's paid placement against the organic ranking on the same keyword. Off by default to keep the dataset focused on ads.",
+            "default": false
+        },
+        "includeSummary": {
+            "title": "Include per-keyword summary",
+            "type": "boolean",
+            "description": "Emit one KEYWORD_SUMMARY row per keyword: sponsored share of page one, ad slot positions, unique advertised ASINs, and which ASINs appeared across the most samples - the 'who is bidding hardest' answer.",
+            "default": true
+        },
+        "maxResultsPerKeyword": {
+            "title": "Max results per sample",
+            "type": "integer",
+            "description": "Cap results parsed from each search page. 0 means parse the whole page (Amazon returns roughly 16-60 results depending on the keyword).",
+            "editor": "number",
+            "minimum": 0,
+            "default": 0
+        },
+        "delaySeconds": {
+            "title": "Delay between requests (seconds)",
+            "type": "integer",
+            "description": "Pause between searches and between samples. Amazon search is defended: most TLS fingerprints are rejected outright and CAPTCHAs are served to traffic it dislikes. Pacing is what keeps a run clean; this actor never solves CAPTCHAs.",
+            "editor": "number",
+            "minimum": 0,
+            "maximum": 60,
+            "default": 3
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "description": "STRONGLY RECOMMENDED. Amazon search rejects most datacentre traffic and serves CAPTCHAs; a rotating residential proxy plus the built-in fingerprint ladder is what makes a multi-keyword run viable.",
+            "editor": "proxy",
+            "default": { "useApifyProxy": true, "apifyProxyGroups": ["RESIDENTIAL"] }
+        }
+    },
+    "required": ["keywords"]
+}

@@ -1,0 +1,125 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "additionalProperties": true,
+        "title": "YouTube community post record",
+        "description": "One record per community post. recordType separates four different outcomes that a lesser scraper would all report as zero results: POST (a parsed post), EMPTY (the page rendered and the channel has not posted), ERROR (including community-unavailable, which is a channel setting), and REDUCED (YouTube declined to fill the page). likeCountIsApprox is always true - YouTube publishes no exact figure to logged-out clients.",
+        "properties": {
+            "_input": { "type": ["string", "null"], "title": "Input" },
+            "_query": { "type": ["string", "null"], "title": "Query" },
+            "_source": {
+                "type": ["string", "null"],
+                "title": "Source",
+                "description": "youtube-posts | reference | none."
+            },
+            "_scrapedAt": { "type": ["string", "null"], "format": "date-time", "title": "Scraped at" },
+            "_attempts": { "type": ["integer", "null"], "title": "Attempts" },
+            "_tlsProfile": { "type": ["string", "null"], "title": "TLS profile" },
+            "recordType": {
+                "type": ["string", "null"],
+                "title": "Record type",
+                "description": "POST | EMPTY | REDUCED | ERROR | SURFACE."
+            },
+            "channelHandle": { "type": ["string", "null"], "title": "Channel handle" },
+            "feedPosition": {
+                "type": ["integer", "null"],
+                "title": "Feed position",
+                "description": "1 is the newest post on the page."
+            },
+            "postId": { "type": ["string", "null"], "title": "Post ID" },
+            "postUrl": { "type": ["string", "null"], "title": "Post URL" },
+            "authorName": { "type": ["string", "null"], "title": "Author" },
+            "channelId": { "type": ["string", "null"], "title": "Channel ID" },
+            "channelUrl": { "type": ["string", "null"], "title": "Channel URL" },
+            "text": {
+                "type": ["string", "null"],
+                "title": "Post text",
+                "description": "The full post body with line breaks preserved."
+            },
+            "textLength": { "type": ["integer", "null"], "title": "Text length" },
+            "links": {
+                "type": ["array", "null"],
+                "title": "Links",
+                "description": "Outbound URLs, unwrapped from YouTube's /redirect?q= tracker so you get the real destination."
+            },
+            "publishedTimeText": {
+                "type": ["string", "null"],
+                "title": "Published",
+                "description": "Relative, as YouTube shows it: \"8 days ago\", \"5 months ago (edited)\"."
+            },
+            "isEdited": { "type": ["boolean", "null"], "title": "Edited" },
+            "likeCountText": {
+                "type": ["string", "null"],
+                "title": "Likes (text)",
+                "description": "Exactly as YouTube prints it: \"1.9M\", \"6.5K\"."
+            },
+            "likeCountApprox": {
+                "type": ["integer", "null"],
+                "title": "Likes (parsed)",
+                "description": "\"1.9M\" parsed to 1900000. Approximate by construction."
+            },
+            "likeCountIsApprox": {
+                "type": ["boolean", "null"],
+                "title": "Likes rounded?",
+                "description": "Always true. No exact like figure exists in the logged-out payload."
+            },
+            "attachmentType": {
+                "type": ["string", "null"],
+                "title": "Attachment",
+                "description": "none | image | multi-image | video | poll."
+            },
+            "images": {
+                "type": ["array", "null"],
+                "title": "Images",
+                "description": "Highest-resolution URL of each attached image."
+            },
+            "video": {
+                "type": ["object", "null"],
+                "title": "Attached video",
+                "description": "videoId, title, url, viewCountText, publishedTimeText."
+            },
+            "poll": {
+                "type": ["object", "null"],
+                "title": "Poll",
+                "description": "choices, choiceCount, totalVotesText, totalVotesApprox. votesPerChoice is null by design - see votesPerChoiceNote."
+            },
+            "error": { "type": ["string", "null"], "title": "Error" },
+            "message": { "type": ["string", "null"], "title": "Message" },
+            "hint": { "type": ["string", "null"], "title": "Hint" }
+        }
+    },
+    "views": {
+        "overview": {
+            "title": "Community posts",
+            "transformation": {
+                "fields": [
+                    "channelHandle",
+                    "feedPosition",
+                    "publishedTimeText",
+                    "attachmentType",
+                    "likeCountText",
+                    "likeCountApprox",
+                    "text",
+                    "links",
+                    "postUrl"
+                ]
+            },
+            "display": {
+                "component": "table",
+                "properties": {
+                    "channelHandle": { "label": "Channel" },
+                    "feedPosition": { "label": "#" },
+                    "publishedTimeText": { "label": "Published" },
+                    "attachmentType": { "label": "Attachment" },
+                    "likeCountText": { "label": "Likes" },
+                    "likeCountApprox": { "label": "Likes (n)" },
+                    "text": { "label": "Post" },
+                    "links": { "label": "Links" },
+                    "postUrl": { "label": "URL" }
+                }
+            }
+        }
+    }
+}

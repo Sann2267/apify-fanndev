@@ -1,0 +1,148 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "ESPPRA tender/procurement record",
+        "description": "One record per row. Shape depends on recordType: TENDER_INVITATION (listType=tenders), TENDER_AWARD_INTENTION (listType=award_intentions), or SUSPENDED_SUPPLIER (listType=suspended_suppliers). Label-based fields are parsed from ESPPRA's own 'Label: value' paragraphs, so extra fields beyond those listed below may appear if ESPPRA adds a new one. A single _error record is emitted instead of payload fields when a page fails or is inaccessible.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "'list:<listType>' for every record produced by this actor."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which extraction strategy emitted this record (S1-tenders-listing, S1-award_intentions-listing, S1-suspended_suppliers-listing, or 'none' on error)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed records (blocked_or_transient)."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "recordType": {
+                "type": "string",
+                "title": "Record type",
+                "description": "TENDER_INVITATION, TENDER_AWARD_INTENTION, or SUSPENDED_SUPPLIER."
+            },
+            "_page": {
+                "title": "Page",
+                "description": "Which page of the listing this row came from (always 1 for suspended_suppliers)."
+            },
+            "_totalAvailable": {
+                "title": "Total available",
+                "description": "Total rows ESPPRA reports for this listing, before any maxResults truncation."
+            },
+            "_totalPages": {
+                "title": "Total pages",
+                "description": "Total pages ESPPRA reports for this listing (server-fixed page size)."
+            },
+            "title": {
+                "title": "Title",
+                "description": "The tender/intention's title as published by ESPPRA."
+            },
+            "procuringEntity": {
+                "title": "Procuring entity",
+                "description": "The government body running this procurement. TENDER_INVITATION / TENDER_AWARD_INTENTION only."
+            },
+            "referenceNumber": {
+                "title": "Reference number",
+                "description": "The procuring entity's own tender/intention reference. TENDER_INVITATION / TENDER_AWARD_INTENTION only."
+            },
+            "procurementMethod": {
+                "title": "Procurement method",
+                "description": "TENDER_INVITATION only -- e.g. Request For Tender, Request For Proposal, Request for Expression of Interest."
+            },
+            "tenderUploadDate": {
+                "title": "Tender upload date",
+                "description": "TENDER_INVITATION only -- raw text as shown by ESPPRA (e.g. 'Tuesday 28th July 2026 9:56 am')."
+            },
+            "submissionDeadline": {
+                "title": "Submission deadline",
+                "description": "TENDER_INVITATION only -- bid submission deadline, raw text as shown by ESPPRA."
+            },
+            "uploadDate": {
+                "title": "Upload date",
+                "description": "TENDER_AWARD_INTENTION only -- raw text as shown by ESPPRA."
+            },
+            "documentId": {
+                "title": "Document ID",
+                "description": "The internal id ESPPRA attaches to the download link (numeric for tenders, sometimes the reference number itself for award intentions)."
+            },
+            "documentUrl": {
+                "title": "Document URL",
+                "description": "Direct link to the tender/intention notice PDF."
+            },
+            "supplierId": {
+                "title": "Supplier ID",
+                "description": "SUSPENDED_SUPPLIER only -- ESPPRA's internal numeric id for this debarment entry."
+            },
+            "tradingName": {
+                "title": "Trading name",
+                "description": "SUSPENDED_SUPPLIER only."
+            },
+            "companyName": {
+                "title": "Company name",
+                "description": "SUSPENDED_SUPPLIER only -- registered legal entity name."
+            },
+            "suspensionStartDate": {
+                "title": "Suspension start date",
+                "description": "SUSPENDED_SUPPLIER only -- raw text as shown by ESPPRA (e.g. '17th Jun 22')."
+            },
+            "suspensionEndDate": {
+                "title": "Suspension end date",
+                "description": "SUSPENDED_SUPPLIER only."
+            },
+            "suspensionDocumentFile": {
+                "title": "Suspension document filename",
+                "description": "SUSPENDED_SUPPLIER only -- raw filename from the API; see suspensionDocumentUrl for the resolved link."
+            },
+            "suspensionDocumentUrl": {
+                "title": "Suspension document URL",
+                "description": "SUSPENDED_SUPPLIER only -- direct link to the suspension notice PDF."
+            },
+            "_actionRawPlaceholder": {
+                "title": "Action column (raw, unreliable)",
+                "description": "SUSPENDED_SUPPLIER only -- ESPPRA's own DataTable hides this column client-side; observed value is always an epoch-zero placeholder date ('1st Jan 70'), not real data. Passed through raw per this project's convention rather than dropped silently."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across all record types -- rows missing a given column render blank.",
+            "transformation": {
+                "fields": [
+                    "recordType",
+                    "title",
+                    "procuringEntity",
+                    "referenceNumber",
+                    "procurementMethod",
+                    "submissionDeadline",
+                    "tradingName",
+                    "suspensionEndDate",
+                    "documentUrl",
+                    "_totalAvailable",
+                    "_error",
+                    "_scrapedAt"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

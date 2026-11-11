@@ -1,0 +1,81 @@
+{
+    "title": "National Research Portal Scraper input",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "mode": {
+            "title": "Mode",
+            "type": "string",
+            "description": "documents = search papers and articles (all three portals). journals = the journal directory (Garuda). authors = the researcher directory (Garuda). reference = check which portals are answering right now and how many records they hold.",
+            "editor": "select",
+            "default": "documents",
+            "enum": ["documents", "journals", "authors", "reference"],
+            "enumTitles": [
+                "documents - papers and articles",
+                "journals - journal directory (Garuda)",
+                "authors - researcher directory (Garuda)",
+                "reference - which portals are live"
+            ]
+        },
+        "portal": {
+            "title": "Portal",
+            "type": "string",
+            "description": "Which national portal to search. Garuda indexes Indonesian journals, CiNii indexes Japanese research, KCI indexes Korean journals.",
+            "editor": "select",
+            "default": "garuda",
+            "enum": ["garuda", "cinii", "kci", "all"],
+            "enumTitles": [
+                "garuda - Indonesia (Garba Rujukan Digital)",
+                "cinii - Japan (CiNii Research, NII)",
+                "kci - South Korea (Korea Citation Index)",
+                "all - every portal"
+            ]
+        },
+        "portals": {
+            "title": "Portals",
+            "type": "array",
+            "description": "Several portals in one run. The item budget is split evenly between them, so no single portal can consume the whole run.",
+            "editor": "stringList"
+        },
+        "query": {
+            "title": "Search query",
+            "type": "string",
+            "description": "What to search for. Works in the portal's own language as well as English - Korean and Japanese queries return their local literature.",
+            "editor": "textfield",
+            "prefill": "machine learning"
+        },
+        "maxItems": {
+            "title": "Max items",
+            "type": "integer",
+            "description": "Maximum records per run, split across the selected portals.",
+            "editor": "number",
+            "default": 200,
+            "minimum": 1
+        },
+        "maxPages": {
+            "title": "Max pages per portal",
+            "type": "integer",
+            "description": "How deep to page into each portal's results. Garuda serves 10 rows per page, CiNii and KCI 50.",
+            "editor": "number",
+            "default": 5,
+            "minimum": 1,
+            "maximum": 100
+        },
+        "ciniiArticlesOnly": {
+            "title": "CiNii: articles only",
+            "type": "boolean",
+            "description": "Search only CiNii's article index instead of everything it holds (which also includes books, dissertations, projects and datasets).",
+            "default": false
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "description": "Optional. All three portals answered every request without a proxy.",
+            "editor": "proxy",
+            "default": {
+                "useApifyProxy": false
+            }
+        }
+    },
+    "required": ["mode"]
+}

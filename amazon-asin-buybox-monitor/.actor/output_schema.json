@@ -1,0 +1,216 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "ASIN product / Buy Box record",
+        "description": "Two record shapes, discriminated by `recordType`. PRODUCT is one Amazon product looked up by ASIN. CAPTCHA_ESCALATION marks an ASIN that could not be fetched (bot wall) or an input that was not a valid ASIN, so a short run is never mistaken for a short catalogue. Amazon omits the Buy Box block from roughly half of anonymous product pages; `buyBoxDataAvailable` says whether seller data was served at all, so a null seller is never mistaken for 'sold by Amazon'. Every field is nullable accordingly.",
+        "properties": {
+            "_input": {
+                "type": ["string", "null"],
+                "title": "Input",
+                "description": "The ASIN (or raw input value) this row came from."
+            },
+            "_source": {
+                "type": ["string", "null"],
+                "title": "Source strategy",
+                "description": "S1-dp-page for a scraped product, S0-diagnostic for a failure row."
+            },
+            "_scrapedAt": {
+                "type": ["string", "null"],
+                "title": "Scraped at",
+                "description": "UTC ISO-8601 timestamp of the fetch."
+            },
+            "recordType": {
+                "type": ["string", "null"],
+                "title": "Record type",
+                "description": "PRODUCT or CAPTCHA_ESCALATION."
+            },
+            "asin": {
+                "type": ["string", "null"],
+                "title": "ASIN",
+                "description": "Amazon Standard Identification Number."
+            },
+            "marketplace": {
+                "type": ["string", "null"],
+                "title": "Marketplace",
+                "description": "Amazon domain suffix the row was scraped from."
+            },
+            "productUrl": {
+                "type": ["string", "null"],
+                "title": "Product URL",
+                "description": "Canonical /dp/ URL."
+            },
+            "title": {
+                "type": ["string", "null"],
+                "title": "Title",
+                "description": "Product title."
+            },
+            "brand": {
+                "type": ["string", "null"],
+                "title": "Brand",
+                "description": "Brand or store name, with Amazon's 'Visit the ... Store' wrapper stripped."
+            },
+            "price": {
+                "type": ["number", "null"],
+                "title": "Price",
+                "description": "Current displayed price. Null when Amazon served no price (unavailable listings)."
+            },
+            "currency": {
+                "type": ["string", "null"],
+                "title": "Currency",
+                "description": "Currency symbol or code as displayed. Pinned to the marketplace, not the proxy's country."
+            },
+            "availability": {
+                "type": ["string", "null"],
+                "title": "Availability text",
+                "description": "Raw availability line, e.g. 'In Stock' or 'Only 3 left in stock'."
+            },
+            "inStock": {
+                "type": ["boolean", "null"],
+                "title": "In stock",
+                "description": "Tri-state. Null means Amazon served no stock signal at all — not 'out of stock'."
+            },
+            "condition": {
+                "type": ["string", "null"],
+                "title": "Condition",
+                "description": "Condition of the offer shown. Anonymous pages carry the New offer; used and refurbished offers are not exposed to logged-out clients."
+            },
+            "rating": {
+                "type": ["number", "null"],
+                "title": "Rating",
+                "description": "Average star rating out of 5."
+            },
+            "reviewCount": {
+                "type": ["integer", "null"],
+                "title": "Review count",
+                "description": "Number of customer ratings."
+            },
+            "bestSellersRank": {
+                "type": ["integer", "null"],
+                "title": "Best Sellers rank",
+                "description": "Top-level Best Sellers Rank."
+            },
+            "bestSellersCategory": {
+                "type": ["string", "null"],
+                "title": "Best Sellers category",
+                "description": "Category the rank applies to."
+            },
+            "imageUrl": {
+                "type": ["string", "null"],
+                "title": "Image URL",
+                "description": "Highest-resolution main image found."
+            },
+            "featureBullets": {
+                "type": ["array", "null"],
+                "title": "Feature bullets",
+                "description": "Bullet points from the product description block."
+            },
+            "buyBoxDataAvailable": {
+                "type": ["boolean", "null"],
+                "title": "Buy Box data available",
+                "description": "Whether Amazon served the Buy Box seller block for this request. False means the data was withheld — NOT that Amazon is the seller. Read every seller field below as unknown when this is false."
+            },
+            "buyBoxSellerId": {
+                "type": ["string", "null"],
+                "title": "Buy Box seller ID",
+                "description": "Merchant ID of the Buy Box winner. ATVPDKIKX0DER is Amazon's own retail account."
+            },
+            "buyBoxSellerName": {
+                "type": ["string", "null"],
+                "title": "Buy Box seller name",
+                "description": "Display name of the Buy Box winner."
+            },
+            "buyBoxIsAmazon": {
+                "type": ["boolean", "null"],
+                "title": "Buy Box is Amazon",
+                "description": "True when Amazon retail holds the Buy Box. Null when no seller was served."
+            },
+            "shipsFrom": {
+                "type": ["string", "null"],
+                "title": "Ships from",
+                "description": "Fulfilment party, which may differ from the seller (FBA)."
+            },
+            "returnPolicy": {
+                "type": ["string", "null"],
+                "title": "Return policy",
+                "description": "Return window as stated on the product page, e.g. '30 days returnable' or 'Non-returnable'."
+            },
+            "hasAddToCart": {
+                "type": ["boolean", "null"],
+                "title": "Has add-to-cart",
+                "description": "Whether a purchasable Buy Box was rendered."
+            },
+            "parentAsin": {
+                "type": ["string", "null"],
+                "title": "Parent ASIN",
+                "description": "Parent of this variation family, when the product has variants."
+            },
+            "childAsins": {
+                "type": ["array", "null"],
+                "title": "Child ASINs",
+                "description": "Sibling variant ASINs (sizes, colours, flavours)."
+            },
+            "variationCount": {
+                "type": ["integer", "null"],
+                "title": "Variation count",
+                "description": "Number of variants in the family."
+            },
+            "variationDimensions": {
+                "type": ["array", "null"],
+                "title": "Variation dimensions",
+                "description": "Dimension labels the family varies on, e.g. Size, Flavor Name."
+            },
+            "isVariationChild": {
+                "type": ["boolean", "null"],
+                "title": "Is variation child",
+                "description": "True when this row was fetched by expanding another ASIN's variation family."
+            },
+            "changeType": {
+                "type": ["string", "null"],
+                "title": "Change type",
+                "description": "NEW, UNCHANGED, PRICE_INCREASED, PRICE_DECREASED, BUYBOX_SELLER_CHANGED, BACK_IN_STOCK or OUT_OF_STOCK. Null when change tracking is off."
+            },
+            "changes": {
+                "type": ["array", "null"],
+                "title": "All changes",
+                "description": "Every change detected this run, when more than one applies."
+            },
+            "previousPrice": {
+                "type": ["number", "null"],
+                "title": "Previous price",
+                "description": "Price recorded in the previous run."
+            },
+            "previousSellerId": {
+                "type": ["string", "null"],
+                "title": "Previous seller ID",
+                "description": "Buy Box seller recorded in the previous run."
+            },
+            "priceDelta": {
+                "type": ["number", "null"],
+                "title": "Price delta",
+                "description": "Current minus previous price. Negative means the price dropped."
+            },
+            "priceDeltaPercent": {
+                "type": ["number", "null"],
+                "title": "Price delta percent",
+                "description": "Price change as a percentage of the previous price."
+            },
+            "previousScrapedAt": {
+                "type": ["string", "null"],
+                "title": "Previous scraped at",
+                "description": "Timestamp of the snapshot being compared against."
+            },
+            "_error": {
+                "type": ["string", "null"],
+                "title": "Error",
+                "description": "BLOCKED or INVALID_ASIN on a diagnostic row, otherwise null."
+            },
+            "_errorDetail": {
+                "type": ["string", "null"],
+                "title": "Error detail",
+                "description": "Human-readable reason for the failure."
+            }
+        }
+    }
+}

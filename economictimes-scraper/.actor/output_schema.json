@@ -1,0 +1,99 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Article / latest-headline record",
+        "description": "Raw-passthrough dataset envelope. Every record carries _input/_source/_scrapedAt (failed URLs are not written to the dataset -- they are reported in the ERRORS record of the run's key-value store). Article-mode records (S1-jsonld) carry headline/articleBody-style fields spread verbatim from the page's NewsArticle JSON-LD block, so extra schema.org fields beyond those listed here may also appear. Latest-mode records (S2-rss, the site's default RSS feed) carry title/link-style fields only -- no byline/author field is exposed by either source.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The exact input value (article URL, or 'latest') that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which extraction strategy emitted this record: S1-jsonld (article page NewsArticle block), S2-rss (default RSS feed), or none (error record)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "headline": {
+                "title": "Headline",
+                "description": "Article headline (article mode; raw passthrough from JSON-LD NewsArticle)."
+            },
+            "description": {
+                "title": "Description",
+                "description": "Short description/summary. Present on both article-mode records (NewsArticle JSON-LD) and latest-mode RSS items."
+            },
+            "articleBody": {
+                "title": "Article body",
+                "description": "Full plain-text article body (article mode; raw passthrough from JSON-LD NewsArticle -- this site's ld+json is unusually complete and includes the full text, not just a teaser)."
+            },
+            "keywords": {
+                "title": "Keywords",
+                "description": "Article keywords/tags (article mode; raw passthrough from JSON-LD NewsArticle)."
+            },
+            "inLanguage": {
+                "title": "Language",
+                "description": "Article language code (article mode; raw passthrough from JSON-LD NewsArticle)."
+            },
+            "datePublished": {
+                "title": "Date published",
+                "description": "Publish timestamp (article mode; raw passthrough from JSON-LD NewsArticle)."
+            },
+            "dateModified": {
+                "title": "Date modified",
+                "description": "Last-modified timestamp (article mode; raw passthrough from JSON-LD NewsArticle)."
+            },
+            "articleSection": {
+                "title": "Article section",
+                "description": "Site section/category the article belongs to (article mode; raw passthrough from JSON-LD NewsArticle)."
+            },
+            "title": {
+                "title": "Title",
+                "description": "Headline text (latest mode; from the default RSS feed <title> element)."
+            },
+            "link": {
+                "title": "Link",
+                "description": "Article URL (latest mode; from the default RSS feed <link> element)."
+            },
+            "guid": {
+                "title": "GUID",
+                "description": "Feed item GUID (latest mode; from the default RSS feed <guid> element)."
+            },
+            "pubDate": {
+                "title": "Publish date",
+                "description": "Publish timestamp as a raw RSS date string (latest mode; from the default RSS feed <pubDate> element). Note: the default feed is not strictly chronological -- sort/filter by this field if a strict time window is needed."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across both article and latest-headline records.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "_source",
+                    "_scrapedAt",
+                    "headline",
+                    "title",
+                    "link",
+                    "datePublished",
+                    "pubDate",
+                    "description",
+                    "articleSection"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

@@ -1,0 +1,231 @@
+{
+    "title": "Steam Sales & Discount Tracker",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "mode": {
+            "title": "What to collect",
+            "type": "string",
+            "description": "deals = every discounted game/DLC/package on Steam (~9,500), with filters, discount end date and deal type. featured = storefront deal events: Daily Deal, Weekend Deals, Free Weekends, franchise/publisher sale spotlights and the featured specials. freebies = free-to-keep giveaways (100% off) and Free Weekends. appPrices = price and discount of your games in several countries, converted to USD. salePage = every item on a Steam sale page (publisher, franchise or developer sales) with prices. saleEvents = Steam's official calendar of seasonal sales, themed Fests and Next Fest.",
+            "editor": "select",
+            "enum": [
+                "deals",
+                "featured",
+                "freebies",
+                "appPrices",
+                "salePage",
+                "saleEvents"
+            ],
+            "enumTitles": [
+                "All discounted items (with filters)",
+                "Daily Deal, Weekend Deals & spotlights",
+                "Free-to-keep games & Free Weekends",
+                "Regional prices for my games",
+                "Items on a sale page",
+                "Sale & Fest calendar"
+            ],
+            "default": "deals",
+            "prefill": "deals"
+        },
+        "country": {
+            "title": "Store country",
+            "type": "string",
+            "description": "Two-letter country code (US, GB, DE, ID, BR, ...). Steam discounts and prices are regional, so the deal list and currency follow this country. Used by every mode except appPrices and saleEvents.",
+            "default": "US",
+            "prefill": "US",
+            "editor": "textfield"
+        },
+        "maxItems": {
+            "title": "Max results",
+            "type": "integer",
+            "description": "Maximum deal / sale-item records to return. Steam lists about 9,500 discounted items in the US; set 10000 to read them all (about 5 minutes). Ended-deal detection only runs when the whole list was read.",
+            "default": 500,
+            "prefill": 100,
+            "minimum": 1,
+            "maximum": 20000
+        },
+        "minDiscount": {
+            "title": "Minimum discount (%)",
+            "type": "integer",
+            "description": "deals: only return items discounted by at least this much. Default 1 drops the ~2% of Steam's specials list shown at 0% (edition upgrades, DLC whose bundle is the discounted item); 0 keeps them. Applied after download (Steam has no discount filter), so it does not reduce the number of pages read.",
+            "default": 1,
+            "minimum": 0,
+            "maximum": 100
+        },
+        "maxPrice": {
+            "title": "Maximum price",
+            "type": "number",
+            "description": "deals: only return items whose discounted price is at most this amount, in the store country's currency (e.g. 10 = $10.00 in the US). Leave empty for no limit.",
+            "minimum": 0,
+            "editor": "number"
+        },
+        "category": {
+            "title": "Item type",
+            "type": "string",
+            "description": "deals: restrict to games, DLC, software or soundtracks.",
+            "editor": "select",
+            "enum": [
+                "all",
+                "games",
+                "dlc",
+                "software",
+                "soundtracks"
+            ],
+            "enumTitles": [
+                "Everything",
+                "Games only",
+                "DLC only",
+                "Software only",
+                "Soundtracks only"
+            ],
+            "default": "all"
+        },
+        "tags": {
+            "title": "Steam tags",
+            "type": "array",
+            "editor": "stringList",
+            "description": "deals: only items with ALL of these Steam tags. Tag names (Horror, RPG, Cooking, Roguelike, ...) or numeric tag ids. Useful for themed Fests: their sale pages are dynamic, so tag-filtered deals is how you list them."
+        },
+        "searchTerm": {
+            "title": "Search term",
+            "type": "string",
+            "description": "deals: only discounted items matching this text (title, franchise, publisher).",
+            "editor": "textfield"
+        },
+        "sortBy": {
+            "title": "Sort by",
+            "type": "string",
+            "description": "deals: order of results. Note that 'Best reviewed' only lists items that have reviews (about half of all deals).",
+            "editor": "select",
+            "enum": [
+                "relevance",
+                "priceAsc",
+                "priceDesc",
+                "releasedDesc",
+                "nameAsc",
+                "reviewsDesc"
+            ],
+            "enumTitles": [
+                "Relevance (Steam default)",
+                "Lowest price",
+                "Highest price",
+                "Newest release",
+                "Name",
+                "Best reviewed"
+            ],
+            "default": "relevance"
+        },
+        "hideFreeToPlay": {
+            "title": "Hide free-to-play games",
+            "type": "boolean",
+            "description": "deals: drop free-to-play games (their DLC deals still appear).",
+            "default": false
+        },
+        "apps": {
+            "title": "Games (for appPrices)",
+            "type": "array",
+            "editor": "stringList",
+            "description": "appPrices: one per line - a Steam appid (1808500), a Steam store URL, or a game name (resolved through Steam store search; an exact title match wins).",
+            "prefill": [
+                "1808500",
+                "https://store.steampowered.com/app/632360/Risk_of_Rain_2/",
+                "Elden Ring"
+            ]
+        },
+        "countries": {
+            "title": "Countries (for appPrices)",
+            "type": "array",
+            "editor": "stringList",
+            "description": "appPrices: two-letter country codes to compare. Each record gets its USD equivalent (ECB reference rates), the cheapest country and the difference versus the US price.",
+            "prefill": [
+                "US",
+                "GB",
+                "DE",
+                "BR",
+                "TR",
+                "IN",
+                "ID",
+                "AR"
+            ],
+            "default": [
+                "US"
+            ]
+        },
+        "saleUrls": {
+            "title": "Sale pages (for salePage)",
+            "type": "array",
+            "editor": "stringList",
+            "description": "salePage: store.steampowered.com/sale/<name> URLs or just the <name>. Get current ones from the featured mode (SPOTLIGHT records with targetType 'sale'). Ended sales are reported as not_found.",
+            "prefill": []
+        },
+        "includeDiscountDetails": {
+            "title": "Include discount end date & deal type",
+            "type": "boolean",
+            "description": "Adds discountEndsAt, hoursLeft, discountType (weekend / weeklong / launch / special / named campaign), developers, publishers and discounted bundles, from Valve's official store API (1 extra request per 100 items).",
+            "default": true
+        },
+        "includeUsdPrices": {
+            "title": "Add USD prices",
+            "type": "boolean",
+            "description": "Convert every price to USD with the European Central Bank's daily reference rates (about 30 currencies; others stay null).",
+            "default": true
+        },
+        "includePastEvents": {
+            "title": "Include ended events",
+            "type": "boolean",
+            "description": "saleEvents: also return calendar entries that already ended.",
+            "default": false
+        },
+        "compareWithPrevious": {
+            "title": "Compare with previous run (monitoring)",
+            "type": "boolean",
+            "description": "Remember each item's price between runs and add previousFinalPriceCents, priceChangeCents, priceDropPct, isNewDeal, lowestPriceSeenCents and alert. In deals/freebies mode, items that disappeared since the last complete run come back as DEAL_ENDED records. Schedule the actor (e.g. every 6 hours) to turn it into a deal monitor. Snapshots are per mode and per filter set, in the named key-value store 'steam-sales-tracker-snapshots'.",
+            "default": true
+        },
+        "alertPriceDropPct": {
+            "title": "Price-drop alert threshold (%)",
+            "type": "integer",
+            "description": "When comparing with the previous run, set alert=true on items whose price fell by at least this percentage (new deals are always alerted). 0 = alert on any drop.",
+            "default": 0,
+            "minimum": 0,
+            "maximum": 100
+        },
+        "maxConcurrency": {
+            "title": "Max concurrent requests",
+            "type": "integer",
+            "description": "Parallel requests for price lookups. Store search pages are always paced to about 1 every 2.5 seconds per IP (Steam's rate limit).",
+            "default": 4,
+            "minimum": 1,
+            "maximum": 10
+        },
+        "maxRetries": {
+            "title": "Max retries per request",
+            "type": "integer",
+            "description": "Attempts per request with exponential backoff before an item is reported as an error.",
+            "default": 6,
+            "minimum": 1,
+            "maximum": 12
+        },
+        "proxyConfiguration": {
+            "title": "Proxy",
+            "type": "object",
+            "editor": "proxy",
+            "description": "Apify Residential proxy is recommended: Steam rate-limits store search per IP, and with a proxy a rate limit switches to a new IP instead of pausing ~25 seconds. Prices always follow the 'country' setting, not the proxy location.",
+            "default": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": [
+                    "RESIDENTIAL"
+                ]
+            },
+            "prefill": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": [
+                    "RESIDENTIAL"
+                ]
+            }
+        }
+    },
+    "required": [
+        "mode"
+    ]
+}

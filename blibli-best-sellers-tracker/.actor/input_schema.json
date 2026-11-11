@@ -1,0 +1,109 @@
+{
+    "title": "Blibli Best Sellers Tracker",
+    "description": "Memantau daftar \"Paling Laris\" Blibli per kategori dan melaporkan produk yang masuk, naik, turun, atau keluar dibanding run sebelumnya.",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "categories": {
+            "title": "Kategori yang dipantau",
+            "type": "array",
+            "description": "URL kategori Blibli atau kodenya langsung, mis. https://www.blibli.com/c3/memory-card/ME-1000006 atau ME-1000006. Daftar \"Paling Laris\" ada di kategori level 3 (sub-sub-kategori).",
+            "editor": "stringList",
+            "prefill": [
+                "ME-1000006"
+            ],
+            "sectionCaption": "Kategori"
+        },
+        "discoverCategories": {
+            "title": "Telusuri kategori otomatis",
+            "type": "boolean",
+            "description": "Menelusuri sendiri pohon kategori Blibli sampai level target, bukan memakai daftar di atas. Perhatikan \"Maksimal kategori\" — tiap kategori berarti ratusan permintaan.",
+            "default": false
+        },
+        "rootCategories": {
+            "title": "Mulai penelusuran dari",
+            "type": "array",
+            "description": "Kode kategori tempat penelusuran dimulai, mis. 53270 (Komputer & Gaming). Kosongkan untuk mulai dari seluruh 14 kategori utama Blibli. Hanya dipakai kalau penelusuran otomatis aktif.",
+            "editor": "stringList",
+            "prefill": []
+        },
+        "categoryLevel": {
+            "title": "Level kategori target",
+            "type": "integer",
+            "description": "Kedalaman kategori yang dipindai. Level 3 adalah kategori penjualan yang punya daftar \"Paling Laris\".",
+            "default": 3,
+            "minimum": 1,
+            "maximum": 5
+        },
+        "maxCategories": {
+            "title": "Maksimal kategori per run",
+            "type": "integer",
+            "description": "Pembatas biaya. Tiap kategori memerlukan sekitar \"Kandidat per kategori\" permintaan halaman produk.",
+            "default": 10,
+            "minimum": 1,
+            "maximum": 500,
+            "unit": "kategori"
+        },
+        "candidatesPerCategory": {
+            "title": "Kandidat per kategori",
+            "type": "integer",
+            "description": "Berapa produk terlaris di kategori yang diperiksa peringkatnya. Peringkat \"Paling Laris\" tidak sejalan dengan jumlah terjual, jadi produk berperingkat bisa berada cukup dalam. Pengujian menunjukkan 300 memulihkan daftar secara utuh; 100 masih menyisakan lubang.",
+            "default": 300,
+            "prefill": 100,
+            "minimum": 20,
+            "maximum": 2000,
+            "unit": "produk",
+            "sectionCaption": "Kedalaman & biaya"
+        },
+        "maxConcurrency": {
+            "title": "Permintaan paralel maksimum",
+            "type": "integer",
+            "description": "Turunkan kalau Blibli mulai memblokir; naikkan untuk menyelesaikan lebih cepat saat memakai proxy.",
+            "default": 10,
+            "minimum": 1,
+            "maximum": 50
+        },
+        "maxRunSeconds": {
+            "title": "Batas waktu pemindaian",
+            "type": "integer",
+            "description": "Pemindaian dihentikan dengan rapi setelah sekian detik, lalu hasil yang sudah terkumpul tetap disimpan (kategori yang belum tuntas ditandai leaderboardComplete=false). Kosongkan untuk tanpa batas. Terlepas dari isian ini, actor selalu berhenti sendiri sebelum timeout run tercapai supaya hasil tidak hilang.",
+            "minimum": 30,
+            "unit": "detik"
+        },
+        "trackChanges": {
+            "title": "Lacak perubahan antar-run",
+            "type": "boolean",
+            "description": "Membandingkan hasil dengan run sebelumnya untuk memberi status MASUK / NAIK / TURUN / TETAP / KELUAR pada tiap produk. Matikan kalau Anda hanya ingin potret sesaat.",
+            "default": true,
+            "sectionCaption": "Pemantauan berkala"
+        },
+        "stateStoreName": {
+            "title": "Nama penyimpanan snapshot",
+            "type": "string",
+            "description": "Key-value store bernama tempat snapshot run terakhir disimpan. Run terjadwal dengan nama yang sama akan saling menyambung. Pakai nama berbeda untuk memisahkan pemantauan yang tidak berkaitan.",
+            "default": "blibli-best-sellers-state",
+            "editor": "textfield"
+        },
+        "watchMerchantCodes": {
+            "title": "Kode penjual yang disorot",
+            "type": "array",
+            "description": "Produk milik kode penjual ini ditandai isWatched=true di hasil, mis. BLL-70058. Berguna untuk menyaring posisi toko Anda sendiri di antara pesaing.",
+            "editor": "stringList",
+            "prefill": []
+        },
+        "proxyConfiguration": {
+            "title": "Proxy",
+            "type": "object",
+            "description": "Sangat disarankan: proxy residensial. Blibli menolak semua IP datacenter dan sebagian IP residensial secara acak (actor otomatis ganti IP). Pada pengujian, residensial tanpa negara lebih jarang ditolak dibanding residensial Indonesia, jadi itu yang dijadikan default.",
+            "editor": "proxy",
+            "default": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": [
+                    "RESIDENTIAL"
+                ]
+            },
+            "sectionCaption": "Jaringan"
+        }
+    },
+    "required": []
+}

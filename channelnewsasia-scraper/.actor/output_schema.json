@@ -1,0 +1,102 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Article / latest-headline record",
+        "description": "Raw-passthrough dataset envelope. Every record carries _input/_source/_scrapedAt (failed URLs are not written to the dataset -- they are reported in the ERRORS record of the run's key-value store). Article-mode records (S1-jsonld+html) carry headline/articleBody-style fields; latest-mode records (S2-rss) carry title/link-style fields.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The exact input value (URL, or 'latest') that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which extraction strategy emitted this record (e.g. S1-jsonld+html, S2-rss)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "headline": {
+                "title": "Headline",
+                "description": "Article headline (from ld+json NewsArticle node)."
+            },
+            "description": {
+                "title": "Description",
+                "description": "Article dek/description. On latest-mode (RSS) records this is the RSS item's <description> instead (often empty)."
+            },
+            "articleBody": {
+                "title": "Article body",
+                "description": "Full article text, joined from div.text > div.text-long paragraph blocks (concatenated across all blocks for longform/syndicated pieces)."
+            },
+            "datePublished": {
+                "title": "Date published",
+                "description": "ISO 8601 publish date, from ld+json."
+            },
+            "dateModified": {
+                "title": "Date modified",
+                "description": "ISO 8601 last-modified date, from ld+json."
+            },
+            "author": {
+                "title": "Author",
+                "description": "Author name, extracted from the ld+json author object's 'name' field."
+            },
+            "image": {
+                "title": "Image",
+                "description": "Lead image URL, extracted from the ld+json image object's 'url' field."
+            },
+            "title": {
+                "title": "Title",
+                "description": "Headline from the RSS item (latest mode)."
+            },
+            "link": {
+                "title": "Link",
+                "description": "Article URL (latest mode)."
+            },
+            "guid": {
+                "title": "GUID",
+                "description": "RSS item GUID (latest mode)."
+            },
+            "pubDate": {
+                "title": "Publish date",
+                "description": "RSS pubDate string (latest mode)."
+            },
+            "category": {
+                "title": "Category",
+                "description": "RSS item category (latest mode)."
+            },
+            "thumbnailUrl": {
+                "title": "Thumbnail URL",
+                "description": "RSS media:thumbnail url attribute (latest mode)."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across both article and latest-headline records.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "_source",
+                    "_scrapedAt",
+                    "headline",
+                    "title",
+                    "link",
+                    "datePublished",
+                    "pubDate",
+                    "author"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

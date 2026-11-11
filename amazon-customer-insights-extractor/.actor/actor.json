@@ -1,0 +1,22 @@
+{
+    "actorSpecification": 1,
+    "name": "amazon-customer-insights-extractor",
+    "version": "0.1",
+    "buildTag": "latest",
+    "title": "Amazon Customer Insights & Aspect Sentiment",
+    "description": "Extract Amazon's \"Customers say\" insights per ASIN: the AI review summary plus every aspect customers mention, with sentiment and mention counts. Negative and mixed aspects surface the content gaps competitors leave open, ready for FAQ and SEO copy.",
+    "categories": ["ECOMMERCE", "MARKETING"],
+    "minMemoryMbytes": 256,
+    "maxMemoryMbytes": 4096,
+    "defaultRunOptions": {
+        "build": "latest",
+        "memoryMbytes": 1024,
+        "timeoutSecs": 3600
+    },
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

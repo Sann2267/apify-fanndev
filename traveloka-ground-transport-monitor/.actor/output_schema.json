@@ -1,0 +1,496 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+            "recordType": {
+                "type": "string"
+            },
+            "searchDate": {
+                "type": [
+                    "string",
+                    "null"
+                ]
+            },
+            "routeQuery": {
+                "type": [
+                    "string",
+                    "null"
+                ]
+            },
+            "originQuery": {
+                "type": [
+                    "string",
+                    "null"
+                ]
+            },
+            "destinationQuery": {
+                "type": [
+                    "string",
+                    "null"
+                ]
+            },
+            "originCode": {
+                "type": [
+                    "string",
+                    "null"
+                ]
+            },
+            "destinationCode": {
+                "type": [
+                    "string",
+                    "null"
+                ]
+            },
+            "routeSequence": {
+                "type": [
+                    "string",
+                    "null"
+                ]
+            },
+            "productType": {
+                "type": [
+                    "string",
+                    "null"
+                ]
+            },
+            "operatorName": {
+                "type": [
+                    "string",
+                    "null"
+                ]
+            },
+            "operatorId": {
+                "type": [
+                    "string",
+                    "null"
+                ]
+            },
+            "fleetName": {
+                "type": [
+                    "string",
+                    "null"
+                ]
+            },
+            "busType": {
+                "type": [
+                    "string",
+                    "null"
+                ]
+            },
+            "seatClass": {
+                "type": [
+                    "string",
+                    "null"
+                ]
+            },
+            "seatSubClass": {
+                "type": [
+                    "string",
+                    "null"
+                ]
+            },
+            "seatLayout": {
+                "type": [
+                    "string",
+                    "null"
+                ]
+            },
+            "seatCapacity": {
+                "type": [
+                    "number",
+                    "integer",
+                    "null"
+                ]
+            },
+            "seatsAvailable": {
+                "type": [
+                    "number",
+                    "integer",
+                    "null"
+                ]
+            },
+            "availabilityStatus": {
+                "type": [
+                    "string",
+                    "null"
+                ]
+            },
+            "fare": {
+                "type": [
+                    "number",
+                    "integer",
+                    "null"
+                ]
+            },
+            "originalFare": {
+                "type": [
+                    "number",
+                    "integer",
+                    "null"
+                ]
+            },
+            "discountPercent": {
+                "type": [
+                    "number",
+                    "integer",
+                    "null"
+                ]
+            },
+            "childFare": {
+                "type": [
+                    "number",
+                    "integer",
+                    "null"
+                ]
+            },
+            "infantFare": {
+                "type": [
+                    "number",
+                    "integer",
+                    "null"
+                ]
+            },
+            "currency": {
+                "type": [
+                    "string",
+                    "null"
+                ]
+            },
+            "promoLabel": {
+                "type": [
+                    "string",
+                    "null"
+                ]
+            },
+            "durationMinutes": {
+                "type": [
+                    "number",
+                    "integer",
+                    "null"
+                ]
+            },
+            "departureDate": {
+                "type": [
+                    "string",
+                    "null"
+                ]
+            },
+            "departureTime": {
+                "type": [
+                    "string",
+                    "null"
+                ]
+            },
+            "arrivalDate": {
+                "type": [
+                    "string",
+                    "null"
+                ]
+            },
+            "arrivalTime": {
+                "type": [
+                    "string",
+                    "null"
+                ]
+            },
+            "pickupPointName": {
+                "type": [
+                    "string",
+                    "null"
+                ]
+            },
+            "pickupPointAddress": {
+                "type": [
+                    "string",
+                    "null"
+                ]
+            },
+            "pickupCity": {
+                "type": [
+                    "string",
+                    "null"
+                ]
+            },
+            "pickupLatitude": {
+                "type": [
+                    "number",
+                    "integer",
+                    "null"
+                ]
+            },
+            "pickupLongitude": {
+                "type": [
+                    "number",
+                    "integer",
+                    "null"
+                ]
+            },
+            "dropoffPointName": {
+                "type": [
+                    "string",
+                    "null"
+                ]
+            },
+            "dropoffPointAddress": {
+                "type": [
+                    "string",
+                    "null"
+                ]
+            },
+            "dropoffCity": {
+                "type": [
+                    "string",
+                    "null"
+                ]
+            },
+            "dropoffLatitude": {
+                "type": [
+                    "number",
+                    "integer",
+                    "null"
+                ]
+            },
+            "dropoffLongitude": {
+                "type": [
+                    "number",
+                    "integer",
+                    "null"
+                ]
+            },
+            "facilities": {
+                "type": [
+                    "array",
+                    "null"
+                ]
+            },
+            "operatorRating": {
+                "type": [
+                    "number",
+                    "integer",
+                    "null"
+                ]
+            },
+            "operatorRatingScale": {
+                "type": [
+                    "number",
+                    "integer",
+                    "null"
+                ]
+            },
+            "operatorReviewCount": {
+                "type": [
+                    "number",
+                    "integer",
+                    "null"
+                ]
+            },
+            "routeId": {
+                "type": [
+                    "string",
+                    "null"
+                ]
+            },
+            "skuId": {
+                "type": [
+                    "string",
+                    "null"
+                ]
+            },
+            "busTripCode": {
+                "type": [
+                    "string",
+                    "null"
+                ]
+            },
+            "inventoryId": {
+                "type": [
+                    "string",
+                    "null"
+                ]
+            },
+            "departuresReturned": {
+                "type": [
+                    "integer",
+                    "null"
+                ]
+            },
+            "inventoriesBeforeDedupe": {
+                "type": [
+                    "integer",
+                    "null"
+                ]
+            },
+            "operatorCount": {
+                "type": [
+                    "integer",
+                    "null"
+                ]
+            },
+            "minFare": {
+                "type": [
+                    "number",
+                    "integer",
+                    "null"
+                ]
+            },
+            "maxFare": {
+                "type": [
+                    "number",
+                    "integer",
+                    "null"
+                ]
+            },
+            "averageFare": {
+                "type": [
+                    "number",
+                    "integer",
+                    "null"
+                ]
+            },
+            "totalSeatsAvailable": {
+                "type": [
+                    "number",
+                    "integer",
+                    "null"
+                ]
+            },
+            "departuresOnPromo": {
+                "type": [
+                    "integer",
+                    "null"
+                ]
+            },
+            "operators": {
+                "type": [
+                    "array",
+                    "null"
+                ]
+            },
+            "error": {
+                "type": [
+                    "string",
+                    "null"
+                ]
+            },
+            "scrapedAt": {
+                "type": "string"
+            }
+        },
+        "required": [
+            "recordType",
+            "scrapedAt"
+        ]
+    },
+    "views": {
+        "departures": {
+            "title": "Departures",
+            "transformation": {
+                "fields": [
+                    "searchDate",
+                    "routeQuery",
+                    "operatorName",
+                    "departureTime",
+                    "arrivalTime",
+                    "durationMinutes",
+                    "fare",
+                    "seatsAvailable",
+                    "pickupPointName",
+                    "dropoffPointName",
+                    "recordType"
+                ]
+            },
+            "display": {
+                "component": "table",
+                "properties": {
+                    "searchDate": {
+                        "label": "Date"
+                    },
+                    "routeQuery": {
+                        "label": "Route"
+                    },
+                    "operatorName": {
+                        "label": "Operator"
+                    },
+                    "departureTime": {
+                        "label": "Departs"
+                    },
+                    "arrivalTime": {
+                        "label": "Arrives"
+                    },
+                    "durationMinutes": {
+                        "label": "Minutes"
+                    },
+                    "fare": {
+                        "label": "Fare"
+                    },
+                    "seatsAvailable": {
+                        "label": "Seats"
+                    },
+                    "pickupPointName": {
+                        "label": "Pickup"
+                    },
+                    "dropoffPointName": {
+                        "label": "Drop-off"
+                    },
+                    "recordType": {
+                        "label": "Type"
+                    }
+                }
+            }
+        },
+        "routes": {
+            "title": "Route summaries",
+            "transformation": {
+                "fields": [
+                    "searchDate",
+                    "routeQuery",
+                    "operatorCount",
+                    "departuresReturned",
+                    "minFare",
+                    "maxFare",
+                    "averageFare",
+                    "totalSeatsAvailable",
+                    "operators",
+                    "recordType"
+                ]
+            },
+            "display": {
+                "component": "table",
+                "properties": {
+                    "searchDate": {
+                        "label": "Date"
+                    },
+                    "routeQuery": {
+                        "label": "Route"
+                    },
+                    "operatorCount": {
+                        "label": "Operators"
+                    },
+                    "departuresReturned": {
+                        "label": "Departures"
+                    },
+                    "minFare": {
+                        "label": "Min fare"
+                    },
+                    "maxFare": {
+                        "label": "Max fare"
+                    },
+                    "averageFare": {
+                        "label": "Avg fare"
+                    },
+                    "totalSeatsAvailable": {
+                        "label": "Seats"
+                    },
+                    "operators": {
+                        "label": "Per operator"
+                    },
+                    "recordType": {
+                        "label": "Type"
+                    }
+                }
+            }
+        }
+    }
+}

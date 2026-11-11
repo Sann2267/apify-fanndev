@@ -1,0 +1,162 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Article / latest-headline record",
+        "description": "Raw-passthrough dataset envelope. Every record carries _input/_source/_scrapedAt (and _error/_errorDetail on failures). Article-mode records carry id/slug/headline-style fields, sourced primarily from the WordPress REST API by numeric post ID (S1-wpapi-by-id) or, on API failure, raw Elementor HTML (S2-html). Latest-mode records (S3-archive, the site's Headlines category archive) carry title/link-style fields.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The exact input value (URL, or 'latest') that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which extraction strategy emitted this record: S1-wpapi-by-id (WordPress REST API by numeric post ID, primary), S2-html (raw HTML fallback, used only if the discovery-link/API path fails), S3-archive (latest mode, Headlines category archive)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed extractions -- the error kind (e.g. not_found, http_500, blocked_or_transient)."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "id": {
+                "title": "Post ID",
+                "description": "Internal numeric WordPress post ID, discovered from the article HTML's REST-discovery <link>. S1-wpapi-by-id only."
+            },
+            "slug": {
+                "title": "Slug",
+                "description": "URL slug of the post. S1-wpapi-by-id only."
+            },
+            "link": {
+                "title": "Link",
+                "description": "Canonical article URL, as reported by the WordPress REST API."
+            },
+            "headline": {
+                "title": "Headline",
+                "description": "Article headline, HTML-entity-decoded and tag-stripped."
+            },
+            "description": {
+                "title": "Description",
+                "description": "Short article summary, from the WordPress excerpt. S1-wpapi-by-id and S3-archive only -- not available on the S2-html fallback (no excerpt markup on the article page itself)."
+            },
+            "articleBody": {
+                "title": "Article body",
+                "description": "Full article text, paragraphs joined with a blank line."
+            },
+            "date": {
+                "title": "Date",
+                "description": "Publish date/time, no timezone suffix. On S1-wpapi-by-id this is verbatim from WordPress and was observed IDENTICAL to date_gmt on every sampled article (this site's WordPress install has its timezone setting configured as UTC, unlike some other outlets in this portfolio). On S2-html it is a best-effort parse of the page's visible 'Month D, YYYY' + 'H:MM am/pm' text (no ISO datetime attribute exists on this site's article template)."
+            },
+            "date_gmt": {
+                "title": "Date (UTC)",
+                "description": "Publish date/time in UTC, verbatim from the WordPress REST API. S1-wpapi-by-id only."
+            },
+            "modified": {
+                "title": "Modified",
+                "description": "Last-modified date/time, verbatim from WordPress. S1-wpapi-by-id only."
+            },
+            "modified_gmt": {
+                "title": "Modified (UTC)",
+                "description": "Last-modified date/time in UTC, verbatim from WordPress. S1-wpapi-by-id only."
+            },
+            "dateText": {
+                "title": "Date (raw text)",
+                "description": "Raw 'Month D, YYYY' text as displayed on the article page. S2-html only, present alongside the parsed 'date' field for verification."
+            },
+            "timeText": {
+                "title": "Time (raw text)",
+                "description": "Raw 'H:MM am/pm' text as displayed on the article page. S2-html only."
+            },
+            "author": {
+                "title": "Author",
+                "description": "WordPress author display name. This site has only two WP user accounts ('webmaster', 'Website Editor') -- almost every article shows the generic 'Website Editor', not an individual. Real reporter bylines (e.g. 'MARY LEMBA, Lusaka') are written into the first paragraph of articleBody instead, not exposed as structured author data anywhere on this site."
+            },
+            "authorId": {
+                "title": "Author ID",
+                "description": "Numeric WordPress user ID of the author. S1-wpapi-by-id only."
+            },
+            "authorSlug": {
+                "title": "Author slug",
+                "description": "WordPress author archive slug. S1-wpapi-by-id only."
+            },
+            "authorLink": {
+                "title": "Author link",
+                "description": "URL of the author's archive page on the site."
+            },
+            "categories": {
+                "title": "Categories",
+                "description": "List of category names attached to the post (e.g. ['Headlines', 'News'])."
+            },
+            "tags": {
+                "title": "Tags",
+                "description": "List of tag names attached to the post. S1-wpapi-by-id only."
+            },
+            "featuredImage": {
+                "title": "Featured image",
+                "description": "Lead image object (url/width/height/altText). S1-wpapi-by-id only -- use 'thumbnail' on S3-archive records instead."
+            },
+            "guid": {
+                "title": "GUID",
+                "description": "WordPress-internal GUID URL (e.g. https://www.daily-mail.co.zm/?p=5159). S1-wpapi-by-id only."
+            },
+            "contentProtected": {
+                "title": "Content protected",
+                "description": "WordPress's own paywall/protected-content flag on the post body -- observed false on every sampled article (no paywall found on this site). S1-wpapi-by-id only."
+            },
+            "postId": {
+                "title": "Post ID (latest mode)",
+                "description": "Internal numeric WordPress post ID, read from the archive card's 'post-<id>' CSS class. S3-archive only."
+            },
+            "title": {
+                "title": "Title",
+                "description": "Headline text of a latest-mode (S3-archive) headline item."
+            },
+            "pubDate": {
+                "title": "Publish date",
+                "description": "Plain-text publish date (e.g. 'August 21, 2026'), verbatim from the archive listing page -- no time-of-day is shown on this page (see 'date'/'dateText'/'timeText' on article-mode records for time precision). Latest mode only."
+            },
+            "thumbnail": {
+                "title": "Thumbnail",
+                "description": "Lead image URL shown on the archive card. S3-archive only -- can be null for posts with no featured image."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across both article and latest-headline records.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "_source",
+                    "_scrapedAt",
+                    "headline",
+                    "title",
+                    "link",
+                    "date",
+                    "pubDate",
+                    "categories",
+                    "author",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

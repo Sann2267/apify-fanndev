@@ -1,0 +1,134 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Article / latest-headline record",
+        "description": "Raw-passthrough dataset envelope. Every record carries _input/_source/_scrapedAt (and _error/_errorDetail on failures). Article-mode records (S1-jsonld) are the JSON-LD NewsArticle object spread verbatim -- Axios emits ld+json as a list ([NewsMediaOrganization, NewsArticle]) rather than a bare dict, but the extractor picks out the NewsArticle entry. Latest-mode records (S2-rss) come from Axios's unusually rich RSS 2.0 feed, which carries a full content:encoded body, multiple dc:creator co-byline tags, and a media:content thumbnail. Upstream JSON-LD is passed through close to verbatim, so extra schema.org fields beyond those listed here may also appear.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The exact input value (URL, or 'latest'/'latest:<section>') that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which extraction strategy emitted this record (S1-jsonld or S2-rss)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed extractions -- the error kind."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "headline": {
+                "title": "Headline",
+                "description": "Article headline (raw passthrough from JSON-LD NewsArticle)."
+            },
+            "description": {
+                "title": "Description",
+                "description": "Short article description/dek."
+            },
+            "articleBody": {
+                "title": "Article body",
+                "description": "Full article text, if carried in the JSON-LD block."
+            },
+            "datePublished": {
+                "title": "Date published",
+                "description": "ISO 8601 publish date."
+            },
+            "dateModified": {
+                "title": "Date modified",
+                "description": "ISO 8601 last-modified date."
+            },
+            "author": {
+                "title": "Author",
+                "description": "Author object(s) as emitted by upstream JSON-LD (raw passthrough)."
+            },
+            "publisher": {
+                "title": "Publisher",
+                "description": "Publisher organization object."
+            },
+            "image": {
+                "title": "Image",
+                "description": "Lead image object."
+            },
+            "mainEntityOfPage": {
+                "title": "Main entity of page",
+                "description": "Canonical WebPage reference."
+            },
+            "articleSection": {
+                "title": "Section",
+                "description": "Article section/category."
+            },
+            "keywords": {
+                "title": "Keywords",
+                "description": "Comma-separated or array of keywords, as emitted upstream."
+            },
+            "title": {
+                "title": "Title",
+                "description": "Headline from the RSS item (latest mode)."
+            },
+            "link": {
+                "title": "Link",
+                "description": "Article URL (latest mode)."
+            },
+            "guid": {
+                "title": "GUID",
+                "description": "RSS item GUID (latest mode)."
+            },
+            "pubDate": {
+                "title": "Publish date",
+                "description": "RSS pubDate string (latest mode)."
+            },
+            "content": {
+                "title": "Content (RSS)",
+                "description": "Full article body from the RSS item's content:encoded field (latest mode)."
+            },
+            "creators": {
+                "title": "Creators",
+                "description": "List of dc:creator byline names, supporting co-bylines (latest mode)."
+            },
+            "categories": {
+                "title": "Categories",
+                "description": "List of <category> tags from the RSS item (latest mode)."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across both article and latest-headline records.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "_source",
+                    "_scrapedAt",
+                    "headline",
+                    "title",
+                    "link",
+                    "datePublished",
+                    "pubDate",
+                    "author",
+                    "creators",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

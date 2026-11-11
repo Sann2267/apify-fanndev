@@ -1,0 +1,18 @@
+{
+    "actorSpecification": 1,
+    "name": "youtube-community-posts-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "YouTube Community Post & Poll Scraper",
+    "description": "Scrape the YouTube Community tab that video-metric scrapers ignore. Returns each post's full text, like count, publish time, outbound links (unwrapped from YouTube's redirect), attached images and videos, plus poll options and total votes. No login.",
+    "categories": [
+        "SOCIAL_MEDIA",
+        "MARKETING"
+    ],
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

@@ -1,0 +1,101 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Article / latest-headline record",
+        "description": "Raw-passthrough dataset envelope. Every record carries _input/_source/_scrapedAt (failed URLs are not written to the dataset -- they are reported in the ERRORS record of the run's key-value store). Article-mode records carry headline/articleBody-style fields; latest-mode records (RSS or sitemap) carry title/link-style fields. Upstream JSON-LD is passed through close to verbatim, so extra schema.org fields beyond those listed here may also appear.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The exact input value (URL, or 'latest'/'latest:<section>') that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which extraction strategy emitted this record (e.g. S1-jsonld, S2-rss)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "id": {
+                "title": "Article ID",
+                "description": "Internal article ID, raw passthrough from __NEXT_DATA__."
+            },
+            "title": {
+                "title": "Title",
+                "description": "Article title, raw passthrough."
+            },
+            "headline": {
+                "title": "Headline",
+                "description": "Article headline, raw passthrough."
+            },
+            "categories": {
+                "title": "Categories",
+                "description": "Section/category taxonomy, raw passthrough."
+            },
+            "tags": {
+                "title": "Tags",
+                "description": "Tags, raw passthrough."
+            },
+            "contributions": {
+                "title": "Contributions/byline",
+                "description": "Byline contributor objects, raw passthrough."
+            },
+            "body": {
+                "title": "Body blocks",
+                "description": "Ordered list of ParagraphNode/TextNode body blocks, raw passthrough."
+            },
+            "payWall": {
+                "title": "Paywall info",
+                "description": "Paywall metadata object, raw passthrough."
+            },
+            "_paywalled": {
+                "title": "Paywalled",
+                "description": "True when payWall is truthy."
+            },
+            "relatedArticles": {
+                "title": "Related articles",
+                "description": "Related-article references, raw passthrough."
+            },
+            "articleText": {
+                "title": "Article text",
+                "description": "Flattened plain-text article body, derived from the body blocks."
+            },
+            "link": {
+                "title": "Link",
+                "description": "Article URL."
+            },
+            "publicationDate": {
+                "title": "Publication date",
+                "description": "Sitemap publication date."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across both article and latest-headline records.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "_source",
+                    "_scrapedAt",
+                    "headline",
+                    "title",
+                    "link",
+                    "publicationDate",
+                    "_paywalled"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

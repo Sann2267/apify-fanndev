@@ -1,0 +1,23 @@
+{
+    "actorSpecification": 1,
+    "name": "steam-concurrent-players-monitor",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Steam Concurrent Players Monitor - Live Counts & History",
+    "description": "Track Steam player counts: live top 100, daily peak chart, live count for any game, monthly and hourly history, a 12,700-game long-tail ranking and total Steam users online. Built-in change detection for scheduled monitoring.",
+    "categories": [
+        "DEVELOPER_TOOLS",
+        "OTHER"
+    ],
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json",
+    "defaultRunOptions": {
+        "build": "latest",
+        "memoryMbytes": 256,
+        "timeoutSecs": 3600
+    }
+}

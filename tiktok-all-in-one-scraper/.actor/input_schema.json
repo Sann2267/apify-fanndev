@@ -1,0 +1,56 @@
+{
+    "title": "TikTok All-in-One Scraper",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "mode": {
+            "title": "Mode",
+            "type": "string",
+            "description": "Which TikTok surface to scrape. 'video' is the richest: views, likes, comments, shares plus the author's follower/heart/video counts and the sound used. 'profile' returns account stats only (the embed publishes no video list). 'hashtag' and 'music' return the videos TikTok currently shows on those pages - one page of roughly 6 and 9 videos respectively, which is all the embed ships. 'oembed' is TikTok's official lightweight record for a video url: title, author and thumbnail, no engagement counters.",
+            "editor": "select",
+            "default": "video",
+            "enum": ["video", "profile", "hashtag", "music", "oembed"],
+            "enumTitles": [
+                "video - full engagement + author stats + sound",
+                "profile - account stats (followers, hearts, bio)",
+                "hashtag - videos on a hashtag page (~6, one page)",
+                "music - videos using a sound (~9, one page)",
+                "oembed - official lightweight record + thumbnail"
+            ]
+        },
+        "targets": {
+            "title": "Targets",
+            "type": "array",
+            "description": "What to scrape, matched to the mode. For video: video or photo urls, vm.tiktok.com / vt.tiktok.com short links, or bare numeric video ids. For profile: usernames, @handles or profile urls (e.g. \"nasa\", \"@nasa\", \"https://www.tiktok.com/@nasa\"). For hashtag: tags with or without the # (e.g. \"fyp\"). For music: a music url - its slug ends in the id - or the bare music id (e.g. \"7301919715965077506\"). For oembed: full video urls only, since TikTok's oEmbed endpoint rejects bare ids.",
+            "editor": "stringList",
+            "prefill": ["https://www.tiktok.com/@complex/video/7626254334065511711"],
+            "example": ["https://www.tiktok.com/@complex/video/7626254334065511711"]
+        },
+        "maxItemsPerTarget": {
+            "title": "Max items per target",
+            "type": "integer",
+            "description": "Cap on rows per target for the hashtag and music modes. Leave at 0 for everything the embed shipped, which is about 6 videos for a hashtag and 9 for a sound - TikTok's embed loader is signature-gated, so there is no deeper page to request and a higher value cannot produce more. Ignored by the video, profile and oembed modes, which always produce exactly one row per target.",
+            "default": 0,
+            "minimum": 0,
+            "maximum": 50,
+            "unit": "items"
+        },
+        "delaySeconds": {
+            "title": "Delay between targets",
+            "type": "integer",
+            "description": "Seconds to wait between targets. TikTok answers repeated embed requests from one IP with HTTP 503 after a handful of calls, so pacing keeps a run alive far longer than hammering does. Lower it only when running through rotating residential proxies.",
+            "default": 2,
+            "minimum": 0,
+            "maximum": 60,
+            "unit": "seconds"
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "description": "Strongly recommended for more than a few targets. TikTok's embed throttle is IP-bound, and this actor rotates both the egress IP and the TLS fingerprint when it hits a 503 - without a proxy only the fingerprint can change, which on its own does not lift the throttle.",
+            "editor": "proxy",
+            "default": { "useApifyProxy": true }
+        }
+    },
+    "required": ["targets"]
+}

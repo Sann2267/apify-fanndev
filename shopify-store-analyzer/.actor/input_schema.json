@@ -1,0 +1,92 @@
+{
+    "title": "Shopify Store Analyzer",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "mode": {
+            "title": "Mode",
+            "type": "string",
+            "editor": "select",
+            "description": "What to do with each store URL. Store analysis is the all-in-one overview. Products exports the whole catalogue. New products lists only recent arrivals. Changes compares against your previous run. Collections exports the collection list. Detect just checks whether a site is Shopify and which theme it runs -- fast and cheap for qualifying many domains.",
+            "enum": [
+                "store-analysis",
+                "products",
+                "new-products",
+                "changes",
+                "collections",
+                "detect"
+            ],
+            "enumTitles": [
+                "Store analysis -- profile, theme, catalogue stats and newest products",
+                "Products -- the full catalogue with prices and variants",
+                "New products -- everything added in the last N days",
+                "Changes -- new, removed, price and stock changes since last run",
+                "Collections -- the store's collection list",
+                "Detect -- is it Shopify, and which theme? (no catalogue crawl)"
+            ],
+            "default": "store-analysis",
+            "prefill": "store-analysis"
+        },
+        "storeUrls": {
+            "title": "Shopify store URLs",
+            "type": "array",
+            "editor": "stringList",
+            "description": "One or more store URLs. A domain on its own works too (allbirds.com). You can also paste a myshopify.com address directly.",
+            "prefill": [
+                "https://allbirds.com",
+                "colourpop.com",
+                "brooklinen.com"
+            ]
+        },
+        "maxProducts": {
+            "title": "Max products per store",
+            "type": "integer",
+            "description": "Caps how many products are read per store. Leave empty or set 0 for the whole catalogue. Large stores can hold thousands of products, so set a limit when you only need a sample.",
+            "default": 1000,
+            "minimum": 0,
+            "unit": "products"
+        },
+        "newWithinDays": {
+            "title": "New within (days)",
+            "type": "integer",
+            "description": "New products mode only. How far back counts as 'new', based on when the product went live in the store.",
+            "default": 7,
+            "minimum": 1,
+            "maximum": 3650,
+            "unit": "days"
+        },
+        "newestProducts": {
+            "title": "Newest products to include",
+            "type": "integer",
+            "description": "Store analysis mode only. How many of the most recently published products to return alongside the store profile.",
+            "default": 10,
+            "minimum": 0,
+            "maximum": 250,
+            "unit": "products"
+        },
+        "explodeVariants": {
+            "title": "One row per variant",
+            "type": "boolean",
+            "description": "Products mode only. In addition to one row per product (with variants nested), also emit a flat row for every single variant -- easier to open in a spreadsheet.",
+            "default": false
+        },
+        "maxConcurrency": {
+            "title": "Max concurrent stores",
+            "type": "integer",
+            "description": "How many stores to analyse in parallel.",
+            "default": 4,
+            "minimum": 1,
+            "maximum": 16
+        },
+        "proxyConfiguration": {
+            "title": "Proxy",
+            "type": "object",
+            "editor": "proxy",
+            "description": "Optional. Shopify's public store data needs no proxy and the actor runs fine without one. Use a country-specific proxy if a store shows different storefronts per region.",
+            "default": {
+                "useApifyProxy": false
+            }
+        }
+    },
+    "required": ["mode", "storeUrls"]
+}

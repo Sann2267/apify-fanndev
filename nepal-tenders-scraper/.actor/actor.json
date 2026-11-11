@@ -1,0 +1,14 @@
+{
+    "actorSpecification": 1,
+    "name": "nepal-tenders-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Nepal Government Tenders Scraper (PPMO e-GP / Bolpatra)",
+    "description": "Scrapes Nepal's official e-Government Procurement portal (bolpatra.gov.np, PPMO) for the latest tender notices, filtered search by keyword/category/method/entity, and full per-tender detail pages with bid schedule, fee, contact, and documents. No login needed to browse.",
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

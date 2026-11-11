@@ -1,0 +1,14 @@
+{
+    "actorSpecification": 1,
+    "name": "algeria-tenders-scraper",
+    "version": "0.1",
+    "buildTag": "latest",
+    "title": "Algeria Government Tenders Scraper (MDN)",
+    "description": "Scrapes public tender notices published by Algeria's Ministry of National Defense (MDN) -- public-works, hospital-equipment, and logistics tenders for military regions and affiliated public institutions. No account or login needed.",
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

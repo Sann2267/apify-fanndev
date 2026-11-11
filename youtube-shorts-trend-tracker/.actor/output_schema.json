@@ -1,0 +1,125 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "additionalProperties": true,
+        "title": "YouTube Shorts trend record",
+        "description": "One record per Short. gridPosition is the rank YouTube gave it for that hashtag and is the trend signal itself. viewsApprox comes from the grid and is ROUNDED; viewCount comes from the Short's own page and is exact. likeCountIsApprox tells you which kind of like figure you are looking at.",
+        "properties": {
+            "_input": { "type": ["string", "null"], "title": "Input" },
+            "_query": { "type": ["string", "null"], "title": "Query" },
+            "_source": {
+                "type": ["string", "null"],
+                "title": "Source",
+                "description": "youtube-hashtag-grid | youtube-shorts-detail | reference | none."
+            },
+            "_scrapedAt": { "type": ["string", "null"], "format": "date-time", "title": "Scraped at" },
+            "_attempts": {
+                "type": ["integer", "null"],
+                "title": "Attempts",
+                "description": "Fetches needed before the payload appeared."
+            },
+            "_tlsProfile": { "type": ["string", "null"], "title": "TLS profile" },
+            "_detailSurface": {
+                "type": ["string", "null"],
+                "title": "Detail surface",
+                "description": "shorts | watch | watch+shorts - which page the per-Short figures came from."
+            },
+            "recordType": {
+                "type": ["string", "null"],
+                "title": "Record type",
+                "description": "SHORT | REDUCED | ERROR | SURFACE."
+            },
+            "hashtag": { "type": ["string", "null"], "title": "Hashtag" },
+            "gridPosition": {
+                "type": ["integer", "null"],
+                "title": "Grid rank",
+                "description": "Position in YouTube's own ranking for this hashtag. 1 is top."
+            },
+            "videoId": { "type": ["string", "null"], "title": "Video ID" },
+            "url": { "type": ["string", "null"], "title": "URL" },
+            "title": { "type": ["string", "null"], "title": "Title" },
+            "channelName": { "type": ["string", "null"], "title": "Channel" },
+            "channelId": { "type": ["string", "null"], "title": "Channel ID" },
+            "viewsApprox": {
+                "type": ["integer", "null"],
+                "title": "Views (rounded)",
+                "description": "From the grid. \"3.3 million\" becomes 3300000 - do not treat as exact."
+            },
+            "viewsApproxText": {
+                "type": ["string", "null"],
+                "title": "Views text",
+                "description": "The raw accessibility string the rounded figure came from."
+            },
+            "viewCount": {
+                "type": ["integer", "null"],
+                "title": "Views (exact)",
+                "description": "From the Short's own page. Present when detail is on."
+            },
+            "likeCount": { "type": ["integer", "null"], "title": "Likes" },
+            "likeCountIsApprox": {
+                "type": ["boolean", "null"],
+                "title": "Likes rounded?",
+                "description": "True when the figure came from the /shorts/ page, which rounds. Turn on exactLikes for the precise number."
+            },
+            "likeToViewPercent": {
+                "type": ["number", "null"],
+                "title": "Like/view %",
+                "description": "likeCount / viewCount * 100. The engagement figure Shorts rankings actually turn on."
+            },
+            "lengthSeconds": { "type": ["integer", "null"], "title": "Duration (s)" },
+            "isShortFormat": {
+                "type": ["boolean", "null"],
+                "title": "Is a Short",
+                "description": "False flags a regular upload that appeared in the grid, rather than mixing it in silently."
+            },
+            "soundAttribution": {
+                "type": ["string", "null"],
+                "title": "Sound",
+                "description": "\"Original Sound\" or the track name. Only the /shorts/ page carries this."
+            },
+            "description": { "type": ["string", "null"], "title": "Description" },
+            "hashtags": { "type": ["array", "null"], "title": "Hashtags in description" },
+            "error": { "type": ["string", "null"], "title": "Error" },
+            "message": { "type": ["string", "null"], "title": "Message" },
+            "hint": { "type": ["string", "null"], "title": "Hint" }
+        }
+    },
+    "views": {
+        "overview": {
+            "title": "Trending Shorts",
+            "transformation": {
+                "fields": [
+                    "hashtag",
+                    "gridPosition",
+                    "title",
+                    "channelName",
+                    "viewCount",
+                    "likeCount",
+                    "likeToViewPercent",
+                    "likeCountIsApprox",
+                    "lengthSeconds",
+                    "soundAttribution",
+                    "url"
+                ]
+            },
+            "display": {
+                "component": "table",
+                "properties": {
+                    "hashtag": { "label": "Tag" },
+                    "gridPosition": { "label": "Rank" },
+                    "title": { "label": "Short" },
+                    "channelName": { "label": "Channel" },
+                    "viewCount": { "label": "Views" },
+                    "likeCount": { "label": "Likes" },
+                    "likeToViewPercent": { "label": "Like/view %" },
+                    "likeCountIsApprox": { "label": "Rounded?" },
+                    "lengthSeconds": { "label": "Sec" },
+                    "soundAttribution": { "label": "Sound" },
+                    "url": { "label": "URL" }
+                }
+            }
+        }
+    }
+}

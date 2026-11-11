@@ -1,0 +1,164 @@
+{
+    "title": "99.co Property Scraper",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "mode": {
+            "title": "Mode",
+            "type": "string",
+            "description": "Which surface to scrape. 99.co runs two different applications on one domain, so modes are split by market: the id-prefixed ones cover Indonesia and the sg-prefixed ones cover Singapore. Each mode reads one input list.",
+            "editor": "select",
+            "default": "idSearch",
+            "enum": [
+                "idSearch",
+                "idListingDetail",
+                "idLocations",
+                "sgSearch",
+                "sgListingDetail",
+                "sgHdbResalePrices"
+            ],
+            "enumTitles": [
+                "Indonesia - search listings (richest data)",
+                "Indonesia - full listing detail incl. POI, Q&A, price trend",
+                "Indonesia - location facets (seeds for beating the page ceiling)",
+                "Singapore - search listings",
+                "Singapore - full listing detail",
+                "Singapore - median HDB resale prices per town"
+            ]
+        },
+        "idSearchTargets": {
+            "title": "Indonesia: search targets",
+            "type": "array",
+            "description": "Indonesian search paths, used by idSearch and idLocations. Must start with 'jual' (for sale) or 'sewa' (for rent), optionally followed by a property type and a location, e.g. 'jual/rumah', 'sewa/apartemen', 'jual/rumah/jakarta-selatan'. A full https://www.99.co/id/... URL also works. The urlSlug field from idLocations can be pasted straight in here.",
+            "editor": "stringList",
+            "prefill": [
+                "jual/rumah"
+            ]
+        },
+        "idListingSlugs": {
+            "title": "Indonesia: listing slugs or URLs",
+            "type": "array",
+            "description": "Indonesian listing slugs for idListingDetail, e.g. 'rumah-dijual-24miliar-cilandak-cp-54195423533', or the full https://www.99.co/id/properti/... URL. The url field of any idSearch record can be fed straight back in here.",
+            "editor": "stringList"
+        },
+        "sgSearchTargets": {
+            "title": "Singapore: search targets",
+            "type": "array",
+            "description": "Singapore search paths for sgSearch, relative to /singapore, e.g. 'rent', 'sale', 'rent/areas/bedok', 'rent/2-bedrooms'. A full https://www.99.co/singapore/... URL also works.",
+            "editor": "stringList",
+            "prefill": [
+                "rent"
+            ]
+        },
+        "sgListingUrls": {
+            "title": "Singapore: listing URLs",
+            "type": "array",
+            "description": "Full Singapore listing URLs for sgListingDetail, e.g. https://www.99.co/singapore/rooms/property/335a-yishun-street-31-hdb-PBi5f6nP6qK47XRZKadBXm. The listingUrl field of any sgSearch record works here.",
+            "editor": "stringList"
+        },
+        "maxPages": {
+            "title": "Max pages per target",
+            "type": "integer",
+            "description": "How many result pages to walk per search target. Indonesian search is HARD CAPPED at 9: from page 10 onward 99.co answers with a Cloudflare managed challenge that no TLS fingerprint gets past, so a higher value is clamped and a warning is logged. Singapore has no such cap. Indonesian pages carry about 31 entries, Singapore about 36.",
+            "default": 5,
+            "minimum": 1,
+            "maximum": 200,
+            "unit": "pages"
+        },
+        "maxItemsPerTarget": {
+            "title": "Max items per target",
+            "type": "integer",
+            "description": "Hard cap on records emitted per search target. Leave at 0 for no cap beyond maxPages.",
+            "default": 0,
+            "minimum": 0,
+            "unit": "items"
+        },
+        "includeProjectPlacements": {
+            "title": "Indonesia: include project placements",
+            "type": "boolean",
+            "description": "Indonesian result pages interleave ordinary listings ('secondary') with paid developer and project placements ('primary'). Both are emitted by default, tagged with groupType. Turn this off to keep only ordinary listings - worth doing when counting a market, since placements are paid inventory rather than organic supply.",
+            "default": true
+        },
+        "minPrice": {
+            "title": "Indonesia: minimum price (IDR)",
+            "type": "integer",
+            "description": "Lower price bound for Indonesian search, in rupiah. Sent as harga_min, which is verified to reach the backend filter. Price bands are the main way to split a query that would otherwise exceed the 9-page ceiling.",
+            "minimum": 0,
+            "unit": "IDR"
+        },
+        "maxPrice": {
+            "title": "Indonesia: maximum price (IDR)",
+            "type": "integer",
+            "description": "Upper price bound for Indonesian search, in rupiah. Sent as harga_maks.",
+            "minimum": 0,
+            "unit": "IDR"
+        },
+        "minBedrooms": {
+            "title": "Indonesia: minimum bedrooms",
+            "type": "integer",
+            "description": "Minimum bedroom count for Indonesian search. Sent as kamar_tidur_min.",
+            "minimum": 0
+        },
+        "propertyType": {
+            "title": "Indonesia: property type",
+            "type": "string",
+            "description": "Property type filter for Indonesian search, sent as tipe_properti, e.g. 'rumah', 'apartemen', 'tanah', 'ruko'. Usually simpler to put the type in the search path instead ('jual/apartemen').",
+            "editor": "textfield"
+        },
+        "sort": {
+            "title": "Indonesia: sort order",
+            "type": "string",
+            "description": "Sort order for Indonesian search, sent as urut, e.g. 'termurah' (cheapest first) or 'terbaru' (newest first). Changing the sort is another way to reach different inventory within the 9-page ceiling.",
+            "editor": "textfield"
+        },
+        "concurrency": {
+            "title": "Concurrency",
+            "type": "integer",
+            "description": "Parallel requests for the detail modes. Search modes always walk pages in order because each page's referer is the previous page. Kept low by default: 99.co sits behind Cloudflare and pages are over 1 MB.",
+            "default": 3,
+            "minimum": 1,
+            "maximum": 10
+        },
+        "requestDelaySecs": {
+            "title": "Delay between requests",
+            "type": "integer",
+            "description": "Minimum seconds between requests. Cloudflare scores this origin more aggressively than a plain server-rendered site, and the pages are large, so a small floor costs little. Set to 0 to disable pacing.",
+            "default": 1,
+            "minimum": 0,
+            "maximum": 30,
+            "unit": "seconds"
+        },
+        "maxRetries": {
+            "title": "Max retries",
+            "type": "integer",
+            "description": "Attempts per request before giving up. Each retry backs off exponentially with jitter and rotates to the next TLS impersonation profile. The client always gives the ladder at least one full lap, since a challenge is fingerprint-shaped.",
+            "default": 4,
+            "minimum": 1,
+            "maximum": 10
+        },
+        "requestTimeoutSecs": {
+            "title": "Request timeout",
+            "type": "integer",
+            "description": "Per-request timeout in seconds. 99.co pages are 1-1.6 MB, so do not set this too low.",
+            "default": 45,
+            "minimum": 10,
+            "maximum": 300,
+            "unit": "seconds"
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "description": "Optional but recommended at volume. 99.co is behind Cloudflare and escalates to a managed challenge on some paths, so residential exit addresses hold up better than datacenter ones over a long run. If proxy setup fails the run continues direct and says so rather than failing.",
+            "editor": "proxy",
+            "default": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": [
+                    "RESIDENTIAL"
+                ]
+            }
+        }
+    },
+    "required": [
+        "mode"
+    ]
+}

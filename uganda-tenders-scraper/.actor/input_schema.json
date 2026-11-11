@@ -1,0 +1,69 @@
+{
+    "title": "Uganda Government Tenders Scraper (PPDA e-GP)",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "mode": {
+            "title": "Mode",
+            "type": "string",
+            "editor": "select",
+            "description": "'latest' = currently open bid notices (accepting bids right now). 'archived' = closed/historical bid notices. 'detail' = fetch specific notice ID(s) directly.",
+            "enum": ["latest", "archived", "detail"],
+            "enumTitles": ["Latest (currently open notices)", "Archived (closed/historical notices)", "Detail (specific notice IDs)"],
+            "default": "latest",
+            "prefill": "latest"
+        },
+        "noticeIds": {
+            "title": "Notice IDs or detail URLs",
+            "type": "array",
+            "editor": "stringList",
+            "description": "Only used when mode='detail'. One or more notice IDs (e.g. 390594566) or full detail URLs (e.g. https://egpuganda.go.ug/index/390594566_egp) to fetch directly."
+        },
+        "financialYear": {
+            "title": "Financial year filter",
+            "type": "string",
+            "editor": "textfield",
+            "description": "Only used when mode='archived'. Restrict results to one Ugandan financial year, e.g. \"2025-2026\". Leave blank for all years.",
+            "prefill": "2025-2026"
+        },
+        "maxResults": {
+            "title": "Max results",
+            "type": "integer",
+            "description": "Maximum number of notices to return. Ignored by mode='detail' (which returns exactly the IDs given).",
+            "default": 50,
+            "minimum": 1,
+            "maximum": 2000,
+            "prefill": 50
+        },
+        "fetchDetails": {
+            "title": "Fetch full detail per notice",
+            "type": "boolean",
+            "description": "For 'latest'/'archived' modes: also fetch each notice's detail page (full untruncated subject + description) and opportunistically its bid-opening result (bidder names and amounts, where available). Slower but much richer output.",
+            "default": true,
+            "prefill": true
+        },
+        "maxConcurrency": {
+            "title": "Max concurrent detail fetches",
+            "type": "integer",
+            "description": "How many notice-detail pages to fetch in parallel.",
+            "default": 4,
+            "minimum": 1,
+            "maximum": 16,
+            "prefill": 4
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "editor": "proxy",
+            "description": "Apify Proxy configuration. This target has no anti-bot gate, so a plain datacenter proxy (or no proxy) also works -- residential is offered for consistency with other actors in this collection.",
+            "default": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            },
+            "prefill": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            }
+        }
+    }
+}

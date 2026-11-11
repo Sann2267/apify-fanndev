@@ -1,0 +1,14 @@
+{
+    "actorSpecification": 1,
+    "name": "ethiopia-tenders-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Ethiopia Government Tenders Scraper",
+    "description": "Scrape Ethiopia's official government procurement (eGP) portal. Get the newest published procurement lots across all federal agencies, browse the 29,000+ record register, or look up item-level detail (quantities, prices, specs, milestones) for a lot. No account or API key needed.",
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

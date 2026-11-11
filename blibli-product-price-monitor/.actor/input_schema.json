@@ -1,0 +1,95 @@
+{
+    "title": "Blibli Product & Price Monitor",
+    "description": "Tentukan kata kunci dan/atau kategori Blibli yang mau dipantau. Actor mengembalikan nama, harga, diskon, rating, jumlah ulasan, dan status stok tiap produk.",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "searchTerms": {
+            "title": "Kata kunci",
+            "type": "array",
+            "description": "Kata kunci pencarian Blibli, satu per baris. Contoh: \"laptop gaming\", \"kopi arabika\".",
+            "editor": "stringList",
+            "prefill": ["laptop gaming"],
+            "sectionCaption": "Yang dipantau"
+        },
+        "categories": {
+            "title": "Kategori",
+            "type": "array",
+            "description": "URL kategori Blibli (mis. https://www.blibli.com/c3/memory-card/ME-1000006) atau ID kategorinya langsung (mis. ME-1000006). Buka kategori di Blibli dan salin URL-nya dari address bar.",
+            "editor": "stringList",
+            "prefill": []
+        },
+        "maxItemsPerQuery": {
+            "title": "Maksimal produk per query",
+            "type": "integer",
+            "description": "Batas produk yang diambil untuk tiap kata kunci/kategori. Blibli sendiri hanya melayani 2.000 hasil pertama per query — untuk menembusnya, jalankan beberapa query dengan rentang harga berbeda.",
+            "default": 100,
+            "minimum": 1,
+            "maximum": 2000,
+            "unit": "produk"
+        },
+        "sortBy": {
+            "title": "Urutan hasil",
+            "type": "string",
+            "description": "Menentukan produk mana yang masuk saat jumlahnya dibatasi. \"bestSelling\" dan \"popular\" cocok untuk memetakan pesaing teratas; \"cheapest\" cocok untuk melacak titik harga terendah.",
+            "editor": "select",
+            "default": "relevance",
+            "enum": ["relevance", "bestSelling", "popular", "cheapest", "expensive", "newest"],
+            "enumTitles": [
+                "Relevansi",
+                "Terlaris",
+                "Terpopuler",
+                "Termurah",
+                "Termahal",
+                "Terbaru"
+            ]
+        },
+        "minPrice": {
+            "title": "Harga minimum (Rp)",
+            "type": "integer",
+            "description": "Saring produk di bawah harga ini. Kosongkan untuk tanpa batas bawah.",
+            "minimum": 0,
+            "unit": "Rp",
+            "sectionCaption": "Penyaringan"
+        },
+        "maxPrice": {
+            "title": "Harga maksimum (Rp)",
+            "type": "integer",
+            "description": "Saring produk di atas harga ini. Kosongkan untuk tanpa batas atas.",
+            "minimum": 0,
+            "unit": "Rp"
+        },
+        "includeOutOfStock": {
+            "title": "Sertakan produk habis",
+            "type": "boolean",
+            "description": "Matikan untuk hanya mengambil produk yang tersedia. Biarkan aktif kalau Anda ingin melacak kapan stok pesaing kosong.",
+            "default": true
+        },
+        "fetchProductDetails": {
+            "title": "Ambil detail tiap produk",
+            "type": "boolean",
+            "description": "Membuka setiap halaman produk untuk mendapat jumlah stok pasti, jumlah dilihat, peringkat terlaris, dan garansi. Jauh lebih akurat, tapi menambah satu permintaan per produk sehingga lebih lambat dan lebih mahal.",
+            "default": false,
+            "sectionCaption": "Kedalaman & performa"
+        },
+        "maxConcurrency": {
+            "title": "Permintaan paralel maksimum",
+            "type": "integer",
+            "description": "Turunkan kalau Blibli mulai memblokir; naikkan untuk menyelesaikan lebih cepat saat memakai proxy.",
+            "default": 8,
+            "minimum": 1,
+            "maximum": 50
+        },
+        "proxyConfiguration": {
+            "title": "Proxy",
+            "type": "object",
+            "description": "Sangat disarankan. Proxy residensial wajib (IP datacenter selalu 403). Tanpa negara lebih jarang ditolak daripada residensial ID.",
+            "editor": "proxy",
+            "default": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            }
+        }
+    },
+    "required": []
+}

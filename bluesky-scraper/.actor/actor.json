@@ -1,0 +1,15 @@
+{
+    "actorSpecification": 1,
+    "name": "bluesky-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Bluesky Scraper",
+    "description": "Scrape Bluesky profiles, posts, threads, followers, likes, reposts, quotes, custom feeds, lists, starter packs, trends and full-text search -- 15 modes, no login or API key needed.",
+    "categories": ["SOCIAL_MEDIA"],
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

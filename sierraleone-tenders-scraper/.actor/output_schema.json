@@ -1,0 +1,115 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Sierra Leone tender notice",
+        "description": "One record per tender row on NPPA's public Bids/Tenders board (or a single _error record when a keyword matches nothing, or the board can't be fetched). Raw passthrough from nppa.gov.sl/bid/'s TablePress table -- no registration/reference number is exposed upstream beyond whatever appears inside the free-text description.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The keyword that produced this record, or \"(all bids)\" when no keyword filter was given."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which extraction strategy emitted this record (S1-bid-tenders-table, or 'none' on error)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_rowIndex": {
+                "type": "integer",
+                "title": "Row index",
+                "description": "0-based position of this tender in NPPA's table (newest first, as published upstream)."
+            },
+            "_totalMatches": {
+                "type": "integer",
+                "title": "Total matches",
+                "description": "Total tenders matching this keyword (or total tenders on the board, for \"(all bids)\"), before any maxResults truncation."
+            },
+            "_truncated": {
+                "type": "boolean",
+                "title": "Truncated",
+                "description": "True if _totalMatches exceeded maxResults and not every match was pushed to the dataset."
+            },
+            "biddingOrganization": {
+                "type": "string",
+                "title": "Bidding organization",
+                "description": "The procuring government entity, exactly as published (formatting/spacing quirks in the source are preserved verbatim)."
+            },
+            "datePosted": {
+                "type": "string",
+                "title": "Date posted (raw)",
+                "description": "The Date Posted cell exactly as published (format is inconsistent upstream, e.g. \"14-08-2026\" vs \"30- 04-2026\")."
+            },
+            "datePostedIso": {
+                "type": "string",
+                "format": "date",
+                "title": "Date posted (parsed)",
+                "description": "Best-effort ISO 8601 (YYYY-MM-DD) parse of datePosted. Omitted when the raw value couldn't be parsed."
+            },
+            "expirationDate": {
+                "type": "string",
+                "title": "Expiration date (raw)",
+                "description": "The Expiration Date cell exactly as published."
+            },
+            "expirationDateIso": {
+                "type": "string",
+                "format": "date",
+                "title": "Expiration date (parsed)",
+                "description": "Best-effort ISO 8601 (YYYY-MM-DD) parse of expirationDate. Omitted when the raw value couldn't be parsed."
+            },
+            "isExpired": {
+                "type": "boolean",
+                "title": "Expired",
+                "description": "True if expirationDateIso is before today (UTC). Omitted when expirationDate couldn't be parsed -- NPPA does not remove expired rows on its own."
+            },
+            "descriptionOfBidding": {
+                "type": "string",
+                "title": "Description of bidding",
+                "description": "Free-text description of the tender, exactly as published."
+            },
+            "documentUrl": {
+                "type": "string",
+                "title": "Tender document URL",
+                "description": "Direct link to the tender's PDF document. Omitted when the upstream row has a broken or missing download link (a real, occasional data-quality issue on NPPA's board, not a parsing failure)."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on a failed/empty job (no_results, blocked_or_transient)."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns for each tender.",
+            "transformation": {
+                "fields": [
+                    "biddingOrganization",
+                    "descriptionOfBidding",
+                    "datePosted",
+                    "expirationDate",
+                    "isExpired",
+                    "documentUrl",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

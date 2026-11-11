@@ -1,0 +1,65 @@
+{
+    "title": "Zambia Government Tenders Scraper",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "mode": {
+            "title": "Mode",
+            "type": "string",
+            "editor": "select",
+            "enum": ["latest", "list", "detail"],
+            "enumTitles": [
+                "Latest open tenders (currently accepting bids, full detail)",
+                "Historical tender listing (bulk browse, list-level fields)",
+                "Detail lookup (specific resourceId(s) or tender URL(s))"
+            ],
+            "description": "'latest' returns currently-open tenders with full detail. 'list' paginates ZPPA's large historical 'Opened Bid Details' table (title, reference number, procuring entity, deadline, procurement method, status -- no login needed). 'detail' fetches one or more specific tenders by resourceId or URL.",
+            "default": "latest",
+            "prefill": "latest"
+        },
+        "maxItems": {
+            "title": "Max items",
+            "type": "integer",
+            "description": "Applies to 'latest' (capped at ~10 by the site's own homepage widget) and 'list' (paginates 10 rows per request -- e.g. 200 fetches ~20 pages).",
+            "default": 20,
+            "minimum": 1,
+            "maximum": 5000,
+            "prefill": 20
+        },
+        "resourceIds": {
+            "title": "Tender resource IDs",
+            "type": "array",
+            "editor": "stringList",
+            "description": "Mode 'detail' only. Numeric tender resourceId(s), e.g. \"29201439\" (found in tender URLs as ?resourceId=...).",
+            "prefill": ["29201439"]
+        },
+        "tenderUrls": {
+            "title": "Tender URLs",
+            "type": "array",
+            "editor": "stringList",
+            "description": "Mode 'detail' only. Full tender detail URLs from eprocure.zppa.org.zm (resourceId is extracted automatically)."
+        },
+        "maxConcurrency": {
+            "title": "Max concurrent workers",
+            "type": "integer",
+            "description": "Mode 'detail' only -- how many tender lookups to run in parallel.",
+            "default": 4,
+            "minimum": 1,
+            "maximum": 16,
+            "prefill": 4
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "editor": "proxy",
+            "description": "Apify Proxy configuration. Off by default -- no WAF/CAPTCHA was found on this target (confirmed across multiple TLS/browser profiles), so a direct connection works reliably.",
+            "default": {
+                "useApifyProxy": false
+            },
+            "prefill": {
+                "useApifyProxy": false
+            }
+        }
+    },
+    "required": []
+}

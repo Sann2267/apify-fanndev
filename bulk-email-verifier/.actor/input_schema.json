@@ -1,0 +1,156 @@
+{
+    "title": "Bulk Email Verifier",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "emails": {
+            "title": "Email addresses",
+            "type": "array",
+            "description": "One address per line. Display-name forms ('Jane Doe <jane@acme.com>') are accepted, duplicates are removed before anything is checked.",
+            "editor": "stringList",
+            "prefill": [
+                "support@apify.com",
+                "this-mailbox-does-not-exist-9x7q@gmail.com",
+                "info@shopify.com",
+                "someone@mailinator.com",
+                "typo@gmial.com",
+                "not-an-email"
+            ]
+        },
+        "emailText": {
+            "title": "Paste a list instead",
+            "type": "string",
+            "description": "For pasting straight out of a spreadsheet or CRM export. Separate addresses by newline, comma or semicolon. Merged with the list above.",
+            "editor": "textarea"
+        },
+        "verifySmtp": {
+            "title": "Check the mailbox over SMTP",
+            "type": "boolean",
+            "description": "Ask the mail server whether the mailbox exists (RCPT TO, never DATA - no mail is sent). Needs outbound port 25, which many networks block; the run tests this once and reports the answer in the summary record instead of failing.",
+            "default": true
+        },
+        "detectCatchAll": {
+            "title": "Detect catch-all domains",
+            "type": "boolean",
+            "description": "After an address is accepted, ask the same server about a random address on that domain. If it accepts that too, the domain takes everything and the acceptance proved nothing - reported as risky rather than deliverable.",
+            "default": true
+        },
+        "treatRoleAsRisky": {
+            "title": "Treat role mailboxes as risky",
+            "type": "boolean",
+            "description": "info@, sales@, support@ and the like are real mailboxes but carry higher complaint rates on cold sends. Turn this off to score them purely on deliverability.",
+            "default": true
+        },
+        "includeMxRecords": {
+            "title": "Include full MX records",
+            "type": "boolean",
+            "description": "Keep the full MX list with preferences on each record. Turn off for a slimmer dataset; mxHost is always present.",
+            "default": true
+        },
+        "onlySafeToSend": {
+            "title": "Only return safe-to-send addresses",
+            "type": "boolean",
+            "description": "Output nothing but confirmed deliverable addresses. The run summary still counts everything, so you keep the real rates.",
+            "default": false,
+            "groupCaption": "Output filters",
+            "groupDescription": "Applied after verification, so the summary record always reflects the whole list."
+        },
+        "onlyStatuses": {
+            "title": "Only these statuses",
+            "type": "array",
+            "description": "Keep only the statuses you select. Leave empty to return everything.",
+            "editor": "select",
+            "items": {
+                "type": "string",
+                "enum": [
+                    "deliverable",
+                    "undeliverable",
+                    "risky",
+                    "unknown"
+                ],
+                "enumTitles": [
+                    "Deliverable",
+                    "Undeliverable",
+                    "Risky",
+                    "Unknown"
+                ]
+            },
+            "default": []
+        },
+        "concurrency": {
+            "title": "Concurrent checks",
+            "type": "integer",
+            "description": "How many addresses to work on at once. SMTP conversations are serialised per domain regardless, so a list of many different domains goes fast while one big domain stays polite.",
+            "default": 20,
+            "minimum": 1,
+            "maximum": 100
+        },
+        "dnsTimeoutSeconds": {
+            "title": "DNS timeout (seconds)",
+            "type": "integer",
+            "description": "Per MX lookup. Results are cached per domain for the run.",
+            "default": 8,
+            "minimum": 2,
+            "maximum": 30
+        },
+        "smtpTimeoutSeconds": {
+            "title": "SMTP timeout (seconds)",
+            "type": "integer",
+            "description": "Per SMTP step. Raise it for slow or greylisting servers; a timeout is reported as unknown, never as undeliverable.",
+            "default": 12,
+            "minimum": 3,
+            "maximum": 60
+        },
+        "heloHostname": {
+            "title": "HELO hostname",
+            "type": "string",
+            "description": "The hostname announced in EHLO/HELO. Using a domain you actually control, with matching forward and reverse DNS, measurably reduces how often servers stonewall the probe.",
+            "editor": "textfield",
+            "default": "mail.example.com"
+        },
+        "mailFromAddress": {
+            "title": "MAIL FROM address",
+            "type": "string",
+            "description": "The envelope sender used during the probe. No mail is ever sent to or from it; some servers simply refuse to answer an empty sender.",
+            "editor": "textfield",
+            "default": "verify@example.com"
+        },
+        "emitSummary": {
+            "title": "Add a run summary record",
+            "type": "boolean",
+            "description": "Append one RUN_SUMMARY record with the status breakdown, deliverable rate, duplicates removed and whether port 25 was reachable from this run.",
+            "default": true
+        },
+        "exportFormats": {
+            "title": "Extra export files",
+            "type": "array",
+            "description": "Also write the results to the key-value store in these formats. The dataset is always produced regardless.",
+            "editor": "select",
+            "items": {
+                "type": "string",
+                "enum": [
+                    "json",
+                    "ndjson",
+                    "csv",
+                    "xlsx"
+                ],
+                "enumTitles": [
+                    "JSON",
+                    "NDJSON",
+                    "CSV",
+                    "Excel (XLSX)"
+                ]
+            },
+            "default": []
+        },
+        "proxyConfiguration": {
+            "title": "Proxy for the SMTP probe",
+            "type": "object",
+            "description": "Outbound port 25 is blocked on the Apify platform, so mailbox-level checks only work if a proxy allows a CONNECT tunnel to port 25. Enable this to try; the run reports which route it used and falls back to MX-only when the tunnel is refused. DNS is never proxied.",
+            "editor": "proxy",
+            "default": {
+                "useApifyProxy": false
+            }
+        }
+    }
+}

@@ -1,0 +1,187 @@
+{
+    "title": "Discord Server & Community Scraper",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "mode": {
+            "title": "Mode",
+            "type": "string",
+            "description": "Which extraction to run. No Discord login, bot token or self-bot is used or accepted - everything here is served to an anonymous client, which means public server data rather than message history. Start with 'discoverySearch' to find servers by keyword, 'inviteLookup' to get live member counts for any invite you already have, or 'serverSnapshot' to track the same servers over time.",
+            "editor": "select",
+            "default": "discoverySearch",
+            "enum": [
+                "discoverySearch",
+                "discoveryCategory",
+                "serverProfile",
+                "inviteLookup",
+                "serverWidget",
+                "serverSnapshot",
+                "trendingGames",
+                "gameProfile",
+                "botProfile"
+            ],
+            "enumTitles": [
+                "Discovery Search - find servers by keyword across Discord's ~53,000 public directory",
+                "Discovery Category - browse a whole category (gaming, music, entertainment, science & tech, education)",
+                "Server Profile - full public profile: long description, social links, keywords, age",
+                "Invite Lookup - resolve ANY invite to live member and online counts (works outside Discovery)",
+                "Server Widget - who is online right now, and in which voice channel",
+                "Server Snapshot - one comparable row per server per run, for growth tracking on a schedule",
+                "Trending Games - Discord's weekly games chart, with week-on-week movement and history",
+                "Game Profile - one game: genres, publisher, platforms, official links, official server",
+                "Bot / App Profile - public metadata for any Discord app or bot by its application ID"
+            ]
+        },
+        "searchKeywords": {
+            "title": "Search keywords",
+            "type": "array",
+            "description": "Keywords for discoverySearch. Each one is matched against server names, descriptions and the keywords owners tag their server with. This is the way to reach the ~45 categories that have no browsable page - Cryptocurrency, Finance, Anime & Manga, Memes, Esports and the rest - which exist only as tags on server records.",
+            "editor": "stringList",
+            "prefill": [
+                "crypto"
+            ]
+        },
+        "categories": {
+            "title": "Discovery categories",
+            "type": "array",
+            "description": "Categories for discoveryCategory. Discord publishes a browsable page for exactly five: gaming, music, entertainment, science & tech, education. Anything else is a 404 on Discord's side - use searchKeywords for those.",
+            "editor": "stringList",
+            "prefill": [
+                "science & tech"
+            ]
+        },
+        "serverTargets": {
+            "title": "Servers",
+            "type": "array",
+            "description": "Servers for serverProfile, serverWidget and serverSnapshot. Paste whatever you have: an invite link (https://discord.gg/python), a Discovery URL (https://discord.com/servers/python-267624335836053506), a bare guild ID (267624335836053506) or a bare invite code (python). The actor works out which is which. NOTE that a bare guild ID can only be resolved if the server is in Discovery or publishes a widget - an invite code always resolves.",
+            "editor": "stringList",
+            "prefill": [
+                "https://discord.gg/python"
+            ]
+        },
+        "inviteCodes": {
+            "title": "Invite codes or links",
+            "type": "array",
+            "description": "Invites for inviteLookup. Accepts discord.gg/CODE, discord.com/invite/CODE or the bare code. Vanity codes and random codes both work. This is the only mode that reaches servers which never joined Server Discovery, which is the overwhelming majority of Discord.",
+            "editor": "stringList",
+            "prefill": [
+                "https://discord.gg/python"
+            ]
+        },
+        "gameTargets": {
+            "title": "Games",
+            "type": "array",
+            "description": "Games for gameProfile. Needs the full slug-and-ID form Discord uses, e.g. valheim-1124358970618953818, or the whole URL. The trendingGames mode emits exactly this as its gameUrl field, so the two chain together.",
+            "editor": "stringList",
+            "prefill": [
+                "https://discord.com/game/valheim-1124358970618953818"
+            ]
+        },
+        "applicationIds": {
+            "title": "Application / bot IDs",
+            "type": "array",
+            "description": "Discord application IDs for botProfile. A bare numeric ID, or any URL containing one (an OAuth2 authorize link works). Returns the app's public metadata: name, description, tags, verification and monetization status, install scopes and permissions, and its policy URLs.",
+            "editor": "stringList",
+            "prefill": [
+                "936929561302675456"
+            ]
+        },
+        "targets": {
+            "title": "Targets (generic)",
+            "type": "array",
+            "description": "Optional catch-all. Whatever you put here is routed into whichever list the chosen mode needs, so this actor can be driven from another actor or a scheduler with one field no matter which mode is selected. Ignored when the mode's own list is filled in.",
+            "editor": "stringList"
+        },
+        "weeksOfHistory": {
+            "title": "Weeks of history",
+            "type": "integer",
+            "description": "For trendingGames: how many weekly charts to collect, walking backwards. 1 is the current week. The walk follows the previous-week link inside each chart rather than stepping dates by seven, because Discord answers a date it has no chart for with the CURRENT chart instead of a 404.",
+            "editor": "number",
+            "default": 1,
+            "minimum": 1,
+            "maximum": 52
+        },
+        "startWeekDate": {
+            "title": "Start week",
+            "type": "string",
+            "description": "For trendingGames: the week to start from, as YYYY-MM-DD, matching a weekDate Discord publishes (e.g. 2026-09-10). Leave empty for the current week. If Discord has no chart for the date you give, the actor reports that rather than silently returning the current week.",
+            "editor": "textfield"
+        },
+        "gameCategory": {
+            "title": "Game category",
+            "type": "string",
+            "description": "Optional genre filter for trendingGames, as the slug Discord uses on the chart: survival, fantasy, sandbox, open-world, indie, adventure, rpg, crafting and so on. Leave empty for the overall chart.",
+            "editor": "textfield"
+        },
+        "includeWidgetMembers": {
+            "title": "Include the online member list",
+            "type": "boolean",
+            "description": "For serverWidget: keep the per-member rows (up to 100 people currently online, their status and voice channel). Turn this off for just the counts. Discord anonymises these itself - the id field is a position in the response, never a real user ID - so they cannot be joined across runs.",
+            "editor": "checkbox",
+            "default": true
+        },
+        "maxItems": {
+            "title": "Max items",
+            "type": "integer",
+            "description": "Hard ceiling on dataset records for the whole run. 0 means no limit. This is the main control over cost.",
+            "editor": "number",
+            "default": 200,
+            "minimum": 0
+        },
+        "maxPagesPerTarget": {
+            "title": "Max pages per keyword or category",
+            "type": "integer",
+            "description": "How many result pages to walk per keyword or category in the two Discovery modes. Discord serves 12 servers per page and ignores any page size you ask for, so this is your item count divided by 12: 10 pages is up to 120 servers per keyword.",
+            "editor": "number",
+            "default": 5,
+            "minimum": 1,
+            "maximum": 500
+        },
+        "requestDelaySecs": {
+            "title": "Delay between directory requests (seconds)",
+            "type": "number",
+            "description": "Pacing for the server-rendered pages (/servers and /trending-games). Discord allows about six of these back to back per IP address and then answers HTTP 429 with no Retry-After header, so this is the setting that decides whether a long Discovery walk finishes. 2 seconds was measured clean over 16 consecutive requests. Lower it only behind a rotating proxy.",
+            "editor": "number",
+            "default": 2,
+            "minimum": 0,
+            "maximum": 60
+        },
+        "apiRequestDelaySecs": {
+            "title": "Delay between API requests (seconds)",
+            "type": "number",
+            "description": "Pacing for Discord's JSON API (invites, widgets, applications). These are far more permissive than the directory pages - a 25-request burst drew no throttling at all - so this floor is deliberately low.",
+            "editor": "number",
+            "default": 0.4,
+            "minimum": 0,
+            "maximum": 30
+        },
+        "maxRetries": {
+            "title": "Max retries per request",
+            "type": "integer",
+            "editor": "number",
+            "default": 4,
+            "minimum": 1,
+            "maximum": 10,
+            "description": "How many times to retry a single request before giving up on it and writing a diagnostic row. Retries cover transport errors and rate limits; a 404 or a disabled widget is a final answer and is never retried."
+        },
+        "requestTimeoutSecs": {
+            "title": "Request timeout (seconds)",
+            "type": "integer",
+            "editor": "number",
+            "default": 45,
+            "minimum": 5,
+            "maximum": 300,
+            "description": "Per-request timeout. Discovery listing pages are around 340 KB, so allow more than you would for a JSON endpoint on a slow proxy."
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "description": "Optional. Discord served every surface this actor uses to a plain datacentre address during testing, so a proxy is not needed to get data - unlike most scrapers. What it buys is rate-limit headroom: the directory allows only about six requests back to back per address, so rotating addresses make a long Discovery walk finish sooner. DATACENTER is enough; residential is not required.",
+            "editor": "proxy",
+            "default": {
+                "useApifyProxy": false
+            }
+        }
+    },
+    "required": []
+}

@@ -1,0 +1,202 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Facebook event record",
+        "description": "Dataset envelope (_input / _source / _scrapedAt / recordType) on top of one event per row. One EVENT row per event, one RUN_SUMMARY per run, ERROR rows when a search or page returns nothing. Facebook changes its payload without notice, so unlisted fields pass through rather than failing the run.",
+        "additionalProperties": true,
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The search term or page this record came from."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source",
+                "description": "Always events."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was emitted."
+            },
+            "recordType": {
+                "type": "string",
+                "title": "Record type",
+                "description": "EVENT, RUN_SUMMARY or ERROR."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Failure rows only: events_unavailable or unexpected_error."
+            },
+            "eventId": {
+                "title": "Event ID",
+                "description": "Facebook's numeric id for the event."
+            },
+            "name": {
+                "title": "Event name",
+                "description": "The event's title."
+            },
+            "eventUrl": {
+                "title": "Event URL",
+                "description": "Link to the event on Facebook."
+            },
+            "dayTimeSentence": {
+                "title": "When (as shown)",
+                "description": "Facebook's own line, e.g. 'Sun, 20 Sep at 16:00 EDT'. Localised and abbreviated, and the only date a page's events tab publishes."
+            },
+            "startTimestamp": {
+                "title": "Start (epoch)",
+                "description": "Exact start time in epoch seconds. Present on search results; absent on page-tab events."
+            },
+            "startsAtIso": {
+                "title": "Starts at",
+                "description": "ISO 8601 UTC start time, converted from startTimestamp. Null when Facebook published only the sentence."
+            },
+            "isOnline": {
+                "title": "Online",
+                "description": "Whether the event is virtual."
+            },
+            "isPast": {
+                "title": "Past",
+                "description": "Whether Facebook marks the event as finished."
+            },
+            "isCanceled": {
+                "title": "Cancelled",
+                "description": "Whether the event has been cancelled."
+            },
+            "eventKind": {
+                "title": "Event kind",
+                "description": "e.g. PUBLIC_TYPE."
+            },
+            "placeName": {
+                "title": "Venue",
+                "description": "Venue label. Most Facebook events use a free-text place with no separate name, in which case this is the first segment of the address the organiser typed."
+            },
+            "placeAddress": {
+                "title": "Address",
+                "description": "The full address line, e.g. '149 Irving Ave, Brooklyn, NY, United States, New York 11237'."
+            },
+            "city": {
+                "title": "City",
+                "description": "City, where Facebook attaches a structured place."
+            },
+            "latitude": {
+                "title": "Latitude",
+                "description": "Only on events attached to a structured place."
+            },
+            "longitude": {
+                "title": "Longitude",
+                "description": "Only on events attached to a structured place."
+            },
+            "priceRangeText": {
+                "title": "Ticket price",
+                "description": "Facebook's ticketing line, where the event sells tickets."
+            },
+            "hostName": {
+                "title": "Host",
+                "description": "The page or person hosting. Populated on page-tab events; search results often omit it."
+            },
+            "hostUrl": {
+                "title": "Host URL",
+                "description": "Link to the host's profile."
+            },
+            "goingCount": {
+                "title": "Going",
+                "description": "Parsed from Facebook's attendance line ('1 going'). Facebook abbreviates large counts, so this is approximate; attendanceText keeps the original."
+            },
+            "interestedCount": {
+                "title": "Interested",
+                "description": "Parsed from the attendance line the same way."
+            },
+            "attendanceText": {
+                "title": "Attendance (as shown)",
+                "description": "Facebook's own attendance sentence."
+            },
+            "coverPhotoUrl": {
+                "title": "Cover photo",
+                "description": "Cover image. A signed CDN link that expires."
+            },
+            "coverPhotoCaption": {
+                "title": "Cover photo text",
+                "description": "Facebook's machine-generated alt text for the cover image. It often contains the poster's headline, which is the closest thing to a description the public payload carries - the event's own description page is not readable logged out."
+            },
+            "source": {
+                "title": "Source",
+                "description": "'search' or 'page'."
+            },
+            "query": {
+                "title": "Query",
+                "description": "The search term or page slug behind this row."
+            },
+            "sourceUrl": {
+                "title": "Source URL",
+                "description": "The Facebook URL this row came from."
+            }
+        }
+    },
+    "views": {
+        "overview": {
+            "title": "Events",
+            "description": "One row per event: what, when, where.",
+            "transformation": {
+                "fields": [
+                    "name",
+                    "dayTimeSentence",
+                    "startsAtIso",
+                    "placeAddress",
+                    "isOnline",
+                    "goingCount",
+                    "priceRangeText",
+                    "eventUrl",
+                    "recordType",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        },
+        "calendar": {
+            "title": "Calendar",
+            "description": "Sort by exact start time to build a schedule.",
+            "transformation": {
+                "fields": [
+                    "startsAtIso",
+                    "name",
+                    "placeName",
+                    "city",
+                    "isOnline",
+                    "hostName",
+                    "goingCount",
+                    "eventUrl"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        },
+        "venues": {
+            "title": "Venues",
+            "description": "Where the events are happening.",
+            "transformation": {
+                "fields": [
+                    "placeName",
+                    "placeAddress",
+                    "city",
+                    "latitude",
+                    "longitude",
+                    "name",
+                    "startsAtIso",
+                    "eventUrl"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

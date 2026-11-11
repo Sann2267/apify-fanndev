@@ -1,0 +1,14 @@
+{
+    "actorSpecification": 1,
+    "name": "guardian-nigeria-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Guardian Nigeria Scraper",
+    "description": "Extract full article text or the newest headlines from The Guardian Nigeria (guardian.ng), a major Nigerian daily -- not related to the UK's The Guardian. No account or API key needed.",
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

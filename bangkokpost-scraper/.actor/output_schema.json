@@ -1,0 +1,129 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Article / latest-headline record",
+        "description": "Raw-passthrough dataset envelope. Every record carries _input/_source/_scrapedAt (and _error/_errorDetail on failures). Article-mode records (S1-jsonld) are the JSON-LD NewsArticle object spread verbatim -- a rich shape with a byline author array (each with jobTitle/url), an editor field, and a full NewsMediaOrganization publisher block. Latest-mode records (S2-atom) come from the site-wide Atom feed (not RSS 2.0: <entry>/<id>/<updated>/<content type=\"html\"> instead of <item>/<guid>/<pubDate>/<description>). Upstream JSON-LD is passed through close to verbatim, so extra schema.org fields beyond those listed here may also appear.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The exact input value (URL, or 'latest'/'latest:<section>') that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which extraction strategy emitted this record (S1-jsonld or S2-atom)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed extractions -- the error kind."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "headline": {
+                "title": "Headline",
+                "description": "Article headline (raw passthrough from JSON-LD NewsArticle)."
+            },
+            "description": {
+                "title": "Description",
+                "description": "Short article description/dek."
+            },
+            "articleBody": {
+                "title": "Article body",
+                "description": "Full article text, if carried in the JSON-LD block."
+            },
+            "datePublished": {
+                "title": "Date published",
+                "description": "ISO 8601 publish date."
+            },
+            "dateModified": {
+                "title": "Date modified",
+                "description": "ISO 8601 last-modified date."
+            },
+            "author": {
+                "title": "Author",
+                "description": "Byline author array, each item potentially carrying name/jobTitle/url (raw passthrough)."
+            },
+            "editor": {
+                "title": "Editor",
+                "description": "Editor name(s), as emitted upstream."
+            },
+            "publisher": {
+                "title": "Publisher",
+                "description": "Full NewsMediaOrganization publisher object."
+            },
+            "image": {
+                "title": "Image",
+                "description": "Lead image object."
+            },
+            "mainEntityOfPage": {
+                "title": "Main entity of page",
+                "description": "Canonical WebPage reference."
+            },
+            "articleSection": {
+                "title": "Section",
+                "description": "Article section/category."
+            },
+            "keywords": {
+                "title": "Keywords",
+                "description": "Comma-separated or array of keywords, as emitted upstream."
+            },
+            "title": {
+                "title": "Title",
+                "description": "Entry title from the Atom feed (latest mode)."
+            },
+            "link": {
+                "title": "Link",
+                "description": "Article URL, taken from the Atom entry's <id> (latest mode)."
+            },
+            "updated": {
+                "title": "Updated",
+                "description": "Atom entry <updated> value (latest mode)."
+            },
+            "content": {
+                "title": "Content (feed)",
+                "description": "HTML article content from the Atom entry's <content type=\"html\"> field (latest mode)."
+            },
+            "categories": {
+                "title": "Categories",
+                "description": "List of category term strings from the Atom entry (latest mode)."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across both article and latest-headline records.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "_source",
+                    "_scrapedAt",
+                    "headline",
+                    "title",
+                    "link",
+                    "datePublished",
+                    "updated",
+                    "author",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

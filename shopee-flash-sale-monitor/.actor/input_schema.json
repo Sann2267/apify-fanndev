@@ -1,0 +1,65 @@
+{
+    "title": "Shopee Flash Sale & Price Drop Monitor",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "mode": {
+            "title": "Mode",
+            "type": "string",
+            "description": "monitor = sessions plus every item in them (the price-tracking mode). sessions = the session calendar only, 1 request per country. reference = probe each country and report what answered.",
+            "editor": "select",
+            "enum": ["monitor", "sessions", "reference"],
+            "enumTitles": [
+                "monitor - sessions + all items",
+                "sessions - calendar only (cheap)",
+                "reference - measure the surface"
+            ],
+            "default": "monitor"
+        },
+        "countries": {
+            "title": "Country sites",
+            "type": "array",
+            "description": "ISO codes. ID SG MY PH VN TH BR TW MX CO CL. Sessions verified live on ID, SG, MY, PH, VN, TH and BR.",
+            "editor": "stringList",
+            "prefill": ["ID"]
+        },
+        "ongoingOnly": {
+            "title": "Only the session running now",
+            "type": "boolean",
+            "description": "On: skip upcoming sessions, which cuts the run to the flash sale that is actually live. Off: pull upcoming sessions too, so you can see tomorrow's line-up before it starts.",
+            "default": false
+        },
+        "itemsPerSession": {
+            "title": "Items per session",
+            "type": "integer",
+            "description": "One request per session regardless. 100 returns the whole session (measured 42-53 items); lowering this does not save requests, only rows.",
+            "default": 100,
+            "minimum": 1,
+            "maximum": 200
+        },
+        "concurrency": {
+            "title": "Concurrent countries",
+            "type": "integer",
+            "description": "How many country sites to work on at once.",
+            "default": 3,
+            "minimum": 1,
+            "maximum": 8
+        },
+        "tlsProfile": {
+            "title": "Preferred TLS profile",
+            "type": "string",
+            "description": "Optional. The flash-sale endpoints answered on all four during recon.",
+            "editor": "select",
+            "enum": ["chrome124", "chrome120", "safari17_0", "firefox133"],
+            "default": "chrome124"
+        },
+        "proxyConfiguration": {
+            "title": "Proxy",
+            "type": "object",
+            "description": "Recommended for scheduled runs. Shopee gates most of its API at the load balancer; if you start seeing GATED records, a residential exit IP is the first thing to try.",
+            "editor": "proxy",
+            "prefill": { "useApifyProxy": true }
+        }
+    },
+    "required": ["mode"]
+}

@@ -1,0 +1,110 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Article / latest-headline record",
+        "description": "Raw-passthrough dataset envelope. Every record carries _input/_source/_scrapedAt (failed URLs are not written to the dataset -- they are reported in the ERRORS record of the run's key-value store). Article-mode records (S1-jsonld) are the JSON-LD NewsArticle object spread verbatim. Latest-mode records (S2-rss) come from the default site-wide RSS 2.0 feed, which carries only title/description/link/guid/pubDate -- no byline field. Upstream JSON-LD is passed through close to verbatim, so extra schema.org fields beyond those listed here may also appear.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The exact input value (URL, or 'latest'/'latest:<section>') that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which extraction strategy emitted this record (S1-jsonld or S2-rss)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "headline": {
+                "title": "Headline",
+                "description": "Article headline (raw passthrough from JSON-LD NewsArticle)."
+            },
+            "description": {
+                "title": "Description",
+                "description": "Short article description/dek."
+            },
+            "articleBody": {
+                "title": "Article body",
+                "description": "Full article text, if carried in the JSON-LD block."
+            },
+            "datePublished": {
+                "title": "Date published",
+                "description": "ISO 8601 publish date."
+            },
+            "dateModified": {
+                "title": "Date modified",
+                "description": "ISO 8601 last-modified date."
+            },
+            "author": {
+                "title": "Author",
+                "description": "Author object(s) as emitted by upstream JSON-LD (raw passthrough)."
+            },
+            "publisher": {
+                "title": "Publisher",
+                "description": "Publisher organization object."
+            },
+            "image": {
+                "title": "Image",
+                "description": "Lead image object."
+            },
+            "mainEntityOfPage": {
+                "title": "Main entity of page",
+                "description": "Canonical WebPage reference."
+            },
+            "articleSection": {
+                "title": "Section",
+                "description": "Article section/category."
+            },
+            "keywords": {
+                "title": "Keywords",
+                "description": "Comma-separated or array of keywords, as emitted upstream."
+            },
+            "title": {
+                "title": "Title",
+                "description": "Headline from the RSS item (latest mode)."
+            },
+            "link": {
+                "title": "Link",
+                "description": "Article URL (latest mode)."
+            },
+            "guid": {
+                "title": "GUID",
+                "description": "RSS item GUID (latest mode)."
+            },
+            "pubDate": {
+                "title": "Publish date",
+                "description": "RSS pubDate string (latest mode)."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across both article and latest-headline records.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "_source",
+                    "_scrapedAt",
+                    "headline",
+                    "title",
+                    "link",
+                    "datePublished",
+                    "pubDate",
+                    "author"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

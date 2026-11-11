@@ -1,0 +1,14 @@
+{
+    "actorSpecification": 1,
+    "name": "guyana-tenders-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Guyana Government Tenders Scraper (NPTAB eProcure)",
+    "description": "Pull currently advertised government tender/bid opportunities, plus full-text project advertisements, from eprocure.gov.gy -- Guyana's official centralized procurement opportunities website run by the National Procurement and Tender Administration Board (NPTAB). No account or API key needed.",
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

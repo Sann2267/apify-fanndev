@@ -1,0 +1,137 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Solomon Islands Business Registry entity profile / search-result record",
+        "description": "Raw-passthrough dataset envelope. Every record carries _input/_source/_scrapedAt (and _error/_errorDetail on failures). Detail-mode records (_source: S1-catalyst-entityview, the default) carry the full public profile, flattened generically from the registry's own Catalyst (Foster Moore) HTML widgets -- field names and grouping (e.g. director/shareholderInd/ownerind/filingsRepeater as lists) mirror upstream's own label text and CSS-class vocabulary verbatim, since the registry exposes no traditional JSON REST API and each register (Companies/Business Names/Foreign Investments) uses its own tab set and field labels. Summary-mode records (_source: S1-catalyst-searchresult, when 'Fetch full entity profile' is off) carry only the search-result row.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The exact query (name or registration number) that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "S1-catalyst-entityview (full profile), S1-catalyst-searchresult (summary row only), or none (error record)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed extractions -- not_found (search matched nothing), click_failed / detail_fetch_failed / blocked_or_transient (network or session issue)."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "_tabs": {
+                "title": "Profile tabs fetched",
+                "description": "Detail mode only: the exact list of tab labels this entity's profile page had (varies by register -- e.g. Companies have Directors/Shares & Shareholders, Business Names have Owners)."
+            },
+            "entityViewUrl": {
+                "title": "Entity profile URL",
+                "description": "The public registry permalink this detail record was extracted from."
+            },
+            "label": {
+                "title": "Search result label",
+                "description": "Summary-mode only: raw \"<Name> (<RegistrationNumber>)\" label as shown on the registry's search-results page."
+            },
+            "name": {
+                "title": "Name",
+                "description": "Summary-mode only: entity name parsed out of 'label'."
+            },
+            "registrationNumber": {
+                "title": "Registration number",
+                "description": "Summary-mode only: registration number parsed out of 'label'."
+            },
+            "entityTypeBadge": {
+                "title": "Entity type badge",
+                "description": "Summary-mode only: the register badge shown on the result row -- COM (Companies), BN (Business Names), or INV (Foreign Investments)."
+            },
+            "ItemAddress": {
+                "title": "Address (search result)",
+                "description": "Summary-mode only: the address line shown on the result row."
+            },
+            "Company Name": {
+                "title": "Company name",
+                "description": "Detail mode (Companies), inside the currentEntityNames list."
+            },
+            "Company Type": {
+                "title": "Company type",
+                "description": "Detail mode (Companies), e.g. Private Company / Public Company."
+            },
+            "Company Status": {
+                "title": "Company status",
+                "description": "Detail mode (Companies), e.g. Registered / Removed."
+            },
+            "Business Name": {
+                "title": "Business name",
+                "description": "Detail mode (Business Names)."
+            },
+            "Business Name Number": {
+                "title": "Business name registration number",
+                "description": "Detail mode (Business Names)."
+            },
+            "director": {
+                "title": "Directors",
+                "description": "Detail mode (Companies): list of directors, each with Name/Nationality/Director Consent/Appointed Date, exactly as labeled by the registry."
+            },
+            "shareholderInd": {
+                "title": "Shareholders",
+                "description": "Detail mode (Companies): list of individual shareholders, each with Name/Number of shares/Nationality/Appointed Date."
+            },
+            "ownerind": {
+                "title": "Owners",
+                "description": "Detail mode (Business Names): list of individual owners, each with Name/Residential Address/Postal Address/Nationality/Appointed Date."
+            },
+            "physicalAddress": {
+                "title": "Physical addresses",
+                "description": "Detail mode: registered office / principal place of business addresses on file."
+            },
+            "postalAddress": {
+                "title": "Postal address",
+                "description": "Detail mode: postal address on file."
+            },
+            "filingsRepeater": {
+                "title": "Filing history",
+                "description": "Detail mode: list of filings on record, each with Name (form/filing type)/Submitted/End (dates)."
+            },
+            "Total Shares": {
+                "title": "Total shares",
+                "description": "Detail mode (Companies), from the Shares & Shareholders tab."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across both full-profile and search-summary records. Additional register-specific columns (e.g. Company Status vs Business Name Status) are present in the raw record but not all shown here, since each register labels its own fields differently.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "_source",
+                    "_scrapedAt",
+                    "name",
+                    "label",
+                    "registrationNumber",
+                    "entityTypeBadge",
+                    "entityViewUrl",
+                    "_tabs",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

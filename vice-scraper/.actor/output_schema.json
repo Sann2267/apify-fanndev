@@ -1,0 +1,113 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Article / latest-headline record",
+        "description": "Raw-passthrough dataset envelope. Every record carries _input/_source/_scrapedAt (failed URLs are not written to the dataset -- they are reported in the ERRORS record of the run's key-value store). Article-mode records (S1-jsonld+html) carry headline/articleBody-style fields sourced from the standalone NewsArticle ld+json block plus WordPress entry-content HTML. Latest-mode records (S2-rss, from the site-wide /en/rss feed) carry title/link-style fields. Extra fields beyond those listed here may appear if upstream shape shifts.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The exact input value (article URL, or 'latest') that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which extraction strategy emitted this record (S1-jsonld+html, S2-rss, or 'none' on error)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "headline": {
+                "title": "Headline",
+                "description": "Article headline, from the standalone NewsArticle ld+json block (article mode only)."
+            },
+            "description": {
+                "title": "Description",
+                "description": "Short article description/dek. Article mode: from meta[property=og:description]. Latest mode: RSS <description>, HTML-unescaped and tag-stripped (includes the WordPress '...appeared first on VICE' boilerplate)."
+            },
+            "articleBody": {
+                "title": "Article body",
+                "description": "Full article text, joined from <p class=\"wp-block-paragraph\"> tags in div.entry-content (article mode only)."
+            },
+            "articleSection": {
+                "title": "Section",
+                "description": "Article section/category, from the NewsArticle ld+json block (article mode only)."
+            },
+            "datePublished": {
+                "title": "Date published",
+                "description": "ISO 8601 publish date (article mode only)."
+            },
+            "dateModified": {
+                "title": "Date modified",
+                "description": "ISO 8601 last-modified date (article mode only)."
+            },
+            "author": {
+                "title": "Author",
+                "description": "Author name(s). Article mode: joined from the NewsArticle ld+json author object/array. Latest mode: RSS dc:creator."
+            },
+            "keywords": {
+                "title": "Keywords",
+                "description": "Keywords as emitted in the NewsArticle ld+json block (article mode only)."
+            },
+            "image": {
+                "title": "Image",
+                "description": "Lead image URL, from the NewsArticle ld+json image object (article mode only)."
+            },
+            "title": {
+                "title": "Title",
+                "description": "Headline from the RSS item (latest mode only)."
+            },
+            "link": {
+                "title": "Link",
+                "description": "Article URL, from the RSS item (latest mode only)."
+            },
+            "guid": {
+                "title": "GUID",
+                "description": "RSS item guid (latest mode only)."
+            },
+            "pubDate": {
+                "title": "Publish date",
+                "description": "RSS pubDate string (latest mode only)."
+            },
+            "contentHtml": {
+                "title": "Content HTML",
+                "description": "Full body HTML from the RSS content:encoded element, HTML-unescaped (latest mode only)."
+            },
+            "categories": {
+                "title": "Categories",
+                "description": "List of RSS <category> values (latest mode only)."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across both article and latest-headline records.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "_source",
+                    "_scrapedAt",
+                    "headline",
+                    "title",
+                    "link",
+                    "description",
+                    "datePublished",
+                    "pubDate",
+                    "author",
+                    "articleSection",
+                    "categories"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

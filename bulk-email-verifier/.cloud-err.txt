@@ -1,0 +1,5 @@
+
+Warning: You are using an old version of Apify CLI. We strongly recommend you always use the latest available version.
+       ↪ Run npm install -g apify-cli@latest to update! 👍 
+
+application/json

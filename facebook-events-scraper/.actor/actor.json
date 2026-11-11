@@ -1,0 +1,23 @@
+{
+    "actorSpecification": 1,
+    "name": "facebook-events-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Facebook Events Scraper",
+    "description": "Collect public Facebook events by keyword and city, or straight from a page's events tab: name, date, venue address, online or in-person, ticket price line, host and attendance. Facebook's event search is the one search vertical still open to logged-out clients, and this actor uses it.",
+    "categories": [
+        "SOCIAL_MEDIA",
+        "OTHER"
+    ],
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json",
+    "defaultRunOptions": {
+        "build": "latest",
+        "timeoutSecs": 3600,
+        "memoryMbytes": 1024
+    }
+}

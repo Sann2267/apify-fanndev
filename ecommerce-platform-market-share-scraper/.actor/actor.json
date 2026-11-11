@@ -1,0 +1,18 @@
+{
+    "actorSpecification": 1,
+    "name": "ecommerce-platform-market-share-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Ecommerce Platform Market Share & Migration Scraper",
+    "description": "Track ecommerce platform market share: live store counts for 110 platforms, quarterly growth back to 2019, stores by country, category, app, technology and theme, plus how many stores switch between platforms. Shopify, WooCommerce, BigCommerce, Wix and more.",
+    "categories": [
+        "ECOMMERCE",
+        "BUSINESS"
+    ],
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

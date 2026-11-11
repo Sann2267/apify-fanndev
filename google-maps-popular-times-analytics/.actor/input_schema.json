@@ -1,0 +1,151 @@
+{
+    "title": "Google Maps Popular Times & Traffic Analytics",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "searchQueries": {
+            "title": "Search queries",
+            "type": "array",
+            "editor": "stringList",
+            "prefill": [
+                "gym"
+            ],
+            "description": "Venue types to collect, e.g. 'gym', 'cafe', 'shopping mall'. Each runs across the location below. A location is required with queries."
+        },
+        "areaName": {
+            "title": "Location - named area",
+            "type": "string",
+            "editor": "textfield",
+            "prefill": "jakarta",
+            "description": "City, region or country, e.g. 'jakarta', 'bali', 'Austin, Texas'. Common cities use a built-in box; any other name is looked up on OpenStreetMap. For a precise area use a centre point with a radius, or a bounding box."
+        },
+        "centerLatitude": {
+            "title": "Location - centre latitude",
+            "type": "string",
+            "editor": "textfield",
+            "description": "Latitude of the centre point. Use with centre longitude and radius."
+        },
+        "centerLongitude": {
+            "title": "Location - centre longitude",
+            "type": "string",
+            "editor": "textfield",
+            "description": "Longitude of the centre point."
+        },
+        "radiusKm": {
+            "title": "Location - radius (km)",
+            "type": "string",
+            "editor": "textfield",
+            "description": "Collect venues within this many kilometres of the centre point."
+        },
+        "boundingBox": {
+            "title": "Location - bounding box [south, west, north, east]",
+            "type": "array",
+            "editor": "json",
+            "description": "Most precise option. Tiled into several search points, then filtered to the box using each venue's real coordinates."
+        },
+        "tileSizeKm": {
+            "title": "Search tile size (km)",
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 200,
+            "description": "Spacing of search points inside your area. Smaller = more thorough, more requests. Leave empty to choose automatically."
+        },
+        "maxPlacesPerQuery": {
+            "title": "Max places per query",
+            "type": "integer",
+            "default": 50,
+            "minimum": 1,
+            "maximum": 2000,
+            "description": "Stop each query after this many venues. Each venue costs one extra request to fetch its popular-times curve."
+        },
+        "placeUrls": {
+            "title": "Specific Google Maps URLs",
+            "type": "array",
+            "editor": "requestListSources",
+            "description": "Optional. Collect named venues directly instead of searching. Short links are followed automatically."
+        },
+        "placeIds": {
+            "title": "Specific Place IDs / CIDs / feature IDs",
+            "type": "array",
+            "editor": "stringList",
+            "description": "Optional. Accepts a Place ID (ChIJ...), a numeric CID, or a raw feature ID (0x...:0x...)."
+        },
+        "outputFormat": {
+            "title": "Output format",
+            "type": "string",
+            "editor": "select",
+            "default": "wide",
+            "enum": [
+                "wide",
+                "long"
+            ],
+            "enumTitles": [
+                "Wide - one row per venue",
+                "Long - one row per venue/day/hour"
+            ],
+            "description": "Wide keeps the whole weekly curve nested inside one row per venue. Long emits one row per venue/day/hour, which is what you want for CSV, spreadsheets and dataframes - group by hour across venues without unpacking anything."
+        },
+        "onlyPlacesWithPopularTimes": {
+            "title": "Only keep venues that have popular times",
+            "type": "boolean",
+            "default": true,
+            "description": "Most small venues have no foot-traffic data at all. Leave on to keep the dataset to venues that do; switch off to also record which venues were checked and had none."
+        },
+        "requestDelaySeconds": {
+            "title": "Delay between requests (seconds)",
+            "type": "string",
+            "editor": "textfield",
+            "default": "1.5",
+            "description": "Pause between requests. Google returns less data to an IP that has made many recent requests, so slowing down can improve how many venues come back with a curve. Raise it for large runs."
+        },
+        "exportFormats": {
+            "title": "Extra export files",
+            "type": "array",
+            "editor": "select",
+            "default": [],
+            "description": "Also write the results to the key-value store in these formats. The Apify dataset is always produced regardless.",
+            "items": {
+                "type": "string",
+                "enum": [
+                    "json",
+                    "csv",
+                    "excel",
+                    "ndjson"
+                ],
+                "enumTitles": [
+                    "JSON",
+                    "CSV",
+                    "Excel (.xlsx)",
+                    "NDJSON"
+                ]
+            }
+        },
+        "language": {
+            "title": "Language (hl)",
+            "type": "string",
+            "default": "en",
+            "editor": "textfield",
+            "description": "Google interface language. Affects busyness wording such as 'Usually a little busy'."
+        },
+        "region": {
+            "title": "Region (gl)",
+            "type": "string",
+            "default": "US",
+            "editor": "textfield",
+            "description": "Two-letter country code biasing Google's results, e.g. US, ID, GB."
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "editor": "proxy",
+            "default": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": [
+                    "RESIDENTIAL"
+                ]
+            },
+            "description": "Residential proxy is ON by default and this actor genuinely needs it. Google sends a reduced place record to datacenter IPs with the popular-times block stripped out entirely: measured on the Apify platform, the same run returned 0% coverage with no proxy and 62.5% coverage through RESIDENTIAL. Turning the proxy off will usually return no foot-traffic data at all. Note GOOGLE_SERP cannot be used here - it does not tunnel arbitrary HTTPS."
+        }
+    },
+    "required": []
+}

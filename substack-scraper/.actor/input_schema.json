@@ -1,0 +1,75 @@
+{
+    "title": "Substack Newsletter to Markdown Scraper",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "mode": {
+            "title": "Mode",
+            "type": "string",
+            "editor": "select",
+            "description": "\"post\" converts specific post URL(s) to Markdown. \"archive\" crawls a whole publication's archive (paginated) and converts every post found to Markdown, plus one publication-profile record.",
+            "enum": ["post", "archive"],
+            "enumTitles": ["Post (by URL)", "Publication archive (all posts)"],
+            "default": "post",
+            "prefill": "post"
+        },
+        "url": {
+            "title": "URL",
+            "type": "string",
+            "editor": "textfield",
+            "description": "\"post\" mode: a single post URL (e.g. \"https://noahpinion.substack.com/p/some-slug\"). \"archive\" mode: a publication URL, custom domain, or bare subdomain (e.g. \"noahpinion\", \"noahpinion.substack.com\", or \"https://www.noahpinion.blog\").",
+            "prefill": "https://noahpinion.substack.com/p/the-death-of-market-street"
+        },
+        "urls": {
+            "title": "URLs",
+            "type": "array",
+            "editor": "stringList",
+            "description": "Multiple post URLs (\"post\" mode) or multiple publications (\"archive\" mode) to process in one run."
+        },
+        "sort": {
+            "title": "Sort order (archive mode)",
+            "type": "string",
+            "editor": "select",
+            "description": "\"archive\" mode only -- crawl newest posts first or top/most-popular first.",
+            "enum": ["new", "top"],
+            "enumTitles": ["Newest first", "Top (most popular) first"],
+            "default": "new",
+            "prefill": "new"
+        },
+        "maxItems": {
+            "title": "Max posts per publication (archive mode)",
+            "type": "integer",
+            "editor": "number",
+            "description": "\"archive\" mode only -- max posts to fetch and convert per publication. Pagination is followed automatically until this cap or the end of the archive, whichever comes first.",
+            "default": 50,
+            "minimum": 1,
+            "maximum": 10000,
+            "prefill": 50
+        },
+        "maxConcurrency": {
+            "title": "Max concurrent workers",
+            "type": "integer",
+            "editor": "number",
+            "description": "How many URLs/publications to process in parallel. In \"archive\" mode this is also used for that publication's own per-post fetch concurrency.",
+            "default": 4,
+            "minimum": 1,
+            "maximum": 16,
+            "prefill": 4
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "editor": "proxy",
+            "description": "Apify Proxy configuration. Residential is on by default. Not required for this target (no WAF was found -- see CRAWLING_METHOD.md), but kept on for production robustness.",
+            "default": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            },
+            "prefill": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            }
+        }
+    },
+    "required": ["mode"]
+}

@@ -1,0 +1,43 @@
+{
+    "title": "Algeria Government Tenders Scraper (MDN)",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "mode": {
+            "title": "Mode",
+            "type": "string",
+            "editor": "select",
+            "description": "\"Latest\" = the current rolling window (roughly the last 10 months, newest day first, ~2,200 notices at recon time). \"Archived\" = the older overflow window the site keeps once items roll off the current page (roughly 2 further months).",
+            "enum": ["latest", "archived"],
+            "enumTitles": [
+                "Latest (current rolling window, ~10 months)",
+                "Archived (older overflow window, ~2 months)"
+            ],
+            "default": "latest",
+            "prefill": "latest"
+        },
+        "maxResults": {
+            "title": "Max results",
+            "type": "integer",
+            "description": "Caps how many notices are kept in the output for this run. The underlying page is always fetched in full first (there is no server-side pagination), so this only trims what gets saved to the dataset, not how much is downloaded.",
+            "default": 200,
+            "minimum": 1,
+            "maximum": 10000,
+            "prefill": 200
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "editor": "proxy",
+            "description": "Apify Proxy configuration.",
+            "default": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            },
+            "prefill": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            }
+        }
+    }
+}

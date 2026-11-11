@@ -1,0 +1,14 @@
+{
+    "actorSpecification": 1,
+    "name": "partiful-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Partiful Events Scraper",
+    "description": "Extract public event details, a host's public profile and published event list, or Partiful's discover/trending feed from partiful.com -- no account or login needed.",
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

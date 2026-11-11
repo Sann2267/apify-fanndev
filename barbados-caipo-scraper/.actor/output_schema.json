@@ -1,0 +1,87 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "CAIPO search-result record",
+        "description": "Raw-passthrough dataset envelope. Every record carries _input/_source/_scrapedAt (and _error/_errorDetail on failures). Successful records carry company_name/company_number/registration_category/registration_date exactly as returned by CAIPO's searchDbApi -- the entirety of what the free public search exposes (no directors/officers/status/detail endpoint exists; a fuller profile requires a paid $5 manual 'Company Inquiry' outside this actor's scope).",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The exact query (name, registration number, or empty string for a category-only search) that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "S1-searchDbApi (real match), or none (error record)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_totalAvailable": {
+                "type": "integer",
+                "title": "Total matches available",
+                "description": "Total number of rows CAIPO reports matching this query (may exceed the number of records emitted if maxResultsPerQuery capped it)."
+            },
+            "_truncated": {
+                "type": "boolean",
+                "title": "Truncated upstream",
+                "description": "True if CAIPO itself capped the match count at 2,000 rows before this actor's own maxResultsPerQuery was applied -- refine the query/category to see the rest."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed extractions -- not_found (search matched nothing), search_api_error (upstream rejected the query), blocked_or_transient (network issue)."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "company_name": {
+                "title": "Company name",
+                "description": "Registered entity/business name, exactly as held by CAIPO."
+            },
+            "company_number": {
+                "title": "Registration number",
+                "description": "CAIPO registration number. NOTE: not a unique per-entity key -- CAIPO reuses numbers across amalgamations/re-registrations/name changes, so the same number can appear on multiple rows with different company_name values."
+            },
+            "registration_category": {
+                "title": "Register category",
+                "description": "Which CAIPO register this entry sits in (e.g. DOMESTIC REGISTER, BUSINESS NAMES, INTERNATIONAL BUSINESS COMPANY, CHARITY REGISTER). Can be null for some legacy rows."
+            },
+            "registration_date": {
+                "title": "Registration date",
+                "description": "Date registered (YYYY-MM-DD), as held by CAIPO. A literal \"0\" means CAIPO has no recorded date for that entry (seen on old/legacy rows) -- passed through raw, not normalized."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns for every record.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "_source",
+                    "_scrapedAt",
+                    "company_name",
+                    "company_number",
+                    "registration_category",
+                    "registration_date",
+                    "_totalAvailable",
+                    "_truncated",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

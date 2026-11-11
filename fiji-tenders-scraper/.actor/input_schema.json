@@ -1,0 +1,43 @@
+{
+    "title": "Fiji Government Tenders Scraper (Ministry of Finance)",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "listType": {
+            "title": "List type",
+            "type": "string",
+            "editor": "select",
+            "description": "\"Current\" = tenders open for submission right now (~17 at a time). \"Awards\" = tenders awarded within the past 36 months (~369 at a time), with the winning company's name extracted where published.",
+            "enum": ["current", "awards"],
+            "enumTitles": [
+                "Current tenders (open now)",
+                "Awards (past 36 months, with winning bidder)"
+            ],
+            "default": "current",
+            "prefill": "current"
+        },
+        "maxResults": {
+            "title": "Max results",
+            "type": "integer",
+            "description": "Caps how many records are kept in the output for this run.",
+            "default": 500,
+            "minimum": 1,
+            "maximum": 10000,
+            "prefill": 500
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "editor": "proxy",
+            "description": "Apify Proxy configuration.",
+            "default": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            },
+            "prefill": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            }
+        }
+    }
+}

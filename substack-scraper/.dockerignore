@@ -1,0 +1,13 @@
+__pycache__
+*.pyc
+.venv
+venv
+apify_storage
+storage
+.git
+.gitignore
+.github
+*.md
+!README.md
+.pytest_cache
+tests/

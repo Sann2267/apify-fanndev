@@ -1,0 +1,68 @@
+{
+    "title": "Malawi Government Tenders Scraper",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "noticeTypes": {
+            "title": "Notice board(s) to scrape",
+            "type": "array",
+            "editor": "select",
+            "description": "Which PPDA notice board(s) to fetch. Each is a separate page on ppda.mw with its own table.",
+            "items": {
+                "type": "string",
+                "enum": ["tenders", "awards", "intentions", "debarments", "admin_reviews"],
+                "enumTitles": [
+                    "Open Tenders",
+                    "Award Notices",
+                    "Intentions to Award",
+                    "Debarred Suppliers",
+                    "Administrative Review Notices"
+                ]
+            },
+            "default": ["tenders"],
+            "prefill": ["tenders"]
+        },
+        "keyword": {
+            "title": "Filter by keyword",
+            "type": "string",
+            "editor": "textfield",
+            "description": "Only return notices whose title, institution, or reference number contains this text (case-insensitive). Leave blank to return every notice currently on the selected board(s)."
+        },
+        "keywords": {
+            "title": "Filter by multiple keywords",
+            "type": "array",
+            "editor": "stringList",
+            "description": "Run multiple keyword filters in one job (each produces its own tagged set of matching records). Combined with 'keyword' if both are set."
+        },
+        "onlyOpenTenders": {
+            "title": "Only open (not yet closed) tenders",
+            "type": "boolean",
+            "description": "If true, excludes 'tenders' board rows whose Closing Date has already passed. Has no effect on the other notice boards (awards, intentions, debarments, admin_reviews don't have a closing date).",
+            "default": false,
+            "prefill": false
+        },
+        "maxResults": {
+            "title": "Max results per notice board per keyword",
+            "type": "integer",
+            "description": "Caps how many notice records are pushed to the dataset per notice board per keyword (or overall, if no keyword is given). Each board is a single page (tens to low hundreds of rows), so this mostly exists as a safety cap.",
+            "default": 100,
+            "minimum": 1,
+            "maximum": 1000,
+            "prefill": 100
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "editor": "proxy",
+            "description": "Apify Proxy configuration.",
+            "default": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            },
+            "prefill": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            }
+        }
+    }
+}

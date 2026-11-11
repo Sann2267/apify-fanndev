@@ -1,0 +1,118 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Article / latest-headline record",
+        "description": "Raw-passthrough dataset envelope. Every record carries _input/_source/_scrapedAt (and _error/_errorDetail on failures). Article-mode records (S1-html, no NewsArticle ld+json exists on this site -- fields come from <meta> tags and HTML) carry headline/articleBody-style fields; latest-mode records (S2-sitemap, monthly Google News sitemap shard, no RSS feed exists) carry title/link-style fields.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The exact input value (URL, or 'latest') that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which extraction strategy emitted this record (e.g. S1-html, S2-sitemap)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed extractions -- the error kind."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "headline": {
+                "title": "Headline",
+                "description": "Article headline, from the <h1 class=\"title\"> element (meta tags as fallback)."
+            },
+            "description": {
+                "title": "Description",
+                "description": "Short article description, from the <meta name=\"description\"> tag."
+            },
+            "articleBody": {
+                "title": "Article body",
+                "description": "Full article text, joined from direct-child <p>/<h2>/<h3>/<blockquote> tags of each div.con-text block."
+            },
+            "author": {
+                "title": "Author",
+                "description": "Per-article byline/wire-source tag from <h5 class=\"title\"> (e.g. \"QNA\", \"AFP\", \"The Peninsula\")."
+            },
+            "publisher": {
+                "title": "Publisher",
+                "description": "Publisher/organisation name from the article:author meta tag (upstream labels its own org name this way, not a personal byline)."
+            },
+            "category": {
+                "title": "Category",
+                "description": "Main section name from the breadcrumb's first link, e.g. \"Qatar\", \"World\"."
+            },
+            "subcategory": {
+                "title": "Subcategory",
+                "description": "Subsection name from the breadcrumb's second link, e.g. \"General\", \"Europe\"."
+            },
+            "datePublished": {
+                "title": "Date published",
+                "description": "Publish timestamp as given by the datePublished/article:published_time meta tags (Doha local time, no explicit UTC offset in the raw value)."
+            },
+            "dateModified": {
+                "title": "Date modified",
+                "description": "Last-modified timestamp as given by the dateModified/article:modified_time meta tags."
+            },
+            "image": {
+                "title": "Image",
+                "description": "Lead image URL from the og:image meta tag."
+            },
+            "title": {
+                "title": "Title",
+                "description": "Headline text of a latest-mode sitemap entry (news:title)."
+            },
+            "link": {
+                "title": "Link",
+                "description": "Article URL from the sitemap entry (loc)."
+            },
+            "pubDate": {
+                "title": "Publish date",
+                "description": "ISO 8601 publish timestamp from the sitemap entry (news:publication_date)."
+            },
+            "lastmod": {
+                "title": "Last modified",
+                "description": "ISO 8601 last-modified timestamp from the sitemap entry (lastmod)."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across both article and latest-headline records.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "_source",
+                    "_scrapedAt",
+                    "headline",
+                    "title",
+                    "link",
+                    "datePublished",
+                    "pubDate",
+                    "author",
+                    "category",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

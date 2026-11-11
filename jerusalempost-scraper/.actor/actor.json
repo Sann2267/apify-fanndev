@@ -1,0 +1,14 @@
+{
+    "actorSpecification": 1,
+    "name": "jerusalempost-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Jerusalem Post Scraper",
+    "description": "Extract full article text or the newest headlines from The Jerusalem Post (jpost.com), an English-language Israeli news outlet -- no account or API key needed.",
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

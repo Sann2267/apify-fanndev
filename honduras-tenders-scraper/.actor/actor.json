@@ -1,0 +1,14 @@
+{
+    "actorSpecification": 1,
+    "name": "honduras-tenders-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Honduras Government Tenders Scraper",
+    "description": "Search Honduras' official ONCAE public procurement register (HonduCompras) for government tenders/licitaciones and get institution, object, stage, dates, contact, line items, documents, bidders, and award info. No account or login needed.",
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

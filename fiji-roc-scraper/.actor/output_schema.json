@@ -1,0 +1,90 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Fiji ROC search-result record",
+        "description": "Raw-passthrough dataset envelope. Every record carries _input/_source/_scrapedAt (and _error/_errorDetail on failures). Field names mirror the upstream 'Buy Information' search grid verbatim (EntityName/EntityNumber/Type/Status/LegalElement). Fiji ROC's public search only exposes these summary fields -- the full entity profile (directors, shareholders, registered address, filing history, certificate download) sits behind a mandatory 'ROC Pass' OIDC login plus a paid purchase step on the source site, which is out of scope for this HTTP-only, no-login actor.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The exact query (entity number or entity name) that produced this record."
+            },
+            "_searchBy": {
+                "type": "string",
+                "title": "Search field used",
+                "description": "entityNumber or entityName -- which upstream form field the query was sent as."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "S1-buyinformation-search (real result row), or none (error record)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed extractions -- not_found (search matched nothing), result_set_too_broad (upstream silently caps very large result sets -- narrow the query), or blocked_or_transient (network/session issue)."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "EntityName": {
+                "title": "Entity name",
+                "description": "Registered name of the company or business name, as held by ROC."
+            },
+            "LegalElement": {
+                "title": "Legal element / suffix",
+                "description": "Company suffix, e.g. LIMITED, PTE LIMITED, LTD, PTE LTD. Empty for business names (sole trader / partnership registrations)."
+            },
+            "EntityNumber": {
+                "title": "Entity number",
+                "description": "ROC company or business-name registration number, e.g. 10658 (company) or RCBS2015I10658 / 2026RB010658 (business name)."
+            },
+            "Type": {
+                "title": "Entity type",
+                "description": "COMPANY or BUSINESS NAME, as classified by ROC."
+            },
+            "Status": {
+                "title": "Status",
+                "description": "Upstream register status, e.g. ACTIVE, CEASED, DE-REGISTERED."
+            },
+            "entityDetailUrl": {
+                "title": "Full-profile URL (requires login)",
+                "description": "The upstream 'Buy Information' detail/purchase URL for this entity. Loading it redirects to auth.digital.gov.fj (ROC Pass OIDC login) -- NOT fetched by this actor, included only as a reference pointer."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns for every search-result record.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "_searchBy",
+                    "_source",
+                    "_scrapedAt",
+                    "EntityName",
+                    "LegalElement",
+                    "EntityNumber",
+                    "Type",
+                    "Status",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

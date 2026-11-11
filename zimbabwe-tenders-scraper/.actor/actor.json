@@ -1,0 +1,14 @@
+{
+    "actorSpecification": 1,
+    "name": "zimbabwe-tenders-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Zimbabwe Government Tenders Scraper",
+    "description": "Scrape Zimbabwe's official government procurement portal (PRAZ eGP System). Get currently-open tenders, browse a 64,000+ record historical tender archive, browse recent award notices with contract amounts and awardee details, or look up specific tenders/awards by ID. No account or API key needed.",
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

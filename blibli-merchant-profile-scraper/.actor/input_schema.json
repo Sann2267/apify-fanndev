@@ -1,0 +1,61 @@
+{
+    "title": "Blibli Merchant Profile & Inventory Scraper",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "storeUrls": {
+            "title": "Stores to map",
+            "type": "array",
+            "description": "Which stores to profile. Accepts a store URL (https://www.blibli.com/merchant/<name>/COP-60023), a bare store code (COP-60023), or ANY product URL or SKU from that store - the store code is the SKU's own prefix, so pasting a competitor's product link works. List several to benchmark competitors side by side.",
+            "editor": "stringList",
+            "prefill": ["https://www.blibli.com/merchant/colgate-palmolive-indonesia-flagship-store/COP-60023"],
+            "default": []
+        },
+        "includeProducts": {
+            "title": "Include product inventory",
+            "type": "boolean",
+            "description": "Emit one PRODUCT record per item in the store's catalogue, with price, discount, rating, sold count and stock location. Turn off for a fast profile-only run.",
+            "default": true
+        },
+        "catalogCoverage": {
+            "title": "Catalogue coverage",
+            "type": "string",
+            "description": "Blibli's search serves at most 800 products per query. 'standard' does one sweep, which is the complete catalogue for most stores. 'deep' adds sort-order and price-band sweeps to reach further into very large catalogues (measured: 2,271 of 3,112 products on a store where a single sweep returned 800).",
+            "editor": "select",
+            "enum": ["standard", "deep"],
+            "enumTitles": [
+                "Standard - one sweep, up to 800 products",
+                "Deep - extra sort and price-band sweeps for large stores"
+            ],
+            "default": "standard"
+        },
+        "maxProductsPerStore": {
+            "title": "Max products per store",
+            "type": "integer",
+            "description": "Stop after this many products per store. 0 means no limit - sweep until the coverage plan is exhausted.",
+            "editor": "number",
+            "minimum": 0,
+            "default": 0
+        },
+        "includeReviewStats": {
+            "title": "Include review statistics",
+            "type": "boolean",
+            "description": "Add the store's rating histogram, average rating, negative share, and Blibli's own review-topic counts (quality, price, shipping, packaging, service, authenticity) to the profile record.",
+            "default": true
+        },
+        "includeVouchers": {
+            "title": "Include store vouchers",
+            "type": "boolean",
+            "description": "Add the store's currently active vouchers - discount value, minimum spend and expiry - to the profile record. Useful for reading a competitor's promotional posture.",
+            "default": true
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "description": "Blibli is behind Cloudflare. Apify Residential proxy with country 'ID' is recommended for long runs; short runs usually succeed without a proxy.",
+            "editor": "proxy",
+            "default": { "useApifyProxy": true, "apifyProxyGroups": ["RESIDENTIAL"] }
+        }
+    },
+    "required": ["storeUrls"]
+}

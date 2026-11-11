@@ -1,0 +1,395 @@
+{
+    "title": "mobile.de Scraper",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "mode": {
+            "title": "What to scrape",
+            "type": "string",
+            "description": "search = vehicle listings for a filter set or a pasted mobile.de search URL. detail = the full vehicle page for an ad, including the seller's description text and the complete equipment list. dealer_inventory = every vehicle one seller currently has online. dealer_contact = a seller's legal imprint (company, street address, phone, Handelsregister and VAT numbers), which on mobile.de is only reachable through one of their ads. similar_ads = mobile.de's own 'similar vehicles' set for an ad. market_count = result counts only, one request per filter set, for sizing a market without pulling listings. reference_data = the make and model id tree plus every filter's allowed values, which is what you need to turn 'BMW 3 Series' into the ids the search filters take.",
+            "editor": "select",
+            "default": "search",
+            "enum": [
+                "search",
+                "detail",
+                "dealer_inventory",
+                "dealer_contact",
+                "similar_ads",
+                "market_count",
+                "reference_data"
+            ],
+            "enumTitles": [
+                "Search listings",
+                "Vehicle detail",
+                "Dealer inventory",
+                "Dealer contact / imprint",
+                "Similar vehicles",
+                "Market count only",
+                "Reference data (makes, models, filters)"
+            ]
+        },
+        "searchUrls": {
+            "title": "mobile.de search URLs",
+            "type": "array",
+            "description": "Paste mobile.de search result URLs to scrape them as-is. Used by the search and market_count modes, and takes precedence over the filter fields below. IMPORTANT: mobile.de honours only its short filter codes (vc, ms, p, ml, fr, ...). A URL built on the legacy makeModelVariant1.makeId= parameters, and the pretty /s/auto/<make>/ links the site shows in the address bar, both return every car on the site rather than the ones you filtered for. mobile.de gives no error when this happens, so the actor compares what it sent against the filters the API echoes back and writes a droppedFilters warning into the run log and the search_summary record. SEO landing pages such as /auto/bmw-3er-reihe.html do filter correctly, but ignore any extra parameters you add to them.",
+            "editor": "stringList",
+            "prefill": [],
+            "default": []
+        },
+        "vehicleCategory": {
+            "title": "Vehicle category",
+            "type": "string",
+            "description": "Which mobile.de marketplace to search. mobile.de does not reject an unknown category - it quietly searches Cars instead and returns the full car count - so the actor validates this value before sending it.",
+            "editor": "select",
+            "default": "Car",
+            "enum": [
+                "Car",
+                "Motorbike",
+                "Motorhome",
+                "EBike",
+                "VanUpTo7500",
+                "TruckOver7500",
+                "SemiTrailerTruck",
+                "SemiTrailer",
+                "Trailer",
+                "Bus",
+                "ConstructionMachine",
+                "AgriculturalVehicle",
+                "ForkliftTruck"
+            ],
+            "enumTitles": [
+                "Cars",
+                "Motorbikes",
+                "Motorhomes",
+                "E-Bikes",
+                "Vans up to 7.5t",
+                "Trucks over 7.5t",
+                "Semi-trailer trucks",
+                "Semi-trailers",
+                "Trailers",
+                "Buses",
+                "Construction machines",
+                "Agricultural vehicles",
+                "Forklift trucks"
+            ]
+        },
+        "makeId": {
+            "title": "Make ID",
+            "type": "string",
+            "description": "mobile.de's numeric id for the manufacturer, for example 3500 for BMW, 1900 for Audi, 25200 for Volkswagen. Run the reference_data mode once to get the full list with names. Names are not accepted here because mobile.de's search API only takes ids.",
+            "editor": "textfield"
+        },
+        "modelId": {
+            "title": "Model ID",
+            "type": "string",
+            "description": "mobile.de's numeric id for a SINGLE model, such as 116 or 318 - not for a whole series. Only unique within a make, so it must be given together with Make ID. Leave empty to search every model of the make. Use Model Group ID instead when you want a whole series. Run the reference_data mode to get both, already paired with the exact filter value to use.",
+            "editor": "textfield"
+        },
+        "modelGroupId": {
+            "title": "Model Group ID (series)",
+            "type": "string",
+            "description": "mobile.de's numeric id for a whole series, such as 21 for the BMW 3 Series or 20 for the 1 Series. This is a SEPARATE field from Model ID and the two are not interchangeable: mobile.de keeps series and single models in one number space but reads them from different slots, so putting a series id in Model ID silently returns a different model's cars with no error at all. Give one or the other, never both. The reference_data mode marks which is which.",
+            "editor": "textfield"
+        },
+        "searchQuery": {
+            "title": "Free-text search",
+            "type": "string",
+            "description": "Free-text search across listing titles and descriptions, for example 'Golf GTI Clubsport'. Combines with the other filters.",
+            "editor": "textfield"
+        },
+        "priceMin": {
+            "title": "Minimum price (EUR)",
+            "type": "integer",
+            "description": "Gross consumer price floor in euros. Leave empty for no floor.",
+            "editor": "number",
+            "minimum": 0
+        },
+        "priceMax": {
+            "title": "Maximum price (EUR)",
+            "type": "integer",
+            "description": "Gross consumer price ceiling in euros. Leave empty for no ceiling. Price bands are also the most practical way to slice a query that is larger than mobile.de's ~2,000-row depth ceiling.",
+            "editor": "number",
+            "minimum": 0
+        },
+        "mileageMin": {
+            "title": "Minimum mileage (km)",
+            "type": "integer",
+            "description": "Odometer floor in kilometres.",
+            "editor": "number",
+            "minimum": 0
+        },
+        "mileageMax": {
+            "title": "Maximum mileage (km)",
+            "type": "integer",
+            "description": "Odometer ceiling in kilometres.",
+            "editor": "number",
+            "minimum": 0
+        },
+        "firstRegistrationMin": {
+            "title": "First registration from (year)",
+            "type": "integer",
+            "description": "Earliest year of first registration, for example 2018.",
+            "editor": "number",
+            "minimum": 1900
+        },
+        "firstRegistrationMax": {
+            "title": "First registration to (year)",
+            "type": "integer",
+            "description": "Latest year of first registration.",
+            "editor": "number",
+            "minimum": 1900
+        },
+        "powerMin": {
+            "title": "Minimum power (kW)",
+            "type": "integer",
+            "description": "Engine power floor in kilowatts, not PS. 100 kW is roughly 136 PS.",
+            "editor": "number",
+            "minimum": 0
+        },
+        "powerMax": {
+            "title": "Maximum power (kW)",
+            "type": "integer",
+            "description": "Engine power ceiling in kilowatts, not PS.",
+            "editor": "number",
+            "minimum": 0
+        },
+        "fuelType": {
+            "title": "Fuel type",
+            "type": "string",
+            "description": "Restrict to one fuel type. The reference_data mode lists every value mobile.de accepts for the chosen vehicle category.",
+            "editor": "select",
+            "enum": [
+                "PETROL",
+                "DIESEL",
+                "ELECTRICITY",
+                "HYBRID",
+                "HYBRID_PLUGIN",
+                "LPG",
+                "CNG",
+                "HYDROGENIUM",
+                "ETHANOL",
+                "OTHER"
+            ],
+            "enumTitles": [
+                "Petrol",
+                "Diesel",
+                "Electric",
+                "Hybrid",
+                "Plug-in hybrid",
+                "LPG",
+                "CNG",
+                "Hydrogen",
+                "Ethanol",
+                "Other"
+            ]
+        },
+        "transmission": {
+            "title": "Transmission",
+            "type": "string",
+            "description": "Restrict to manual, automatic or semi-automatic gearboxes.",
+            "editor": "select",
+            "enum": [
+                "MANUAL_GEAR",
+                "AUTOMATIC_GEAR",
+                "SEMIAUTOMATIC_GEAR"
+            ],
+            "enumTitles": [
+                "Manual",
+                "Automatic",
+                "Semi-automatic"
+            ]
+        },
+        "condition": {
+            "title": "Vehicle condition",
+            "type": "string",
+            "description": "New vehicles, used vehicles, or leave empty for both.",
+            "editor": "select",
+            "enum": [
+                "NEW",
+                "USED"
+            ],
+            "enumTitles": [
+                "New",
+                "Used"
+            ]
+        },
+        "sellerType": {
+            "title": "Seller type",
+            "type": "string",
+            "description": "Restrict to commercial dealers or to private sellers. Leave empty for both.",
+            "editor": "select",
+            "enum": [
+                "dealer",
+                "private"
+            ],
+            "enumTitles": [
+                "Dealers only",
+                "Private sellers only"
+            ]
+        },
+        "includeDamaged": {
+            "title": "Include damaged vehicles",
+            "type": "boolean",
+            "description": "Turn off to exclude vehicles listed as damaged or unrepaired. mobile.de includes them by default in a plain search, though its own SEO landing pages exclude them.",
+            "editor": "checkbox",
+            "default": true
+        },
+        "country": {
+            "title": "Seller country",
+            "type": "string",
+            "description": "Two-letter country code of the seller, for example DE, AT, NL, IT. Leave empty for all countries.",
+            "editor": "textfield"
+        },
+        "zipCode": {
+            "title": "Postcode",
+            "type": "string",
+            "description": "German postcode to search around. Only has an effect together with Radius.",
+            "editor": "textfield"
+        },
+        "radiusKm": {
+            "title": "Radius (km)",
+            "type": "integer",
+            "description": "Search radius in kilometres around the postcode. Postcode plus radius is a good way to slice a query that is too large for mobile.de's ~2,000-row depth ceiling.",
+            "editor": "number",
+            "minimum": 0
+        },
+        "maxDaysOnline": {
+            "title": "Listed within the last N days",
+            "type": "integer",
+            "description": "Only vehicles first published within this many days. Set to 1 to poll for new listings.",
+            "editor": "number",
+            "minimum": 0
+        },
+        "sortBy": {
+            "title": "Sort by",
+            "type": "string",
+            "description": "How mobile.de orders the results. Sorting changes which ~2,000 listings are reachable on a query larger than the depth ceiling, so 'Listing age' plus descending is the right choice for monitoring new stock.",
+            "editor": "select",
+            "enum": [
+                "relevance",
+                "price",
+                "mileage",
+                "firstRegistration",
+                "power",
+                "age"
+            ],
+            "enumTitles": [
+                "Relevance",
+                "Price",
+                "Mileage",
+                "First registration",
+                "Power",
+                "Listing age"
+            ]
+        },
+        "sortDescending": {
+            "title": "Sort descending",
+            "type": "boolean",
+            "description": "Reverse the sort order. Combine with 'Listing age' to put the newest listings first.",
+            "editor": "checkbox",
+            "default": false
+        },
+        "adIds": {
+            "title": "Ad IDs",
+            "type": "array",
+            "description": "mobile.de ad ids for the detail, dealer_contact and similar_ads modes, for example 446326880. The numeric id at the end of any mobile.de vehicle URL.",
+            "editor": "stringList",
+            "prefill": [],
+            "default": []
+        },
+        "adUrls": {
+            "title": "Ad URLs",
+            "type": "array",
+            "description": "Full mobile.de vehicle URLs, as an alternative to Ad IDs, for the detail, dealer_contact and similar_ads modes. Both /fahrzeuge/details.html?id=... and /auto-inserat/<slug>/<id>.html forms are accepted.",
+            "editor": "stringList",
+            "prefill": [],
+            "default": []
+        },
+        "sellerIds": {
+            "title": "Seller IDs",
+            "type": "array",
+            "description": "mobile.de numeric seller ids for the dealer_inventory mode. Every listing record this actor produces carries the seller's id in data.sellerId, so a search run feeds this field directly.",
+            "editor": "stringList",
+            "prefill": [],
+            "default": []
+        },
+        "maxItems": {
+            "title": "Maximum records",
+            "type": "integer",
+            "description": "Stop after this many records across the whole run. Leave empty to take everything the query can reach. Note that mobile.de caps any single query at roughly 2,000 listings no matter how many matches it reports.",
+            "editor": "number",
+            "minimum": 1
+        },
+        "pageSize": {
+            "title": "Listings per request",
+            "type": "integer",
+            "description": "How many listings to pull per HTTP request, up to 200. The default of 200 is the efficient setting: mobile.de honours it, so a full 2,000-listing query costs 10 requests instead of 100.",
+            "editor": "number",
+            "default": 200,
+            "minimum": 1,
+            "maximum": 200
+        },
+        "language": {
+            "title": "Language",
+            "type": "string",
+            "description": "Language for mobile.de's localised labels (price text, equipment names, condition wording). The underlying vehicle data is the same either way.",
+            "editor": "select",
+            "default": "de",
+            "enum": [
+                "de",
+                "en",
+                "fr",
+                "it",
+                "es",
+                "nl",
+                "pl"
+            ],
+            "enumTitles": [
+                "German",
+                "English",
+                "French",
+                "Italian",
+                "Spanish",
+                "Dutch",
+                "Polish"
+            ]
+        },
+        "requestDelaySecs": {
+            "title": "Delay between requests (seconds)",
+            "type": "string",
+            "description": "Pause between HTTP requests. The default 0.4s was comfortable during recon - mobile.de never rate-limited this API - but raise it for very long runs.",
+            "editor": "textfield",
+            "default": "0.4"
+        },
+        "maxRetries": {
+            "title": "Max retries",
+            "type": "integer",
+            "description": "How many times to retry a failed request before writing a diagnostic row and moving on. Retries use exponential backoff.",
+            "editor": "number",
+            "default": 4,
+            "minimum": 0,
+            "maximum": 10
+        },
+        "timeoutSecs": {
+            "title": "Request timeout (seconds)",
+            "type": "integer",
+            "description": "Per-request timeout.",
+            "editor": "number",
+            "default": 45,
+            "minimum": 5,
+            "maximum": 300
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "description": "Optional. mobile.de gates on the TLS fingerprint rather than on the IP address, so this actor works without a proxy. A RESIDENTIAL proxy with country DE is still the safer setting for long runs, and makes prices and regional availability match what a German buyer sees.",
+            "editor": "proxy",
+            "default": {
+                "useApifyProxy": false
+            }
+        }
+    },
+    "required": [
+        "mode"
+    ]
+}

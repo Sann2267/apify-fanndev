@@ -1,0 +1,95 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Job search / detail record",
+        "description": "Raw-passthrough dataset envelope on top of topcv.vn's own data. Every record carries _input/_source/_scrapedAt (and _error/_errorDetail on failures). Full-detail records (search mode with fetchFullDetails=true, or detail mode) carry the site's own public schema.org JobPosting JSON-LD object verbatim (title, description, baseSalary, jobLocation, hiringOrganization, ...). Search-mode records with fetchFullDetails=false carry only the compact search-result-card fields this actor parses out of the SSR search results HTML (job_id, title, url, company_name, salary_text, city, tags, posted_text, ...). Content is Vietnamese and passed through untranslated.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The keyword/city search or job ID/URL that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "S1-jsonld (full-detail record, from the job page's own JobPosting JSON-LD), S1-html-search (compact search-summary record, from the SSR search results HTML), or none on failure."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed extractions (e.g. not_found, invalid_input, invalid_city)."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "_warning": {
+                "type": "string",
+                "title": "Warning",
+                "description": "Present only when a search result's detail fetch failed and this record fell back to the compact search-summary fields instead (detail_fetch_failed_used_search_summary)."
+            },
+
+            "job_id": { "title": "Job ID", "description": "Search-summary record -- topcv.vn's numeric job ID." },
+            "title": { "title": "Job title", "description": "Both record shapes." },
+            "url": { "title": "Job URL", "description": "Search-summary record -- canonical topcv.vn/viec-lam/.../<id>.html link." },
+            "company_name": { "title": "Company name", "description": "Search-summary record." },
+            "company_url": { "title": "Company URL", "description": "Search-summary record -- topcv.vn/cong-ty/... link." },
+            "company_logo_url": { "title": "Company logo URL", "description": "Search-summary record." },
+            "salary_text": { "title": "Salary (as displayed)", "description": "Search-summary record -- e.g. \"Tới 45 triệu\" or \"Thoả thuận\" (negotiable), as shown on the site, not parsed into a number." },
+            "city": { "title": "City / province", "description": "Search-summary record." },
+            "experience_text": { "title": "Experience required (as displayed)", "description": "Search-summary record -- e.g. \"5 năm\"." },
+            "tags": { "title": "Tags", "description": "Search-summary record -- job-function/skill/benefit tag list shown on the result card." },
+            "posted_text": { "title": "Posted (relative, as displayed)", "description": "Search-summary record -- e.g. \"hôm nay\"." },
+            "posted_updated_text": { "title": "Updated (relative, as displayed)", "description": "Search-summary record -- e.g. \"Cập nhật 3 phút trước\"." },
+            "is_verified_employer": { "title": "Verified employer", "description": "Search-summary record -- whether topcv.vn shows its verified-employer badge." },
+
+            "description": { "title": "Full description", "description": "Full-detail record -- HTML-formatted job description, requirements, and benefits combined (topcv.vn's own JobPosting.description)." },
+            "identifier": { "title": "Employer identifier", "description": "Full-detail record -- {name, value} where value is the employer's numeric company ID." },
+            "datePosted": { "title": "Date posted", "description": "Full-detail record -- ISO 8601 date." },
+            "validThrough": { "title": "Valid through", "description": "Full-detail record -- ISO 8601 expiry timestamp." },
+            "employmentType": { "title": "Employment type", "description": "Full-detail record -- e.g. FULL_TIME." },
+            "hiringOrganization": { "title": "Hiring organization", "description": "Full-detail record -- {name, sameAs (company page URL), logo}." },
+            "jobLocation": { "title": "Job location", "description": "Full-detail record -- {address: {streetAddress, addressLocality, addressRegion, postalCode, addressCountry}}." },
+            "baseSalary": { "title": "Base salary", "description": "Full-detail record -- {currency, value: {unitText, minValue?, maxValue?}}. When the employer marks salary negotiable, `value.value` holds the literal Vietnamese string \"Thoả thuận\" instead of a numeric minValue/maxValue -- confirmed live, not a parsing gap." },
+            "industry": { "title": "Industry", "description": "Full-detail record." },
+            "jobBenefits": { "title": "Job benefits", "description": "Full-detail record -- HTML-formatted, also included inline within `description`." },
+            "employerOverview": { "title": "Employer overview / responsibilities", "description": "Full-detail record -- HTML-formatted, also included inline within `description`." },
+            "occupationalCategory": { "title": "Occupational category", "description": "Full-detail record -- e.g. \"Nhân viên\"." },
+            "experienceRequirements": { "title": "Experience requirements", "description": "Full-detail record -- {monthsOfExperience}." },
+            "skills": { "title": "Skills", "description": "Full-detail record -- comma-separated skill/keyword string." },
+            "totalJobOpenings": { "title": "Total job openings", "description": "Full-detail record -- number of open headcount for this posting." }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across search-summary and full-detail records.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "title",
+                    "company_name",
+                    "city",
+                    "salary_text",
+                    "baseSalary",
+                    "datePosted",
+                    "url",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

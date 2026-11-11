@@ -1,0 +1,278 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "99.co record",
+        "description": "Dataset envelope (_input / _source / _scrapedAt / recordType) on top of 99.co's own field shape. Indonesian records pass the site's JSON through essentially verbatim, so they keep its snake_case names (full_address, location_pin, price.price_tag); Singapore records are assembled from schema.org plus the React flight payload and use the schema.org names. Record types: idListing, idListingDetail, idLocation, sgListing, sgListingDetail, sgHdbMedianPrice and error. 99.co ships changes without notice, so unlisted fields pass through rather than failing the run.",
+        "additionalProperties": true,
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The search target, slug or URL this record came from."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which extraction layer produced the row: S1-id-nextdata (Indonesian __NEXT_DATA__), S1-sg-jsonld-rsc (Singapore schema.org + React flight), S1-sg-api (the open JSON API), or none on failure rows."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was emitted."
+            },
+            "recordType": {
+                "type": "string",
+                "title": "Record type",
+                "description": "idListing, idListingDetail, idLocation, sgListing, sgListingDetail, sgHdbMedianPrice or error."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Failure rows only: challenge_wall (Cloudflare served a managed challenge to every TLS profile - on Indonesian search this is the page-10 ceiling and is expected), not_found, no_results, fetch_failed, unexpected_shape, unparsable_input, run_failed."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic accompanying _error."
+            },
+            "_warning": {
+                "type": "string",
+                "title": "Warning",
+                "description": "Non-fatal degradation marker. rsc_listing_not_matched means the schema.org spine had no matching flight object, so the row carries identity but not the rich fields; jsonld_itemlist_missing means the reverse."
+            },
+            "groupType": {
+                "title": "Group type",
+                "description": "Indonesian listings only: 'secondary' for an ordinary listing, 'primary' for a paid developer or project placement. Result pages interleave the two, so filter on this before counting a market."
+            },
+            "id": {
+                "title": "Listing ID",
+                "description": "Indonesian listing UUID."
+            },
+            "business_id": {
+                "title": "Business ID",
+                "description": "Indonesian internal numeric listing id."
+            },
+            "title": {
+                "title": "Title",
+                "description": "Listing title as the advertiser wrote it."
+            },
+            "full_address": {
+                "title": "Full address",
+                "description": "Free-text address as entered by the advertiser."
+            },
+            "description": {
+                "title": "Description",
+                "description": "Full listing description."
+            },
+            "price": {
+                "title": "Price",
+                "description": "Indonesian price object. Carries more than the asking figure: price/price_tag is current, last_price and last_price_change_at record the previous asking price and when it moved, delta_price_percentage the change, and market_price 99.co's own valuation for comparison."
+            },
+            "mortgage": {
+                "title": "Mortgage",
+                "description": "Indicative monthly instalments by term, as 99.co computes them."
+            },
+            "attributes": {
+                "title": "Attributes",
+                "description": "Structured property attributes (land and building area, bedrooms, bathrooms, floors, certification, furnishing)."
+            },
+            "location_pin": {
+                "title": "Location pin",
+                "description": "Latitude and longitude."
+            },
+            "location": {
+                "title": "Location",
+                "description": "Administrative hierarchy - province, city, district, subdistrict."
+            },
+            "media": {
+                "title": "Media",
+                "description": "Photos, floor plans and video attached to the listing."
+            },
+            "agent": {
+                "title": "Agent",
+                "description": "Listing agent and agency as 99.co publishes them on the public page."
+            },
+            "flags": {
+                "title": "Flags",
+                "description": "Listing badges: verified, owner-listed, premium, video viewing and similar."
+            },
+            "url": {
+                "title": "URL slug",
+                "description": "Indonesian listing slug. Prepend https://www.99.co/id/properti/ for the page, or feed it straight into idListingDetail."
+            },
+            "timestamps": {
+                "title": "Timestamps",
+                "description": "Created, updated and published times for the listing."
+            },
+            "status": {
+                "title": "Status",
+                "description": "Listing lifecycle state."
+            },
+            "clusters": {
+                "title": "Clusters",
+                "description": "Project or cluster the unit belongs to, when it is part of one."
+            },
+            "developer": {
+                "title": "Developer",
+                "description": "Developer behind the project, for primary listings."
+            },
+            "poi": {
+                "title": "Points of interest",
+                "description": "Nearby points of interest."
+            },
+            "poiData": {
+                "title": "POI data",
+                "description": "Detail pages only: the expanded nearby-amenities dataset."
+            },
+            "questionsAndAnswers": {
+                "title": "Questions and answers",
+                "description": "Detail pages only: the public Q&A thread on the listing."
+            },
+            "priceInsightTrendMarket": {
+                "title": "Price trend",
+                "description": "Detail pages only: 99.co's market price trend series for the area."
+            },
+            "venueData": {
+                "title": "Venue data",
+                "description": "Detail pages only: venue and building information."
+            },
+            "locationName": {
+                "title": "Location name",
+                "description": "idLocation rows: human-readable location name."
+            },
+            "urlSlug": {
+                "title": "Location URL slug",
+                "description": "idLocation rows: the search path for this location, ready to paste into idSearchTargets. This is the intended way to split a query that would otherwise hit the 9-page ceiling."
+            },
+            "parentSlug": {
+                "title": "Parent location slug",
+                "description": "idLocation rows: the parent location's slug, or null for a top-level location."
+            },
+            "listingId": {
+                "title": "Listing ID",
+                "description": "Singapore listing id, taken from the schema.org sku or the final token of the listing URL."
+            },
+            "listingUrl": {
+                "title": "Listing URL",
+                "description": "Canonical Singapore listing URL. Feed into sgListingDetail for the full record."
+            },
+            "address": {
+                "title": "Address",
+                "description": "Singapore address. A string on search rows, a schema.org PostalAddress object on detail rows."
+            },
+            "propertyTypeLabel": {
+                "title": "Property type",
+                "description": "Singapore property type as displayed, e.g. 'HDB 3 Rooms'."
+            },
+            "listing": {
+                "title": "Listing payload",
+                "description": "Singapore search rows: the raw listing object from the React flight payload - price, psf, beds, bathrooms, floor area, tenure, furnishing, coordinates, neighbourhood and region. Nested pointer values are resolved before the record is emitted."
+            },
+            "name": {
+                "title": "Name",
+                "description": "Singapore detail rows: listing headline from schema.org."
+            },
+            "imageUrl": {
+                "title": "Image URL",
+                "description": "Singapore detail rows: primary listing image."
+            },
+            "floorSize": {
+                "title": "Floor size",
+                "description": "Singapore detail rows: schema.org QuantitativeValue, typically square feet (unitCode FTK)."
+            },
+            "offers": {
+                "title": "Offers",
+                "description": "Singapore detail rows: schema.org Offer with price and currency."
+            },
+            "latitude": {
+                "title": "Latitude",
+                "description": "Singapore detail rows: latitude from schema.org geo."
+            },
+            "longitude": {
+                "title": "Longitude",
+                "description": "Singapore detail rows: longitude from schema.org geo."
+            },
+            "attributes_sg": {
+                "title": "Attributes (Singapore)",
+                "description": "Reserved. Singapore detail attributes are emitted under 'attributes' as a flattened name/value map alongside the raw additionalProperty list."
+            },
+            "datePublished": {
+                "title": "Date published",
+                "description": "Singapore detail rows: when the page was first published."
+            },
+            "dateModified": {
+                "title": "Date modified",
+                "description": "Singapore detail rows: when the page last changed."
+            },
+            "columns": {
+                "title": "Columns",
+                "description": "sgHdbMedianPrice rows: the table's column titles, kept alongside the values so a new flat-type column widens the record instead of shifting every figure."
+            },
+            "values": {
+                "title": "Values",
+                "description": "sgHdbMedianPrice rows: the raw row cells, positionally matching columns. An asterisk on a figure is 99.co's own marker, passed through untouched."
+            },
+            "pageNumber": {
+                "title": "Page number",
+                "description": "Which result page this record came from."
+            },
+            "pageUrl": {
+                "title": "Page URL",
+                "description": "The URL actually fetched, after any redirect."
+            },
+            "totalCount": {
+                "title": "Total matching listings",
+                "description": "How many listings 99.co says match this query. For Indonesian search this is usually far larger than what one run can reach, because anonymous paging stops at page 9 - the gap is real inventory, not an error."
+            },
+            "totalPagesReported": {
+                "title": "Reported page count",
+                "description": "Indonesian search only: the total_page figure 99.co reports (it caps at 500). Recorded for reference; the reachable limit is 9."
+            }
+        }
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "transformation": {
+                "fields": [
+                    "recordType",
+                    "title",
+                    "name",
+                    "full_address",
+                    "address",
+                    "price",
+                    "listing",
+                    "url",
+                    "listingUrl",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        },
+        "idListings": {
+            "title": "Indonesia listings",
+            "transformation": {
+                "fields": [
+                    "groupType",
+                    "title",
+                    "full_address",
+                    "price",
+                    "attributes",
+                    "location",
+                    "location_pin",
+                    "agent",
+                    "flags",
+                    "url",
+                    "totalCount"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

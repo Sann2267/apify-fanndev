@@ -1,0 +1,216 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Researcher / affiliation record",
+        "description": "One record per researcher or institution. Every record carries _input/_source/_scrapedAt (and _error/_errorDetail on failures). recordType discriminates: AUTHOR_CARD (listing row), AUTHOR_PROFILE (full profile), AFFILIATION (institution row).",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The search scope or SINTA ID that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "S1-html, or none on failure."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp."
+            },
+            "recordType": {
+                "title": "Record type",
+                "description": "AUTHOR_CARD | AUTHOR_PROFILE | AFFILIATION."
+            },
+            "sintaId": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "SINTA ID",
+                "description": "National researcher ID -- the stable key for this dataset."
+            },
+            "name": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Name",
+                "description": "Researcher or institution name."
+            },
+            "profileUrl": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Profile URL",
+                "description": "Public SINTA profile page."
+            },
+            "googleScholarId": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Google Scholar ID",
+                "description": "Listing rows -- the researcher's Google Scholar user ID, letting you join this record to Scholar."
+            },
+            "affiliation": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Affiliation",
+                "description": "University or institution."
+            },
+            "affiliationId": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Affiliation ID",
+                "description": "Institution ID, joinable to affiliations mode."
+            },
+            "department": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Department",
+                "description": "Department and study programme."
+            },
+            "subjects": {
+                "title": "Subjects",
+                "description": "Declared subject areas."
+            },
+            "sintaScoreOverall": {
+                "type": [
+                    "integer",
+                    "null"
+                ],
+                "title": "SINTA score (overall)",
+                "description": "National score, all time."
+            },
+            "sintaScore3Yr": {
+                "type": [
+                    "integer",
+                    "null"
+                ],
+                "title": "SINTA score (3 years)",
+                "description": "National score over the last three years."
+            },
+            "affilScore": {
+                "type": [
+                    "integer",
+                    "null"
+                ],
+                "title": "Affiliation score",
+                "description": "Profile records -- the researcher's contribution score to their institution."
+            },
+            "affilScore3Yr": {
+                "type": [
+                    "integer",
+                    "null"
+                ],
+                "title": "Affiliation score (3 years)",
+                "description": "Profile records -- three-year affiliation score."
+            },
+            "scopusHIndex": {
+                "type": [
+                    "integer",
+                    "null"
+                ],
+                "title": "Scopus H-index",
+                "description": "Listing rows."
+            },
+            "wosHIndex": {
+                "type": [
+                    "integer",
+                    "null"
+                ],
+                "title": "Web of Science H-index",
+                "description": "Listing rows. Hidden in the site's own UI but present in the page and read anyway."
+            },
+            "googleHIndex": {
+                "type": [
+                    "integer",
+                    "null"
+                ],
+                "title": "Google Scholar H-index",
+                "description": "Listing rows."
+            },
+            "publications": {
+                "title": "Publication metrics",
+                "description": "Profile records -- article, citation, cited-document, H-index, i10-index and G-index counts for each of Scopus, Google Scholar and Web of Science."
+            },
+            "metaText": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Meta text",
+                "description": "Affiliation records -- the institution's abbreviation, location, code, department and author counts as published."
+            },
+            "imageUrl": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Image URL",
+                "description": "Profile photo or institution logo."
+            },
+            "_totalRecordsAvailable": {
+                "type": [
+                    "integer",
+                    "null"
+                ],
+                "title": "Total records available",
+                "description": "How many records the upstream listing holds in total for this scope -- so you can tell how much a capped run left behind."
+            },
+            "_error": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Error",
+                "description": "Present only on failures."
+            },
+            "_errorDetail": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across researcher and affiliation records.",
+            "transformation": {
+                "fields": [
+                    "recordType",
+                    "sintaId",
+                    "name",
+                    "affiliation",
+                    "department",
+                    "sintaScoreOverall",
+                    "sintaScore3Yr",
+                    "scopusHIndex",
+                    "googleScholarId",
+                    "profileUrl",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

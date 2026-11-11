@@ -1,0 +1,169 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "ProcureTT notice record",
+        "description": "Raw-passthrough dataset envelope. Every record carries _noticeType/_source/_scrapedAt (and _error/_errorDetail on failures). Payload fields are keyed by ProcureTT's own column labels verbatim, and differ by _noticeType -- the fields below cover all five notice types.",
+        "properties": {
+            "_noticeType": {
+                "type": "string",
+                "title": "Notice type",
+                "description": "tenders, awards, asppa, prequalification, or disposals."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "S1-html-table (listing only), S1-html-detail (listing + per-entry detail page, when fetchDetail=true), or none (error record)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed extractions -- not_found (zero rows for this notice type) or blocked_or_transient (network/upstream issue)."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "_entryId": {
+                "title": "Entry ID",
+                "description": "ProcureTT's internal Gravity Forms entry id for this row, or null when this notice type has no per-entry detail page (awards, asppa)."
+            },
+            "_detail": {
+                "type": "object",
+                "title": "Detail page fields",
+                "description": "Present only when input fetchDetail=true and this notice type has a detail page (tenders, prequalification, disposals). A superset of the listing columns, keyed by the detail page's own field labels -- e.g. tenders add 'Notice Type', 'Date of Issuance', 'Lines of Business (Level 4)' (precise UNSPSC codes), and 'Submission Deadline Time'. Null if the detail fetch failed (_detailError set alongside)."
+            },
+            "_detailError": {
+                "type": "string",
+                "title": "Detail fetch error",
+                "description": "Present only when fetchDetail=true and the per-entry detail request failed for this specific row -- the listing fields are still returned."
+            },
+            "Public Body": {
+                "title": "Public body",
+                "description": "All notice types. The government ministry/agency/state enterprise that published this notice."
+            },
+            "Tender Reference No.": {
+                "title": "Tender reference number",
+                "description": "tenders only. ProcureTT's own tender reference, e.g. 'ITB#5/2026' or a bare numeric id."
+            },
+            "Reference No.": {
+                "title": "Reference number",
+                "description": "awards only."
+            },
+            "Disposal Reference No.": {
+                "title": "Disposal reference number",
+                "description": "disposals only."
+            },
+            "Status": {
+                "title": "Status",
+                "description": "tenders only, e.g. 'Open'."
+            },
+            "Description": {
+                "title": "Description",
+                "description": "tenders and awards. Free-text notice description. On 'awards', can be '...'-truncated with no detail page to recover the full text (a genuine upstream limitation, not a parsing gap)."
+            },
+            "Submission Deadline Date": {
+                "title": "Submission deadline date",
+                "description": "tenders only. DD/MM/YYYY as rendered by ProcureTT."
+            },
+            "Deadline Date": {
+                "title": "Deadline date",
+                "description": "prequalification only. DD/MM/YYYY."
+            },
+            "Closing Deadline Date": {
+                "title": "Closing deadline date",
+                "description": "disposals only. DD/MM/YYYY."
+            },
+            "Posted Date": {
+                "title": "Posted date",
+                "description": "asppa, prequalification, disposals. DD/MM/YYYY."
+            },
+            "Lines of Business (Level 3)": {
+                "type": "array",
+                "title": "Lines of business (UNSPSC level 3)",
+                "description": "tenders, prequalification, disposals (as 'Disposal Categories'). Array of 'code description' strings from ProcureTT's own bulleted list."
+            },
+            "Disposal Categories": {
+                "type": "array",
+                "title": "Disposal categories",
+                "description": "disposals only. Same shape as 'Lines of Business (Level 3)'."
+            },
+            "Supplier or Contractor Awarded": {
+                "title": "Supplier or contractor awarded",
+                "description": "awards only."
+            },
+            "Award Value (TTD)": {
+                "title": "Award value (TTD)",
+                "description": "awards only. Trinidad and Tobago Dollars, as stated in the column header."
+            },
+            "Award Date": {
+                "title": "Award date",
+                "description": "awards only. Observed in ISO YYYY-MM-DD format, unlike every other date field on this platform (which render DD/MM/YYYY) -- verified against source, not a parsing artifact."
+            },
+            "Fiscal Year": {
+                "title": "Fiscal year",
+                "description": "asppa only, e.g. '2025/2026'."
+            },
+            "Tender Notice Document": {
+                "type": "object",
+                "title": "Tender notice document",
+                "description": "tenders only. {text, url} -- direct, no-login PDF download link."
+            },
+            "ASPPA Document": {
+                "type": "object",
+                "title": "ASPPA document",
+                "description": "asppa only. {text, url}."
+            },
+            "Pre-Qualification Notice Document": {
+                "type": "object",
+                "title": "Pre-qualification notice document",
+                "description": "prequalification only. {text, url}."
+            },
+            "Disposal Notice Document": {
+                "type": "object",
+                "title": "Disposal notice document",
+                "description": "disposals only. {text, url}."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across all five notice types.",
+            "transformation": {
+                "fields": [
+                    "_noticeType",
+                    "_source",
+                    "_scrapedAt",
+                    "Public Body",
+                    "Tender Reference No.",
+                    "Reference No.",
+                    "Disposal Reference No.",
+                    "Status",
+                    "Description",
+                    "Supplier or Contractor Awarded",
+                    "Award Value (TTD)",
+                    "Award Date",
+                    "Submission Deadline Date",
+                    "Deadline Date",
+                    "Closing Deadline Date",
+                    "Posted Date",
+                    "Fiscal Year",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

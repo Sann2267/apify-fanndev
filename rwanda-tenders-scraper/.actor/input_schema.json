@@ -1,0 +1,122 @@
+{
+    "title": "Rwanda Government Tenders Scraper (UMUCYO e-GP)",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "mode": {
+            "title": "Mode",
+            "type": "string",
+            "editor": "select",
+            "description": "'list' = browse/search the public tender-notice listing (newest first by default). 'detail' = fetch specific tender(s) directly by their detail_ref.",
+            "enum": ["list", "detail"],
+            "enumTitles": ["List (browse/search notices)", "Detail (specific tender refs)"],
+            "default": "list",
+            "prefill": "list"
+        },
+        "detailRefs": {
+            "title": "Detail refs",
+            "type": "array",
+            "editor": "stringList",
+            "description": "Only used when mode='detail'. One or more 'tendReferNo|tendStageCd|tendTypeCd' strings, exactly as emitted in the detail_ref field of mode='list' output, e.g. \"000001/NC/NCB/2026/2027/1207000001|O|NC\"."
+        },
+        "maxResults": {
+            "title": "Max results",
+            "type": "integer",
+            "description": "Maximum number of tender notices to return. Ignored by mode='detail' (which returns exactly the refs given).",
+            "default": 50,
+            "minimum": 1,
+            "maximum": 2000,
+            "prefill": 50
+        },
+        "fetchDetails": {
+            "title": "Fetch full detail per notice",
+            "type": "boolean",
+            "description": "For mode='list': also fetch each notice's own detail page (procuring entity, full description, fee, security, documents list, etc). Slower but much richer output.",
+            "default": true,
+            "prefill": true
+        },
+        "tenderType": {
+            "title": "Tender type filter",
+            "type": "string",
+            "editor": "select",
+            "description": "Restrict to one procurement type. Leave blank for all types.",
+            "enum": ["", "G", "C", "NC", "W"],
+            "enumTitles": ["All types", "Goods", "Consultant Services", "Non Consultant Services", "Works"],
+            "default": "",
+            "prefill": ""
+        },
+        "tenderMethod": {
+            "title": "Tender method filter",
+            "type": "string",
+            "editor": "select",
+            "description": "Restrict to one procurement method. Leave blank for all methods.",
+            "enum": ["", "NCB", "ICB"],
+            "enumTitles": ["All methods", "National Competitive Bidding", "International Competitive Bidding"],
+            "default": "",
+            "prefill": ""
+        },
+        "tenderStatus": {
+            "title": "Tender status filter",
+            "type": "string",
+            "editor": "select",
+            "description": "Restrict to one tender lifecycle status. Leave blank for all statuses. Note: querying 'Signed Contract' returns no data on this endpoint -- contract-award data is not exposed on this public listing.",
+            "enum": ["", "ADV", "OPE", "EVA", "SIG", "CAN", "A"],
+            "enumTitles": ["All statuses", "Advertised", "Opened", "Under Evaluation", "Signed Contract", "Cancelled", "Amended"],
+            "default": "",
+            "prefill": ""
+        },
+        "procuringEntityName": {
+            "title": "Procuring entity name contains",
+            "type": "string",
+            "editor": "textfield",
+            "description": "Free-text filter on the procuring entity name, e.g. \"Ministry of Health\". Leave blank for all entities."
+        },
+        "tenderName": {
+            "title": "Tender name contains",
+            "type": "string",
+            "editor": "textfield",
+            "description": "Free-text filter on the tender name/title. Leave blank for all."
+        },
+        "tenderNo": {
+            "title": "Tender number",
+            "type": "string",
+            "editor": "textfield",
+            "description": "Filter by an exact/partial tender reference number."
+        },
+        "invitationDateFrom": {
+            "title": "Invitation date from",
+            "type": "string",
+            "editor": "textfield",
+            "description": "Restrict to notices advertised on/after this date, format dd/MM/yyyy (e.g. 01/07/2026). Leave blank for no lower bound."
+        },
+        "invitationDateTo": {
+            "title": "Invitation date to",
+            "type": "string",
+            "editor": "textfield",
+            "description": "Restrict to notices advertised on/before this date, format dd/MM/yyyy. Leave blank for no upper bound."
+        },
+        "maxConcurrency": {
+            "title": "Max concurrent detail fetches",
+            "type": "integer",
+            "description": "How many notice-detail pages to fetch in parallel.",
+            "default": 4,
+            "minimum": 1,
+            "maximum": 16,
+            "prefill": 4
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "editor": "proxy",
+            "description": "Apify Proxy configuration. This target has no anti-bot gate, so a plain datacenter proxy (or no proxy) also works -- residential is offered for consistency with other actors in this collection.",
+            "default": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            },
+            "prefill": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            }
+        }
+    }
+}

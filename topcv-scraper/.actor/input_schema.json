@@ -1,0 +1,86 @@
+{
+    "title": "TopCV Scraper",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "mode": {
+            "title": "Mode",
+            "type": "string",
+            "editor": "select",
+            "description": "\"search\" runs a keyword/city job search and (by default) hydrates each result into a full job record. \"detail\" fetches full detail for specific job ID(s)/URL(s) directly.",
+            "enum": ["search", "detail"],
+            "enumTitles": ["Keyword/city search", "Job detail (by ID/URL)"],
+            "default": "search",
+            "prefill": "search"
+        },
+        "keyword": {
+            "title": "Keyword",
+            "type": "string",
+            "editor": "textfield",
+            "description": "\"search\" mode -- free-text job title/keyword search (e.g. \"python\", \"kế toán\", \"nhân viên bán hàng\"). Leave empty (with a city, or entirely) to list all currently active postings, newest first.",
+            "prefill": "python"
+        },
+        "city": {
+            "title": "City / province",
+            "type": "string",
+            "editor": "textfield",
+            "description": "\"search\" mode -- optional. A Vietnamese province/city name or slug as used on topcv.vn, e.g. \"Hà Nội\", \"ha-noi\", \"Hồ Chí Minh\", \"ho-chi-minh\", \"Đà Nẵng\". Combined with \"keyword\" when both are given.",
+            "prefill": "Hà Nội"
+        },
+        "maxResults": {
+            "title": "Max results",
+            "type": "integer",
+            "editor": "number",
+            "description": "\"search\" mode -- maximum number of job listings to return. Pagination is followed automatically until this cap or the end of the result set.",
+            "default": 50,
+            "minimum": 1,
+            "maximum": 2000,
+            "prefill": 50
+        },
+        "fetchFullDetails": {
+            "title": "Fetch full details for each result",
+            "type": "boolean",
+            "editor": "checkbox",
+            "description": "\"search\" mode -- when on (default), each search result is hydrated into a full job record (description, requirements, benefits, salary, employer info) with one extra request per job. Turn off for faster/cheaper runs that only need the compact search-result fields (title, company, location, salary label, tags, posted date).",
+            "default": true,
+            "prefill": true
+        },
+        "jobId": {
+            "title": "Job ID or URL",
+            "type": "string",
+            "editor": "textfield",
+            "description": "\"detail\" mode -- a single job's numeric ID or the full topcv.vn/viec-lam/.../<id>.html URL.",
+            "prefill": "https://www.topcv.vn/viec-lam/fullstack-software-engineer/2143657.html"
+        },
+        "jobIds": {
+            "title": "Job IDs or URLs",
+            "type": "array",
+            "editor": "stringList",
+            "description": "\"detail\" mode only -- multiple job IDs/URLs to fetch full detail for in one run."
+        },
+        "maxConcurrency": {
+            "title": "Max concurrent workers",
+            "type": "integer",
+            "description": "How many detail requests to run in parallel (used in \"search\" mode when hydrating results, and in \"detail\" mode across multiple IDs).",
+            "default": 4,
+            "minimum": 1,
+            "maximum": 16,
+            "prefill": 4
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "editor": "proxy",
+            "description": "Apify Proxy configuration. Residential is on by default.",
+            "default": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            },
+            "prefill": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            }
+        }
+    },
+    "required": ["mode"]
+}

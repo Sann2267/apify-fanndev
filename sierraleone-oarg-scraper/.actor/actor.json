@@ -1,0 +1,14 @@
+{
+    "actorSpecification": 1,
+    "name": "sierraleone-oarg-scraper",
+    "version": "0.1",
+    "buildTag": "latest",
+    "title": "Sierra Leone Business Registry Name Search",
+    "description": "Search Sierra Leone's official Office of the Administrator and Registrar-General (OARG) business registry to check whether a business name is already registered, and see every existing matching name. No account or login needed.",
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

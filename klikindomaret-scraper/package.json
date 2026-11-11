@@ -1,0 +1,9 @@
+{
+  "name": "klikindomaret-scraper-waf",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Headless AWS WAF token minter (jsdom) sidecar for the klikindomaret Apify actor.",
+  "dependencies": {
+    "jsdom": "^24.1.0"
+  }
+}

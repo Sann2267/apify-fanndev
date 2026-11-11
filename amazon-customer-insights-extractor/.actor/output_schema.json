@@ -1,0 +1,267 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Customer insight / aspect record",
+        "description": "Three record shapes, discriminated by `recordType`. PRODUCT_INSIGHT is one ASIN with its AI review summary and the full aspect list. ASPECT is one aspect of one product, with sentiment, mention count split into positive/negative, Amazon's one-sentence verdict on that aspect, and rank — the shape to sort and filter on. CAPTCHA_ESCALATION marks an ASIN that was bot-walled or an input that was not a valid ASIN, so a short run is never mistaken for a product with no opinions. Products with too few reviews carry no insight widget at all, which is why `hasInsights` exists and every field is nullable.",
+        "properties": {
+            "_input": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Input",
+                "description": "The ASIN (or raw input value) this row came from."
+            },
+            "_source": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Source strategy",
+                "description": "S1-dp-insights for scraped data, S0-diagnostic for a failure row."
+            },
+            "_scrapedAt": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Scraped at",
+                "description": "UTC ISO-8601 timestamp of the fetch."
+            },
+            "recordType": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Record type",
+                "description": "PRODUCT_INSIGHT, ASPECT or CAPTCHA_ESCALATION."
+            },
+            "asin": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "ASIN",
+                "description": "Amazon Standard Identification Number."
+            },
+            "marketplace": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Marketplace",
+                "description": "Amazon domain suffix the row was scraped from."
+            },
+            "productUrl": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Product URL",
+                "description": "Canonical /dp/ URL."
+            },
+            "title": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Title",
+                "description": "Product title."
+            },
+            "brand": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Brand",
+                "description": "Brand or store name."
+            },
+            "rating": {
+                "type": [
+                    "number",
+                    "null"
+                ],
+                "title": "Rating",
+                "description": "Average star rating out of 5."
+            },
+            "reviewCount": {
+                "type": [
+                    "integer",
+                    "null"
+                ],
+                "title": "Review count",
+                "description": "Number of customer ratings the insights are drawn from."
+            },
+            "aiSummary": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "AI review summary",
+                "description": "Amazon's generated 'Customers say' paragraph. Written by Amazon from customer reviews, not by this actor."
+            },
+            "hasInsights": {
+                "type": [
+                    "boolean",
+                    "null"
+                ],
+                "title": "Has insights",
+                "description": "False when Amazon served no insight widget — normal for products with few reviews. Distinguishes 'no opinions published' from a failed parse."
+            },
+            "aspectCount": {
+                "type": [
+                    "integer",
+                    "null"
+                ],
+                "title": "Aspect count",
+                "description": "Number of aspects Amazon published for this product."
+            },
+            "positiveAspectCount": {
+                "type": [
+                    "integer",
+                    "null"
+                ],
+                "title": "Positive aspect count",
+                "description": "Aspects customers are positive about."
+            },
+            "negativeAspectCount": {
+                "type": [
+                    "integer",
+                    "null"
+                ],
+                "title": "Negative aspect count",
+                "description": "Aspects customers are negative about."
+            },
+            "gapAspectCount": {
+                "type": [
+                    "integer",
+                    "null"
+                ],
+                "title": "Content gap count",
+                "description": "Negative plus mixed aspects — the copy opportunities."
+            },
+            "totalMentions": {
+                "type": [
+                    "integer",
+                    "null"
+                ],
+                "title": "Total mentions",
+                "description": "Sum of mention counts across all aspects with a published count."
+            },
+            "contentGaps": {
+                "type": [
+                    "array",
+                    "null"
+                ],
+                "title": "Content gaps",
+                "description": "Names of the negative and mixed aspects — what a competitor's listing has not convincingly addressed."
+            },
+            "topAspects": {
+                "type": [
+                    "array",
+                    "null"
+                ],
+                "title": "Top aspects",
+                "description": "Five most-mentioned aspects, regardless of sentiment."
+            },
+            "aspects": {
+                "type": [
+                    "array",
+                    "null"
+                ],
+                "title": "All aspects",
+                "description": "Full aspect list as objects with aspect, sentiment, mentions, positive, negative and aspectSummary."
+            },
+            "aspect": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Aspect",
+                "description": "On an ASPECT row: the thing customers talked about, e.g. mixability, value for money."
+            },
+            "sentiment": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Sentiment",
+                "description": "POSITIVE, MIXED or NEGATIVE, as classified by Amazon."
+            },
+            "mentions": {
+                "type": [
+                    "integer",
+                    "null"
+                ],
+                "title": "Mentions",
+                "description": "How many reviews mention this aspect. Null when Amazon published the aspect without a count (localized pages)."
+            },
+            "positive": {
+                "type": [
+                    "integer",
+                    "null"
+                ],
+                "title": "Positive mentions",
+                "description": "Reviews mentioning this aspect favourably. Null when Amazon published the aspect without a split."
+            },
+            "negative": {
+                "type": [
+                    "integer",
+                    "null"
+                ],
+                "title": "Negative mentions",
+                "description": "Reviews mentioning this aspect unfavourably. positive + negative equals mentions — Amazon publishes no neutral bucket."
+            },
+            "aspectSummary": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Aspect summary",
+                "description": "Amazon's generated one-sentence verdict on this single aspect, e.g. \"Customers praise the writing quality of the book, describing it as one of the most beautiful ways to tell a story.\" Written by Amazon, not by this actor. Distinct from aiSummary, which covers the whole product."
+            },
+            "mentionRank": {
+                "type": [
+                    "integer",
+                    "null"
+                ],
+                "title": "Mention rank",
+                "description": "Rank of this aspect within the product, 1 = most mentioned."
+            },
+            "mentionSharePercent": {
+                "type": [
+                    "number",
+                    "null"
+                ],
+                "title": "Mention share percent",
+                "description": "This aspect's share of the product's total counted mentions."
+            },
+            "isContentGap": {
+                "type": [
+                    "boolean",
+                    "null"
+                ],
+                "title": "Is content gap",
+                "description": "True for negative and mixed aspects — the rows worth acting on."
+            },
+            "_error": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Error",
+                "description": "BLOCKED or INVALID_ASIN on a diagnostic row, otherwise null."
+            },
+            "_errorDetail": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Error detail",
+                "description": "Human-readable reason for the failure."
+            }
+        }
+    }
+}

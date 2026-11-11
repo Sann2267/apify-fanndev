@@ -1,0 +1,71 @@
+{
+    "title": "Bolivia Government Tenders Scraper (SICOES)",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "tipo": {
+            "title": "Tender scope",
+            "type": "string",
+            "editor": "select",
+            "description": "\"Convocatorias\" (national) covers ordinary domestic public procurement. \"Convocatorias Internacionales\" is SICOES's own modality flag for processes also open to foreign bidders -- still run by Bolivian government entities.",
+            "enum": ["convNacional", "convInternacional"],
+            "enumTitles": ["Convocatorias Nacionales", "Convocatorias Internacionales"],
+            "default": "convNacional",
+            "prefill": "convNacional"
+        },
+        "entidad": {
+            "title": "Entity keyword (optional)",
+            "type": "string",
+            "editor": "textfield",
+            "description": "Free-text keyword to filter by purchasing government entity name (Spanish), e.g. 'Gobierno Autonomo Municipal'. Leave blank to include all entities."
+        },
+        "objetoContrato": {
+            "title": "Object of contracting keyword (optional)",
+            "type": "string",
+            "editor": "textfield",
+            "description": "Free-text keyword matched against the tender's object/description (Spanish), e.g. 'construccion' or 'medicamentos'. Leave blank to include all."
+        },
+        "soloVigentes": {
+            "title": "Only currently open tenders",
+            "type": "boolean",
+            "description": "When enabled (default, matches SICOES's own default), only tenders still accepting proposals are returned. Disable to include historical/closed processes too.",
+            "default": true,
+            "prefill": true
+        },
+        "tiposContratacion": {
+            "title": "Contracting types",
+            "type": "array",
+            "editor": "select",
+            "description": "Which contracting-type categories to include. All four are selected by default, matching SICOES's own default.",
+            "items": {
+                "type": "string",
+                "enum": ["B", "O", "S", "C"],
+                "enumTitles": ["Bienes (Goods)", "Obras (Works)", "Servicios Generales (General Services)", "Servicios de Consultoria (Consulting)"]
+            },
+            "default": ["B", "O", "S", "C"],
+            "prefill": ["B", "O", "S", "C"]
+        },
+        "maxResults": {
+            "title": "Max results",
+            "type": "integer",
+            "description": "Caps how many tender records this run returns. SICOES's own search page returns 10 rows per page server-side -- this actor pages through as many requests as needed up to this cap or until the result set is exhausted.",
+            "default": 50,
+            "minimum": 1,
+            "maximum": 5000,
+            "prefill": 50
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "editor": "proxy",
+            "description": "Apify Proxy configuration. Datacenter proxies worked fine during recon (no country-specific geo-block observed), so no residential/country default is forced -- switch to Bolivia-geolocated Residential if you see unexplained blocks.",
+            "default": {
+                "useApifyProxy": true
+            },
+            "prefill": {
+                "useApifyProxy": true
+            }
+        }
+    },
+    "required": []
+}

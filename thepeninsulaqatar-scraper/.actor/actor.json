@@ -1,0 +1,14 @@
+{
+    "actorSpecification": 1,
+    "name": "thepeninsulaqatar-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "The Peninsula Qatar Scraper",
+    "description": "Extract full article text or the newest headlines from The Peninsula (thepeninsulaqatar.com), Qatar's English-language national newspaper -- no account or API key needed.",
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

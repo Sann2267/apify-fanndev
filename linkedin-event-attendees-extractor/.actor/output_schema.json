@@ -1,0 +1,51 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "LinkedIn event attendee record",
+        "description": "Dataset envelope (_input / _source / _scrapedAt / recordType) on top of LinkedIn event data. One EVENT row per event, one ATTENDEE row per person, NOTICE rows when no cookie was supplied or LinkedIn withheld the roster, and ERROR rows on failure. LinkedIn changes its private API without notice, so unlisted fields pass through rather than failing the run.",
+        "additionalProperties": true,
+        "properties": {
+            "_input": { "type": "string", "title": "Input", "description": "The event URL that produced this record." },
+            "_source": { "type": "string", "title": "Source surface", "description": "voyager-event, voyager-event-attendees, or none on NOTICE and ERROR rows." },
+            "_scrapedAt": { "type": "string", "title": "Scraped at", "description": "UTC ISO 8601 timestamp when this record was emitted." },
+            "recordType": { "type": "string", "title": "Record type", "description": "EVENT, ATTENDEE, NOTICE or ERROR." },
+            "_error": { "type": "string", "title": "Error", "description": "Failure rows only: unparsable_event, auth_required, fetch_failed or attendees_failed." },
+            "_errorDetail": { "type": "string", "title": "Error detail", "description": "Free-form diagnostic accompanying _error." },
+            "_notice": { "type": "string", "title": "Notice", "description": "cookie_required when no li_at was supplied, attendee_list_withheld when LinkedIn served the event but not its roster." },
+            "_noticeDetail": { "type": "string", "title": "Notice detail", "description": "What the notice means and what to change." },
+            "fullName": { "title": "Full name", "description": "The attendee's display name as LinkedIn renders it." },
+            "firstName": { "title": "First name", "description": "Split from the display name with pronouns, emoji hiring frames and credential suffixes removed, so a mail merge reads correctly." },
+            "lastName": { "title": "Last name", "description": "Last remaining name part after the same cleanup. Null for mononyms." },
+            "headline": { "title": "Headline", "description": "The attendee's LinkedIn headline - what they do, in their own words." },
+            "profileUrl": { "title": "Profile URL", "description": "Canonical profile link, tracking parameters stripped and country subdomains folded onto www so a CRM de-duplicates correctly." },
+            "location": { "title": "Location", "description": "Where LinkedIn places the attendee." },
+            "attendanceStatus": { "title": "Attendance status", "description": "Whether the person registered or attended, when LinkedIn distinguishes them." },
+            "eventName": { "title": "Event", "description": "The event's title." },
+            "eventUrl": { "title": "Event URL", "description": "Canonical event link." },
+            "eventId": { "title": "Event id", "description": "LinkedIn's numeric event id." },
+            "eventDescription": { "title": "Event description", "description": "EVENT rows: the event blurb, trimmed to 2,000 characters." },
+            "eventOrganiser": { "title": "Organiser", "description": "The person or company running the event - often a lead in its own right." },
+            "eventAttendeeCount": { "title": "Attendee count", "description": "How many people LinkedIn says are attending. This is frequently published even when the NAMES are withheld, so compare it against your row count to see how much of the roster you actually received." },
+            "eventStartAtEpochMs": { "title": "Starts at", "description": "EVENT rows: start time as epoch milliseconds." }
+        }
+    },
+    "views": {
+        "attendees": {
+            "title": "Attendees",
+            "transformation": {
+                "fields": ["fullName", "firstName", "lastName", "headline", "profileUrl", "location", "attendanceStatus", "eventName", "eventUrl"]
+            },
+            "display": {
+                "component": "table",
+                "properties": {
+                    "fullName": { "label": "Name" },
+                    "headline": { "label": "Headline" },
+                    "profileUrl": { "label": "Profile" },
+                    "eventName": { "label": "Event" }
+                }
+            }
+        }
+    }
+}

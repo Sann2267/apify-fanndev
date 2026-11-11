@@ -1,0 +1,14 @@
+{
+    "actorSpecification": 1,
+    "name": "nigeria-tenders-scraper",
+    "version": "0.1",
+    "buildTag": "latest",
+    "title": "Nigeria Government Tenders Scraper (NOCOPO/BPP)",
+    "description": "Scrapes Nigeria's official Open Contracting Portal (NOCOPO, Bureau of Public Procurement) for public federal procurement records -- browse recent tenders/awards/contracts and fetch full OCDS detail for any record. No account or login needed.",
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

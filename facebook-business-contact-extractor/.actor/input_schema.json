@@ -1,0 +1,146 @@
+{
+    "title": "Facebook Business Contact Extractor",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "searchKeywords": {
+            "title": "Discover businesses by keyword",
+            "type": "array",
+            "description": "Find pages instead of listing them. Facebook's own page search is closed to logged-out clients (every /search/ path returns 404), so discovery runs through the Ad Library: it is keyword-addressable and every result names its advertiser. A useful side effect is that the businesses it finds are all currently spending money on ads.",
+            "editor": "stringList",
+            "prefill": [
+                "dentist"
+            ]
+        },
+        "countries": {
+            "title": "Countries for discovery",
+            "type": "array",
+            "description": "ISO country codes the Ad Library search runs in. Ignored when you supply pages directly.",
+            "editor": "stringList",
+            "default": [
+                "US"
+            ],
+            "prefill": [
+                "US"
+            ]
+        },
+        "pages": {
+            "title": "Pages",
+            "type": "array",
+            "description": "Extract contacts from a list you already have: vanity slugs ('BarbutoNYC') or full Facebook page URLs.",
+            "editor": "stringList"
+        },
+        "startUrls": {
+            "title": "Start URLs",
+            "type": "array",
+            "description": "Page URLs, for pasting a list straight out of another actor's dataset.",
+            "editor": "requestListSources"
+        },
+        "maxPages": {
+            "title": "Max pages",
+            "type": "integer",
+            "description": "Caps how many business pages are opened, across both direct input and discovery.",
+            "default": 100,
+            "minimum": 1,
+            "maximum": 5000,
+            "unit": "pages"
+        },
+        "includeTransparency": {
+            "title": "Also read the page transparency tab",
+            "type": "boolean",
+            "description": "Adds the page creation date and whether the business is currently running ads - both useful for qualifying a lead. Costs one extra request per page.",
+            "default": false
+        },
+        "requireEmail": {
+            "title": "Only businesses with an email",
+            "type": "boolean",
+            "description": "Drop pages that publish no email address.",
+            "default": false,
+            "groupCaption": "Filters",
+            "groupDescription": "Applied after reading each page, so the run summary still counts everything that was read."
+        },
+        "requirePhone": {
+            "title": "Only businesses with a phone number",
+            "type": "boolean",
+            "description": "Drop pages that publish no phone number.",
+            "default": false
+        },
+        "requireWebsite": {
+            "title": "Only businesses with a website",
+            "type": "boolean",
+            "description": "Drop pages that publish no website.",
+            "default": false
+        },
+        "requireAnyContact": {
+            "title": "Only businesses reachable somehow",
+            "type": "boolean",
+            "description": "Drop pages that publish no email, phone, website or address at all.",
+            "default": false
+        },
+        "minFollowers": {
+            "title": "Minimum followers",
+            "type": "integer",
+            "description": "Pages whose follower count could not be read are dropped too, since an unknown count cannot be shown to clear the bar.",
+            "minimum": 0,
+            "unit": "followers"
+        },
+        "categoryContains": {
+            "title": "Category contains",
+            "type": "string",
+            "description": "Case-insensitive substring match against the page's self-declared categories, e.g. 'restaurant', 'dental'.",
+            "editor": "textfield"
+        },
+        "contentLanguages": {
+            "title": "Ad languages for discovery",
+            "type": "array",
+            "description": "Two-letter language codes. Narrows the Ad Library discovery search to ads in these languages.",
+            "editor": "stringList",
+            "default": []
+        },
+        "concurrency": {
+            "title": "Concurrent page reads",
+            "type": "integer",
+            "description": "About tabs are large - 8 to 18 MB each - so raising this speeds the run up but costs memory and bandwidth.",
+            "default": 4,
+            "minimum": 1,
+            "maximum": 10
+        },
+        "emitSummary": {
+            "title": "Add a run summary record",
+            "type": "boolean",
+            "description": "Append one RUN_SUMMARY record: how many pages were read, and how many publish an email, phone, website or address.",
+            "default": true
+        },
+        "exportFormats": {
+            "title": "Extra export files",
+            "type": "array",
+            "description": "Also write the results to the key-value store in these formats. The dataset is always produced regardless.",
+            "editor": "select",
+            "items": {
+                "type": "string",
+                "enum": [
+                    "json",
+                    "ndjson",
+                    "csv",
+                    "xlsx"
+                ],
+                "enumTitles": [
+                    "JSON",
+                    "NDJSON",
+                    "CSV",
+                    "Excel (XLSX)"
+                ]
+            },
+            "default": []
+        },
+        "proxyConfiguration": {
+            "title": "Proxy",
+            "type": "object",
+            "description": "Optional. Page about tabs apply no TLS or IP gate and this actor does not paginate through Facebook's GraphQL, so the direct connection works on the Apify platform too. Keyword discovery reads the Ad Library's rendered first page only, which is not rate-limited. Use a proxy to spread a very large run across IPs.",
+            "editor": "proxy",
+            "default": {
+                "useApifyProxy": false
+            }
+        }
+    }
+}

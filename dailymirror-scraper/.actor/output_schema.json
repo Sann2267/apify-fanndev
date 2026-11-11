@@ -1,0 +1,98 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Article / latest-headline record",
+        "description": "Raw-passthrough dataset envelope. Every record carries _input/_source/_scrapedAt (failed URLs are not written to the dataset -- they are reported in the ERRORS record of the run's key-value store). Article-mode records (S1-jsonld, articleBody pulled directly from the page's ld+json NewsArticle block) carry headline/articleBody-style fields; latest-mode records (S2-html-listing, scraped from the Breaking News category listing page since no working RSS feed or XML sitemap exists) carry title/link-style fields.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The exact input value (URL, or 'latest') that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which extraction strategy emitted this record (e.g. S1-jsonld, S2-html-listing)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "articleId": {
+                "title": "Article ID",
+                "description": "Internal numeric Daily Mirror article ID, taken from the trailing digits of the article URL."
+            },
+            "categoryId": {
+                "title": "Category ID",
+                "description": "Internal numeric Daily Mirror category/section ID from the URL (e.g. 108 = Breaking News)."
+            },
+            "category": {
+                "title": "Category",
+                "description": "URL path segment identifying the section (e.g. \"breaking-news\", \"sports\", \"business\", \"school_rugby\") -- derived from the URL since ld+json's articleSection field is always the static string \"Sri Lanka\" on every article."
+            },
+            "headline": {
+                "title": "Headline",
+                "description": "Article headline, from the NewsArticle ld+json node (HTML entities decoded)."
+            },
+            "description": {
+                "title": "Description",
+                "description": "Short article summary, from the NewsArticle ld+json node (HTML entities decoded)."
+            },
+            "articleBody": {
+                "title": "Article body",
+                "description": "Full article text, taken directly from the ld+json NewsArticle node's articleBody field (HTML entities decoded). Article mode only."
+            },
+            "author": {
+                "title": "Author",
+                "description": "Byline name from the ld+json author object -- a specific reporter name on some pieces, or the generic literal \"DM Editorial\" on many others."
+            },
+            "datePublished": {
+                "title": "Date published",
+                "description": "ISO 8601 publish date from ld+json (article mode only)."
+            },
+            "dateModified": {
+                "title": "Date modified",
+                "description": "ISO 8601 last-modified date from ld+json (article mode only)."
+            },
+            "image": {
+                "title": "Image",
+                "description": "Lead image object (url/width/height) from ld+json, passed through as-is. \"url\" is sometimes the literal string \"none\" (no lead image) or a relative path rather than an absolute URL. Article mode only."
+            },
+            "title": {
+                "title": "Title",
+                "description": "Headline text of a latest-mode listing item, from the visible anchor text on the Breaking News category listing page."
+            },
+            "link": {
+                "title": "Link",
+                "description": "Article URL, from the Breaking News category listing page -- latest mode only."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across both article and latest-headline records.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "_source",
+                    "_scrapedAt",
+                    "headline",
+                    "title",
+                    "link",
+                    "datePublished",
+                    "category",
+                    "author"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

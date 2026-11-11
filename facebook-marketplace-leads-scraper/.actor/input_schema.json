@@ -1,0 +1,167 @@
+{
+    "title": "Facebook Marketplace Leads Scraper",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "cities": {
+            "title": "City slugs",
+            "type": "array",
+            "description": "The city segment from a Marketplace URL: 'nyc', 'jakarta', 'london', 'sydney'. IMPORTANT: a numeric location id does NOT work - Facebook accepts it, returns HTTP 200, and hands back listings from its own default location instead of yours. Numeric entries are rejected with a warning rather than scraped into wrong data. Leave empty to use Facebook's default location.",
+            "editor": "stringList",
+            "prefill": [
+                "nyc"
+            ]
+        },
+        "categories": {
+            "title": "Categories",
+            "type": "array",
+            "description": "Marketplace category slugs, e.g. vehicles, propertyforsale, propertyrentals, electronics, furniture, apparel. Each is combined with every city.",
+            "editor": "stringList",
+            "prefill": [
+                "vehicles"
+            ]
+        },
+        "searchQueries": {
+            "title": "Search terms",
+            "type": "array",
+            "description": "Free-text searches, run inside each city. Use this instead of (or alongside) categories when you are after a specific item.",
+            "editor": "stringList"
+        },
+        "listingUrls": {
+            "title": "Specific listing URLs",
+            "type": "array",
+            "description": "Marketplace item URLs or numeric item ids, to fetch the detail page of listings you already know about.",
+            "editor": "stringList"
+        },
+        "maxListingsPerQuery": {
+            "title": "Max listings per query",
+            "type": "integer",
+            "description": "Facebook renders about 24 listings per page and this actor replays its pagination query for the rest.",
+            "default": 48,
+            "minimum": 1,
+            "maximum": 2000,
+            "unit": "listings"
+        },
+        "minPrice": {
+            "title": "Minimum price",
+            "type": "integer",
+            "description": "Sent to Facebook as a URL filter (verified honoured) and also applied locally. Listings with no readable price are dropped, since an unknown price cannot be shown to sit inside the range.",
+            "minimum": 0
+        },
+        "maxPrice": {
+            "title": "Maximum price",
+            "type": "integer",
+            "description": "Sent to Facebook as a URL filter (verified honoured) and also applied locally.",
+            "minimum": 0
+        },
+        "sortBy": {
+            "title": "Sort",
+            "type": "string",
+            "description": "Facebook's own sort. 'Newest first' is the one to use for lead generation.",
+            "editor": "select",
+            "enum": [
+                "",
+                "creation_time_descend",
+                "price_ascend",
+                "price_descend",
+                "distance_ascend"
+            ],
+            "enumTitles": [
+                "Facebook's default (suggested)",
+                "Newest first",
+                "Price: lowest first",
+                "Price: highest first",
+                "Nearest first"
+            ],
+            "default": ""
+        },
+        "radiusKm": {
+            "title": "Search radius (km)",
+            "type": "integer",
+            "description": "How far around the city to look.",
+            "minimum": 1,
+            "maximum": 500,
+            "unit": "km"
+        },
+        "maxAgeDays": {
+            "title": "Listed within the last N days",
+            "type": "integer",
+            "description": "Filtered locally against each listing's own timestamp. Facebook's daysSinceListed URL parameter is accepted and then ignored by Facebook - byte-for-byte identical results - so this actor does not rely on it.",
+            "minimum": 0,
+            "unit": "days"
+        },
+        "excludeSold": {
+            "title": "Exclude sold listings",
+            "type": "boolean",
+            "description": "Drop listings Facebook marks as sold.",
+            "default": true
+        },
+        "titleContains": {
+            "title": "Title contains",
+            "type": "string",
+            "description": "Case-insensitive substring match against the listing title.",
+            "editor": "textfield"
+        },
+        "fetchDetails": {
+            "title": "Also open each listing page",
+            "type": "boolean",
+            "description": "Adds the description, exact coordinates, postal code, condition, currency and vehicle specifications - none of which appear in the feed. Costs one extra request per listing.",
+            "default": false
+        },
+        "maxDetailFetches": {
+            "title": "Max detail pages",
+            "type": "integer",
+            "description": "Caps the extra requests when detail fetching is on.",
+            "default": 50,
+            "minimum": 1,
+            "maximum": 1000,
+            "unit": "listings"
+        },
+        "emitSummary": {
+            "title": "Add a run summary record",
+            "type": "boolean",
+            "description": "Append one RUN_SUMMARY record: listings collected, cities covered, and the min / median / max price.",
+            "default": true
+        },
+        "exportFormats": {
+            "title": "Extra export files",
+            "type": "array",
+            "description": "Also write the results to the key-value store in these formats. The dataset is always produced regardless.",
+            "editor": "select",
+            "items": {
+                "type": "string",
+                "enum": [
+                    "json",
+                    "ndjson",
+                    "csv",
+                    "xlsx"
+                ],
+                "enumTitles": [
+                    "JSON",
+                    "NDJSON",
+                    "CSV",
+                    "Excel (XLSX)"
+                ]
+            },
+            "default": []
+        },
+        "proxyConfiguration": {
+            "title": "Proxy",
+            "type": "object",
+            "description": "Apify Proxy. RESIDENTIAL is the default and you should keep it: Facebook serves datacentre addresses a reduced page with no feed and no counts, so a run without a residential proxy usually collects nothing. The exit country also decides which country's results you get.",
+            "editor": "proxy",
+            "default": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": [
+                    "RESIDENTIAL"
+                ]
+            },
+            "prefill": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": [
+                    "RESIDENTIAL"
+                ]
+            }
+        }
+    }
+}

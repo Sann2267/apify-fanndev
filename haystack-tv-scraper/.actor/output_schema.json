@@ -1,0 +1,297 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Haystack News record",
+        "description": "Raw-passthrough dataset envelope on top of Haystack's own API shapes. Every record carries _input / _source / _scrapedAt / recordType (and _error / _errorDetail on failures). Upstream field names are preserved verbatim, so a VIDEO row is a Haystack stream object and a LOCAL_EVENT row is a PredictHQ-derived event object. Use recordType to split a run's mixed output into tables.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The exact target, video URL, query or city that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which endpoint emitted the row: S1-playlist-<kind>, S1-search, S1-channel, S1-sitemap, S2-sitemap-xml, S1-polls-ssr, S1-localEvents, or none on failure."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was emitted."
+            },
+            "recordType": {
+                "type": "string",
+                "title": "Record type",
+                "description": "VIDEO, VIDEO_DETAIL, TAG_GROUP, CHANNEL, CATEGORY, VIDEO_CATEGORY, LIVE_CHANNEL, SPECIAL_STREAM, LOCATION, TOPIC, POLL, LOCAL_EVENT, LOCAL_EVENTS_SUMMARY, or ERROR."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failure rows: not_found, empty_feed, no_results, no_events, location_unresolved, bad_input, invalid_request, auth_rejected, timeout, retries_exhausted, unexpected_shape, or exception."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic, present only alongside _error."
+            },
+            "_warning": {
+                "type": "string",
+                "title": "Warning",
+                "description": "Non-fatal degradation marker. premium_capped_partial_harvest on a LOCAL_EVENTS_SUMMARY means Haystack withheld events from anonymous callers."
+            },
+            "title": {
+                "title": "Title",
+                "description": "Video headline, channel name, or event name depending on recordType."
+            },
+            "videoId": {
+                "title": "Video ID",
+                "description": "Haystack's short video id, e.g. 6daOFLevf. Added by this actor from streamUrl."
+            },
+            "webUrl": {
+                "title": "Web URL",
+                "description": "Added by this actor -- the human-facing haystack.tv permalink for the row."
+            },
+            "slug": {
+                "title": "Slug",
+                "description": "URL slug of the video or channel."
+            },
+            "author": {
+                "title": "Author",
+                "description": "VIDEO rows -- the publishing channel's short name, e.g. bloomberg, khou."
+            },
+            "publishedDate": {
+                "title": "Published at",
+                "description": "VIDEO rows -- when the clip was published, ISO 8601."
+            },
+            "ageLabel": {
+                "title": "Age label",
+                "description": "VIDEO rows -- Haystack's human-readable freshness, e.g. '3h ago'."
+            },
+            "duration": {
+                "title": "Duration",
+                "description": "VIDEO rows -- clip length in seconds."
+            },
+            "categories": {
+                "title": "Categories",
+                "description": "VIDEO rows -- every Haystack category the clip belongs to."
+            },
+            "topics": {
+                "title": "Topics",
+                "description": "VIDEO rows -- topic tags attached to the clip, each {tag: ...}."
+            },
+            "popularityScore": {
+                "title": "Popularity score",
+                "description": "VIDEO rows -- Haystack's internal popularity ranking for the clip."
+            },
+            "mediaFiles": {
+                "title": "Media files",
+                "description": "VIDEO rows -- HLS manifests (adaptive, hd720, audio) on Haystack's CDN."
+            },
+            "cc": {
+                "title": "Captions",
+                "description": "VIDEO rows -- closed-caption tracks, usually a WebVTT URL per language."
+            },
+            "snapshotHighUrl": {
+                "title": "Thumbnail",
+                "description": "VIDEO rows -- 480x270 thumbnail; snapshotUrl and snapshot720Url carry other sizes."
+            },
+            "channel": {
+                "title": "Channel",
+                "description": "VIDEO rows -- the publishing channel object: name, title, tag, thumbnail."
+            },
+            "feedTitle": {
+                "title": "Feed title",
+                "description": "VIDEO rows -- which feed this clip was collected from, e.g. 'Current Events'."
+            },
+            "playlistId": {
+                "title": "Playlist ID",
+                "description": "VIDEO rows -- the playlist snapshot the clip came from."
+            },
+            "llm": {
+                "title": "AI classification",
+                "description": "VIDEO_DETAIL rows only -- Haystack's own model output: primaryCategory, contentType, scope, urgency, editorialStance, primaryUserNeed, primaryEmotion, emotionalIntensity, broadAppeal, headlineMagnetism, narrativeResolution."
+            },
+            "views": {
+                "title": "Views",
+                "description": "VIDEO_DETAIL rows only -- view count."
+            },
+            "exit_ratio": {
+                "title": "Exit ratio",
+                "description": "VIDEO_DETAIL rows only -- share of viewers who left during the clip; with exit_users and total_users_for_exit this is Haystack's retention signal."
+            },
+            "sourceUrl": {
+                "title": "Source URL",
+                "description": "VIDEO_DETAIL rows only -- the publisher's own page for the story."
+            },
+            "haystackTags": {
+                "title": "Haystack tags",
+                "description": "VIDEO_DETAIL rows only -- internal editorial tags."
+            },
+            "tag": {
+                "title": "Tag",
+                "description": "TAG_GROUP / TOPIC rows -- the topic slug, e.g. trump."
+            },
+            "numVideos": {
+                "title": "Videos in topic",
+                "description": "TAG_GROUP rows -- how many videos in the feed carry this topic."
+            },
+            "name": {
+                "title": "Name",
+                "description": "CHANNEL / CATEGORY / LOCATION rows -- the internal identifier."
+            },
+            "thumbnail": {
+                "title": "Thumbnail",
+                "description": "CHANNEL rows -- 512x512 channel logo."
+            },
+            "path": {
+                "title": "Path",
+                "description": "CATEGORY rows -- the site path, e.g. /news."
+            },
+            "description": {
+                "title": "Description",
+                "description": "CATEGORY / LOCAL_EVENT rows -- descriptive copy."
+            },
+            "pollId": {
+                "title": "Poll ID",
+                "description": "POLL rows -- Haystack's poll identifier."
+            },
+            "question": {
+                "title": "Question",
+                "description": "POLL rows -- the poll question."
+            },
+            "results": {
+                "title": "Poll results",
+                "description": "POLL rows -- added by this actor: one {choice, votes, pct} per option."
+            },
+            "totalVoteCount": {
+                "title": "Total votes",
+                "description": "POLL rows -- votes cast across all choices."
+            },
+            "startDate": {
+                "title": "Starts at",
+                "description": "POLL / LOCAL_EVENT rows -- when the poll opened or the event begins."
+            },
+            "endDate": {
+                "title": "Ends at",
+                "description": "POLL / LOCAL_EVENT rows -- when the poll closes or the event ends."
+            },
+            "labels": {
+                "title": "Event labels",
+                "description": "LOCAL_EVENT rows -- category tags such as concert, festival, sports."
+            },
+            "location": {
+                "title": "Venue",
+                "description": "LOCAL_EVENT rows -- lat, lon, venue, address, city, state, postalCode."
+            },
+            "local_rank": {
+                "title": "Local rank",
+                "description": "LOCAL_EVENT rows -- PredictHQ's local impact score for the event."
+            },
+            "metadata": {
+                "title": "Event metadata",
+                "description": "LOCAL_EVENT rows -- provenance plus the untouched upstream record under metadata.raw."
+            },
+            "_slice": {
+                "title": "Harvest slice",
+                "description": "LOCAL_EVENT rows -- which filter combination surfaced this event, e.g. sort=date&category=sports."
+            },
+            "eventsHarvested": {
+                "title": "Events harvested",
+                "description": "LOCAL_EVENTS_SUMMARY rows -- unique events collected for the city."
+            },
+            "eventsTotalUpstream": {
+                "title": "Events upstream",
+                "description": "LOCAL_EVENTS_SUMMARY rows -- how many events Haystack says the city has."
+            },
+            "eventsHiddenByPaywall": {
+                "title": "Events withheld",
+                "description": "LOCAL_EVENTS_SUMMARY rows -- how many Haystack withheld from anonymous callers."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across every record type this actor emits.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "recordType",
+                    "_scrapedAt",
+                    "title",
+                    "webUrl",
+                    "author",
+                    "publishedDate",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        },
+        "videos": {
+            "title": "Videos",
+            "description": "Video headlines with publisher, freshness and topics.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "recordType",
+                    "title",
+                    "author",
+                    "webUrl",
+                    "publishedDate",
+                    "ageLabel",
+                    "duration",
+                    "categories",
+                    "topics",
+                    "popularityScore",
+                    "snapshotHighUrl"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        },
+        "polls": {
+            "title": "Polls",
+            "description": "Poll questions with vote counts and computed percentages.",
+            "transformation": {
+                "fields": [
+                    "pollId",
+                    "question",
+                    "results",
+                    "totalVoteCount",
+                    "startDate",
+                    "endDate",
+                    "webUrl"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        },
+        "localEvents": {
+            "title": "Local events",
+            "description": "Events with venue, timing and local impact rank.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "title",
+                    "startDate",
+                    "endDate",
+                    "location",
+                    "labels",
+                    "local_rank",
+                    "_slice"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

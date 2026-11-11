@@ -1,0 +1,66 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Etsy record",
+        "description": "Every record shares one envelope - item_type, id, data, metadata - so a single dataset can hold products, shops, reviews and diagnostics and still be joined relationally on id and metadata.parentId. The shape of data depends on item_type: search_result (a product card from a category grid or shop catalogue), shop_result (a shop from keyword search), shop_profile (seller metrics), product_detail (the full listing), review, review_sentiment (Etsy's AI review tags), or error. Etsy ships changes without notice, so unlisted fields pass through rather than failing the run.",
+        "additionalProperties": true,
+        "properties": {
+            "item_type": {
+                "type": "string",
+                "title": "Item type",
+                "description": "search_result, shop_result, shop_profile, product_detail, review, review_sentiment or error."
+            },
+            "id": {
+                "type": ["string", "null"],
+                "title": "ID",
+                "description": "The listing ID for products and reviews' parents, the shop name for shops, the review ID for reviews. Null on error rows."
+            },
+            "data": {
+                "type": "object",
+                "title": "Data",
+                "description": "The record body, keyed by item_type. search_result: listingId, title, url, shopId, shopName, shopUrl, price, originalPrice, currency (ISO, from JSON-LD), currencySymbol (as rendered), discount, shopRating, shopReviewCount, imageUrl, imageAlt, isAd, freeShipping, badges, isBestseller, isStarSeller, positionOnPage. NOTE shopRating/shopReviewCount are named for what Etsy actually puts on a grid card: the stars describe the SELLER, not the item - a card for listing 4306368113 shows 4.72 and 9,023 while that listing's own page shows 4.7 and 2,282 and its shop shows exactly 9,023. For per-item ratings use product_detail. shop_result: shopName, shopTitle, tagline, itemCount, shopUrl, avatarUrl, previewImages. shop_profile: shopName, location, totalSales, onEtsySince, rating plus ratingAllTime and ratingRecencyWeighted (Etsy publishes both and they differ), reviewCount, announcement, members, faqs, logoUrl, bannerUrl, isStarSeller. product_detail: title, description, categoryPath, breadcrumbs, price/priceMin/priceMax/originalPrice/currency, availability, quantityAvailable, lowStockRemaining, peopleWithItemInCart, shipsFrom, rating, reviewCount, images, variations, highlights, reviewFeatureTags, reviewSentiment, shopTotalSales, shopTenure, listingBadge, sellerTags (always null - Etsy no longer publishes seller SEO tags on listing pages). review: reviewId, rating, text, date, buyerName, buyerProfileUrl, photos (buyer uploads), sellerResponse, purchasedListingId/Url/Title. error: _error (challenge_wall, not_found, fetch_failed, unsupported_url, unresolvable_listing, no_results, run_failed), _errorDetail, _input."
+            },
+            "metadata": {
+                "type": "object",
+                "title": "Metadata",
+                "description": "scrapedAt (UTC ISO 8601), sourceUrl (the page the record came from, tracking parameters removed), mode, keyword (the search term that surfaced this row, when there was one), rank (position within the whole target, continuing across pages), page, parentId (the shop or listing this row hangs off), locale (the Etsy locale prefix used, which determines the currency)."
+            }
+        }
+    },
+    "views": {
+        "overview": {
+            "title": "All records",
+            "transformation": {
+                "fields": [
+                    "item_type",
+                    "id",
+                    "data",
+                    "metadata"
+                ]
+            },
+            "display": {
+                "component": "table",
+                "properties": {
+                    "item_type": {
+                        "label": "Type",
+                        "format": "text"
+                    },
+                    "id": {
+                        "label": "ID",
+                        "format": "text"
+                    },
+                    "data": {
+                        "label": "Data",
+                        "format": "object"
+                    },
+                    "metadata": {
+                        "label": "Metadata",
+                        "format": "object"
+                    }
+                }
+            }
+        }
+    }
+}

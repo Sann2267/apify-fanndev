@@ -1,0 +1,118 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Article / latest-headline record",
+        "description": "Raw-passthrough dataset envelope. Every record carries _input/_source/_scrapedAt (and _error/_errorDetail on failures). Article-mode records (S1-jsonld+html: metadata from the page's single NewsArticle-type ld+json block, full text from the #article_node_id HTML element since ld+json has no articleBody) carry headline/articleBody-style fields; latest-mode records (S2-html-listing, homepage-scraped since no usable English-language RSS/sitemap exists) carry title/link/articleId-style fields.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The exact input value (URL, or 'latest') that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which extraction strategy emitted this record (S1-jsonld+html or S2-html-listing)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed extractions -- the error kind."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "headline": {
+                "title": "Headline",
+                "description": "Article headline, from the ld+json NewsArticle/OpinionNewsArticle block."
+            },
+            "description": {
+                "title": "Description",
+                "description": "Article summary/lede, from the ld+json block."
+            },
+            "about": {
+                "title": "About",
+                "description": "Raw 'about' field from ld+json, present only on some opinion pieces -- observed to just be the headline auto-split on a comma, not curated topic tags. Null on most articles."
+            },
+            "articleBody": {
+                "title": "Article body",
+                "description": "Full article text, collected from every <p> tag inside the page's #article_node_id HTML element (not present in ld+json on this site)."
+            },
+            "articleType": {
+                "title": "Article type",
+                "description": "The ld+json node's @type value, e.g. 'NewsArticle' for regular news/business/sport pieces or 'OpinionNewsArticle' for opinion columns."
+            },
+            "category": {
+                "title": "Category",
+                "description": "Section/category name, read from the entry-category breadcrumb link in HTML (not present in ld+json)."
+            },
+            "author": {
+                "title": "Author",
+                "description": "Byline name from the ld+json author Person object -- the generic 'Asharq Al Awsat' staff/wire byline for most news, or a real named columnist for opinion pieces."
+            },
+            "publisher": {
+                "title": "Publisher",
+                "description": "Publisher name from the ld+json publisher Organization object -- always the Arabic 'الشرق الأوسط', not an English string, even on the English-edition page. Passed through as-is."
+            },
+            "datePublished": {
+                "title": "Date published",
+                "description": "ISO 8601 publish date from ld+json."
+            },
+            "dateModified": {
+                "title": "Date modified",
+                "description": "ISO 8601 last-modified date from ld+json."
+            },
+            "image": {
+                "title": "Image",
+                "description": "Lead image URL from the ld+json image ImageObject."
+            },
+            "title": {
+                "title": "Title",
+                "description": "Headline text of a latest-mode homepage-listing item."
+            },
+            "link": {
+                "title": "Link",
+                "description": "Article URL as scraped from the homepage listing."
+            },
+            "articleId": {
+                "title": "Article ID",
+                "description": "Numeric article/node ID parsed from the homepage's data-nid attribute. Latest-mode items are sorted newest-first by this ID descending."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across both article and latest-headline records.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "_source",
+                    "_scrapedAt",
+                    "headline",
+                    "title",
+                    "link",
+                    "datePublished",
+                    "author",
+                    "category",
+                    "articleId",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

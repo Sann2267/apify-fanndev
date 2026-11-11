@@ -1,0 +1,114 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Article / latest-headline record",
+        "description": "Raw-passthrough dataset envelope. Every record carries _input/_source/_scrapedAt (and _error/_errorDetail on failures). Article-mode records carry headline/articleBody-style fields; latest-mode records (news sitemap) carry title/link/pubDate-style fields. Upstream JSON-LD is passed through close to verbatim, so extra schema.org fields beyond those listed here may also appear.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The exact input value (URL, or 'latest') that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which extraction strategy emitted this record (e.g. S1-jsonld+html, S2-sitemap)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed extractions -- the error kind (e.g. not_found, blocked_or_transient)."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "headline": {
+                "title": "Headline",
+                "description": "Article headline (article mode)."
+            },
+            "description": {
+                "title": "Description",
+                "description": "Short article description/dek, from ld+json (article mode)."
+            },
+            "articleBody": {
+                "title": "Article body",
+                "description": "Full article text, reconstructed from paragraph tags (article mode). Note: at least one sampled article has a body genuinely truncated mid-word by the upstream CMS -- passed through as-is."
+            },
+            "author": {
+                "title": "Author",
+                "description": "Byline (article mode) -- always the agency itself, \"Kabar\" (Organization), on every sample; this is wire-service content, not individually bylined."
+            },
+            "publisher": {
+                "title": "Publisher",
+                "description": "Publisher organization name (article mode only) -- \"Kabar\"."
+            },
+            "category": {
+                "title": "Category",
+                "description": "Section/category label shown on the article page (article mode only), e.g. \"Central Asia\", \"WNG-2026\"."
+            },
+            "sourceCredit": {
+                "title": "Source credit",
+                "description": "Optional attributed-source line shown above the article body (article mode only), e.g. \"Akorda\", \"WNG media headquarters\" -- absent on agency-original stories with no external source."
+            },
+            "datePublished": {
+                "title": "Date published",
+                "description": "ISO 8601 publish date (article mode only)."
+            },
+            "dateModified": {
+                "title": "Date modified",
+                "description": "ISO 8601 last-modified date (article mode only)."
+            },
+            "image": {
+                "title": "Image",
+                "description": "Lead image URL(s), raw passthrough of the ld+json 'image' field (article mode only)."
+            },
+            "title": {
+                "title": "Title",
+                "description": "Headline (latest mode, from the news sitemap)."
+            },
+            "link": {
+                "title": "Link",
+                "description": "Article URL (latest mode)."
+            },
+            "pubDate": {
+                "title": "Publish date",
+                "description": "ISO 8601 publish timestamp as given by the news sitemap (latest mode)."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across both article and latest-headline records.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "_source",
+                    "_scrapedAt",
+                    "headline",
+                    "title",
+                    "link",
+                    "category",
+                    "datePublished",
+                    "pubDate",
+                    "author",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

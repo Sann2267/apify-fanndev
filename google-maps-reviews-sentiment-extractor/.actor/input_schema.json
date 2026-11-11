@@ -1,0 +1,190 @@
+{
+    "title": "Google Maps Reviews & Sentiment Extractor",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "placeUrls": {
+            "title": "Google Maps place URLs",
+            "type": "array",
+            "description": "Google Maps URLs to scrape. Open a place in Google Maps and copy the URL from the address bar. Short links (maps.app.goo.gl) are followed automatically. NOTE: a free-text search query is NOT accepted here - Google no longer exposes place search to non-browser clients, so this actor works from place identifiers only.",
+            "editor": "requestListSources",
+            "prefill": [
+                {
+                    "url": "https://www.google.com/maps/place/?q=place_id:ChIJrTLr-GyuEmsRBfy61i59si0"
+                }
+            ]
+        },
+        "placeIds": {
+            "title": "Place IDs / CIDs / feature IDs",
+            "type": "array",
+            "description": "Alternative to URLs. Accepts a Place ID (ChIJ...), a numeric CID, or a raw feature ID (0x...:0x...). One per line.",
+            "editor": "stringList",
+            "prefill": [
+                "ChIJLU7jZClu5kcR4PcOOO6p3I0"
+            ]
+        },
+        "mode": {
+            "title": "Mode",
+            "type": "string",
+            "description": "reviews = every review plus a per-place summary row (default). summary_only = one page of reviews, emit only the aggregated sentiment summary (fast and cheap). owner_responses = only reviews the business replied to, for response-rate analysis.",
+            "editor": "select",
+            "default": "reviews",
+            "enum": [
+                "reviews",
+                "summary_only",
+                "owner_responses"
+            ],
+            "enumTitles": [
+                "Reviews + sentiment (full)",
+                "Sentiment summary only (fast)",
+                "Owner responses only"
+            ]
+        },
+        "maxReviewsPerPlace": {
+            "title": "Max reviews per place",
+            "type": "integer",
+            "description": "Stop after this many reviews per place. Google serves up to 60 on the first page and 20 per page after that.",
+            "default": 100,
+            "minimum": 1,
+            "maximum": 10000
+        },
+        "sortBy": {
+            "title": "Sort reviews by",
+            "type": "string",
+            "description": "Google applies this server-side. 'relevant' returns a mixed-rating sample; 'newest' is the only order that reliably walks the whole list.",
+            "editor": "select",
+            "default": "newest",
+            "enum": [
+                "newest",
+                "relevant",
+                "highest",
+                "lowest"
+            ],
+            "enumTitles": [
+                "Newest first",
+                "Most relevant",
+                "Highest rating",
+                "Lowest rating"
+            ]
+        },
+        "minRating": {
+            "title": "Minimum rating",
+            "type": "integer",
+            "description": "Keep only reviews rated at or above this value (1-5).",
+            "minimum": 1,
+            "maximum": 5
+        },
+        "maxRating": {
+            "title": "Maximum rating",
+            "type": "integer",
+            "description": "Keep only reviews rated at or below this value (1-5). Combine with the minimum to isolate, say, 1-2 star complaints.",
+            "minimum": 1,
+            "maximum": 5
+        },
+        "onlyWithOwnerResponse": {
+            "title": "Only reviews with an owner response",
+            "type": "boolean",
+            "description": "Keep only reviews the business has replied to.",
+            "default": false
+        },
+        "boundingBox": {
+            "title": "Bounding box [south, west, north, east]",
+            "type": "array",
+            "description": "Keep only places inside this box. Requires the input URL to carry coordinates (the !3d/!4d or @lat,lng part of a Maps URL) - see the README on geographic filtering.",
+            "editor": "json"
+        },
+        "centerLatitude": {
+            "title": "Radius filter - centre latitude",
+            "type": "string",
+            "description": "Latitude of the centre point, used with centre longitude and radius.",
+            "editor": "textfield"
+        },
+        "centerLongitude": {
+            "title": "Radius filter - centre longitude",
+            "type": "string",
+            "description": "Longitude of the centre point.",
+            "editor": "textfield"
+        },
+        "radiusKm": {
+            "title": "Radius filter - radius (km)",
+            "type": "string",
+            "description": "Keep only places within this many kilometres of the centre point.",
+            "editor": "textfield"
+        },
+        "areaName": {
+            "title": "Named area",
+            "type": "string",
+            "description": "Shorthand for a built-in bounding box, e.g. 'jakarta', 'bali', 'london', 'indonesia'. For anywhere else use an explicit bounding box.",
+            "editor": "textfield"
+        },
+        "onMissingCoordinates": {
+            "title": "When a place has no coordinates",
+            "type": "string",
+            "description": "How to treat a place whose input URL carries no coordinates while a geographic filter is active. 'keep' scrapes it anyway and logs a warning; 'skip' emits a SKIPPED record instead.",
+            "editor": "select",
+            "default": "keep",
+            "enum": [
+                "keep",
+                "skip"
+            ],
+            "enumTitles": [
+                "Keep and warn (default)",
+                "Skip and record"
+            ]
+        },
+        "exportFormats": {
+            "title": "Extra export files",
+            "type": "array",
+            "description": "Also write the run's records to the key-value store in these formats. The Apify dataset is always produced regardless.",
+            "editor": "select",
+            "default": [],
+            "items": {
+                "type": "string",
+                "enum": [
+                    "json",
+                    "csv",
+                    "excel",
+                    "ndjson"
+                ],
+                "enumTitles": [
+                    "JSON",
+                    "CSV",
+                    "Excel (.xlsx)",
+                    "NDJSON"
+                ]
+            }
+        },
+        "language": {
+            "title": "Language (hl)",
+            "type": "string",
+            "description": "Google interface language. Also decides which language Google translates reviews into.",
+            "default": "en",
+            "editor": "textfield"
+        },
+        "region": {
+            "title": "Region (gl)",
+            "type": "string",
+            "description": "Two-letter country code biasing Google's response, e.g. US, ID, GB.",
+            "default": "US",
+            "editor": "textfield"
+        },
+        "pageSize": {
+            "title": "First-page size",
+            "type": "integer",
+            "description": "Reviews requested on the first page. Google caps this at 60 and always returns 20 per page afterwards.",
+            "default": 50,
+            "minimum": 1,
+            "maximum": 60
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "description": "Off by default, and that is the recommended setting. These endpoints have no WAF, so the platform's own IP works fine and costs nothing. Enable a proxy only to spread load across IPs at high volume, and leave the group list empty so Apify picks a group your plan has. RESIDENTIAL is NOT recommended here: Google polices residential proxy pools heavily and answers them with a consent or CAPTCHA interstitial, which makes places fail to resolve.",
+            "editor": "proxy",
+            "default": {
+                "useApifyProxy": false
+            }
+        }
+    },
+    "required": []
+}

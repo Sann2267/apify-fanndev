@@ -1,0 +1,130 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Article / latest-headline record",
+        "description": "Every record carries _input/_source/_scrapedAt (and _error/_errorDetail on failures). Article-mode records (S1-urql) are explicit fields extracted from the Apollo/urql GraphQL cache embedded in __NEXT_DATA__ (theatlantic.com's JSON-LD is metadata-only and lacks articleBody, so full text is reconstructed from ArticleParagraphContent blocks). Latest-mode records (S2-atom) come from The Atlantic's Atom feed (not RSS 2.0), kept teaser-only (summary) for consistency with this portfolio's other 'latest' modes.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The exact input value (URL, or 'latest'/'latest:<section>') that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which extraction strategy emitted this record (S1-urql or S2-atom)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed extractions -- the error kind."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "headline": {
+                "title": "Headline",
+                "description": "Article title, from the urql article cache (article-mode)."
+            },
+            "description": {
+                "title": "Description",
+                "description": "Article dek/description (article-mode)."
+            },
+            "articleBody": {
+                "title": "Article body",
+                "description": "Full article text, reconstructed by concatenating and HTML-stripping ArticleParagraphContent blocks' innerHtml (article-mode)."
+            },
+            "url": {
+                "title": "URL",
+                "description": "Canonical article URL, or the input URL if not present upstream (article-mode)."
+            },
+            "author": {
+                "title": "Author(s)",
+                "description": "List of {name, url} objects for each byline author (article-mode)."
+            },
+            "tags": {
+                "title": "Tags",
+                "description": "List of tag name strings (article-mode)."
+            },
+            "hasMeter": {
+                "title": "Has meter",
+                "description": "Whether the article is paywall-metered, as reported upstream (article-mode)."
+            },
+            "datePublished": {
+                "title": "Date published",
+                "description": "ISO 8601 publish date (article-mode)."
+            },
+            "dateModified": {
+                "title": "Date modified",
+                "description": "ISO 8601 last-modified date (article-mode)."
+            },
+            "primaryCategory": {
+                "title": "Primary category",
+                "description": "Display name of the article's primary category/section (article-mode)."
+            },
+            "contentBlockCount": {
+                "title": "Content block count",
+                "description": "Total number of content blocks (paragraphs, images, embeds) in the urql article.content list, before filtering to paragraphs only (article-mode)."
+            },
+            "title": {
+                "title": "Title",
+                "description": "Entry title from the Atom feed (latest mode)."
+            },
+            "link": {
+                "title": "Link",
+                "description": "Article URL, from the Atom entry's rel=alternate link (latest mode)."
+            },
+            "guid": {
+                "title": "GUID",
+                "description": "Atom entry <id> (latest mode)."
+            },
+            "pubDate": {
+                "title": "Publish date",
+                "description": "Atom entry <published> value (latest mode)."
+            },
+            "updated": {
+                "title": "Updated",
+                "description": "Atom entry <updated> value (latest mode)."
+            },
+            "authors": {
+                "title": "Authors (feed)",
+                "description": "List of author name strings, supporting multiple co-bylines (latest mode)."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across both article and latest-headline records.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "_source",
+                    "_scrapedAt",
+                    "headline",
+                    "title",
+                    "link",
+                    "url",
+                    "datePublished",
+                    "pubDate",
+                    "author",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

@@ -1,0 +1,14 @@
+{
+    "actorSpecification": 1,
+    "name": "zambia-tenders-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Zambia Government Tenders Scraper",
+    "description": "Scrape Zambia's official government procurement portal (ZPPA e-GP). Get currently-open tenders with full detail, browse a 150k+ record historical tender/award listing, or look up specific tenders by ID. No account or API key needed.",
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

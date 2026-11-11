@@ -1,0 +1,124 @@
+{
+    "title": "Honduras Government Tenders Scraper",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "mode": {
+            "title": "Mode",
+            "type": "string",
+            "editor": "select",
+            "enum": ["list", "detail"],
+            "enumTitles": ["List / search tenders", "Detail (specific tender URLs)"],
+            "description": "'list' searches the register (optionally filtered) and returns matching tenders. 'detail' fetches full information for specific tender URLs (e.g. the 'detailUrl' field from a previous 'list' run).",
+            "default": "list",
+            "prefill": "list"
+        },
+        "entidad": {
+            "title": "Institution name contains (list mode)",
+            "type": "string",
+            "editor": "textfield",
+            "description": "Optional. Filters to tenders from one government institution -- a case-insensitive substring match against the register's institution list (e.g. \"Salud\" matches the Ministry of Health). Leave empty to search all institutions.",
+            "prefill": "Salud"
+        },
+        "etapa": {
+            "title": "Stage (list mode)",
+            "type": "string",
+            "editor": "select",
+            "enum": ["todas", "elaboracion", "revisado", "recepcion_ofertas", "evaluacion", "adjudicado", "desierto", "fracasados"],
+            "enumTitles": ["All stages", "In preparation", "Reviewed", "Receiving offers", "Under evaluation", "Awarded", "Declared void", "Failed"],
+            "description": "Filter by process stage. Use 'Receiving offers' or 'Under evaluation' for currently-open tenders, or 'Awarded' for completed contract awards.",
+            "default": "todas",
+            "prefill": "recepcion_ofertas"
+        },
+        "modalidad": {
+            "title": "Modality (list mode)",
+            "type": "string",
+            "editor": "select",
+            "enum": ["todas", "licitacion_o_concurso", "compra_menor", "precalificacion"],
+            "enumTitles": ["All modalities", "Public bidding / contest", "Minor purchase", "Prequalification"],
+            "description": "Optional filter by procurement modality.",
+            "default": "todas",
+            "prefill": "todas"
+        },
+        "tipoAdquisicion": {
+            "title": "Acquisition type (list mode)",
+            "type": "string",
+            "editor": "select",
+            "enum": ["todas", "suministro_bienes_servicios", "obras", "consultoria"],
+            "enumTitles": ["All types", "Goods and/or services", "Public works", "Consulting"],
+            "description": "Optional filter by acquisition type.",
+            "default": "todas",
+            "prefill": "todas"
+        },
+        "expediente": {
+            "title": "Exact tender/record number (list mode)",
+            "type": "string",
+            "editor": "textfield",
+            "description": "Optional. Look up one specific tender by its exact 'Expediente' record number."
+        },
+        "fechaInicio": {
+            "title": "Start date from (list mode)",
+            "type": "string",
+            "editor": "textfield",
+            "description": "Optional. Format dd/mm/yyyy. Filters to tenders whose start date falls on/after this date."
+        },
+        "fechaFin": {
+            "title": "Start date to (list mode)",
+            "type": "string",
+            "editor": "textfield",
+            "description": "Optional. Format dd/mm/yyyy. Filters to tenders whose start date falls on/before this date."
+        },
+        "maxResults": {
+            "title": "Max results (list mode)",
+            "type": "integer",
+            "description": "Maximum number of tenders to return for a 'list' search. The register paginates 30 rows per page; this actor pages through until it reaches this many results.",
+            "default": 50,
+            "minimum": 1,
+            "maximum": 1000,
+            "prefill": 50
+        },
+        "fetchDetail": {
+            "title": "Also fetch full detail per tender (list mode)",
+            "type": "boolean",
+            "description": "When true, also fetches each tender's detail page (contact, line items, documents, bidders, award) and merges it into the same record. Slower -- one extra request per tender.",
+            "default": false
+        },
+        "url": {
+            "title": "Tender detail URL (detail mode)",
+            "type": "string",
+            "editor": "textfield",
+            "description": "A single ProcesoHistorico.aspx detail URL to fetch (e.g. the 'detailUrl' field from a 'list' mode run).",
+            "prefill": "http://sicc.honducompras.gob.hn/HC/procesos/ProcesoHistorico.aspx?Id0=MQAAADEAAAA2AAAANQAAAA%3d%3d-4lhMVLhxydo%3d&Id1=MQAAAA%3d%3d-OFoziWLXW%2fg%3d&Id2=RwAAAEUAAABTAAAAQQAAAEwAAABVAAAARAAAAC0AAABCAAAASQAAAEQAAAAtAAAANAAAADcAAAAxAAAAMwAAAC0AAABMAAAAMQAAADEAAAA5AAAAOQAAAC0AAABQAAAAMAAAADAAAAAwAAAANwAAADIAAAA%3d-dwOcKW7CfQE%3d"
+        },
+        "urls": {
+            "title": "Tender detail URLs (detail mode)",
+            "type": "array",
+            "editor": "stringList",
+            "description": "Multiple detail URLs to fetch in one run. Combined with 'url' if both are set."
+        },
+        "maxConcurrency": {
+            "title": "Max concurrent workers",
+            "type": "integer",
+            "description": "How many detail pages to fetch in parallel (used by 'detail' mode, and by 'list' mode when 'fetchDetail' is on). Keep this low -- the register's server is slow and can take 20-40s per page.",
+            "default": 3,
+            "minimum": 1,
+            "maximum": 6,
+            "prefill": 3
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "editor": "proxy",
+            "description": "Apify Proxy configuration. Residential is on by default.",
+            "default": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            },
+            "prefill": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            }
+        }
+    },
+    "required": []
+}

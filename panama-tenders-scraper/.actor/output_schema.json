@@ -1,0 +1,140 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Panama tender record",
+        "description": "Raw-passthrough dataset envelope. Every record carries _input/_source/_scrapedAt (and _error/_errorDetail on failures). Both 'list' and 'detail' mode records pass through DGCP's own OCDS 'compiledRelease' object close to verbatim (ocid, tender, awards, contracts, buyer, parties, etc.) -- extra fields may appear beyond those listed here as the upstream schema evolves.",
+        "properties": {
+            "_input": {
+                "title": "Input",
+                "description": "'list' mode: an object with the startCursor filter used to produce this run. 'detail' mode: the OCDS ocid requested, as a plain string. Left untyped here since the shape differs by mode."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "S1-ocds-records-api (a 'list' mode page result), S1-ocds-record-detail (a 'detail' mode fetch), or none (error record)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed extractions -- not_found (zero records at this cursor, or an unknown ocid in detail mode), blocked_or_transient (network/server issue after retries)."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "_nextCursor": {
+                "type": "string",
+                "title": "Next page cursor",
+                "description": "Present only on the last record of a 'list' run that stopped because it reached maxResults (feed had more pages available). Pass this value as the 'startCursor' input on a future run to continue where this one left off -- the upstream feed has no date/keyword filter, so this is the only way to see more of it."
+            },
+            "ocid": {
+                "title": "OCDS ocid",
+                "description": "The Open Contracting ID for this tender -- feed this into 'detail' mode's 'ocid'/'ocids' input for a fresh single-record fetch."
+            },
+            "id": {
+                "title": "Release ID",
+                "description": "The compiled release's own id (ocid plus a compile timestamp)."
+            },
+            "date": {
+                "title": "Release date",
+                "description": "Date of the most recent event compiled into this release."
+            },
+            "tag": {
+                "type": "array",
+                "title": "Release tag",
+                "description": "OCDS release tag array, always ['compiled'] for these records."
+            },
+            "publishedDate": {
+                "title": "Published date",
+                "description": "When this compiled release was published to the feed."
+            },
+            "language": {
+                "title": "Language",
+                "description": "OCDS language code, always 'es' (Spanish) for Panama's data."
+            },
+            "initiationType": {
+                "title": "Initiation type",
+                "description": "OCDS initiation type, e.g. 'tender'."
+            },
+            "buyer": {
+                "type": "object",
+                "title": "Buyer",
+                "description": "The government buyer's id and name."
+            },
+            "parties": {
+                "type": "array",
+                "title": "Parties",
+                "description": "Every organization involved (buyer, procuringEntity, supplier(s)), each with an id, name, roles array, and PA-RUC identifier where available."
+            },
+            "planning": {
+                "type": "object",
+                "title": "Planning",
+                "description": "Budget breakdown reference for this procurement, when available."
+            },
+            "tender": {
+                "type": "object",
+                "title": "Tender",
+                "description": "The tender itself: id, title, description, status/statusDetails (e.g. 'complete'/'Adjudicado'), procurementMethod(Details), awardCriteria(Details), mainProcurementCategory(Details), procuringEntity, publishedDate, and 'uri' (a link back into PanamaCompra's own SPA)."
+            },
+            "awards": {
+                "type": "array",
+                "title": "Awards",
+                "description": "Award(s) made for this tender -- value/currency (PAB), status/statusDetails, date, line items (UNSPSC classification, description, quantity, unit), and supplier(s). Empty or absent if not yet awarded."
+            },
+            "contracts": {
+                "type": "array",
+                "title": "Contracts",
+                "description": "Signed contract(s) -- value, status, period, and documents (each with a direct download 'url' on apisv3.panamacompra.gob.pa, documentType, and dates). Empty or absent if no contract has been signed yet."
+            },
+            "relatedProcesses": {
+                "type": "array",
+                "title": "Related processes",
+                "description": "Links to related OCDS processes, e.g. the planning-stage record this tender originated from."
+            },
+            "dataSegmentation": {
+                "type": "object",
+                "title": "Data segmentation",
+                "description": "Upstream's own year/month partition metadata for this record."
+            },
+            "sources": {
+                "type": "array",
+                "title": "Sources",
+                "description": "Which underlying PanamaCompra system version produced this record, e.g. 'panamacompra_v3' (the current live platform) or 'panamacompra_v2' (the prior one)."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns for every record.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "_source",
+                    "_scrapedAt",
+                    "ocid",
+                    "date",
+                    "buyer",
+                    "tender",
+                    "awards",
+                    "sources",
+                    "_error",
+                    "_nextCursor"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

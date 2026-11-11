@@ -1,0 +1,154 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Blibli homepage feed tile",
+        "description": "Raw-passthrough dataset envelope on top of Blibli's own internal API JSON. Every field Blibli returns is preserved verbatim; fields prefixed with `_` are added by this actor -- the standard portfolio envelope plus flattened conveniences (price, discount, ad-banner details, rank) that a consumer would otherwise have to dig out of nested containers. A row is one of three tile types, told apart by `_recordType`: 'product' (carries `sku`/`name`/`price`), 'ad_banner' (carries `promoBannerInfo`), or 'category_card' (a curated 'trending now' collection tile linking to a category landing page, carries `cardLabel`/`cardDescription` but no `sku`).",
+        "properties": {
+            "_input": {
+                "type": ["string", "null"],
+                "title": "Input",
+                "description": "The tab short-code (e.g. TAB_1) that produced this record."
+            },
+            "_source": {
+                "type": ["string", "null"],
+                "title": "Source strategy",
+                "description": "S1-homepage-infinite-recommendations, or none on failure."
+            },
+            "_scrapedAt": {
+                "type": ["string", "null"],
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": ["string", "null"],
+                "title": "Error",
+                "description": "Present only on failed or empty runs (BLOCKED_AFTER_RETRIES, UPSTREAM_SHAPE_CHANGED, INVALID_INPUT, EMPTY_RESULT)."
+            },
+            "_errorDetail": {
+                "type": ["string", "null"],
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "_tabName": {
+                "type": ["string", "null"],
+                "title": "Tab code",
+                "description": "Short tab identifier used to query the feed, e.g. TAB_1."
+            },
+            "_tabTitle": {
+                "type": ["string", "null"],
+                "title": "Tab title",
+                "description": "Human-readable tab label as shown on the homepage, e.g. 'Untukmu', 'Zona affiliate', 'Handuk'."
+            },
+            "_tabSourceType": {
+                "type": ["string", "null"],
+                "title": "Tab source type",
+                "description": "MANUAL (editorially curated tab, e.g. For You / affiliate zone) or AUTOMATIC (algorithmically generated category tab)."
+            },
+            "_recordType": {
+                "type": ["string", "null"],
+                "title": "Record type",
+                "description": "'product' (a real product recommendation), 'ad_banner' (a paid brand-ad slot interleaved with recommendations), 'category_card' (a curated 'trending now' collection tile linking to a category page), or 'unknown' (a genuinely unrecognised tile shape, emitted rather than dropped)."
+            },
+            "_rankInFeed": {
+                "type": ["number", "null"],
+                "title": "Rank in feed",
+                "description": "1-based position of this tile within the tab's sweep, in the order Blibli returned it. Note: the upstream `sequence` field is not reliable for this (observed always 0); this is the actor's own running count."
+            },
+            "_page": {
+                "type": ["number", "null"],
+                "title": "Page",
+                "description": "Which page of the feed this tile came from."
+            },
+            "_productUrl": {
+                "type": ["string", "null"],
+                "title": "Product / card URL",
+                "description": "Absolute blibli.com URL the tile links to. Product and category_card records only; ad banners use _adRedirectUrl instead."
+            },
+            "_cardLabel": {
+                "type": ["string", "null"],
+                "title": "Card label",
+                "description": "Badge text on a category_card tile, e.g. 'Lagi laris' (trending now). Category card records only."
+            },
+            "_cardDescription": {
+                "type": ["string", "null"],
+                "title": "Card description",
+                "description": "Supporting text on a category_card tile, e.g. '1,7 rb terjual bulan ini' (1.7k sold this month) -- a sales-velocity signal for that category. Category card records only."
+            },
+            "_listPrice": {
+                "type": ["number", "null"],
+                "title": "List price (IDR)",
+                "description": "Pre-discount price in rupiah. Product records only; often absent when the tile has no discount (0%)."
+            },
+            "_offerPrice": {
+                "type": ["number", "null"],
+                "title": "Offer price (IDR)",
+                "description": "Current selling price in rupiah. Product records only."
+            },
+            "_discountPercent": {
+                "type": ["number", "null"],
+                "title": "Discount %",
+                "description": "Headline discount off list price. Product records only; recomputed from list/offer price on the rare row where Blibli omits the field, per the pattern documented across this portfolio."
+            },
+            "_discountSource": {
+                "type": ["string", "null"],
+                "title": "Discount provenance",
+                "description": "'upstream' when Blibli published the discount figure itself, 'computed' when derived from list vs offer price."
+            },
+            "_savingAmount": {
+                "type": ["number", "null"],
+                "title": "Saving (IDR)",
+                "description": "List price minus offer price, in rupiah. Product records only."
+            },
+            "_contextualDiscountPercent": {
+                "type": ["number", "null"],
+                "title": "Contextual discount %",
+                "description": "Discount after stacking payment-method/voucher promos, when Blibli exposes one. Product records only."
+            },
+            "_brandAdId": {
+                "type": ["string", "null"],
+                "title": "Ad id",
+                "description": "Blibli's internal id for the ad campaign behind this banner slot. Ad banner records only."
+            },
+            "_adBrandNames": {
+                "type": ["array", "null"],
+                "title": "Ad brand names",
+                "description": "Brand(s) the banner promotes. Ad banner records only."
+            },
+            "_adRedirectUrl": {
+                "type": ["string", "null"],
+                "title": "Ad redirect URL",
+                "description": "Absolute blibli.com landing page the banner links to. Ad banner records only."
+            },
+            "_adStartTime": {
+                "type": ["string", "null"],
+                "format": "date-time",
+                "title": "Ad campaign start",
+                "description": "UTC ISO 8601. Ad banner records only."
+            },
+            "_adEndTime": {
+                "type": ["string", "null"],
+                "format": "date-time",
+                "title": "Ad campaign end",
+                "description": "UTC ISO 8601. Ad banner records only."
+            },
+            "_personalizationSource": {
+                "type": ["string", "null"],
+                "title": "Personalization source",
+                "description": "Which internal recommendation service produced this tile, e.g. 'brs' (Blibli Recommendation Service)."
+            },
+            "_personalizationLogic": {
+                "type": ["string", "null"],
+                "title": "Personalization logic",
+                "description": "Upstream's own tag for the ranking logic applied, e.g. 'DEFAULT_RERANK'. Algorithm-intelligence signal, passed through verbatim."
+            },
+            "_strategyId": {
+                "type": ["string", "null"],
+                "title": "Strategy id",
+                "description": "Upstream's internal recommendation-strategy identifier for this tile."
+            }
+        }
+    }
+}

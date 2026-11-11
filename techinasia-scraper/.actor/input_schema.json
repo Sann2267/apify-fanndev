@@ -1,0 +1,216 @@
+{
+    "title": "Tech in Asia Scraper",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "mode": {
+            "title": "What to scrape",
+            "type": "string",
+            "description": "Pick what you want to collect. Tech in Asia publishes three separate bodies of data - its newsroom, its startup and investor database, and its job board - and each mode reads one of them.",
+            "editor": "select",
+            "enum": [
+                "latestPosts",
+                "searchPosts",
+                "categoryPosts",
+                "tagPosts",
+                "videoPosts",
+                "postDetail",
+                "taxonomies",
+                "trendingQuestions",
+                "companies",
+                "companyDetail",
+                "jobs"
+            ],
+            "enumTitles": [
+                "Latest articles - newest first, newsroom feed",
+                "Search articles - full-text, with filters (deepest reach)",
+                "Articles in a category",
+                "Articles under a tag",
+                "Video articles",
+                "Single articles by URL, slug or id",
+                "Categories, tags and topics (the taxonomy map)",
+                "Trending questions with pageview counts",
+                "Company database - 120,000+ startups and investors",
+                "Single companies by slug",
+                "Job board"
+            ],
+            "default": "latestPosts"
+        },
+        "maxItems": {
+            "title": "Maximum records",
+            "type": "integer",
+            "description": "How many records to collect before stopping. Two ceilings sit above this and belong to Tech in Asia, not to the actor: article list routes stop at 900 records each, and any one search query stops at 1,000. The company database has no such ceiling - all 120,649 records are reachable.",
+            "default": 200,
+            "minimum": 1,
+            "maximum": 100000,
+            "unit": "records"
+        },
+        "includeArticleContent": {
+            "title": "Include the full article body",
+            "type": "boolean",
+            "description": "Off by default, so records carry metadata plus the publisher's own excerpt. Turn this on to add the article's full HTML body. Tech in Asia is a subscription publication - check your licence before republishing or redistributing article text.",
+            "default": false
+        },
+        "searchQueries": {
+            "title": "Search queries",
+            "type": "array",
+            "description": "Used by the searchPosts mode. One query per line. Leave empty to sweep the whole index newest-first. Each query returns up to 1,000 records, so several narrow queries reach further than one broad one.",
+            "editor": "stringList",
+            "prefill": [
+                "fintech indonesia"
+            ]
+        },
+        "postTypes": {
+            "title": "Article types",
+            "type": "array",
+            "description": "Optional filter for searchPosts. Known values: post (full articles), short (news briefs), visual-story. Leave empty for all types.",
+            "editor": "stringList",
+            "prefill": [
+                "post"
+            ]
+        },
+        "filterCategories": {
+            "title": "Filter by category name",
+            "type": "array",
+            "description": "Optional filter for searchPosts, matched on the category's display name - Fintech, Startups, Analysis, Crypto. Spelling and capitalisation must match exactly. Run the taxonomies mode to see every valid name.",
+            "editor": "stringList",
+            "prefill": [
+                "Fintech"
+            ]
+        },
+        "filterAuthors": {
+            "title": "Filter by author name",
+            "type": "array",
+            "description": "Optional filter for searchPosts, matched on the author's display name exactly as it appears on their byline. This is the only way to list one writer's work - Tech in Asia publishes no author endpoint.",
+            "editor": "stringList"
+        },
+        "publishedAfter": {
+            "title": "Published after",
+            "type": "string",
+            "description": "Optional date floor for searchPosts. YYYY-MM-DD, or a unix timestamp.",
+            "editor": "textfield",
+            "prefill": "2026-01-01"
+        },
+        "publishedBefore": {
+            "title": "Published before",
+            "type": "string",
+            "description": "Optional date ceiling for searchPosts. YYYY-MM-DD, or a unix timestamp.",
+            "editor": "textfield"
+        },
+        "categorySlugs": {
+            "title": "Category slugs",
+            "type": "array",
+            "description": "Used by the categoryPosts mode. Slugs such as fintech, startups, analysis, crypto - or paste a full /category/... URL and the slug is taken from it.",
+            "editor": "stringList",
+            "prefill": [
+                "fintech"
+            ]
+        },
+        "tagSlugs": {
+            "title": "Tag slugs",
+            "type": "array",
+            "description": "Used by the tagPosts mode. Slugs such as indonesia, e-commerce, pitch-deck - or paste a full /tag/... URL.",
+            "editor": "stringList",
+            "prefill": [
+                "indonesia"
+            ]
+        },
+        "postUrls": {
+            "title": "Article URLs, slugs or ids",
+            "type": "array",
+            "description": "Used by the postDetail mode. Accepts a full article URL, a bare slug, or a numeric post id - all three resolve to the same record.",
+            "editor": "stringList",
+            "prefill": [
+                "https://www.techinasia.com/news/apple-pay-plans-india-launch-axis-bank-sources"
+            ]
+        },
+        "includeCategories": {
+            "title": "Include categories and topics",
+            "type": "boolean",
+            "description": "For the taxonomies mode: emit all 62 categories plus the site's curated topic map.",
+            "default": true
+        },
+        "includeTags": {
+            "title": "Include tags",
+            "type": "boolean",
+            "description": "For the taxonomies mode: also emit tags. There are 64,649 of them and the route serves the first 900, so this is a sample rather than the full list.",
+            "default": false
+        },
+        "companyQuery": {
+            "title": "Company search text",
+            "type": "string",
+            "description": "For the companies mode: free-text match on company name and description. Leave empty to sweep the whole database instead, which reaches all 120,649 records rather than the 1,000 a search returns.",
+            "editor": "textfield"
+        },
+        "companyCountries": {
+            "title": "Company countries",
+            "type": "array",
+            "description": "For the companies mode. Full country names, spelled as the database does: China, India, Indonesia, Singapore, United States, Japan, Australia, Korea Republic of, Israel, Vietnam, Malaysia, Hong Kong.",
+            "editor": "stringList",
+            "prefill": [
+                "Indonesia"
+            ]
+        },
+        "fundingStages": {
+            "title": "Latest funding stage",
+            "type": "array",
+            "description": "For the companies mode. Valid values: Seed, Series A, Series B, Series C, Series D, Pre-series A, Bridge, Debt, M&A, Early stage, Strategic investment, Unspecified Stage.",
+            "editor": "stringList",
+            "prefill": [
+                "Series A"
+            ]
+        },
+        "companyIndustries": {
+            "title": "Company industries",
+            "type": "array",
+            "description": "For the companies mode. Industry names as the database spells them, for example Venture Capital. Exact matches only.",
+            "editor": "stringList"
+        },
+        "investorsOnly": {
+            "title": "Investors only",
+            "type": "boolean",
+            "description": "For the companies mode: return only entities flagged as investors - 18,246 of the 119,712 indexed.",
+            "default": false
+        },
+        "minAmountRaised": {
+            "title": "Minimum total raised (USD)",
+            "type": "integer",
+            "description": "For the companies mode: keep only companies whose lifetime total raised is at least this much.",
+            "minimum": 0,
+            "unit": "USD"
+        },
+        "companySlugs": {
+            "title": "Company slugs",
+            "type": "array",
+            "description": "Used by the companyDetail mode. The slug must match the database's own spelling exactly - gojek resolves, grab does not. Run the companies mode first to find the right slug.",
+            "editor": "stringList",
+            "prefill": [
+                "gojek"
+            ]
+        },
+        "jobQuery": {
+            "title": "Job search text",
+            "type": "string",
+            "description": "For the jobs mode: free-text match on job title, company and description. Leave empty to list the whole board.",
+            "editor": "textfield"
+        },
+        "remoteJobsOnly": {
+            "title": "Remote jobs only",
+            "type": "boolean",
+            "description": "For the jobs mode: keep only remote postings. Ignored when a job search text is given.",
+            "default": false
+        },
+        "proxyConfiguration": {
+            "title": "Proxy",
+            "type": "object",
+            "description": "Off by default and genuinely optional. Tech in Asia runs no WAF and no IP gate - every surface here answers an unproxied request - so a proxy only adds cost. Turn it on if a very long run starts meeting a rate limiter.",
+            "editor": "proxy",
+            "default": {
+                "useApifyProxy": false
+            }
+        }
+    },
+    "required": [
+        "mode"
+    ]
+}

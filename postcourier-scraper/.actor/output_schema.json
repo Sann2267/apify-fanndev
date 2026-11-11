@@ -1,0 +1,155 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Article / latest-headline record",
+        "description": "Raw-passthrough dataset envelope. Every record carries _input/_source/_scrapedAt (and _error/_errorDetail on failures). Article-mode records (S1-jsonld+wpapi) combine Yoast ld+json metadata with the WordPress REST API's content.rendered body and embedded author/media/term data; latest-mode records (S2-rss) carry title/link-style fields from the site's RSS feed. Post Courier gates most PNG-local news behind a WooCommerce Memberships paywall -- see _paywalled.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The exact input value (URL, or 'latest') that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which extraction strategy emitted this record (S1-jsonld+wpapi, S2-rss, or none on failure)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed extractions -- the error kind (not_found, not_article, blocked_or_transient, http_<code>)."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "_warning": {
+                "title": "Warning",
+                "description": "Non-fatal degradation marker, e.g. wp_api_post_not_found when the WordPress REST API lookup came back empty despite a valid article page."
+            },
+            "headline": {
+                "title": "Headline",
+                "description": "Article headline, from the Yoast ld+json Article node."
+            },
+            "description": {
+                "title": "Description",
+                "description": "Article summary/dek. No <meta name=\"description\"> tag exists on this site's article pages -- falls back to <meta property=\"og:description\">."
+            },
+            "articleBody": {
+                "title": "Article body",
+                "description": "Full article text, joined from paragraphs in the WordPress REST API's content.rendered. When the article is paywalled (_paywalled=true), this is only the ~2-paragraph free preview, not the full text."
+            },
+            "author": {
+                "title": "Author",
+                "description": "Byline name(s) from the ld+json Article node's author reference(s), comma-joined."
+            },
+            "wpAuthor": {
+                "title": "WordPress author",
+                "description": "Author display name from the WordPress REST API's embedded author object -- usually the same generic byline account as `author` on this site."
+            },
+            "coauthors": {
+                "title": "Co-authors (raw IDs)",
+                "description": "Raw Co-Authors Plus taxonomy term IDs from the WordPress REST API, passed through unresolved."
+            },
+            "publisher": {
+                "title": "Publisher",
+                "description": "Publisher name, from the ld+json Organization node ('Post Courier')."
+            },
+            "articleSection": {
+                "title": "Article section",
+                "description": "Section(s) the article is filed under, from ld+json (e.g. ['PNG News', 'World'])."
+            },
+            "keywords": {
+                "title": "Keywords",
+                "description": "Keyword tags from the ld+json Article node."
+            },
+            "categories": {
+                "title": "Categories",
+                "description": "WordPress category term names, from the REST API's embedded terms."
+            },
+            "tags": {
+                "title": "Tags",
+                "description": "WordPress post-tag term names, from the REST API's embedded terms."
+            },
+            "datePublished": {
+                "title": "Date published",
+                "description": "ISO 8601 publish date from ld+json."
+            },
+            "dateModified": {
+                "title": "Date modified",
+                "description": "ISO 8601 last-modified date from ld+json."
+            },
+            "thumbnailUrl": {
+                "title": "Thumbnail URL",
+                "description": "Lead image URL, from the ld+json Article node."
+            },
+            "featuredMediaUrl": {
+                "title": "Featured media URL",
+                "description": "Lead image URL, from the WordPress REST API's embedded featured-media object (usually the same image as thumbnailUrl)."
+            },
+            "wordCount": {
+                "title": "Word count",
+                "description": "Upstream word count from ld+json (counts the full article, even when the visible text is paywall-truncated)."
+            },
+            "_paywalled": {
+                "title": "Paywalled",
+                "description": "True when the WordPress REST API content contains a WooCommerce Memberships restriction message (i.e. articleBody is only a partial preview). False for freely readable articles (mostly wire/PACNEWS content). Null on records that degraded before paywall status could be determined."
+            },
+            "title": {
+                "title": "Title",
+                "description": "Headline text of a latest-mode RSS item."
+            },
+            "link": {
+                "title": "Link",
+                "description": "Article URL from the RSS feed."
+            },
+            "pubDate": {
+                "title": "Publish date (raw)",
+                "description": "Raw RFC-822 pubDate string from the RSS item."
+            },
+            "pubDateIso": {
+                "title": "Publish date (ISO)",
+                "description": "pubDate parsed and converted to UTC ISO 8601."
+            },
+            "creator": {
+                "title": "Creator",
+                "description": "Byline from the RSS item's dc:creator field."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across both article and latest-headline records.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "_source",
+                    "_scrapedAt",
+                    "headline",
+                    "title",
+                    "link",
+                    "datePublished",
+                    "pubDate",
+                    "author",
+                    "creator",
+                    "_paywalled",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

@@ -1,0 +1,81 @@
+{
+    "title": "Blibli Search Keyword Autocomplete & Suggester",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "seedKeywords": {
+            "title": "Seed keywords",
+            "type": "array",
+            "description": "Starting terms to expand, e.g. [\"laptop\", \"sepatu pria\"]. Each seed is run through Blibli's live autocomplete and, with expansion on, through a suffix sweep that pulls far more of the suggestion index.",
+            "editor": "stringList",
+            "prefill": ["laptop"],
+            "default": []
+        },
+        "expansionMode": {
+            "title": "Expansion mode",
+            "type": "string",
+            "description": "How hard to mine each seed. A bare seed returns only a handful of suggestions (measured: 6 for 'laptop'); appending letters pulls a different slice each time (measured: 67 unique keywords from a-j alone). 'related' adds Blibli's 'refine your search' terms. 'full' does both plus digits.",
+            "editor": "select",
+            "enum": ["none", "alphabet", "alphanumeric", "related", "full"],
+            "enumTitles": [
+                "None - seed only (1 request per seed)",
+                "Alphabet - seed + a-z (27 requests per seed)",
+                "Alphanumeric - seed + a-z + 0-9 (37 per seed)",
+                "Related - seed + refine-search terms (2 per seed)",
+                "Full - alphabet + digits + related (38 per seed)"
+            ],
+            "default": "alphabet"
+        },
+        "includeCompetition": {
+            "title": "Measure competition per keyword",
+            "type": "boolean",
+            "description": "For every keyword, count how many products Blibli actually returns for it - the number that tells you how hard the keyword is to rank for. Costs one extra request per keyword. See the README: Blibli publishes no search volume, and this is the measured figure offered in its place.",
+            "default": true
+        },
+        "includeTrending": {
+            "title": "Include trending searches",
+            "type": "boolean",
+            "description": "Add Blibli's marketplace-wide trending search terms as extra rows. Works with no seed keywords at all.",
+            "default": false
+        },
+        "includeCurated": {
+            "title": "Include curated promo keywords",
+            "type": "boolean",
+            "description": "Add the editorially curated keywords Blibli promotes in its search box, each with the promo page it links to.",
+            "default": false
+        },
+        "minWordCount": {
+            "title": "Minimum word count",
+            "type": "integer",
+            "description": "Keep only keywords with at least this many words. Set to 3 to harvest long-tail terms only - easier to rank for and usually higher-converting. 0 disables.",
+            "editor": "number",
+            "minimum": 0,
+            "default": 0
+        },
+        "maxKeywordsPerSeed": {
+            "title": "Max keywords per seed",
+            "type": "integer",
+            "description": "Stop after this many keywords per seed. 0 means no limit - harvest whatever the expansion plan yields.",
+            "editor": "number",
+            "minimum": 0,
+            "default": 0
+        },
+        "maxConcurrency": {
+            "title": "Max concurrency",
+            "type": "integer",
+            "description": "Parallel competition lookups. Keep low to stay under Blibli's rate limiting.",
+            "editor": "number",
+            "minimum": 1,
+            "maximum": 10,
+            "default": 5
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "description": "Blibli is behind Cloudflare and throttles sustained traffic from one IP. Apify Residential proxy with country 'ID' is recommended, especially with expansion and competition measurement on.",
+            "editor": "proxy",
+            "default": { "useApifyProxy": true, "apifyProxyGroups": ["RESIDENTIAL"] }
+        }
+    },
+    "required": []
+}

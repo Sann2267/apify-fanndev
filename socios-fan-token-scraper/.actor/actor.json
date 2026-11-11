@@ -1,0 +1,23 @@
+{
+    "actorSpecification": 1,
+    "name": "socios-fan-token-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Socios.com Fan Token & Fan Vote Scraper",
+    "description": "Scrape Socios.com fan votes with their results already counted - question, every option, votes cast and the winning percentage - across 9,800+ polls and 231 partner clubs. Also returns the fan token catalogue with contract addresses and supply. No account or login needed.",
+    "categories": [
+        "SPORTS",
+        "BUSINESS"
+    ],
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json",
+    "defaultRunOptions": {
+        "build": "latest",
+        "memoryMbytes": 512,
+        "timeoutSecs": 3600
+    }
+}

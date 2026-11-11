@@ -1,0 +1,7 @@
+apify>=4.0.0,<5.0.0
+curl_cffi>=0.15.0
+
+# Defensive pin, per this project's build-incident rules: browserforge's
+# newer releases have shipped fingerprint data changes that broke the image
+# build. Pin until deliberately revisited.
+browserforge==1.2.3

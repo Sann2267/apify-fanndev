@@ -1,0 +1,23 @@
+{
+    "actorSpecification": 1,
+    "name": "facebook-page-reviews-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Facebook Page Review & Rating Scraper",
+    "description": "Get a Facebook business page's recommendation rating and its individual reviews: percent who recommend, total review count, and per review the author, the recommend vote, the written text, Facebook's experience tags, the timestamp and the engagement. Missing pages are reported as errors.",
+    "categories": [
+        "SOCIAL_MEDIA",
+        "BUSINESS"
+    ],
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json",
+    "defaultRunOptions": {
+        "build": "latest",
+        "timeoutSecs": 3600,
+        "memoryMbytes": 1024
+    }
+}

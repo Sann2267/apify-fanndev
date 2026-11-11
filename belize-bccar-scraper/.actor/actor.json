@@ -1,0 +1,14 @@
+{
+    "actorSpecification": 1,
+    "name": "belize-bccar-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Belize BCCAR Business Registry Scraper",
+    "description": "Search Belize's official company and business registry (BCCAR) by name, registration number, certificate number, or entity type, and pull the public registry record: registration number, name, entity type/sub-type, status, address, and registration date. No account or API key needed.",
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

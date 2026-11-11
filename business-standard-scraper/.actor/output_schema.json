@@ -1,0 +1,110 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Article / latest-headline record",
+        "description": "Raw-passthrough dataset envelope. Every record carries _input/_source/_scrapedAt (failed URLs are not written to the dataset -- they are reported in the ERRORS record of the run's key-value store). Article-mode records carry headline/articleBody-style fields; latest-mode records (RSS or sitemap) carry title/link-style fields. Upstream JSON-LD is passed through close to verbatim, so extra schema.org fields beyond those listed here may also appear.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The exact input value (URL, or 'latest'/'latest:<section>') that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which extraction strategy emitted this record (e.g. S1-jsonld, S2-rss)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "headline": {
+                "title": "Headline",
+                "description": "Article headline (raw passthrough from JSON-LD NewsArticle)."
+            },
+            "description": {
+                "title": "Description",
+                "description": "Short article description/dek."
+            },
+            "articleBody": {
+                "title": "Article body",
+                "description": "Full (or teaser, if paywalled) article text, present directly in JSON-LD."
+            },
+            "datePublished": {
+                "title": "Date published",
+                "description": "ISO 8601 publish date."
+            },
+            "dateModified": {
+                "title": "Date modified",
+                "description": "ISO 8601 last-modified date."
+            },
+            "author": {
+                "title": "Author",
+                "description": "Author object(s), raw passthrough."
+            },
+            "image": {
+                "title": "Image",
+                "description": "Lead image object."
+            },
+            "keywords": {
+                "title": "Keywords",
+                "description": "Keywords, raw passthrough."
+            },
+            "title": {
+                "title": "Title",
+                "description": "Headline from the RSS item."
+            },
+            "link": {
+                "title": "Link",
+                "description": "Article URL."
+            },
+            "guid": {
+                "title": "GUID",
+                "description": "RSS item GUID."
+            },
+            "pubDate": {
+                "title": "Publish date",
+                "description": "RSS pubDate string."
+            },
+            "isPremium": {
+                "title": "Is premium",
+                "description": "bs:premium paywall flag."
+            },
+            "imageUrl": {
+                "title": "Image URL",
+                "description": "Lead image URL."
+            },
+            "thumbnailUrl": {
+                "title": "Thumbnail URL",
+                "description": "Thumbnail image URL."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across both article and latest-headline records.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "_source",
+                    "_scrapedAt",
+                    "headline",
+                    "title",
+                    "link",
+                    "datePublished",
+                    "pubDate",
+                    "isPremium"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

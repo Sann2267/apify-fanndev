@@ -1,0 +1,19 @@
+{
+    "actorSpecification": 1,
+    "name": "blibli-product-price-monitor",
+    "title": "Blibli Product & Price Monitor",
+    "description": "Ekstrak nama, harga, diskon, rating, jumlah ulasan, dan status stok produk Blibli berdasarkan kata kunci atau kategori. Untuk analisis tren harga pasar dan pemantauan kompetitor.",
+    "version": "1.0",
+    "meta": {
+        "templateId": "js-crawlee-http"
+    },
+    "input": "./input_schema.json",
+    "dockerfile": "./Dockerfile",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json",
+    "defaultMemoryMbytes": 1024,
+    "minMemoryMbytes": 512,
+    "maxMemoryMbytes": 4096
+}

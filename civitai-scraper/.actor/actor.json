@@ -1,0 +1,14 @@
+{
+    "actorSpecification": 1,
+    "name": "civitai-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Civitai Scraper",
+    "description": "Search and extract Civitai AI model listings, full model/download details, image gallery posts, creators, and tags -- no account or API key needed.",
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

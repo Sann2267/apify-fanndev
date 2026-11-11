@@ -1,0 +1,23 @@
+{
+    "actorSpecification": 1,
+    "name": "snackvideo-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "SnackVideo Scraper - Profiles, Videos, Hashtags & Trending",
+    "description": "Scrape SnackVideo without login: creator profiles with every video and playlist, single videos, hashtag feeds, keyword search, the For You trending feed and playlists. Views, likes, comments, shares, captions, hashtags, music, and download URLs.",
+    "categories": [
+        "SOCIAL_MEDIA",
+        "VIDEOS"
+    ],
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json",
+    "defaultRunOptions": {
+        "build": "latest",
+        "memoryMbytes": 256,
+        "timeoutSecs": 3600
+    }
+}

@@ -1,0 +1,22 @@
+{
+    "actorSpecification": 1,
+    "name": "amazon-bestsellers-movers-tracker",
+    "version": "0.1",
+    "buildTag": "latest",
+    "title": "Amazon Best Sellers & Movers Tracker",
+    "description": "Track the top 100 Best Sellers in any Amazon category or sub-category, and see exactly what moved since the last run - risers, new entries and drop-outs. Built for FBA sellers and affiliates doing winning-product research. No login needed.",
+    "categories": ["ECOMMERCE"],
+    "minMemoryMbytes": 256,
+    "maxMemoryMbytes": 4096,
+    "defaultRunOptions": {
+        "build": "latest",
+        "memoryMbytes": 1024,
+        "timeoutSecs": 3600
+    },
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

@@ -1,0 +1,65 @@
+{
+    "title": "Belize BCCAR Business Registry Scraper",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "query": {
+            "title": "Business/company name or registration number",
+            "type": "string",
+            "editor": "textfield",
+            "description": "A business/company name (or partial name), or an exact BCCAR registration number (e.g. 000013082). All-digit input is searched as a registration number; anything else is searched as a name.",
+            "prefill": "Bank"
+        },
+        "queries": {
+            "title": "Names or registration numbers",
+            "type": "array",
+            "editor": "stringList",
+            "description": "Multiple names/registration numbers to search for in one run. Combined with 'query' if both are set."
+        },
+        "certNumbers": {
+            "title": "Certificate numbers",
+            "type": "array",
+            "editor": "stringList",
+            "description": "Optional: exact certificate numbers to search by. Only certificates issued via the Online Business Registry System (after 28 Nov 2022) are matched -- BCCAR's own limitation, not this actor's."
+        },
+        "entityType": {
+            "title": "Filter by entity type",
+            "type": "string",
+            "editor": "select",
+            "description": "Optional: restrict results to one entity type. Combine with 'query'/'queries' to filter a name search, or leave name/registration-number fields empty to list every entity of this type.",
+            "enum": ["BET-CM", "BET-BN", "BET-LLC", "BET-FND", "BET-FM"],
+            "enumTitles": ["Company", "Business Name", "LLC", "Foundation", "LLP"]
+        },
+        "maxResultsPerQuery": {
+            "title": "Max matches per query",
+            "type": "integer",
+            "description": "Maximum number of matched entities to return per search job.",
+            "default": 20,
+            "minimum": 1,
+            "maximum": 2000,
+            "prefill": 20
+        },
+        "maxConcurrency": {
+            "title": "Max concurrent workers",
+            "type": "integer",
+            "description": "How many search jobs to run in parallel.",
+            "default": 4,
+            "minimum": 1,
+            "maximum": 16,
+            "prefill": 4
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "editor": "proxy",
+            "description": "Apify Proxy configuration. Off by default -- no anti-bot protection (WAF/CAPTCHA/TLS fingerprint gate) was found on this target's public search API during recon, so a direct connection works reliably. Turn on if you run a very high query volume.",
+            "default": {
+                "useApifyProxy": false
+            },
+            "prefill": {
+                "useApifyProxy": false
+            }
+        }
+    },
+    "required": []
+}

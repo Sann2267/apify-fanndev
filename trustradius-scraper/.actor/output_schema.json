@@ -1,0 +1,92 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "TrustRadius record",
+        "description": "Every record carries _input, _source, _scrapedAt and recordType. recordType is REVIEW (one review), PRODUCT_DETAILS (a full product profile), PRODUCT (one row of a category's ranked list), ALTERNATIVE (a competitor or alternative of a product), COMPARISON (a head-to-head page), CATEGORY (a node of the category tree) or ERROR. Upstream objects are passed through close to verbatim, so fields beyond those listed can appear.",
+        "additionalProperties": true,
+        "properties": {
+            "_input": {"type": "string", "title": "Input", "description": "The product, category or comparison you passed in that produced this record."},
+            "_source": {"type": "string", "title": "Source", "description": "tr-rsc-reviews | tr-rsc-reviews+legacy-detail | tr-rsc-product | tr-rsc-category | tr-legacy-competitors | tr-rsc-compare | tr-rsc-categories | none (errors)."},
+            "_scrapedAt": {"type": "string", "format": "date-time", "title": "Scraped at", "description": "UTC ISO 8601 timestamp when this record was emitted."},
+            "recordType": {"type": ["string", "null"], "title": "Record type", "description": "REVIEW | PRODUCT_DETAILS | PRODUCT | ALTERNATIVE | COMPARISON | CATEGORY | ERROR."},
+            "_error": {"type": ["string", "null"], "title": "Error", "description": "Present only on ERROR records: not_found | blocked | unexpected_shape | invalid_input | exception."},
+            "_errorDetail": {"type": ["string", "null"], "title": "Error detail", "description": "Free-form diagnostic, present only alongside _error."},
+            "_warning": {"title": "Warning", "description": "A non-fatal gap, e.g. a review whose detail page could not be read."},
+
+            "productSlug": {"title": "Product slug", "description": "REVIEW: the product the review belongs to."},
+            "productName": {"title": "Product name"},
+            "reviewId": {"title": "Review ID"},
+            "slug": {"title": "Slug", "description": "Review slug on REVIEW, product slug on PRODUCT / PRODUCT_DETAILS / ALTERNATIVE, category slug on CATEGORY."},
+            "url": {"title": "URL"},
+            "title": {"title": "Review title"},
+            "rating": {"title": "Rating (0-10)", "description": "REVIEW: the reviewer's likelihood-to-recommend score; PRODUCT_DETAILS: the aggregate rating object."},
+            "datePublished": {"title": "Published"},
+            "source": {"title": "Review sourcing", "description": "trusted / incentive / source as TrustRadius labels it (e.g. incentivized via RaaS)."},
+            "reviewer": {"title": "Reviewer", "description": "Role, department, company size, industry, experience. Name, company, photo and LinkedIn only when the reviewer made them public."},
+            "verification": {"title": "Verification"},
+            "pros": {"title": "Pros"},
+            "cons": {"title": "Cons"},
+            "answers": {"title": "Answers", "description": "Every question/answer block shown on the review list."},
+            "details": {"title": "Full questionnaire", "description": "Only with 'Include the full review questionnaire': feature ratings by name, usability, ROI, alternatives evaluated, other software used, reviewer country and roles."},
+            "reviewPage": {"title": "Review list page"},
+
+            "rank": {"title": "Rank", "description": "PRODUCT: position in the category's default ranking."},
+            "filterRank": {"title": "Rank under filter"},
+            "categorySlug": {"title": "Category slug"},
+            "categoryName": {"title": "Category name"},
+            "filters": {"title": "Filters applied"},
+            "productId": {"title": "Product ID"},
+            "name": {"title": "Name"},
+            "vendorName": {"title": "Vendor"},
+            "trScore": {"title": "trScore", "description": "TrustRadius's weighted score used for ranking."},
+            "ratingAvg": {"title": "Average rating"},
+            "ratingCount": {"title": "Ratings"},
+            "reviewCount": {"title": "Reviews"},
+            "startingPrice": {"title": "Starting price"},
+            "trialAvailable": {"title": "Free trial"},
+            "product": {"title": "Product (raw)", "description": "PRODUCT: the full product object as the category page ships it."},
+
+            "featureRatings": {"title": "Feature ratings"},
+            "featureGroupRatings": {"title": "Feature group ratings"},
+            "editionPricing": {"title": "Pricing editions"},
+            "pricingPage": {"title": "Pricing page", "description": "PRODUCT_DETAILS with 'Include the pricing page': reviewer price quotes, support, deployment, priced alternatives."},
+            "industryInstallShare": {"title": "Install base by industry", "description": "HG Insights installation counts by NAICS industry."},
+            "competitors": {"title": "Competitors"},
+            "awards": {"title": "Awards"},
+            "prosAndCons": {"title": "Pros and cons (aggregated)"},
+
+            "forProduct": {"title": "Alternative of", "description": "ALTERNATIVE: the product whose alternatives these are."},
+            "lists": {"title": "Lists and positions", "description": "ALTERNATIVE: which lists the product appears in (competitors, alternatives_all / _small / _medium / _large) and at which position."},
+
+            "comparison": {"title": "Comparison"},
+            "products": {"title": "Compared products", "description": "COMPARISON: rating, buy-again/value insights and pricing editions per product."},
+            "featureGroups": {"title": "Feature comparison", "description": "COMPARISON: per-feature scores and winner per product."},
+            "testimonials": {"title": "Testimonials"},
+
+            "categoryId": {"title": "Category ID"},
+            "parentSlug": {"title": "Parent category"},
+            "path": {"title": "Category path"},
+            "depth": {"title": "Depth"},
+            "groups": {"title": "Navigation groups"}
+        }
+    },
+    "views": {
+        "reviews": {
+            "title": "Reviews",
+            "transformation": {"fields": ["productName", "title", "rating", "datePublished", "pros", "cons", "reviewer", "source", "url", "_error"]},
+            "display": {"component": "table"}
+        },
+        "products": {
+            "title": "Products",
+            "transformation": {"fields": ["rank", "name", "vendorName", "trScore", "ratingAvg", "ratingCount", "reviewCount", "startingPrice", "categoryName", "url", "_error"]},
+            "display": {"component": "table"}
+        },
+        "overview": {
+            "title": "All records",
+            "transformation": {"fields": ["recordType", "_input", "name", "title", "slug", "rating", "url", "_error", "_errorDetail"]},
+            "display": {"component": "table"}
+        }
+    }
+}

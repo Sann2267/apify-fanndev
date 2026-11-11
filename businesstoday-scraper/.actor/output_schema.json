@@ -1,0 +1,123 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Article / latest-headline record",
+        "description": "Raw-passthrough dataset envelope. Every record carries _input/_source/_scrapedAt (failed URLs are not written to the dataset -- they are reported in the ERRORS record of the run's key-value store). Article-mode records (S1-jsonld) spread the page's NewsArticle JSON-LD block near-verbatim, including the full articleBody. Latest-mode records (S2-rss) carry title/link-style fields from the site-wide RSS feed. Extra schema.org fields beyond those listed here may appear, and upstream text values may contain double-HTML-escaped entities (e.g. literal '&amp;#039;' instead of an apostrophe) -- passed through as-is per this portfolio's raw-passthrough convention.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The exact input value (URL, or 'latest') that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which extraction strategy emitted this record (S1-jsonld or S2-rss)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "headline": {
+                "title": "Headline",
+                "description": "Article headline (article-mode, from NewsArticle JSON-LD). May contain double-HTML-escaped entities, e.g. '&amp;#039;' in place of an apostrophe."
+            },
+            "description": {
+                "title": "Description",
+                "description": "Short article summary (article-mode from NewsArticle), or the raw RSS item description text (latest-mode)."
+            },
+            "articleBody": {
+                "title": "Article body",
+                "description": "Full plain-text article content (article-mode only)."
+            },
+            "articleSection": {
+                "title": "Section",
+                "description": "Article vertical/section name (article-mode), e.g. 'India', 'Economy'."
+            },
+            "datePublished": {
+                "title": "Date published",
+                "description": "ISO 8601 publish date with +05:30 IST offset (article-mode)."
+            },
+            "dateModified": {
+                "title": "Date modified",
+                "description": "ISO 8601 last-modified date with +05:30 IST offset (article-mode)."
+            },
+            "author": {
+                "title": "Author",
+                "description": "Byline as a single Person object (raw passthrough) -- usually a desk credit like 'Business Today Desk' rather than an individual reporter."
+            },
+            "publisher": {
+                "title": "Publisher",
+                "description": "Publisher Organization object, including logo (article-mode)."
+            },
+            "image": {
+                "title": "Image",
+                "description": "Lead image ImageObject (article-mode)."
+            },
+            "associatedMedia": {
+                "title": "Associated media",
+                "description": "Additional media object(s) attached to the article, as emitted upstream (article-mode)."
+            },
+            "mainEntityOfPage": {
+                "title": "Main entity of page",
+                "description": "Canonical page URL reference (article-mode)."
+            },
+            "inLanguage": {
+                "title": "Language",
+                "description": "Article language code, e.g. 'en' (article-mode)."
+            },
+            "url": {
+                "title": "Canonical URL",
+                "description": "Canonical article URL as emitted in the NewsArticle block (article-mode)."
+            },
+            "keywords": {
+                "title": "Keywords",
+                "description": "Comma-separated topic tags, as emitted upstream (article-mode)."
+            },
+            "title": {
+                "title": "Title",
+                "description": "Headline from the RSS item (latest-mode)."
+            },
+            "link": {
+                "title": "Link",
+                "description": "Article URL with a trailing '?utm_source=rssfeed' query param (latest-mode)."
+            },
+            "pubDate": {
+                "title": "Publish date",
+                "description": "RSS pubDate string with +05:30 IST offset (latest-mode)."
+            },
+            "guid": {
+                "title": "GUID",
+                "description": "RSS item guid, identical to the link value on this feed (latest-mode)."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across both article and latest-headline records.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "_source",
+                    "_scrapedAt",
+                    "headline",
+                    "title",
+                    "link",
+                    "datePublished",
+                    "pubDate",
+                    "author",
+                    "articleSection"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

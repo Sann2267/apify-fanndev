@@ -1,0 +1,49 @@
+{
+    "title": "Sierra Leone Government Tenders Scraper",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "keyword": {
+            "title": "Filter by keyword",
+            "type": "string",
+            "editor": "textfield",
+            "description": "Only return tenders whose procuring entity or description contains this text (case-insensitive). Leave blank to return every tender currently on NPPA's Bids/Tenders board."
+        },
+        "keywords": {
+            "title": "Filter by multiple keywords",
+            "type": "array",
+            "editor": "stringList",
+            "description": "Run multiple keyword filters in one job (each produces its own tagged set of matching records). Combined with 'keyword' if both are set."
+        },
+        "onlyOpenTenders": {
+            "title": "Only open (not yet expired) tenders",
+            "type": "boolean",
+            "description": "If true, excludes tenders whose Expiration Date has already passed. NPPA's board is a running log and does not remove expired entries on its own, so this actor computes it from the (inconsistently formatted) Expiration Date column -- rows where that date can't be parsed are kept either way.",
+            "default": false,
+            "prefill": false
+        },
+        "maxResults": {
+            "title": "Max results per keyword",
+            "type": "integer",
+            "description": "Caps how many tender records are pushed to the dataset per keyword (or overall, if no keyword is given). The whole board is a single page (~30 rows as of this actor's last check), so this mostly exists as a safety cap.",
+            "default": 100,
+            "minimum": 1,
+            "maximum": 1000,
+            "prefill": 100
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "editor": "proxy",
+            "description": "Apify Proxy configuration.",
+            "default": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            },
+            "prefill": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            }
+        }
+    }
+}

@@ -1,0 +1,93 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Post / publication-profile record",
+        "description": "Raw-passthrough dataset envelope on top of Substack's own internal API JSON shape, plus `markdown` (this actor's own HTML-to-Markdown conversion of the post body). \"post\" mode and \"archive\" mode's per-post records carry a post object verbatim (title, body_html, publishedBylines, etc.). \"archive\" mode also emits one PUBLICATION_PROFILE record per publication (recordType discriminates), sourced from the publication homepage since no public unauthenticated publication-metadata API endpoint exists.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The URL/publication that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "S1-api (post/archive JSON), S2-html (publication profile from window._preloads), or none on failure."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed extractions (e.g. not_found, invalid_post_url, auth_required)."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "recordType": {
+                "title": "Record type",
+                "description": "\"archive\" mode only -- PUBLICATION_PROFILE (once per publication) or POST (one per post)."
+            },
+            "markdown": {
+                "title": "Markdown",
+                "description": "Post title/subtitle/byline/date header plus the post body converted to clean Markdown (Substack's own Subscribe/Share CTA boilerplate stripped). Ready to feed to an LLM/embedding pipeline as-is."
+            },
+            "content_truncated": {
+                "title": "Content truncated",
+                "description": "True when this post is paid-subscriber-only (`audience: \"only_paid\"`) -- the public API only returns Substack's own free-preview truncation of body_html/markdown for these, not the full text. This actor does not attempt to bypass that paywall."
+            },
+            "title": { "title": "Title", "description": "Post title." },
+            "subtitle": { "title": "Subtitle", "description": "Post subtitle/dek." },
+            "slug": { "title": "Slug", "description": "Post URL slug." },
+            "post_date": { "title": "Post date", "description": "ISO 8601 publish date." },
+            "canonical_url": { "title": "Canonical URL", "description": "The post's own public URL." },
+            "audience": { "title": "Audience", "description": "\"everyone\" (free), \"only_paid\", etc. -- see content_truncated." },
+            "type": { "title": "Post type", "description": "\"newsletter\", \"podcast\", or \"thread\"." },
+            "wordcount": { "title": "Word count", "description": "Upstream's own word count for the full post." },
+            "publishedBylines": { "title": "Bylines", "description": "Author(s) -- list of byline objects, passed through as-is." },
+            "cover_image": { "title": "Cover image", "description": "Post cover/header image URL." },
+            "body_html": { "title": "Body HTML", "description": "Raw upstream HTML body that `markdown` was converted from (truncated preview only when content_truncated is true)." },
+            "name": { "title": "Publication name", "description": "PUBLICATION_PROFILE record." },
+            "subdomain": { "title": "Publication subdomain", "description": "PUBLICATION_PROFILE record -- the `<subdomain>.substack.com` part." },
+            "custom_domain": { "title": "Custom domain", "description": "PUBLICATION_PROFILE record -- the publication's own domain, if any." },
+            "hero_text": { "title": "Tagline", "description": "PUBLICATION_PROFILE record -- the publication's own tagline/description." },
+            "author_name": { "title": "Primary author", "description": "PUBLICATION_PROFILE record." },
+            "logo_url": { "title": "Logo URL", "description": "PUBLICATION_PROFILE record." }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across post and publication-profile records.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "_source",
+                    "recordType",
+                    "_scrapedAt",
+                    "title",
+                    "name",
+                    "audience",
+                    "content_truncated",
+                    "wordcount",
+                    "post_date",
+                    "canonical_url",
+                    "markdown",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

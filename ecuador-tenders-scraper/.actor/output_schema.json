@@ -1,0 +1,190 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "SERCOP procurement process record",
+        "description": "One record per Ecuador SERCOP procurement process, produced by mode=list (a page of search_ocds results, optionally enriched with full detail) or mode=detail (one specific OCID's full OCDS release history). A single _error record is emitted instead of payload fields when a record can't be fetched.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "For list records: 'list:year=<year>:search=<query>'. For detail records: the OCID that was requested."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which strategy emitted this record (S1-search-ocds, S1-record-ocds, or 'none' on error)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed records (blocked_or_transient, not_found)."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "_detailError": {
+                "type": "string",
+                "title": "Detail enrichment error",
+                "description": "Present only on a list-mode row when fetchDetail=true and that row's own detail fetch failed -- the rest of the row's list fields are still valid."
+            },
+            "id": {
+                "title": "Internal ID",
+                "description": "SERCOP's own internal database row ID (list rows only)."
+            },
+            "ocid": {
+                "title": "OCID",
+                "description": "The Open Contracting ID -- SERCOP's stable identifier for this procurement process across its whole planning -> tender -> award -> contract lifecycle."
+            },
+            "date": {
+                "title": "Date",
+                "description": "The process's publish date, as shown in search results (list rows only)."
+            },
+            "buyerId": {
+                "title": "Buyer ID",
+                "description": "The purchasing government institution's identifier (typically an RUC-based OCDS party id)."
+            },
+            "buyerName": {
+                "title": "Buyer name",
+                "description": "The purchasing government institution's name."
+            },
+            "title": {
+                "title": "Title",
+                "description": "The process's title/reference code as published in search results (list rows only)."
+            },
+            "description": {
+                "title": "Description",
+                "description": "The process's free-text description (list rows only)."
+            },
+            "year": {
+                "title": "Year",
+                "description": "The procurement process year (list rows only)."
+            },
+            "internalType": {
+                "title": "Procurement modality",
+                "description": "SERCOP's Spanish-language procurement modality/type, e.g. 'Licitacion', 'Subasta Inversa Electronica' (list rows only)."
+            },
+            "singleProvider": {
+                "title": "Single provider",
+                "description": "Named contractor already known at publish time, populated only for direct-award-style processes (list rows only)."
+            },
+            "tenderId": {
+                "title": "Tender ID",
+                "description": "The buyer's own tender reference number (detail, or list rows with fetchDetail=true)."
+            },
+            "tenderTitle": {
+                "title": "Tender title",
+                "description": "The tender's title or description."
+            },
+            "tenderStatus": {
+                "title": "Tender status",
+                "description": "e.g. active, complete, planned."
+            },
+            "procurementMethod": {
+                "title": "Procurement method",
+                "description": "e.g. open, limited, direct."
+            },
+            "budgetAmount": {
+                "title": "Budget amount",
+                "description": "The planning-stage budget amount, when present."
+            },
+            "budgetCurrency": {
+                "title": "Budget currency",
+                "description": "Currency code for budgetAmount, e.g. USD (Ecuador's official currency)."
+            },
+            "tags": {
+                "title": "Tags",
+                "description": "Union of OCDS release tags seen across this record's release history (e.g. ['planning', 'tender', 'award'])."
+            },
+            "awardsCount": {
+                "title": "Awards count",
+                "description": "Number of award entries across this record's release history."
+            },
+            "contractsCount": {
+                "title": "Contracts count",
+                "description": "Number of contract entries across this record's release history."
+            },
+            "totalAwardAmount": {
+                "title": "Total award amount",
+                "description": "Sum of all award value amounts on this record, when present."
+            },
+            "awardCurrency": {
+                "title": "Award currency",
+                "description": "Currency code for totalAwardAmount, e.g. USD."
+            },
+            "suppliers": {
+                "title": "Suppliers",
+                "description": "Names of all winning suppliers across this record's awards."
+            },
+            "latestReleaseDate": {
+                "title": "Latest release date",
+                "description": "The date of the most recent entry in this record's release history."
+            },
+            "releases": {
+                "title": "Release history (full detail)",
+                "description": "The complete upstream OCDS 'releases' array verbatim, one entry per planning/tender/award/contract/implementation event -- present on detail records and list rows fetched with fetchDetail=true."
+            },
+            "uri": {
+                "title": "Record URI",
+                "description": "Upstream OCDS release package URI, verbatim."
+            },
+            "version": {
+                "title": "OCDS version",
+                "description": "The OCDS schema version this release package conforms to (e.g. '1.1')."
+            },
+            "publisher": {
+                "title": "Publisher",
+                "description": "The OCDS publisher block (uid, name, scheme) -- 'Servicio Nacional de Contratacion Publica (SERCOP)' / 'ocds-5wno2w'."
+            },
+            "extensions": {
+                "title": "OCDS extensions",
+                "description": "URLs of the official OCDS extensions this release package uses (e.g. enquiries, lots, techniques, auctions, value breakdown)."
+            },
+            "publishedDate": {
+                "title": "Package published date",
+                "description": "The release package's own publishedDate field, upstream."
+            },
+            "license": {
+                "title": "License URL",
+                "description": "Upstream OCDS license URL (Creative Commons Attribution 3.0 Ecuador)."
+            },
+            "publicationPolicy": {
+                "title": "Publication policy URL",
+                "description": "Upstream OCDS publication policy document URL."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across list and detail records -- rows missing a given column render blank.",
+            "transformation": {
+                "fields": [
+                    "ocid",
+                    "buyerName",
+                    "title",
+                    "date",
+                    "internalType",
+                    "tenderStatus",
+                    "totalAwardAmount",
+                    "awardCurrency",
+                    "_error",
+                    "_scrapedAt"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

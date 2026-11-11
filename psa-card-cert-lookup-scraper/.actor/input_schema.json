@@ -1,0 +1,89 @@
+{
+    "title": "PSA Cert Lookup Scraper input",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "mode": {
+            "title": "Mode",
+            "type": "string",
+            "description": "cert = the graded item, its population, PSA's price estimate and a sales summary, one row per certification number. sales = every comparable sale PSA lists for that certificate, one row each. range = walk a block of consecutive certification numbers. reference = check the source is answering right now.",
+            "editor": "select",
+            "default": "cert",
+            "enum": [
+                "cert",
+                "sales",
+                "range",
+                "reference"
+            ],
+            "enumTitles": [
+                "cert - graded item + population + estimate",
+                "sales - comparable sales as rows",
+                "range - a block of consecutive cert numbers",
+                "reference - is the source answering right now"
+            ]
+        },
+        "certNumber": {
+            "title": "Certification number",
+            "type": "string",
+            "description": "A single PSA certification number, the number printed on the label. A full psacard.com/cert/... URL works too.",
+            "editor": "textfield",
+            "prefill": "49204884"
+        },
+        "certNumbers": {
+            "title": "Certification numbers",
+            "type": "array",
+            "description": "Several certification numbers to look up in one run.",
+            "editor": "stringList",
+            "prefill": [
+                "49204884"
+            ]
+        },
+        "startCert": {
+            "title": "Start certification number (range mode)",
+            "type": "string",
+            "description": "First certification number of the block to walk. Certificates are issued sequentially, so a block covers cards graded around the same time.",
+            "editor": "textfield"
+        },
+        "rangeCount": {
+            "title": "How many (range mode)",
+            "type": "integer",
+            "description": "How many consecutive certification numbers to look up, starting at 'startCert'. Capped at 5000.",
+            "editor": "number",
+            "default": 25,
+            "minimum": 1,
+            "maximum": 5000
+        },
+        "maxItems": {
+            "title": "Max items",
+            "type": "integer",
+            "description": "Maximum records per run.",
+            "editor": "number",
+            "default": 200,
+            "minimum": 1
+        },
+        "maxConcurrency": {
+            "title": "Max concurrency",
+            "type": "integer",
+            "description": "How many certificates to look up in parallel. Keep this modest - the source is behind a strict gate and hammering it invites a block.",
+            "editor": "number",
+            "default": 3,
+            "minimum": 1,
+            "maximum": 8
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "description": "Residential proxy is REQUIRED and is the default. PSA refuses datacenter IP addresses outright: the same lookup that works from a home connection returns nothing from a cloud one. Leave this as it is unless you are supplying your own residential proxy.",
+            "editor": "proxy",
+            "default": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": [
+                    "RESIDENTIAL"
+                ]
+            }
+        }
+    },
+    "required": [
+        "mode"
+    ]
+}

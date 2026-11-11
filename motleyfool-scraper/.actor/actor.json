@@ -1,0 +1,16 @@
+{
+    "actorSpecification": 1,
+    "name": "motleyfool-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Motley Fool Scraper",
+    "description": "Extract full article text or the newest headlines from The Motley Fool (fool.com), a major investing/stock-analysis media outlet -- no account or API key needed.",
+    "dockerfile": "./Dockerfile",
+    "minMemoryMbytes": 256,
+    "maxMemoryMbytes": 1024,
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

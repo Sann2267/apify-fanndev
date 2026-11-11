@@ -1,0 +1,23 @@
+{
+    "actorSpecification": 1,
+    "name": "spotify-charts-monitor",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Spotify Global & Regional Charts Monitor",
+    "description": "Scrape Spotify's Top 50 daily charts for 49 countries and Top Songs weekly charts for 14, plus the global weekly track, album and ARTIST charts. Reports rank movement between runs - climbers, fallers, new entries and drop-outs - because Spotify's chart playlists publish only today's order.",
+    "categories": [
+        "ENTERTAINMENT",
+        "BUSINESS"
+    ],
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json",
+    "defaultRunOptions": {
+        "build": "latest",
+        "memoryMbytes": 512,
+        "timeoutSecs": 3600
+    }
+}

@@ -1,0 +1,14 @@
+{
+    "actorSpecification": 1,
+    "name": "kunuz-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Kun.uz Scraper",
+    "description": "Extract full article text or the newest headlines from Kun.uz (kun.uz), Uzbekistan's most-visited news portal, English edition -- no account or API key needed.",
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

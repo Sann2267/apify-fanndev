@@ -1,0 +1,129 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Article / latest-headline record",
+        "description": "Raw-passthrough dataset envelope. Every record carries _input/_source/_scrapedAt (and _error/_errorDetail on failures). Article-mode records (S1-jsonld) are a near-verbatim spread of the m.thewire.in page's NewsArticle JSON-LD block, so extra schema.org fields beyond those listed here may appear. Latest-mode records (S2-sitemap) carry title/link/pubDate/image fields from The Wire's category-1 sitemap.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The exact input value (the URL you requested, or 'latest') that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which extraction strategy emitted this record (S1-jsonld or S2-sitemap)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed extractions -- the error kind."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "headline": {
+                "title": "Headline",
+                "description": "Article headline (raw passthrough from JSON-LD NewsArticle)."
+            },
+            "description": {
+                "title": "Description",
+                "description": "Short article description/dek (article-mode only, from JSON-LD)."
+            },
+            "articleBody": {
+                "title": "Article body",
+                "description": "Full article text, present on the upstream JSON-LD NewsArticle node."
+            },
+            "datePublished": {
+                "title": "Date published",
+                "description": "ISO 8601 publish date (with +05:30 IST offset)."
+            },
+            "dateModified": {
+                "title": "Date modified",
+                "description": "ISO 8601 last-modified date."
+            },
+            "author": {
+                "title": "Author",
+                "description": "Author object as emitted by upstream JSON-LD (raw passthrough -- a single Person/Organization dict on every sample seen, but may vary)."
+            },
+            "publisher": {
+                "title": "Publisher",
+                "description": "Publisher organization object (name, logo)."
+            },
+            "image": {
+                "title": "Image",
+                "description": "Lead image object (article mode) -- or the sitemap `image:loc` URL string (latest mode)."
+            },
+            "thumbnailUrl": {
+                "title": "Thumbnail URL",
+                "description": "Lead image URL, article mode only."
+            },
+            "mainEntityOfPage": {
+                "title": "Main entity of page",
+                "description": "The canonical desktop thewire.in URL -- note this differs from the `url` field, which is the m.thewire.in URL actually fetched."
+            },
+            "url": {
+                "title": "URL (JSON-LD)",
+                "description": "The m.thewire.in article URL as emitted by upstream JSON-LD (article mode). Not to be confused with `_input`, which is the URL you supplied."
+            },
+            "keywords": {
+                "title": "Keywords",
+                "description": "Comma-separated topic tags, as emitted upstream."
+            },
+            "inLanguage": {
+                "title": "Language",
+                "description": "Article language code, e.g. 'en'."
+            },
+            "speakable": {
+                "title": "Speakable",
+                "description": "Schema.org SpeakableSpecification block, as emitted upstream."
+            },
+            "title": {
+                "title": "Title",
+                "description": "Headline, from the sitemap's image:title (latest-mode only)."
+            },
+            "link": {
+                "title": "Link",
+                "description": "Article URL, from the sitemap's loc (latest-mode only)."
+            },
+            "pubDate": {
+                "title": "Publish date",
+                "description": "Sitemap lastmod timestamp (latest-mode only)."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across both article and latest-headline records.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "_source",
+                    "_scrapedAt",
+                    "headline",
+                    "title",
+                    "link",
+                    "datePublished",
+                    "pubDate",
+                    "author",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

@@ -1,0 +1,161 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "El Salvador (COMPRASAL) tender/award record",
+        "description": "Raw-passthrough dataset envelope. Every record carries _input/_source/_scrapedAt (and _error/_errorDetail on failures). 'open' mode records use COMPRASAL's own 'procesos/disponibles' fields (institucion is a plain string here); 'awarded' mode records use its 'procesos/publicos' fields (institucion is an object here, and beneficiario/proveedor/accionistas carry supplier and declared beneficial-owner data); 'detail' mode records (and open/awarded with fetchDetail=true) also carry the fuller 'detalle' object fields. Field shapes vary by mode -- this is COMPRASAL's own API shape, passed through close to verbatim.",
+        "properties": {
+            "_input": {
+                "title": "Input",
+                "description": "The filters used to produce this record ('open'/'awarded' mode, an object) or the numeric process ID fetched ('detail' mode, an integer) -- shape varies by mode, so no type is enforced here."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "S1-comprasal-api-disponibles (an open-tender record), S1-comprasal-api-publicos (an awarded/historical record), S1-comprasal-api-detalle (a fetched detail record), or none (error record)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed extractions -- not_found (search/filter matched nothing), blocked_or_transient (network/server issue after retries)."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "_detailError": {
+                "type": "string",
+                "title": "Detail fetch error",
+                "description": "Present only on an 'open'/'awarded' record with fetchDetail=true, when the detail fetch for this specific process failed -- the list fields are still present."
+            },
+            "id": {
+                "title": "Process/award ID",
+                "description": "COMPRASAL's own numeric internal ID -- for 'open' mode this is the process ID (feed into 'detail' mode's processId); for 'awarded' mode this is the award-record ID (use proceso_compra.id instead for 'detail' mode)."
+            },
+            "codigo_proceso": {
+                "title": "Process code",
+                "description": "Human-readable official process code, e.g. \"3303-2026-P0282\"."
+            },
+            "nombre_proceso": {
+                "title": "Process name",
+                "description": "Description of what is being procured."
+            },
+            "institucion": {
+                "title": "Institution",
+                "description": "The government institution -- a plain string in 'open' mode, an object ({id, codigo, nombre}) in 'awarded' mode."
+            },
+            "estado_actual": {
+                "title": "Current status (open mode)",
+                "description": "e.g. \"En ejecución\"."
+            },
+            "estado_proceso": {
+                "title": "Process state (open mode)",
+                "description": "e.g. \"Activo\"."
+            },
+            "forma_contratacion": {
+                "title": "Contracting modality (open mode)",
+                "description": "e.g. \"Licitación competitiva\", \"Comparación de precios\", \"Contratación directa\"."
+            },
+            "EtapaPorProcesos": {
+                "title": "Current stage(s)",
+                "description": "Array of the process's currently-active stage(s) with start/end datetime."
+            },
+            "etapas": {
+                "title": "Full stage timeline (open mode)",
+                "description": "Array of every stage in this process's lifecycle (publication, offer submission, clarifications, addenda, offer receipt, opening, etc.) with start/end datetime."
+            },
+            "monto": {
+                "title": "Award amount (awarded mode)",
+                "description": "Amount of this specific award line, in USD (El Salvador's currency)."
+            },
+            "proceso_compra": {
+                "title": "Parent process (awarded mode)",
+                "description": "Object with the underlying process's id, codigo_proceso, nombre_proceso, fecha_adjudicacion, and institution."
+            },
+            "proveedor": {
+                "title": "Awarded supplier (awarded mode)",
+                "description": "Object with the winning supplier's name, trade name (nombre_comercial), and shareholders (accionistas)."
+            },
+            "accionistas": {
+                "title": "Shareholders (awarded mode)",
+                "description": "Array of the supplier's shareholders, when disclosed."
+            },
+            "beneficiario": {
+                "title": "Declared beneficial owner (awarded mode)",
+                "description": "COMPRASAL's own declared beneficial-ownership data for the awarded supplier -- name parts and nationality, when disclosed. Rare transparency data not every country's tender system publishes."
+            },
+            "codigo_interno": {
+                "title": "Internal reference code (detail mode)"
+            },
+            "fecha_inicio_proceso": {
+                "title": "Process start date (detail mode)"
+            },
+            "fecha_contratacion": {
+                "title": "Contracting date (detail mode)"
+            },
+            "fecha_publicacion": {
+                "title": "Publication date (detail mode)"
+            },
+            "fecha_adjudicacion": {
+                "title": "Award date"
+            },
+            "monto_adjudicado": {
+                "title": "Total awarded amount (detail mode)"
+            },
+            "proceso_publico": {
+                "title": "Is public (detail mode)"
+            },
+            "Institucion": {
+                "title": "Institution (detail mode)",
+                "description": "Object with id and nombre."
+            },
+            "SeguimientoProceso": {
+                "title": "Tracking status (detail mode)"
+            },
+            "FormaContratacion": {
+                "title": "Contracting modality (detail mode)"
+            },
+            "EstadoProceso": {
+                "title": "Process state (detail mode)"
+            },
+            "detail": {
+                "title": "Full detail (when fetchDetail=true)",
+                "description": "The full detalle/procesos/publicos/<id> object, merged in when 'fetchDetail' was requested on an 'open'/'awarded' record."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns for every record.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "_source",
+                    "_scrapedAt",
+                    "id",
+                    "codigo_proceso",
+                    "nombre_proceso",
+                    "institucion",
+                    "estado_actual",
+                    "forma_contratacion",
+                    "monto",
+                    "fecha_adjudicacion",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

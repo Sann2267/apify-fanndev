@@ -1,0 +1,44 @@
+{
+    "title": "Saint Vincent and the Grenadines Government Tenders Scraper",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "listType": {
+            "title": "List type",
+            "type": "string",
+            "editor": "select",
+            "description": "\"Current\" = bids open for submission right now (~20 at a time), each linking directly to its bid/ToR PDF. \"Closed\" = the historical archive of the same table (400+ records). \"Awards\" = one row per calendar year (2017-2025) linking to the Central Procurement Board's quarterly \"Award of Contracts\" PDF bundles (not individual contract-level records -- SVG only publishes these as periodic documents).",
+            "enum": ["current", "closed", "awards"],
+            "enumTitles": [
+                "Current bids (open now)",
+                "Recently closed bids (historical archive)",
+                "Contract award notices (yearly PDF documents)"
+            ],
+            "default": "current",
+            "prefill": "current"
+        },
+        "maxResults": {
+            "title": "Max results",
+            "type": "integer",
+            "description": "Caps how many records are kept in the output for this run.",
+            "default": 500,
+            "minimum": 1,
+            "maximum": 10000,
+            "prefill": 500
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "editor": "proxy",
+            "description": "Apify Proxy configuration.",
+            "default": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            },
+            "prefill": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            }
+        }
+    }
+}

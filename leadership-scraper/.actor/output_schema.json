@@ -1,0 +1,126 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Article / latest-headline record",
+        "description": "Raw-passthrough dataset envelope. Every record carries _input/_source/_scrapedAt (and _error/_errorDetail on failures). Article-mode records (S1-jsonld+html, articleBody pulled from HTML div.entry-content > div.content-inner since the ld+json @graph has no articleBody) carry headline/articleBody-style fields; latest-mode records (S2-rss, WordPress /feed/) carry title/link-style fields, including a full-text content:encoded passthrough.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The exact input value (URL, or 'latest') that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which extraction strategy emitted this record (e.g. S1-jsonld+html, S2-rss)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed extractions -- the error kind."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "headline": {
+                "title": "Headline",
+                "description": "Article headline, from the ld+json Article node."
+            },
+            "description": {
+                "title": "Description",
+                "description": "Short article description (article mode: <meta name=\"description\">, falls back to the ld+json WebPage node's description; latest mode: RSS teaser text)."
+            },
+            "articleBody": {
+                "title": "Article body",
+                "description": "Full article text. Article mode: joined from direct-child <p> tags of div.entry-content > div.content-inner. Latest mode: flattened plain text from the RSS item's content:encoded full-text field."
+            },
+            "author": {
+                "title": "Author",
+                "description": "Byline name, from the ld+json Article node's inline author object (article mode) or the RSS dc:creator (latest mode -- a real per-article byline, not a placeholder)."
+            },
+            "publisher": {
+                "title": "Publisher",
+                "description": "Publisher name (\"Leadership Newspapers\"), resolved from the ld+json publisher @id reference to its Organization node (article mode only)."
+            },
+            "articleSection": {
+                "title": "Article section",
+                "description": "Section name from the ld+json Article node, e.g. \"News\", \"Business\" (article mode only; always a single string on this site)."
+            },
+            "keywords": {
+                "title": "Keywords",
+                "description": "Keyword tag from the ld+json Article node, when present (article mode only; not every article has one)."
+            },
+            "datePublished": {
+                "title": "Date published",
+                "description": "ISO 8601 publish date from ld+json (article mode only)."
+            },
+            "dateModified": {
+                "title": "Date modified",
+                "description": "ISO 8601 last-modified date from ld+json (article mode only)."
+            },
+            "image": {
+                "title": "Image",
+                "description": "Lead image URL, resolved from the ld+json Article node's image @id reference to its ImageObject node (article mode only; this site has no thumbnailUrl field)."
+            },
+            "title": {
+                "title": "Title",
+                "description": "Headline text of a latest-mode RSS item."
+            },
+            "link": {
+                "title": "Link",
+                "description": "Article URL from the RSS item."
+            },
+            "content": {
+                "title": "Content (raw HTML)",
+                "description": "Full article HTML from the RSS item's <content:encoded> field (latest mode only)."
+            },
+            "pubDate": {
+                "title": "Publish date",
+                "description": "RSS pubDate string (latest mode only)."
+            },
+            "categories": {
+                "title": "Categories",
+                "description": "List of <category> values from the RSS item (latest mode only; this feed carries one category per item)."
+            },
+            "guid": {
+                "title": "GUID",
+                "description": "RSS item guid, an internal post ID URL (latest mode only)."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across both article and latest-headline records.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "_source",
+                    "_scrapedAt",
+                    "headline",
+                    "title",
+                    "link",
+                    "datePublished",
+                    "pubDate",
+                    "author",
+                    "articleSection",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

@@ -1,0 +1,14 @@
+{
+    "actorSpecification": 1,
+    "name": "samoa-br-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Samoa Business Registries Company Scraper",
+    "description": "Search Samoa's official company register (Ministry of Commerce, Industry and Labour's Business Registries portal) by name or registration number and pull full public profiles: registration details, addresses, directors, shareholders, share parcels, and filing history. No account or API key needed.",
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

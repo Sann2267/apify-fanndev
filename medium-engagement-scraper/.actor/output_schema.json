@@ -1,0 +1,324 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Medium article record",
+        "description": "Every record carries _input, _source, _scrapedAt and recordType. recordType is POST for an article, SURFACE for a reference probe and ERROR for a failure. _source says which surface a record came from, and that matters: tag and author records carry clap counts but only a preview, while publication records carry the article text but no clap counts - the source exposes one or the other, never both.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The tag, author, publication or URL that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source",
+                "description": "medium-tag-apollo-top | medium-tag-apollo-archive | medium-tag-apollo-recommended | medium-author-apollo | medium-publication-rss | medium-post-apollo | reference | error | none."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was emitted."
+            },
+            "_query": {
+                "type": ["string", "null"],
+                "title": "Query",
+                "description": "The exact input value this record answers."
+            },
+            "recordType": {
+                "type": ["string", "null"],
+                "title": "Record type",
+                "description": "POST | SURFACE | ERROR."
+            },
+            "postId": {
+                "type": ["string", "null"],
+                "title": "Article ID",
+                "description": "The source's identifier for the article."
+            },
+            "title": {
+                "type": ["string", "null"],
+                "title": "Title",
+                "description": "Article title."
+            },
+            "subtitle": {
+                "type": ["string", "null"],
+                "title": "Subtitle",
+                "description": "Article subtitle or standfirst, where one is published."
+            },
+            "url": {
+                "type": ["string", "null"],
+                "title": "URL",
+                "description": "Public article URL."
+            },
+            "slug": {
+                "type": ["string", "null"],
+                "title": "Slug",
+                "description": "URL slug, which ends in the article ID."
+            },
+            "clapCount": {
+                "type": ["integer", "null"],
+                "title": "Claps",
+                "description": "How many claps the article has - the source's engagement measure. Present on tag, author and post records; always null on publication records, because the publication feed publishes no engagement figures."
+            },
+            "responseCount": {
+                "type": ["integer", "null"],
+                "title": "Responses",
+                "description": "How many responses (comments) the article has."
+            },
+            "isPaywalled": {
+                "type": ["boolean", "null"],
+                "title": "Behind the paywall",
+                "description": "True for member-only articles. These serve only their opening paragraphs to anyone not signed in."
+            },
+            "visibility": {
+                "type": ["string", "null"],
+                "title": "Visibility",
+                "description": "The source's own visibility value, e.g. LOCKED or PUBLIC."
+            },
+            "isSeries": {
+                "type": ["boolean", "null"],
+                "title": "Is a series",
+                "description": "True when the article is part of a series."
+            },
+            "publishedAt": {
+                "type": ["string", "null"],
+                "title": "Published",
+                "description": "First publication time as ISO 8601 UTC."
+            },
+            "updatedAt": {
+                "type": ["string", "null"],
+                "title": "Last updated",
+                "description": "Most recent publication time as ISO 8601 UTC."
+            },
+            "publishedAtEpochMs": {
+                "type": ["number", "null"],
+                "title": "Published (epoch ms)",
+                "description": "Publication time exactly as published, in epoch milliseconds."
+            },
+            "publishedAtRaw": {
+                "type": ["string", "null"],
+                "title": "Published (as published)",
+                "description": "Publication date string from the publication feed, e.g. 'Wed, 17 Sep 2026 12:00:00 GMT'."
+            },
+            "updatedAtRaw": {
+                "type": ["string", "null"],
+                "title": "Updated (as published)",
+                "description": "Update timestamp string from the publication feed."
+            },
+            "authorName": {
+                "type": ["string", "null"],
+                "title": "Author",
+                "description": "Author's display name."
+            },
+            "authorUsername": {
+                "type": ["string", "null"],
+                "title": "Author handle",
+                "description": "Author's Medium handle."
+            },
+            "authorId": {
+                "type": ["string", "null"],
+                "title": "Author ID",
+                "description": "The source's identifier for the author."
+            },
+            "authorBio": {
+                "type": ["string", "null"],
+                "title": "Author bio",
+                "description": "Author's bio, where the page includes it."
+            },
+            "authorFollowers": {
+                "type": ["integer", "null"],
+                "title": "Author followers",
+                "description": "Author's follower count, where the page includes it."
+            },
+            "publicationName": {
+                "type": ["string", "null"],
+                "title": "Publication",
+                "description": "Publication the article appeared in, if any."
+            },
+            "publicationSlug": {
+                "type": ["string", "null"],
+                "title": "Publication slug",
+                "description": "Publication's URL slug - a stable key for grouping."
+            },
+            "publicationId": {
+                "type": ["string", "null"],
+                "title": "Publication ID",
+                "description": "The source's identifier for the publication."
+            },
+            "tags": {
+                "type": ["array", "null"],
+                "title": "Tags",
+                "description": "Topics the article is filed under."
+            },
+            "tagQueried": {
+                "type": ["string", "null"],
+                "title": "Tag queried",
+                "description": "Tag mode: the topic this article was found under, which is not necessarily its first tag."
+            },
+            "tagSection": {
+                "type": ["string", "null"],
+                "title": "Tag section",
+                "description": "Tag mode: top, archive or recommended."
+            },
+            "authorQueried": {
+                "type": ["string", "null"],
+                "title": "Author queried",
+                "description": "Author mode: the handle that was requested."
+            },
+            "previewImageAlt": {
+                "type": ["string", "null"],
+                "title": "Preview image alt text",
+                "description": "Alt text of the article's lead image."
+            },
+            "previewImageId": {
+                "type": ["string", "null"],
+                "title": "Preview image ID",
+                "description": "The source's image identifier for the lead image."
+            },
+            "hasFullContent": {
+                "type": ["boolean", "null"],
+                "title": "Preview carries full content",
+                "description": "The source's own flag on the preview card. It describes the card, not the article page, so do not read it as 'the body is complete' - use isTruncated for that."
+            },
+            "contentHtml": {
+                "type": ["string", "null"],
+                "title": "Article content (HTML)",
+                "description": "Publication mode: the article body as published. See contentSource - for some articles the feed carries only a short preview instead."
+            },
+            "contentText": {
+                "type": ["string", "null"],
+                "title": "Article content (plain text)",
+                "description": "The same content with markup stripped."
+            },
+            "contentSource": {
+                "type": ["string", "null"],
+                "title": "Where the content came from",
+                "description": "'content:encoded' for the full article, 'description' for a short preview. In one measured feed, 4 of 10 articles carried the full text (7,536 characters) and 6 carried a preview (about 80), so this tells you which you got."
+            },
+            "isContentFull": {
+                "type": ["boolean", "null"],
+                "title": "Content is the full article",
+                "description": "True only when the feed carried the complete article rather than a preview."
+            },
+            "paragraphCount": {
+                "type": ["integer", "null"],
+                "title": "Paragraph count",
+                "description": "Post mode: how many paragraphs were served. A member-only article serves about 8; a free one served 77."
+            },
+            "bodyText": {
+                "type": ["string", "null"],
+                "title": "Article text",
+                "description": "Post mode: the article text, paragraphs joined."
+            },
+            "paragraphs": {
+                "type": ["array", "null"],
+                "title": "Paragraphs",
+                "description": "Post mode: each paragraph with its type (H3, P, IMG and so on), text and link."
+            },
+            "isTruncated": {
+                "type": ["boolean", "null"],
+                "title": "Body is truncated",
+                "description": "Post mode: true when the source served only the opening of the article, which happens for member-only articles. Free articles come through complete."
+            },
+            "probedUrl": {
+                "type": ["string", "null"],
+                "title": "Probed URL",
+                "description": "Reference mode: the URL that was checked."
+            },
+            "isAvailable": {
+                "type": ["boolean", "null"],
+                "title": "Source available",
+                "description": "Reference mode: whether the source returned parseable data."
+            },
+            "note": {
+                "type": ["string", "null"],
+                "title": "Note",
+                "description": "Reference mode: what happened, in words."
+            },
+            "winningTlsProfile": {
+                "type": ["string", "null"],
+                "title": "Winning browser profile",
+                "description": "Reference mode: which browser fingerprint the source accepted from this address."
+            },
+            "sample": {
+                "type": ["object", "null"],
+                "title": "Sample",
+                "description": "Reference mode: measured evidence - usable and hollow article counts per surface, and whether publications still need the feed rather than the page."
+            },
+            "error": {
+                "type": ["string", "null"],
+                "title": "Error",
+                "description": "Failure reason: not_found, shape_changed, blocked_or_transient, no_items_in_feed, invalid_tag, invalid_author, invalid_publication, invalid_post."
+            },
+            "errorDetail": {
+                "type": ["string", "null"],
+                "title": "Error detail",
+                "description": "Diagnostic text for the failure."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Articles with their engagement.",
+            "transformation": {
+                "fields": [
+                    "title",
+                    "authorName",
+                    "publicationName",
+                    "clapCount",
+                    "responseCount",
+                    "isPaywalled",
+                    "publishedAt",
+                    "url"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        },
+        "engagement": {
+            "title": "Top by claps",
+            "description": "Sort by claps to see what is working in a topic.",
+            "transformation": {
+                "fields": [
+                    "clapCount",
+                    "responseCount",
+                    "title",
+                    "authorName",
+                    "authorUsername",
+                    "publicationName",
+                    "tagQueried",
+                    "isPaywalled",
+                    "publishedAt"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        },
+        "content": {
+            "title": "Article text",
+            "description": "The article bodies, with a flag for whether each is complete.",
+            "transformation": {
+                "fields": [
+                    "title",
+                    "authorName",
+                    "isContentFull",
+                    "contentSource",
+                    "isTruncated",
+                    "paragraphCount",
+                    "contentText",
+                    "bodyText",
+                    "url"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

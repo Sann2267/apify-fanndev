@@ -1,0 +1,103 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Community record",
+        "description": "One record per input URL. Every record carries _input/_source/_scrapedAt (and _error/_errorDetail on failures), a normalized set of value-add fields (communityName, memberCount, subscriptionPrice, estimatedMonthlyRevenue), and the platform's own upstream object verbatim under `raw`.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The URL/slug that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "S1-nextdata (Skool __NEXT_DATA__), S1-html-rsc-scan (Whop regex extraction from its RSC payload), or none on failure."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed extractions (e.g. not_found, not_found_or_private, unexpected_shape, blocked_or_transient)."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "platform": {
+                "type": "string",
+                "title": "Platform",
+                "description": "\"skool\" or \"whop\"."
+            },
+            "communityName": {
+                "type": "string",
+                "title": "Community name"
+            },
+            "url": {
+                "type": "string",
+                "title": "Community URL"
+            },
+            "memberCount": {
+                "type": ["integer", "null"],
+                "title": "Member count",
+                "description": "Total members shown by the platform. This is an all-time/all-tier count on both platforms -- it is NOT limited to currently-paying subscribers, so it will overstate the paying member base for freemium communities."
+            },
+            "isPaid": {
+                "type": "boolean",
+                "title": "Is paid",
+                "description": "Skool: the community's own `membership` flag. Whop: true if at least one recurring plan with a price was found."
+            },
+            "subscriptionPrice": {
+                "type": ["object", "null"],
+                "title": "Subscription price",
+                "description": "The disclosed price, if any. Skool: {amountUsd, currency, interval, monthlyEquivalentUsd} parsed from the community's own `displayPrice` field -- many paid Skool communities do NOT expose this to guests (null in that case). Whop: {monthlyEquivalentUsd, currency} -- the cheapest recurring plan found across the community's access-pass product pages."
+            },
+            "estimatedMonthlyRevenue": {
+                "type": ["number", "null"],
+                "title": "Estimated monthly revenue (MRR estimate)",
+                "description": "memberCount x monthly price -- an UPPER-BOUND triage signal for sponsorship/lead scouting, not verified revenue. Neither platform publishes actual revenue publicly. Null when price wasn't disclosed."
+            },
+            "estimatedMonthlyRevenueBasis": {
+                "type": "string",
+                "title": "MRR estimate basis",
+                "description": "Explains how estimatedMonthlyRevenue was computed, or why it's null."
+            },
+            "raw": {
+                "type": "object",
+                "title": "Raw upstream data",
+                "description": "Skool: the full `currentGroup` object from __NEXT_DATA__, passed through verbatim (totalMembers, totalAdmins, totalOnlineMembers, membership, membershipModel, displayPrice, description, category, etc). Whop: the fields this actor's regex extraction could find (id, title, creatorPitch, route, memberCount, reviewsAverage, publishedReviewsCount, accessPasses, plans) -- not a full page passthrough, since Whop's RSC payload isn't valid JSON to begin with."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns for sponsorship/lead-gen triage.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "platform",
+                    "communityName",
+                    "url",
+                    "memberCount",
+                    "isPaid",
+                    "subscriptionPrice",
+                    "estimatedMonthlyRevenue",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

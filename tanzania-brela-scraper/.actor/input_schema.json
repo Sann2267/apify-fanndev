@@ -1,0 +1,62 @@
+{
+    "title": "Tanzania BRELA Business Registry Scraper",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "query": {
+            "title": "Business/company name or registration number",
+            "type": "string",
+            "editor": "textfield",
+            "description": "A business name, company name (or partial name), registration number, or incorporation/compliance number to search for. Purely-numeric input is searched as a number; anything else is searched as a name.",
+            "prefill": "Kilimanjaro"
+        },
+        "queries": {
+            "title": "Names or numbers",
+            "type": "array",
+            "editor": "stringList",
+            "description": "Multiple names/numbers to search for in one run. Combined with 'query' if both are set."
+        },
+        "entityType": {
+            "title": "Entity type filter",
+            "type": "string",
+            "editor": "select",
+            "description": "Restrict results to business names (sole proprietorships) or companies. \"Any\" searches both.",
+            "enum": ["any", "business", "company"],
+            "enumTitles": ["Any", "Business name (sole proprietor)", "Company"],
+            "default": "any",
+            "prefill": "any"
+        },
+        "maxResultsPerQuery": {
+            "title": "Max results per query",
+            "type": "integer",
+            "description": "Maximum number of matched records to return per search query.",
+            "default": 50,
+            "minimum": 1,
+            "maximum": 500,
+            "prefill": 50
+        },
+        "maxConcurrency": {
+            "title": "Max concurrent workers",
+            "type": "integer",
+            "description": "How many searches to run in parallel.",
+            "default": 4,
+            "minimum": 1,
+            "maximum": 16,
+            "prefill": 4
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "editor": "proxy",
+            "description": "Apify Proxy configuration. Residential is on by default.",
+            "default": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            },
+            "prefill": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            }
+        }
+    }
+}

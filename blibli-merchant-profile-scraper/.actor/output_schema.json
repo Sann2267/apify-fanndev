@@ -1,0 +1,461 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Blibli merchant profile / product record",
+        "description": "Two record shapes, discriminated by `recordType`. MERCHANT_PROFILE carries one flat row per store: identity, seller-performance ratings, shipping origin, audience, review stats and vouchers. PRODUCT carries one row per catalogue item with Blibli's own fields passed through verbatim plus flattened price/rating fields. ERROR carries a diagnostic row when a store fails. Every type is nullable because which fields are populated depends on the record type and on which optional enrichments were enabled.",
+        "properties": {
+            "_input": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Input",
+                "description": "The store code this record belongs to."
+            },
+            "_source": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Source strategy",
+                "description": "S1-merchant-info, S2-catalog-search, or none on failure."
+            },
+            "_scrapedAt": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Error",
+                "description": "Present only on failure rows (INVALID_TARGET, STORE_NOT_FOUND, BLOCKED_AFTER_RETRIES, UPSTREAM_SHAPE_CHANGED, INVALID_INPUT, EMPTY_RESULT). STORE_NOT_FOUND means the code returned a hollow profile -- Blibli answers 200 with all-zero ratings for codes that do not exist."
+            },
+            "_errorDetail": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "recordType": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Record type",
+                "description": "MERCHANT_PROFILE, PRODUCT, or ERROR."
+            },
+            "merchantCode": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Store code",
+                "description": "Blibli merchant code, e.g. COP-60023."
+            },
+            "merchantName": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Store name",
+                "description": "Display name of the store."
+            },
+            "storeUrl": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Store URL",
+                "description": "Public storefront URL."
+            },
+            "isOfficial": {
+                "type": [
+                    "boolean",
+                    "null"
+                ],
+                "title": "Official store",
+                "description": "Whether Blibli marks this as an official brand store."
+            },
+            "level": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Merchant level",
+                "description": "Blibli's merchant tier, e.g. REGULAR."
+            },
+            "activationDateIso": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "format": "date-time",
+                "title": "Store opened",
+                "description": "UTC ISO 8601 date the store was activated - how long the competitor has been trading."
+            },
+            "badgeId": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Badge",
+                "description": "Seller badge tier, e.g. Diamond."
+            },
+            "badgeName": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Badge name",
+                "description": "Human-readable badge label, e.g. 'Diamond Merchant'."
+            },
+            "badgeRating": {
+                "type": [
+                    "number",
+                    "null"
+                ],
+                "title": "Badge score",
+                "description": "Blibli's overall badge score out of 100."
+            },
+            "respondTimeRating": {
+                "type": [
+                    "number",
+                    "null"
+                ],
+                "title": "Response speed rating",
+                "description": "How fast the seller replies to buyers, 0-5. The headline responsiveness figure."
+            },
+            "productQualityRating": {
+                "type": [
+                    "number",
+                    "null"
+                ],
+                "title": "Product quality rating",
+                "description": "Seller's product-quality score, 0-5."
+            },
+            "orderFulfillmentRating": {
+                "type": [
+                    "number",
+                    "null"
+                ],
+                "title": "Order fulfilment rating",
+                "description": "Seller's order-fulfilment score, 0-5."
+            },
+            "fastCustomerResponseRating": {
+                "type": [
+                    "number",
+                    "null"
+                ],
+                "title": "Fast response %",
+                "description": "Percentage of chats answered quickly, over the badge calculation window."
+            },
+            "fastFulfillmentRating": {
+                "type": [
+                    "number",
+                    "null"
+                ],
+                "title": "Fast fulfilment %",
+                "description": "Percentage of orders dispatched quickly."
+            },
+            "orderCompletedRating": {
+                "type": [
+                    "number",
+                    "null"
+                ],
+                "title": "Orders completed %",
+                "description": "Percentage of orders completed rather than cancelled."
+            },
+            "deliveryRating": {
+                "type": [
+                    "number",
+                    "null"
+                ],
+                "title": "Delivery %",
+                "description": "Delivery performance score."
+            },
+            "perfectTransactionRating": {
+                "type": [
+                    "number",
+                    "null"
+                ],
+                "title": "Perfect transaction %",
+                "description": "Percentage of transactions with no issues."
+            },
+            "positiveFeedbackRating": {
+                "type": [
+                    "number",
+                    "null"
+                ],
+                "title": "Positive feedback %",
+                "description": "Percentage of feedback that is positive."
+            },
+            "productPerformanceRating": {
+                "type": [
+                    "number",
+                    "null"
+                ],
+                "title": "Product performance %",
+                "description": "Blibli's product-performance score."
+            },
+            "badgeCalculationDays": {
+                "type": [
+                    "number",
+                    "null"
+                ],
+                "title": "Badge window (days)",
+                "description": "How many days of history the badge scores are calculated over."
+            },
+            "province": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Province",
+                "description": "Province the store operates from."
+            },
+            "pickupPointCode": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Pickup point code",
+                "description": "Code of the warehouse/pickup point orders ship from."
+            },
+            "pickupPointName": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Pickup point name",
+                "description": "Name of the shipping origin, e.g. 'Gudang Blibli'."
+            },
+            "pickupPointCity": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Shipping city",
+                "description": "City goods ship from - drives delivery time and cost to each buyer."
+            },
+            "pickupPointAddress": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Shipping address",
+                "description": "Full street address of the shipping origin."
+            },
+            "pickupPointLatLong": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Shipping coordinates",
+                "description": "Latitude,longitude of the shipping origin."
+            },
+            "fulfilledByBlibli": {
+                "type": [
+                    "boolean",
+                    "null"
+                ],
+                "title": "Fulfilled by Blibli",
+                "description": "Whether the store ships from a Blibli-operated warehouse (FBB), which usually means faster delivery."
+            },
+            "businessHours": {
+                "type": [
+                    "array",
+                    "null"
+                ],
+                "title": "Business hours",
+                "description": "Opening and closing time per day of the week at the pickup point."
+            },
+            "totalFollowers": {
+                "type": [
+                    "number",
+                    "null"
+                ],
+                "title": "Followers",
+                "description": "How many shoppers follow the store - a direct audience-size measure."
+            },
+            "totalReviews": {
+                "type": [
+                    "number",
+                    "null"
+                ],
+                "title": "Total reviews",
+                "description": "Public reviews across the store's whole catalogue."
+            },
+            "reviewsWithText": {
+                "type": [
+                    "number",
+                    "null"
+                ],
+                "title": "Reviews with text",
+                "description": "How many of those reviews carry written content."
+            },
+            "averageRating": {
+                "type": [
+                    "number",
+                    "null"
+                ],
+                "title": "Average rating",
+                "description": "Mean star rating across the store's entire review base."
+            },
+            "ratingCounts": {
+                "type": [
+                    "object",
+                    "null"
+                ],
+                "title": "Rating histogram",
+                "description": "Review count per star level, keyed '1' to '5'."
+            },
+            "negativeSharePercent": {
+                "type": [
+                    "number",
+                    "null"
+                ],
+                "title": "Negative share %",
+                "description": "Percentage of rated reviews that are 1-2 star."
+            },
+            "reviewTopicCounts": {
+                "type": [
+                    "object",
+                    "null"
+                ],
+                "title": "Review topic counts",
+                "description": "Blibli's own classification of what reviewers discuss: QUALITY, PRICE, SHIPMENT, PACKAGING, SERVICE, ORIGINALITY, GENERIC."
+            },
+            "productCount": {
+                "type": [
+                    "number",
+                    "null"
+                ],
+                "title": "Catalogue size",
+                "description": "Total products Blibli reports for the store. Often larger than the number of PRODUCT rows a run can page through - see the 800-per-query limit."
+            },
+            "voucherCount": {
+                "type": [
+                    "number",
+                    "null"
+                ],
+                "title": "Active vouchers",
+                "description": "How many vouchers the store currently offers."
+            },
+            "vouchers": {
+                "type": [
+                    "array",
+                    "null"
+                ],
+                "title": "Vouchers",
+                "description": "Active vouchers with discount title, minimum spend and expiry - the competitor's promotional posture."
+            },
+            "sku": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Product SKU",
+                "description": "PRODUCT rows. Blibli product SKU."
+            },
+            "name": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Name",
+                "description": "Product name on PRODUCT rows; store name on MERCHANT_PROFILE rows."
+            },
+            "listPrice": {
+                "type": [
+                    "number",
+                    "null"
+                ],
+                "title": "List price (IDR)",
+                "description": "PRODUCT rows. Pre-discount price in rupiah."
+            },
+            "salePrice": {
+                "type": [
+                    "number",
+                    "null"
+                ],
+                "title": "Sale price (IDR)",
+                "description": "PRODUCT rows. Current selling price in rupiah."
+            },
+            "discountPercent": {
+                "type": [
+                    "number",
+                    "null"
+                ],
+                "title": "Discount %",
+                "description": "PRODUCT rows. Discount off list price."
+            },
+            "rating": {
+                "type": [
+                    "number",
+                    "null"
+                ],
+                "title": "Product rating",
+                "description": "PRODUCT rows. Star rating of the individual product."
+            },
+            "reviewCount": {
+                "type": [
+                    "number",
+                    "null"
+                ],
+                "title": "Product review count",
+                "description": "PRODUCT rows. Reviews for the individual product."
+            },
+            "soldCount": {
+                "type": [
+                    "number",
+                    "null"
+                ],
+                "title": "Units sold",
+                "description": "PRODUCT rows. Total units sold, where Blibli exposes it - the best available demand proxy."
+            },
+            "storeLocation": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Product ships from",
+                "description": "PRODUCT rows. Location this specific item ships from."
+            },
+            "categories": {
+                "type": [
+                    "array",
+                    "null"
+                ],
+                "title": "Category hierarchy",
+                "description": "PRODUCT rows. Category path, useful for mapping which segments a competitor covers."
+            },
+            "productUrl": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Product URL",
+                "description": "PRODUCT rows. Absolute blibli.com URL."
+            },
+            "imageUrl": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Image URL",
+                "description": "PRODUCT rows. Primary product image."
+            }
+        }
+    }
+}

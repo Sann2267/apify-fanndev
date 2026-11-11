@@ -1,0 +1,51 @@
+{
+    "title": "Eswatini Government Tenders Scraper (ESPPRA)",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "listType": {
+            "title": "List type",
+            "type": "string",
+            "editor": "select",
+            "description": "Which ESPPRA listing to scrape. \"Tenders\" = currently open for bidding. \"Award intentions\" = notice of intention to award, published before contract signature (large, 1,500+). \"Suspended suppliers\" = the debarment register (small).",
+            "enum": ["tenders", "award_intentions", "suspended_suppliers"],
+            "enumTitles": [
+                "Invitation To Tender (open for bidding)",
+                "Intention To Award",
+                "Suspended Suppliers (debarment register)"
+            ],
+            "default": "tenders",
+            "prefill": "tenders"
+        },
+        "maxResults": {
+            "title": "Max results",
+            "type": "integer",
+            "description": "Caps how many rows are scraped for this run, across as many pages as needed. Ignored for \"suspended_suppliers\" (single small call, everything comes back at once).",
+            "default": 50,
+            "minimum": 1,
+            "maximum": 5000,
+            "prefill": 50
+        },
+        "keyword": {
+            "title": "Keyword filter (optional)",
+            "type": "string",
+            "editor": "textfield",
+            "description": "Filters by procuring entity name, tender title, or procurement method. Applies to \"tenders\" and \"award_intentions\" only (server-side search); ignored for \"suspended_suppliers\". Leave blank to fetch everything.",
+            "prefill": ""
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "editor": "proxy",
+            "description": "Apify Proxy configuration.",
+            "default": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            },
+            "prefill": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            }
+        }
+    }
+}

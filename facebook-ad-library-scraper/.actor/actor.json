@@ -1,0 +1,23 @@
+{
+    "actorSpecification": 1,
+    "name": "facebook-ad-library-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Facebook Ad Library Full Scraper",
+    "description": "Pull complete ad records from Meta's public Ad Library: full ad copy, headline, CTA, destination URL, every image and video creative including carousel cards, flight dates, days on air, platforms and advertiser. Search by keyword or advertiser, any country. Paginates past the first 30.",
+    "categories": [
+        "SOCIAL_MEDIA",
+        "MARKETING"
+    ],
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json",
+    "defaultRunOptions": {
+        "build": "latest",
+        "timeoutSecs": 3600,
+        "memoryMbytes": 1024
+    }
+}

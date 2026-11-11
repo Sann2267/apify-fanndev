@@ -1,0 +1,67 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "LinkedIn account activity record",
+        "description": "Dataset envelope (_input / _source / _scrapedAt / recordType) on top of an account's public posting activity. One ACCOUNT row per person or company with derived content metrics, one POST row per analysed post, NOTICE rows where LinkedIn embedded no posts, and ERROR rows on failure. LinkedIn changes its markup without notice, so unlisted fields pass through rather than failing the run.",
+        "additionalProperties": true,
+        "properties": {
+            "_input": { "type": "string", "title": "Input", "description": "The profile or company URL that produced this record." },
+            "_source": { "type": "string", "title": "Source surface", "description": "guest-profile-page, guest-company-page, or none on NOTICE and ERROR rows." },
+            "_scrapedAt": { "type": "string", "title": "Scraped at", "description": "UTC ISO 8601 timestamp when this record was emitted." },
+            "recordType": { "type": "string", "title": "Record type", "description": "ACCOUNT, POST, NOTICE or ERROR." },
+            "_error": { "type": "string", "title": "Error", "description": "Failure rows only: fetch_failed or auth_required." },
+            "_errorDetail": { "type": "string", "title": "Error detail", "description": "Free-form diagnostic accompanying _error." },
+            "_notice": { "type": "string", "title": "Notice", "description": "Explains a non-failure empty result, such as no_public_posts." },
+            "_noticeDetail": { "type": "string", "title": "Notice detail", "description": "What the notice means and what to change." },
+            "accountName": { "title": "Account", "description": "The person's or company's display name." },
+            "accountType": { "title": "Account type", "description": "PERSON or COMPANY. The two behave differently: company pages embed no engagement data." },
+            "accountUrl": { "title": "Account URL", "description": "Canonical LinkedIn link, tracking parameters stripped." },
+            "headline": { "title": "Headline / tagline", "description": "The member's headline or the company's tagline." },
+            "followers": { "title": "Followers", "description": "Follower count - the denominator behind engagementRatePct." },
+            "postsAnalysed": { "title": "Posts analysed", "description": "How many posts this row is based on. LinkedIn embeds roughly the last 6-10 per account, so read every metric here as describing that window and nothing wider." },
+            "daysCovered": { "title": "Days covered", "description": "Span between the oldest and newest analysed post." },
+            "postsPerWeek": { "title": "Posts per week", "description": "Publishing cadence over the covered window." },
+            "firstPostAt": { "title": "Oldest post", "description": "Timestamp of the oldest analysed post." },
+            "lastPostAt": { "title": "Newest post", "description": "Timestamp of the newest analysed post - also a liveness check on whether the account is still active." },
+            "avgReactions": { "title": "Average reactions", "description": "Mean reactions per analysed post. Null when engagement data was not available." },
+            "medianReactions": { "title": "Median reactions", "description": "Median reactions per post. Usually the more honest figure: one viral post skews the mean badly." },
+            "maxReactions": { "title": "Best post reactions", "description": "Reactions on their strongest analysed post." },
+            "engagementRatePct": { "title": "Engagement rate %", "description": "Average reactions divided by followers, as a percentage. The only metric here that compares accounts of different sizes fairly." },
+            "engagementDataAvailable": { "title": "Engagement data available", "description": "False for company pages unless post-level engagement fetching was enabled - company pages embed no reaction counts, and this actor reports that as missing rather than as zero." },
+            "topHashtags": { "title": "Top hashtags", "description": "Most-used hashtags across the analysed posts, lowercased." },
+            "hashtagUsagePct": { "title": "Hashtag usage %", "description": "Share of analysed posts that used any hashtag at all." },
+            "mediaMix": { "title": "Media mix", "description": "Counts by post format - TEXT, LINK, ARTICLE - showing what the account actually publishes." },
+            "avgTextLength": { "title": "Average post length", "description": "Mean characters per post, a usable proxy for whether they write short hooks or long essays." },
+            "articleShare": { "title": "Article share %", "description": "Percentage of analysed posts that were long-form articles." },
+            "bestPostUrl": { "title": "Best post URL", "description": "Link to their strongest analysed post." },
+            "bestPostReactions": { "title": "Best post reactions", "description": "Reactions on that post." },
+            "bestPostText": { "title": "Best post text", "description": "First 400 characters of their strongest post - the fastest way to see what worked." },
+            "postUrl": { "title": "Post URL", "description": "POST rows: permalink." },
+            "postText": { "title": "Post text", "description": "POST rows: the post body as published." },
+            "publishedAt": { "title": "Published at", "description": "POST rows: ISO 8601 publish timestamp." },
+            "reactions": { "title": "Reactions", "description": "POST rows: reaction count, or null where LinkedIn published none." },
+            "hashtags": { "title": "Hashtags", "description": "POST rows: hashtags used in that post." },
+            "mediaType": { "title": "Media type", "description": "POST rows: TEXT, LINK or ARTICLE." },
+            "textLength": { "title": "Text length", "description": "POST rows: characters in the post body." }
+        }
+    },
+    "views": {
+        "accounts": {
+            "title": "Accounts",
+            "transformation": { "fields": ["accountName","accountType","followers","postsAnalysed","postsPerWeek","avgReactions","medianReactions","engagementRatePct","mediaMix","topHashtags","avgTextLength","lastPostAt"] },
+            "display": {
+                "component": "table",
+                "properties": {
+                    "accountName": { "label": "Account" },
+                    "postsPerWeek": { "label": "Posts/wk" },
+                    "avgReactions": { "label": "Avg reactions" },
+                    "engagementRatePct": { "label": "Engagement %" },
+                    "mediaMix": { "label": "Formats" },
+                    "lastPostAt": { "label": "Last post" }
+                }
+            }
+        }
+    }
+}

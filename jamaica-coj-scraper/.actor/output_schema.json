@@ -1,0 +1,107 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "COJ search-result record",
+        "description": "Raw-passthrough dataset envelope. Every record carries _input/_source/_scrapedAt (and _error/_errorDetail on failures). Each successful record is one matched entity's search-result row, field names and shapes passed through verbatim from the Companies Office of Jamaica's own register -- extra fields may appear beyond those listed here if upstream adds one.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The exact query (name or registration number) that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "S1-companysearch (a matched entity row), or none (error record)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed extractions -- not_found (search matched nothing), blocked_or_transient (network/rate-limit issue), or unexpected_shape (upstream page structure changed)."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "rank": {
+                "title": "Rank",
+                "description": "Result ranking position as returned by the register (0-based)."
+            },
+            "id": {
+                "title": "Internal record id",
+                "description": "COJ's internal id for this entity, e.g. '61230-L' for a company or '7874_2015-' for a registered business name."
+            },
+            "name": {
+                "title": "Entity name",
+                "description": "Registered company or business name, as filed."
+            },
+            "number": {
+                "title": "Registration number",
+                "description": "Formatted registration number, e.g. '61230 (Local)', '1057 (Overseas)', or '7874/2015' for a business name."
+            },
+            "status": {
+                "title": "Status",
+                "description": "Current register status, e.g. ACTIVE, REMOVED, Registered, In BO Sanction Process."
+            },
+            "type": {
+                "title": "Entity type",
+                "description": "COMPANY or BUSINESS (a registered business name / sole proprietorship)."
+            },
+            "date": {
+                "title": "Registration/incorporation date",
+                "description": "Free-text date as displayed by COJ (not normalized), e.g. '09 Apr 1999'."
+            },
+            "address": {
+                "title": "Registered address",
+                "description": "Registered office / business address on file, free-text."
+            },
+            "office": {
+                "title": "Officer on file",
+                "description": "A single director/proprietor/shareholder/company secretary name and role, e.g. 'Bjorn Spence - Secretary'. Empty when none is on file for this entity."
+            },
+            "documentCount": {
+                "title": "Filed document count",
+                "description": "Number of documents on file for this entity in COJ's system (purchasing them is outside this actor's scope)."
+            },
+            "link": {
+                "title": "Link",
+                "description": "Reserved by upstream for a direct link; observed empty on every record during testing."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns for search-result records.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "_source",
+                    "_scrapedAt",
+                    "name",
+                    "number",
+                    "status",
+                    "type",
+                    "date",
+                    "address",
+                    "office",
+                    "documentCount",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

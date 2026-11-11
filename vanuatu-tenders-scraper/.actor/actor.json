@@ -1,0 +1,14 @@
+{
+    "actorSpecification": 1,
+    "name": "vanuatu-tenders-scraper",
+    "version": "0.1",
+    "buildTag": "latest",
+    "title": "Vanuatu Government Tenders Scraper (Central Tender Board)",
+    "description": "Scrapes Vanuatu's Central Tender Board (CTB) e-tendering site for public procurement: currently open tenders and the historical archive of tender results, with reference number, purchaser, category, dates, and full description. No login needed.",
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

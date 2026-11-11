@@ -1,0 +1,172 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Sponsored ad / search result record",
+        "description": "Three record shapes, discriminated by `recordType`. SPONSORED_AD is a product carrying Amazon's Sponsored label on page one, with its slot position. ORGANIC is a non-sponsored result (only when requested). KEYWORD_SUMMARY rolls a keyword up across all samples: sponsored share, slot positions and the most persistent advertisers. Ad slots are auctioned per impression, so a keyword with zero ads is a real result rather than a failure. Every type is nullable accordingly.",
+        "properties": {
+            "_input": {
+                "type": ["string", "null"],
+                "title": "Input",
+                "description": "The keyword this row came from."
+            },
+            "_source": {
+                "type": ["string", "null"],
+                "title": "Source strategy",
+                "description": "S1-search-page for a product row, S2-aggregate for a keyword summary, or none on failure."
+            },
+            "_scrapedAt": {
+                "type": ["string", "null"],
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this row was captured."
+            },
+            "_error": {
+                "type": ["string", "null"],
+                "title": "Error",
+                "description": "Present only on failure rows (INVALID_INPUT, BLOCKED_AFTER_RETRIES, CAPTCHA_ESCALATION, EMPTY_RESULT). CAPTCHA_ESCALATION means Amazon challenged the request; this actor does not solve CAPTCHAs."
+            },
+            "_errorDetail": {
+                "type": ["string", "null"],
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "recordType": {
+                "type": ["string", "null"],
+                "title": "Record type",
+                "description": "SPONSORED_AD, ORGANIC or KEYWORD_SUMMARY."
+            },
+            "keyword": {
+                "type": ["string", "null"],
+                "title": "Keyword",
+                "description": "The search term monitored."
+            },
+            "marketplace": {
+                "type": ["string", "null"],
+                "title": "Marketplace",
+                "description": "Amazon domain suffix searched, e.g. com or co.uk."
+            },
+            "sampleIndex": {
+                "type": ["number", "null"],
+                "title": "Sample index",
+                "description": "Which impression this row came from, 1-based. Ads are auctioned per impression, so the same keyword can return different advertisers across samples."
+            },
+            "isSponsored": {
+                "type": ["boolean", "null"],
+                "title": "Sponsored",
+                "description": "True when the result carried Amazon's Sponsored label inside its own result tile. Sponsored strings elsewhere on the page (feedback widgets, banners) are deliberately not counted."
+            },
+            "position": {
+                "type": ["number", "null"],
+                "title": "Position",
+                "description": "1-based slot on page one. The key bidding-intelligence field: a competitor consistently holding position 1-4 is bidding hard."
+            },
+            "slotBand": {
+                "type": ["string", "null"],
+                "title": "Slot band",
+                "description": "TOP (positions 1-4), MID (5-20) or LOWER. Set on sponsored rows only, reflecting Amazon's observed ad-block layout."
+            },
+            "asin": {
+                "type": ["string", "null"],
+                "title": "ASIN",
+                "description": "Amazon product identifier of the advertised product."
+            },
+            "title": {
+                "type": ["string", "null"],
+                "title": "Title",
+                "description": "Product title as shown in the search result."
+            },
+            "price": {
+                "type": ["number", "null"],
+                "title": "Price",
+                "description": "Price as a number, parsed from Amazon's canonical price element. Forced into the selected marketplace's currency regardless of where the actor runs."
+            },
+            "currency": {
+                "type": ["string", "null"],
+                "title": "Currency",
+                "description": "Currency symbol or code detected alongside the price. Always check this rather than assuming USD."
+            },
+            "rating": {
+                "type": ["number", "null"],
+                "title": "Rating",
+                "description": "Star rating out of 5."
+            },
+            "reviewCount": {
+                "type": ["number", "null"],
+                "title": "Review count",
+                "description": "Number of ratings - useful for telling whether an advertiser is buying visibility for a new product."
+            },
+            "imageUrl": {
+                "type": ["string", "null"],
+                "title": "Image URL",
+                "description": "Product thumbnail from the search result."
+            },
+            "productUrl": {
+                "type": ["string", "null"],
+                "title": "Product URL",
+                "description": "Canonical Amazon product URL built from the ASIN."
+            },
+            "isPrime": {
+                "type": ["boolean", "null"],
+                "title": "Prime",
+                "description": "Whether the result shows Prime eligibility."
+            },
+            "samplesTaken": {
+                "type": ["number", "null"],
+                "title": "Samples taken",
+                "description": "KEYWORD_SUMMARY. How many impressions were sampled for this keyword."
+            },
+            "totalResults": {
+                "type": ["number", "null"],
+                "title": "Total results",
+                "description": "KEYWORD_SUMMARY. Results parsed across all samples."
+            },
+            "sponsoredCount": {
+                "type": ["number", "null"],
+                "title": "Sponsored count",
+                "description": "KEYWORD_SUMMARY. Sponsored placements found across all samples. Zero is a legitimate result for a low-competition keyword."
+            },
+            "organicCount": {
+                "type": ["number", "null"],
+                "title": "Organic count",
+                "description": "KEYWORD_SUMMARY. Non-sponsored results across all samples."
+            },
+            "sponsoredSharePercent": {
+                "type": ["number", "null"],
+                "title": "Sponsored share %",
+                "description": "KEYWORD_SUMMARY. Percentage of page-one slots that were paid placements - how contested the keyword is. Measured range across sample keywords was 0% to 21.7%."
+            },
+            "sponsoredPositions": {
+                "type": ["array", "null"],
+                "title": "Sponsored positions",
+                "description": "KEYWORD_SUMMARY. Every slot position that carried an ad, across samples."
+            },
+            "topSlotAdCount": {
+                "type": ["number", "null"],
+                "title": "Top-slot ads",
+                "description": "KEYWORD_SUMMARY. Ads captured in positions 1-4, the most expensive real estate."
+            },
+            "uniqueAdvertisedAsins": {
+                "type": ["number", "null"],
+                "title": "Unique advertisers",
+                "description": "KEYWORD_SUMMARY. How many distinct products were advertised on this keyword."
+            },
+            "mostPersistentAsins": {
+                "type": ["array", "null"],
+                "title": "Most persistent advertisers",
+                "description": "KEYWORD_SUMMARY. ASINs ranked by how many samples they appeared in. An ASIN in every sample is bidding continuously, not just winning one auction - this is the core competitor signal."
+            },
+            "avgAdPrice": {
+                "type": ["number", "null"],
+                "title": "Average ad price",
+                "description": "KEYWORD_SUMMARY. Mean price of advertised products - the price point competitors think is worth paying to promote."
+            },
+            "avgAdRating": {
+                "type": ["number", "null"],
+                "title": "Average ad rating",
+                "description": "KEYWORD_SUMMARY. Mean star rating of advertised products."
+            }
+        }
+    }
+}

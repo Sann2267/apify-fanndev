@@ -1,0 +1,12 @@
+{
+    "actorOutputSchemaVersion": 1,
+    "title": "mobile.de Scraper Results",
+    "properties": {
+        "results": {
+            "type": "string",
+            "title": "Dataset results",
+            "template": "{{links.apiDefaultDatasetUrl}}/items",
+            "description": "Every vehicle listing, vehicle detail, dealer inventory row, dealer imprint, market count, reference record and diagnostic from this run."
+        }
+    }
+}

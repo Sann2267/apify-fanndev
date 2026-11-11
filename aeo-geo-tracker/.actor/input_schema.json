@@ -1,0 +1,48 @@
+{
+    "title": "AEO Bing Rank Tracker",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "query": {
+            "title": "Search query",
+            "type": "string",
+            "editor": "textfield",
+            "description": "Phrase this as a NATURAL QUESTION, not a bare \"best X\"/\"top X\" SEO phrase. Bing was confirmed live to return an irrelevant decoy result set for queries starting with a bare superlative (e.g. \"best crm software\" returns pages about the word \"best\" itself) while the exact same intent phrased naturally (\"which crm software is best for small business\") returns correct, relevant results. See README.",
+            "prefill": "which crm software is best for small business"
+        },
+        "queries": {
+            "title": "Search queries",
+            "type": "array",
+            "editor": "stringList",
+            "description": "Multiple queries to check in one run. Same natural-phrasing requirement as \"query\"."
+        },
+        "targetDomain": {
+            "title": "Target domain",
+            "type": "string",
+            "editor": "textfield",
+            "description": "Your brand's domain (e.g. \"hubspot.com\") to check for in results.",
+            "prefill": "hubspot.com"
+        },
+        "maxConcurrency": {
+            "title": "Max concurrent workers",
+            "type": "integer",
+            "description": "How many queries to process in parallel.",
+            "default": 3,
+            "minimum": 1,
+            "maximum": 10,
+            "prefill": 3
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "editor": "proxy",
+            "description": "Apify Proxy configuration. Not required -- confirmed working without a proxy -- but Residential can be set here if you see transient blocks at scale.",
+            "default": {
+                "useApifyProxy": false
+            },
+            "prefill": {
+                "useApifyProxy": false
+            }
+        }
+    }
+}

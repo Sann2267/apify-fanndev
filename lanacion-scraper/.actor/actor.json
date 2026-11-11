@@ -1,0 +1,14 @@
+{
+    "actorSpecification": 1,
+    "name": "lanacion-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "La Nación Scraper",
+    "description": "Extract full article text or the newest headlines from La Nación (lanacion.com.ar), one of Argentina's two largest newspapers -- no account or API key needed.",
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

@@ -1,0 +1,69 @@
+{
+    "title": "Tanzania Government Tenders Scraper (NeST)",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "mode": {
+            "title": "Mode",
+            "type": "string",
+            "editor": "select",
+            "description": "\"List\" browses NeST's public tender/award record feed starting from a given date. \"Detail\" fetches one or more specific records by their OCID (Open Contracting ID).",
+            "enum": ["list", "detail"],
+            "enumTitles": ["List (browse recent records)", "Detail (fetch specific OCIDs)"],
+            "default": "list",
+            "prefill": "list"
+        },
+        "since": {
+            "title": "Since date (mode=list only)",
+            "type": "string",
+            "editor": "textfield",
+            "description": "Only return records dated on/after this date (ISO 8601, e.g. 2026-06-01T00:00:00Z). Leave blank to default to 90 days ago. NeST's public data currently runs a couple of months behind today, so very recent dates may return nothing.",
+            "prefill": "2026-06-01T00:00:00Z"
+        },
+        "maxResults": {
+            "title": "Max results (mode=list only)",
+            "type": "integer",
+            "description": "Caps how many records this run returns. NeST returns records in small fixed batches per request, so this actor makes as many requests as needed (with pauses to stay within NeST's rate limits) up to this cap or until no further records are available for the date range.",
+            "default": 25,
+            "minimum": 1,
+            "maximum": 2000,
+            "prefill": 25
+        },
+        "ocid": {
+            "title": "OCID (mode=detail only)",
+            "type": "string",
+            "editor": "textfield",
+            "description": "A single NeST record's OCID (Open Contracting ID), e.g. ocds-mv5oob-S6990-2025-2026-G-03-S001. Find OCIDs from a 'list' mode run's ocid field.",
+            "prefill": "ocds-mv5oob-S6990-2025-2026-G-03-S001"
+        },
+        "ocids": {
+            "title": "OCIDs (mode=detail only)",
+            "type": "array",
+            "editor": "stringList",
+            "description": "Multiple OCIDs to fetch full detail for in one run."
+        },
+        "maxConcurrency": {
+            "title": "Max concurrent workers (mode=detail only)",
+            "type": "integer",
+            "description": "How many OCID lookups to run in parallel.",
+            "default": 2,
+            "minimum": 1,
+            "maximum": 5,
+            "prefill": 2
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "editor": "proxy",
+            "description": "Apify Proxy configuration.",
+            "default": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            },
+            "prefill": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            }
+        }
+    }
+}

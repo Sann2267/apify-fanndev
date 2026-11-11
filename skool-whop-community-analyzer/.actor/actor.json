@@ -1,0 +1,14 @@
+{
+    "actorSpecification": 1,
+    "name": "skool-whop-community-analyzer",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Skool/Whop Community Analyzer",
+    "description": "Extract member count, disclosed subscription price, and an estimated monthly revenue (MRR) signal from a Skool or Whop community -- no account or API key needed. Built for sponsorship/collaboration lead scouting.",
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

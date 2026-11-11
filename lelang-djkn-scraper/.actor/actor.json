@@ -1,0 +1,18 @@
+{
+    "actorSpecification": 1,
+    "name": "lelang-djkn-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Indonesia Government Auction (Lelang DJKN) Scraper",
+    "description": "Extract live property, vehicle and asset auction lots from lelang.go.id, Indonesia's official state auction portal (DJKN). Search the full catalogue, filter by category, scope to any of the 71 KPKNL offices, or pull lot detail with reserve price, deposit and ownership documents.",
+    "categories": [
+        "REAL_ESTATE",
+        "BUSINESS"
+    ],
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

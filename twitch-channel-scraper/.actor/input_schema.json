@@ -1,0 +1,103 @@
+{
+    "title": "Twitch Channel Scraper",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "mode": {
+            "title": "Mode",
+            "type": "string",
+            "editor": "select",
+            "description": "\"channel\" gets the profile + live stream status. \"videos\" lists VODs/highlights/uploads. \"clips\" lists top or trending clips. \"schedule\" lists upcoming scheduled streams.",
+            "enum": ["channel", "videos", "clips", "schedule"],
+            "enumTitles": ["Channel profile + live status", "Videos (VODs)", "Clips", "Stream schedule"],
+            "default": "channel",
+            "prefill": "channel"
+        },
+        "login": {
+            "title": "Channel login",
+            "type": "string",
+            "editor": "textfield",
+            "description": "A single Twitch channel login name (the part after twitch.tv/ in the URL, lowercase, e.g. \"shroud\").",
+            "prefill": "shroud"
+        },
+        "logins": {
+            "title": "Channel logins",
+            "type": "array",
+            "editor": "stringList",
+            "description": "Multiple Twitch channel login names to process in one run."
+        },
+        "limit": {
+            "title": "Max items (videos / clips modes)",
+            "type": "integer",
+            "description": "Maximum number of videos or clips to return per channel. Twitch's own device-integrity gate blocks HTTP-only pagination beyond a single page, so this is capped at 100 (the most recent, or most-viewed, items -- not the full archive on channels with more).",
+            "default": 20,
+            "minimum": 1,
+            "maximum": 100,
+            "prefill": 20
+        },
+        "videoType": {
+            "title": "Video type (videos mode)",
+            "type": "string",
+            "editor": "select",
+            "description": "Which kind of videos to list.",
+            "enum": ["ARCHIVE", "HIGHLIGHT", "UPLOAD", "PAST_PREMIERE", "PREMIERE_UPLOAD"],
+            "enumTitles": ["Past broadcasts", "Highlights", "Uploads", "Past premieres", "Premiere uploads"],
+            "default": "ARCHIVE",
+            "prefill": "ARCHIVE"
+        },
+        "videoSort": {
+            "title": "Video sort order (videos mode)",
+            "type": "string",
+            "editor": "select",
+            "description": "Order to return videos in.",
+            "enum": ["TIME", "VIEWS"],
+            "enumTitles": ["Newest first", "Most viewed first"],
+            "default": "TIME",
+            "prefill": "TIME"
+        },
+        "clipsPeriod": {
+            "title": "Clips time window (clips mode)",
+            "type": "string",
+            "editor": "select",
+            "description": "Only consider clips created within this time window.",
+            "enum": ["LAST_DAY", "LAST_WEEK", "LAST_MONTH", "ALL_TIME"],
+            "enumTitles": ["Last 24 hours", "Last 7 days", "Last 30 days", "All time"],
+            "default": "ALL_TIME",
+            "prefill": "ALL_TIME"
+        },
+        "clipsSort": {
+            "title": "Clips sort order (clips mode)",
+            "type": "string",
+            "editor": "select",
+            "description": "Order to return clips in.",
+            "enum": ["VIEWS_DESC", "TRENDING"],
+            "enumTitles": ["Most viewed first", "Trending"],
+            "default": "VIEWS_DESC",
+            "prefill": "VIEWS_DESC"
+        },
+        "maxConcurrency": {
+            "title": "Max concurrent workers",
+            "type": "integer",
+            "description": "How many channels to fetch in parallel.",
+            "default": 4,
+            "minimum": 1,
+            "maximum": 16,
+            "prefill": 4
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "editor": "proxy",
+            "description": "Apify Proxy configuration. Residential is on by default. Not required for this endpoint (no WAF was found), but kept on for production robustness.",
+            "default": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            },
+            "prefill": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            }
+        }
+    },
+    "required": ["mode"]
+}

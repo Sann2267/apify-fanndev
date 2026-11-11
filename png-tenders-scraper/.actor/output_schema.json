@@ -1,0 +1,116 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "NPC procurement record",
+        "description": "Raw-passthrough dataset envelope covering three record types from Papua New Guinea's National Procurement Commission (NPC) -- distinguished by 'record_type'. Every record carries _input/_source/_scrapedAt (and _error/_errorDetail on failures). See CRAWLING_METHOD.md for why the field set differs by record_type.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "'(open tenders)' for tender_notice records, or the record_type ('disposals-notice'/'contracts-awarded') otherwise."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "S1-tender-advertisement-html (open tenders), S1-wp-rest-list (list-only, fetchDetails off), S2-detail-html (list + detail page), or 'none' on an error record."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed extractions -- not_found (no open tenders currently, or a type genuinely returned zero rows) or blocked_or_transient (network/upstream issue)."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "record_type": {
+                "type": "string",
+                "title": "Record type",
+                "description": "tender_notice, disposals-notice, or contracts-awarded."
+            },
+            "reference_number": {
+                "title": "Reference number",
+                "description": "tender_notice only -- NPC's own 'NPC/YYYY-NN' tender reference."
+            },
+            "title": {
+                "title": "Title",
+                "description": "Tender/notice/contract title."
+            },
+            "description": {
+                "title": "Description",
+                "description": "tender_notice only -- the full free-text tender description/EOI text as published."
+            },
+            "closing_date": {
+                "title": "Closing date",
+                "description": "tender_notice only -- free-text closing date/time as published (not normalized -- see CRAWLING_METHOD.md)."
+            },
+            "post_id": {
+                "title": "Internal post ID",
+                "description": "tender_notice only -- NPC's internal numeric ID for this card."
+            },
+            "source_url": {
+                "title": "Source page URL",
+                "description": "tender_notice only -- always the /tender-advertisement/ listing page (no individual permalink exists for this record type)."
+            },
+            "id": {
+                "title": "WordPress post ID",
+                "description": "disposals-notice/contracts-awarded only -- NPC's internal numeric post ID."
+            },
+            "slug": {
+                "title": "URL slug",
+                "description": "disposals-notice/contracts-awarded only."
+            },
+            "link": {
+                "title": "Public URL",
+                "description": "disposals-notice/contracts-awarded only -- the record's own detail page."
+            },
+            "date": {
+                "title": "Publish date",
+                "description": "disposals-notice/contracts-awarded only -- when NPC published this record."
+            },
+            "fields": {
+                "type": "object",
+                "title": "Labeled detail fields",
+                "description": "disposals-notice/contracts-awarded only, when fetchDetails is on -- every '<b>Label:</b> value' field found on the record's detail page, kept verbatim as upstream authored it (e.g. 'Agency', 'Contract Value Inc GST (PGK Unless Specified)', 'Supplier Name'). Label text is free-form and varies by record, which is why it is not split into fixed columns."
+            },
+            "pdf_url": {
+                "title": "PDF advert/document link",
+                "description": "Direct link to the tender advert or notice PDF, when one is published. null for contracts-awarded (no PDF is published for awarded contracts)."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns for browsing tenders, disposals, and contracts together.",
+            "transformation": {
+                "fields": [
+                    "record_type",
+                    "_scrapedAt",
+                    "title",
+                    "reference_number",
+                    "closing_date",
+                    "date",
+                    "fields",
+                    "pdf_url",
+                    "link",
+                    "source_url",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

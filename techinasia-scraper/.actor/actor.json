@@ -1,0 +1,23 @@
+{
+    "actorSpecification": 1,
+    "name": "techinasia-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Tech in Asia Scraper - Articles, Startup Database & Jobs",
+    "description": "Scrape Tech in Asia's newsroom, its 120,000-company startup and investor database, and its job board from one actor. Article search with category, author and date filters; company lookups by country, funding stage and amount raised; job postings with salaries. No login needed.",
+    "categories": [
+        "NEWS",
+        "BUSINESS"
+    ],
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json",
+    "defaultRunOptions": {
+        "build": "latest",
+        "memoryMbytes": 512,
+        "timeoutSecs": 3600
+    }
+}

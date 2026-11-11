@@ -1,0 +1,100 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Article / latest-headline record",
+        "description": "Raw-passthrough dataset envelope. Every record carries _input/_source/_scrapedAt (and _error/_errorDetail on failures, including soft-404s where the article URL renders the homepage shell). Article-mode records (S1-html) carry headline/articleBody-style fields parsed from plain HTML (this CMS has no ld+json); latest-mode records (S2-rss) carry title/link-style fields from a per-section RSS feed.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The exact input value (URL, or 'latest') that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which extraction strategy emitted this record (e.g. S1-html, S2-rss)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed extractions -- the error kind (includes soft-404 cases where a nonexistent article URL returns HTTP 200 with the homepage shell)."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "headline": {
+                "title": "Headline",
+                "description": "Article headline, from h1.innerheader."
+            },
+            "deck": {
+                "title": "Deck",
+                "description": "One-line subheading from header.inner-content > ul > li -- present on hard-news articles, absent on opinion/column pieces."
+            },
+            "description": {
+                "title": "Description",
+                "description": "Article description, from meta[property=og:description]."
+            },
+            "articleBody": {
+                "title": "Article body",
+                "description": "Full article text from header.inner-content <p> tags, with pull-image/caption <table> widgets removed and paragraphs split on runs of <br> tags (this CMS mixes true <p>-per-paragraph markup with a single <p> using <br><br> separators)."
+            },
+            "datePublished": {
+                "title": "Date published",
+                "description": "From meta[itemprop=datePublished]."
+            },
+            "dateModified": {
+                "title": "Date modified",
+                "description": "From meta[itemprop=dateModified]."
+            },
+            "title": {
+                "title": "Title",
+                "description": "Headline from the RSS item (latest mode)."
+            },
+            "link": {
+                "title": "Link",
+                "description": "Article URL (latest mode)."
+            },
+            "guid": {
+                "title": "GUID",
+                "description": "RSS item GUID (latest mode)."
+            },
+            "pubDate": {
+                "title": "Publish date",
+                "description": "RSS pubDate string, in this feed's non-standard format (e.g. 'Monday, 24 August 2026 06:28', not RFC 822) -- passed through as-is (latest mode)."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across both article and latest-headline records.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "_source",
+                    "_scrapedAt",
+                    "headline",
+                    "title",
+                    "link",
+                    "datePublished",
+                    "pubDate",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

@@ -1,0 +1,100 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "H1B filing / case-detail record",
+        "description": "Raw-passthrough dataset envelope on top of h1bdata.info's own HTML table columns / detail-page labels (itself a republish of the US DOL's public LCA disclosure data). Every record carries _input/_source/_scrapedAt (and _error/_errorDetail on failures, _warning on partial-degradation). \"search\" mode with fetchCaseDetails=false emits a lightweight per-filing row (employer, job title, salary, location, dates); fetchCaseDetails=true and \"caseDetail\" mode both emit the full ~76-field case record (wage, worksite, employer point-of-contact, sponsoring attorney).",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "search mode: \"em=<employer>|job=<jobTitle>|city=<city>|year=<year>\" that produced this record. caseDetail mode: the exact case ID requested."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "S1-search-summary (lightweight filing row), S2-detail (search row enriched with full case detail), S1-detail (caseDetail mode, direct case lookup), or none on failure."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this specific record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed extractions (no_results, case_not_found, http_5xx, blocked_or_transient)."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "_warning": {
+                "type": "string",
+                "title": "Warning",
+                "description": "Non-fatal degradation marker -- currently only \"case_detail_unavailable\" (fetchCaseDetails=true but the enrichment fetch for this row's case failed; the search-summary fields are still returned)."
+            },
+
+            "EMPLOYER": { "title": "Employer", "description": "S1-search-summary / S2-detail -- sponsoring company name as it appears in the search-results row." },
+            "JOB_TITLE": { "title": "Job title", "description": "S1-search-summary / S2-detail -- filed job title as it appears in the search-results row (often auto-generated/lightly mangled by the source dataset)." },
+            "BASE_SALARY": { "title": "Base salary", "description": "S1-search-summary / S2-detail -- annualized base salary as displayed in the search-results row." },
+            "LOCATION": { "title": "Location", "description": "S1-search-summary / S2-detail -- \"City, ST\" worksite location." },
+            "SUBMIT_DATE": { "title": "Submit date", "description": "S1-search-summary / S2-detail -- LCA submission date (MM/DD/YYYY) from the search-results row." },
+            "START_DATE": { "title": "Start date", "description": "S1-search-summary / S2-detail -- employment start date (MM/DD/YYYY) from the search-results row." },
+            "caseId": { "title": "Case ID", "description": "S1-search-summary / S2-detail -- LCA case number, parsed from the Base Salary column's link. Not an h1bdata.info column header; kept as this actor's own derived join key. Use with mode='caseDetail' to fetch the full record directly." },
+            "caseUrl": { "title": "Case detail URL", "description": "S1-search-summary / S2-detail -- direct h1bdata.info details.php URL for this case." },
+
+            "LCA_CASE_NUMBER": { "title": "LCA case number", "description": "S1-detail / S2-detail only -- same value as caseId, as labeled on the detail page." },
+            "STATUS": { "title": "Status", "description": "S1-detail / S2-detail only -- e.g. \"Certified\", \"Certified - Withdrawn\", \"Denied\"." },
+            "LCA_CASE_SUBMIT": { "title": "LCA case submit date", "description": "S1-detail / S2-detail only." },
+            "DECISION_DATE": { "title": "Decision date", "description": "S1-detail / S2-detail only." },
+            "VISA_CLASS": { "title": "Visa class", "description": "S1-detail / S2-detail only -- e.g. \"H-1B\"." },
+            "LCA_CASE_JOB_TITLE": { "title": "LCA case job title", "description": "S1-detail / S2-detail only -- raw job title field as filed (may include an internal SOC/wage code suffix)." },
+            "SOC_CODE": { "title": "SOC code", "description": "S1-detail / S2-detail only -- Standard Occupational Classification code." },
+            "SOC_TITLE": { "title": "SOC title", "description": "S1-detail / S2-detail only." },
+            "FULL_TIME_POSITION": { "title": "Full time position", "description": "S1-detail / S2-detail only -- \"True\"/\"False\"." },
+            "LCA_CASE_EMPLOYMENT_START_DATE": { "title": "Employment start date", "description": "S1-detail / S2-detail only." },
+            "END_DATE": { "title": "Employment end date", "description": "S1-detail / S2-detail only." },
+            "TOTAL_WORKER_POSITIONS": { "title": "Total worker positions", "description": "S1-detail / S2-detail only -- number of workers covered by this LCA." },
+            "LCA_CASE_EMPLOYER_NAME": { "title": "Employer name (full)", "description": "S1-detail / S2-detail only." },
+            "EMPLOYER_ADDRESS1": { "title": "Employer address", "description": "S1-detail / S2-detail only." },
+            "EMPLOYER_CITY": { "title": "Employer city", "description": "S1-detail / S2-detail only." },
+            "EMPLOYER_STATE": { "title": "Employer state", "description": "S1-detail / S2-detail only." },
+            "EMPLOYER_POSTAL_CODE": { "title": "Employer postal code", "description": "S1-detail / S2-detail only." },
+            "EMPLOYER_COUNTRY": { "title": "Employer country", "description": "S1-detail / S2-detail only." },
+            "EMPLOYER_PHONE": { "title": "Employer phone", "description": "S1-detail / S2-detail only." },
+            "NAICS_CODE": { "title": "NAICS code", "description": "S1-detail / S2-detail only -- industry classification." },
+            "EMPLOYER_POC_FIRST_NAME": { "title": "Employer contact first name", "description": "S1-detail / S2-detail only -- HR/immigration point-of-contact." },
+            "EMPLOYER_POC_LAST_NAME": { "title": "Employer contact last name", "description": "S1-detail / S2-detail only." },
+            "EMPLOYER_POC_JOB_TITLE": { "title": "Employer contact job title", "description": "S1-detail / S2-detail only." },
+            "EMPLOYER_POC_EMAIL": { "title": "Employer contact email", "description": "S1-detail / S2-detail only -- direct email of the HR/immigration point-of-contact who filed this LCA." },
+            "AGENT_ATTORNEY_FIRST_NAME": { "title": "Sponsoring attorney first name", "description": "S1-detail / S2-detail only -- present when AGENT_REPRESENTING_EMPLOYER is True." },
+            "AGENT_ATTORNEY_LAST_NAME": { "title": "Sponsoring attorney last name", "description": "S1-detail / S2-detail only." },
+            "AGENT_ATTORNEY_EMAIL_ADDRESS": { "title": "Sponsoring attorney email", "description": "S1-detail / S2-detail only." },
+            "LAWFIRM_NAME_BUSINESS_NAME": { "title": "Law firm / business name", "description": "S1-detail / S2-detail only -- the immigration law firm handling this filing." },
+            "WORKSITE_ADDRESS1": { "title": "Worksite address", "description": "S1-detail / S2-detail only." },
+            "LCA_CASE_WORKLOC1_CITY": { "title": "Worksite city", "description": "S1-detail / S2-detail only." },
+            "LCA_CASE_WORKLOC1_STATE": { "title": "Worksite state", "description": "S1-detail / S2-detail only." },
+            "LCA_CASE_WAGE_RATE_FROM": { "title": "Offered wage (from)", "description": "S1-detail / S2-detail only." },
+            "LCA_CASE_WAGE_RATE_UNIT": { "title": "Offered wage unit", "description": "S1-detail / S2-detail only -- e.g. \"Year\", \"Hour\"." },
+            "PREVAILING_WAGE": { "title": "Prevailing wage", "description": "S1-detail / S2-detail only -- DOL-determined prevailing wage floor for this role/location." },
+            "PW_WAGE_LEVEL": { "title": "Prevailing wage level", "description": "S1-detail / S2-detail only -- I through IV, DOL skill/experience tier." },
+            "H1B_DEPENDENT": { "title": "H1B dependent employer", "description": "S1-detail / S2-detail only -- whether the employer is classified as \"H-1B dependent\" (high ratio of H-1B workers)." },
+            "WILLFUL_VIOLATOR": { "title": "Willful violator", "description": "S1-detail / S2-detail only -- DOL willful-violator flag." }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across search-summary and case-detail records.",
+            "transformation": {
+                "fields": ["_input", "_source", "EMPLOYER", "JOB_TITLE", "BASE_SALARY", "LOCATION", "SUBMIT_DATE", "PREVAILING_WAGE", "EMPLOYER_POC_EMAIL", "_error"]
+            },
+            "display": {"component": "table"}
+        }
+    }
+}

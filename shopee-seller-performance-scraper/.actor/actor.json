@@ -1,0 +1,18 @@
+{
+    "actorSpecification": 1,
+    "name": "shopee-seller-performance-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Shopee Seller Profile & Performance Scraper",
+    "description": "Qualify Shopee sellers before you buy or resell. Returns follower count, product count, rating breakdown, positive-rating share, chat response rate, response time, shop age and Official Shop status. Lookup by username, shop ID, shop URL or product URL. No login.",
+    "categories": [
+        "ECOMMERCE",
+        "LEAD_GENERATION"
+    ],
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

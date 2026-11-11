@@ -1,0 +1,14 @@
+{
+    "actorSpecification": 1,
+    "name": "fijitimes-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Fiji Times Scraper",
+    "description": "Extract full article text or the newest headlines from The Fiji Times (fijitimes.com.fj), Fiji's leading newspaper -- no account or API key needed.",
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

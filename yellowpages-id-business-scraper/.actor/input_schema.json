@@ -1,0 +1,105 @@
+{
+    "title": "Yellow Pages Indonesia Scraper",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "mode": {
+            "title": "Mode",
+            "type": "string",
+            "description": "What to extract. Business search is the general-purpose lead builder; the others target one surface each.",
+            "editor": "select",
+            "default": "search_businesses",
+            "enum": [
+                "search_businesses",
+                "category_businesses",
+                "company_details",
+                "search_products",
+                "market_insights",
+                "geo_directory"
+            ],
+            "enumTitles": [
+                "Business search - find companies by keyword (+ optional region/city)",
+                "Category listing - companies under a category slug (+ optional city)",
+                "Company details - full profile for specific companies",
+                "Product search - B2B products by keyword",
+                "Market insights - listing counts per province/city for a keyword",
+                "Geo directory - provinces and their cities (seed list builder)"
+            ]
+        },
+        "queries": {
+            "title": "Keywords or category slugs",
+            "type": "array",
+            "description": "One or more search keywords (e.g. \"bank\", \"hotel\", \"percetakan\"). For Category listing mode use the slug from a /places/<slug> URL. Required for every mode except Company details and Geo directory.",
+            "editor": "stringList",
+            "prefill": [
+                "bank"
+            ],
+            "default": [
+                "bank"
+            ]
+        },
+        "companyUrls": {
+            "title": "Company profile URLs or IDs",
+            "type": "array",
+            "description": "Company details mode only. Accepts a full https://www.yellowpages.id/profil-<id>-<slug>.html URL, the equivalent yoys.id URL, or a bare numeric company ID.",
+            "editor": "stringList",
+            "prefill": [
+                "https://www.yellowpages.id/profil-185272-pt-bank-mandiri-persero-tbk-jakarta.html"
+            ]
+        },
+        "region": {
+            "title": "Province / region filter",
+            "type": "string",
+            "description": "Business search mode. Province name as the site spells it, e.g. \"Jawa Barat\", \"Bali\", \"Daerah Khusus Ibukota Jakarta\". Run Market insights first to see the exact values and their hit counts. Note that promoted listings are returned regardless of this filter.",
+            "editor": "textfield"
+        },
+        "city": {
+            "title": "City filter",
+            "type": "string",
+            "description": "City name, e.g. \"Bandung\", \"Kota Medan\". Used as a query filter in Business search and as a URL segment in Category listing.",
+            "editor": "textfield"
+        },
+        "provinceCodes": {
+            "title": "Province codes",
+            "type": "array",
+            "description": "Geo directory mode. The site uses its own two-digit codes, not Indonesia's official BPS numbering - e.g. 01 Aceh, 02 Bali, 04 Jakarta, 07 Central Java, 30 West Java. Leave empty to crawl all 34 codes that exist; unused codes return an empty page and are reported as errors.",
+            "editor": "stringList"
+        },
+        "maxItemsPerQuery": {
+            "title": "Max items per query",
+            "type": "integer",
+            "description": "Cap on records per keyword. The site itself serves at most 250 rows per query (10 pages x 25), so higher values will not return more - split the query by region or city instead.",
+            "editor": "number",
+            "default": 250,
+            "minimum": 1,
+            "maximum": 250
+        },
+        "enrichWithDetails": {
+            "title": "Enrich with company profile details",
+            "type": "boolean",
+            "description": "Business search and Category listing modes: fetch each company's profile page to add founding year, legal form, labelled phone numbers and categories. Costs one extra request per company.",
+            "default": false
+        },
+        "maxConcurrency": {
+            "title": "Max concurrency",
+            "type": "integer",
+            "description": "Parallel requests for profile fetches and the geo directory.",
+            "editor": "number",
+            "default": 4,
+            "minimum": 1,
+            "maximum": 10
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "description": "Optional. This target applies no IP-based blocking - the same address is served on every open path - so runs work fine with no proxy and that is the default. Turn on Apify Proxy (Residential recommended) only if you run very high volume and want to spread the load.",
+            "editor": "proxy",
+            "default": {
+                "useApifyProxy": false
+            }
+        }
+    },
+    "required": [
+        "mode"
+    ]
+}

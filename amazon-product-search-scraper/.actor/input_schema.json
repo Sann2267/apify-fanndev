@@ -1,0 +1,62 @@
+{
+  "title": "Amazon Product & Search Scraper",
+  "type": "object",
+  "schemaVersion": 1,
+  "properties": {
+    "searchTerms": {
+      "title": "Search terms or Amazon search URLs",
+      "type": "array",
+      "description": "Keywords, or full Amazon search URLs. A URL must contain a k= keyword — Amazon serves node-only category URLs (rh=n%3A..., node=..., /b?...) as a browse page with no results for logged-out clients. Filters and sorts work fine alongside a keyword, e.g. /s?k=yoga+mat&rh=n%3A3407731&s=price-asc-rank",
+      "editor": "stringList",
+      "prefill": ["yoga mat", "coffee maker"],
+      "default": ["yoga mat", "coffee maker"]
+    },
+    "marketplace": {
+      "title": "Marketplace",
+      "type": "string",
+      "description": "Amazon domain to search. Prices are pinned to this marketplace's currency regardless of where the run exits from.",
+      "editor": "select",
+      "enum": ["com", "co.uk", "de", "fr", "it", "es", "ca", "com.au", "co.jp", "in"],
+      "enumTitles": ["amazon.com (US)", "amazon.co.uk", "amazon.de", "amazon.fr", "amazon.it", "amazon.es", "amazon.ca", "amazon.com.au", "amazon.co.jp", "amazon.in"],
+      "default": "com"
+    },
+    "maxPages": {
+      "title": "Pages per search term",
+      "type": "integer",
+      "description": "Amazon stops serving a next-page link after about 7 pages on a broad query; the actor stops on its own when a term runs out, so a high value costs nothing extra.",
+      "minimum": 1,
+      "maximum": 7,
+      "default": 1
+    },
+    "maxItemsPerTerm": {
+      "title": "Max items per term",
+      "type": "integer",
+      "description": "Hard cap on products emitted per search term. 0 means no cap.",
+      "minimum": 0,
+      "maximum": 500,
+      "default": 0
+    },
+    "includeSponsored": {
+      "title": "Include sponsored results",
+      "type": "boolean",
+      "description": "Sponsored placements are flagged with isSponsored either way. Turn this off to keep only organic results for a cleaner price distribution.",
+      "default": true
+    },
+    "delaySeconds": {
+      "title": "Delay between pages (seconds)",
+      "type": "integer",
+      "description": "Pacing between requests. Amazon serves CAPTCHAs to traffic it dislikes.",
+      "minimum": 0,
+      "maximum": 30,
+      "default": 3
+    },
+    "proxyConfiguration": {
+      "title": "Proxy configuration",
+      "type": "object",
+      "description": "Residential proxy strongly recommended. It also determines the delivery country, which is what makes Prime and delivery fields meaningful.",
+      "editor": "proxy",
+      "default": { "useApifyProxy": true, "apifyProxyGroups": ["RESIDENTIAL"] }
+    }
+  },
+  "required": ["searchTerms"]
+}

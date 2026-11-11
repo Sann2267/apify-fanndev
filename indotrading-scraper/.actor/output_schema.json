@@ -1,0 +1,338 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Indotrading record",
+        "description": "Dataset envelope (_input / _source / _scrapedAt / recordType) on top of the fields indotrading itself prints. Record types: product, supplier, category and error. Not every field appears on every record - a product from a category listing carries the seller's membership tier and encrypted id, while the same product from its own detail page carries stock, country of origin and the full gallery instead. Indotrading restyles its pages without notice, so unlisted fields pass through rather than failing the run.",
+        "additionalProperties": true,
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The category slug, search term, product URL or supplier slug this record came from."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which surface produced the row: S1-category-html, S1-search-html, S1-product-jsonld, S1-supplier-html, S1-directory-html, S1-catalog-html, or none on failure rows."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was emitted."
+            },
+            "recordType": {
+                "type": "string",
+                "title": "Record type",
+                "description": "product, supplier, category or error."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Failure rows only: not_found (HTTP 404, or a 200 carrying the homepage, which is how indotrading reports a dead slug), no_results (the page rendered but matched nothing), fetch_failed, unexpected_shape, run_failed."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic accompanying _error."
+            },
+            "_warning": {
+                "type": "string",
+                "title": "Warning",
+                "description": "Non-fatal degradation marker. no_whatsapp_number_on_file means the contact lookup succeeded and this seller simply has no WhatsApp number registered; contact_lookup_failed means the lookup itself did not complete; no_secure_product_id_on_card means the card carried nothing to look up."
+            },
+            "productId": {
+                "title": "Product ID",
+                "description": "Indotrading product id, e.g. P1146289."
+            },
+            "productUrl": {
+                "title": "Product URL",
+                "description": "Public product page link. Feed this back into productDetail mode for the full record."
+            },
+            "productName": {
+                "title": "Product name",
+                "description": "Product title as the seller wrote it."
+            },
+            "priceText": {
+                "title": "Price (as shown)",
+                "description": "The price exactly as rendered, e.g. 'IDR 9.000' or 'Minta penawaran' when the seller hides it behind a quote request."
+            },
+            "priceRaw": {
+                "title": "Price (raw)",
+                "description": "The number behind the quote button. It disagrees with priceText whenever the seller hid the price, in which case it is a placeholder rather than a real figure - always read it together with priceText."
+            },
+            "priceUnit": {
+                "title": "Price unit",
+                "description": "Unit the price applies to, e.g. Unit, Pcs, Meter, or 'call'."
+            },
+            "price": {
+                "title": "Price (numeric)",
+                "description": "Numeric price from the product page's schema.org Offer. Detail records only."
+            },
+            "priceCurrency": {
+                "title": "Price currency",
+                "description": "ISO currency from the schema.org Offer, in practice always IDR. Detail records only."
+            },
+            "availability": {
+                "title": "Availability",
+                "description": "schema.org availability URL, e.g. https://schema.org/InStock. Detail records only."
+            },
+            "isWholesale": {
+                "title": "Wholesale",
+                "description": "Whether the listing offers wholesale (grosir) pricing."
+            },
+            "brand": {
+                "title": "Brand",
+                "description": "Brand as printed on the listing card ('Merek:')."
+            },
+            "descriptionSnippet": {
+                "title": "Description snippet",
+                "description": "Truncated description from the listing card."
+            },
+            "description": {
+                "title": "Description",
+                "description": "Full product description from the page's schema.org Product node. Detail records only."
+            },
+            "imageUrl": {
+                "title": "Image URL",
+                "description": "Primary product image."
+            },
+            "galleryImages": {
+                "title": "Gallery images",
+                "description": "Every image in the product gallery. Detail records only."
+            },
+            "youtubeVideoIds": {
+                "title": "YouTube video IDs",
+                "description": "YouTube ids embedded in the product gallery. Detail records only."
+            },
+            "isPdn": {
+                "title": "PDN badge",
+                "description": "Carries the Produk Dalam Negeri badge, the Indonesian local-content mark that government procurement filters on."
+            },
+            "stock": {
+                "title": "Stock",
+                "description": "Quantity the seller declares in stock. Detail records only."
+            },
+            "minimumOrder": {
+                "title": "Minimum order",
+                "description": "Smallest quantity the seller will accept. Detail records only."
+            },
+            "minOrder": {
+                "title": "Min order",
+                "description": "Minimum order as printed on a supplier-catalogue card."
+            },
+            "countryOfOrigin": {
+                "title": "Country of origin",
+                "description": "Declared country of origin. Detail records only."
+            },
+            "shipsFrom": {
+                "title": "Ships from",
+                "description": "City and region the product ships from. Detail records only."
+            },
+            "categoryName": {
+                "title": "Category name",
+                "description": "Category this product sits in."
+            },
+            "lastUpdate": {
+                "title": "Last update",
+                "description": "Date the seller last touched the listing, in Indonesian short form, e.g. '12 Ags 2026'."
+            },
+            "breadcrumbs": {
+                "title": "Breadcrumbs",
+                "description": "Full category path from the page's schema.org BreadcrumbList, each entry a name and URL. Detail records only."
+            },
+            "productAttributes": {
+                "title": "Product attributes",
+                "description": "Every label/value pair from the product page's attribute list, passed through under indotrading's own Indonesian labels."
+            },
+            "secureProductId": {
+                "title": "Secure product ID",
+                "description": "Encrypted product id. The only key the contact endpoint accepts - the plain P-number is rejected. Stable across page renders."
+            },
+            "secureCompanyId": {
+                "title": "Secure company ID",
+                "description": "Encrypted company id, the company-level counterpart of secureProductId."
+            },
+            "whatsappNumber": {
+                "title": "WhatsApp number",
+                "description": "Supplier WhatsApp number in international form, present when includeContact is on. Passed through exactly as returned, which occasionally includes spacing artefacts such as '62 08111008547'."
+            },
+            "contactCompanyName": {
+                "title": "Contact company name",
+                "description": "Company name as the contact endpoint returns it, which can differ slightly from the listing's companyName."
+            },
+            "contactProductName": {
+                "title": "Contact product name",
+                "description": "Product name as the contact endpoint returns it."
+            },
+            "companyId": {
+                "title": "Company ID",
+                "description": "Indotrading company id, e.g. Co255252."
+            },
+            "companyName": {
+                "title": "Company name",
+                "description": "Supplier name."
+            },
+            "companySlug": {
+                "title": "Company slug",
+                "description": "Supplier's URL slug. Note that a supplier's vanity slug and the slug in its product URLs can differ."
+            },
+            "companyUrl": {
+                "title": "Company URL",
+                "description": "Supplier profile link. Feed this back into supplierProfile mode."
+            },
+            "companyLocation": {
+                "title": "Company location",
+                "description": "City and province, e.g. 'Jakarta Timur, DKI Jakarta'."
+            },
+            "location": {
+                "title": "Location",
+                "description": "City and province on a supplier record."
+            },
+            "companyTaxStatus": {
+                "title": "Tax status",
+                "description": "PKP or Non PKP - whether the supplier is registered to charge VAT, which matters for B2B and government buyers."
+            },
+            "taxStatus": {
+                "title": "Tax status",
+                "description": "PKP or Non PKP on a supplier record."
+            },
+            "membershipTier": {
+                "title": "Membership tier",
+                "description": "Paid tier: diamond, platinum, gold, silver or free. Null means the supplier shows no paid badge at all."
+            },
+            "membershipYears": {
+                "title": "Membership years",
+                "description": "How long the supplier has held its tier, as printed, e.g. '3 Tahun'."
+            },
+            "isVerifiedSupplier": {
+                "title": "Verified supplier",
+                "description": "Whether indotrading has verified the company's documents."
+            },
+            "verifiedDocuments": {
+                "title": "Verified documents",
+                "description": "Which documents were checked, e.g. 'NPWP, SIUP'. Supplier profile records only."
+            },
+            "lastLoginText": {
+                "title": "Last login (as shown)",
+                "description": "Activity string as rendered, e.g. 'Online 2 Hari Lalu'."
+            },
+            "lastLoginMinutesAgo": {
+                "title": "Last login (minutes ago)",
+                "description": "Minutes since the supplier last signed in, present when includeLastLogin is on. Null means indotrading could not resolve the company or reported no activity."
+            },
+            "yearEstablished": {
+                "title": "Year established",
+                "description": "Founding year the supplier declares. Supplier profile records only."
+            },
+            "address": {
+                "title": "Address",
+                "description": "Full street address. Supplier profile records only."
+            },
+            "employeeCount": {
+                "title": "Employee count",
+                "description": "Headcount as declared, e.g. '26 Orang'. Supplier profile records only."
+            },
+            "businessFields": {
+                "title": "Business fields",
+                "description": "Comma-separated industries the supplier operates in. Supplier profile records only."
+            },
+            "sells": {
+                "title": "Sells",
+                "description": "Comma-separated product lines the supplier sells. Supplier profile records only."
+            },
+            "about": {
+                "title": "About",
+                "description": "Truncated company blurb from a supplier directory card."
+            },
+            "logoUrl": {
+                "title": "Logo URL",
+                "description": "Company logo image."
+            },
+            "profileFields": {
+                "title": "Profile fields",
+                "description": "Every label/value pair from the supplier profile table, passed through under indotrading's own Indonesian labels."
+            },
+            "infoRows": {
+                "title": "Info rows",
+                "description": "Every label/value pair from a supplier directory card."
+            },
+            "productCountOnFirstPage": {
+                "title": "Products on first page",
+                "description": "How many products the supplier's first catalogue page showed - a cheap size signal without paging the whole catalogue."
+            },
+            "categorySlug": {
+                "title": "Category slug",
+                "description": "Category slug, e.g. 'pressure-washer'."
+            },
+            "categoryId": {
+                "title": "Category ID",
+                "description": "Numeric category id. It appears only in supplier-directory URLs and cannot be derived from the slug."
+            },
+            "categoryUrl": {
+                "title": "Category URL",
+                "description": "Category listing link."
+            },
+            "pageNumber": {
+                "title": "Page number",
+                "description": "Which listing page this record came from."
+            },
+            "pageUrl": {
+                "title": "Page URL",
+                "description": "The URL actually fetched, after any redirect. Worth reading on search runs, since a keyword matching a category name is redirected to that category."
+            },
+            "advertisedPages": {
+                "title": "Advertised page count",
+                "description": "The page count indotrading prints ('Halaman 1 dari 16'). Recorded for reference only: it overstates how far a category can actually be paged, so this actor stops on the first empty page instead."
+            },
+            "advertisedTotalProducts": {
+                "title": "Advertised product total",
+                "description": "The product total indotrading prints. Same caveat as advertisedPages."
+            }
+        }
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "transformation": {
+                "fields": [
+                    "recordType",
+                    "productName",
+                    "priceText",
+                    "companyName",
+                    "companyLocation",
+                    "membershipTier",
+                    "isVerifiedSupplier",
+                    "whatsappNumber",
+                    "productUrl",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        },
+        "leads": {
+            "title": "Supplier leads",
+            "transformation": {
+                "fields": [
+                    "companyName",
+                    "companyUrl",
+                    "companyLocation",
+                    "companyTaxStatus",
+                    "membershipTier",
+                    "membershipYears",
+                    "isVerifiedSupplier",
+                    "whatsappNumber",
+                    "lastLoginMinutesAgo",
+                    "productName",
+                    "priceText"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

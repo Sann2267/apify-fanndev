@@ -1,0 +1,76 @@
+{
+    "title": "El Salvador Government Tenders Scraper",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "mode": {
+            "title": "Mode",
+            "type": "string",
+            "editor": "select",
+            "enum": ["open", "awarded", "detail"],
+            "enumTitles": ["Open tenders (currently active)", "Awarded contracts (historical, with beneficiary data)", "Detail (specific process IDs)"],
+            "description": "'open' returns currently active/open tenders. 'awarded' pages through the historical awarded-contract ledger (includes supplier and declared beneficial-owner info). 'detail' fetches full information for specific process IDs (e.g. the 'id' field from an 'open' record, or 'proceso_compra.id' from an 'awarded' record).",
+            "default": "open",
+            "prefill": "open"
+        },
+        "entidad": {
+            "title": "Institution name contains (open / awarded mode)",
+            "type": "string",
+            "editor": "textfield",
+            "description": "Optional. Filters to tenders/awards from one government institution -- a case-insensitive substring match (e.g. \"Salud\" matches health-related institutions). In 'open' mode this resolves to COMPRASAL's own institution filter; in 'awarded' mode COMPRASAL's server-side institution filter is broken (verified during recon -- it silently ignores the parameter), so this is applied client-side after fetching each page, which can be slower for a rare institution.",
+            "prefill": "Instituto Salvadoreño del Seguro Social"
+        },
+        "maxResults": {
+            "title": "Max results",
+            "type": "integer",
+            "description": "Maximum number of records to return. 'open' mode: all currently-open processes fit in one response (~370 typically), so this just caps how many are returned. 'awarded' mode: the historical ledger has tens of thousands of records, paged 100 at a time -- this actor pages through until it reaches this many (matching, if 'entidad' is set) results.",
+            "default": 50,
+            "minimum": 1,
+            "maximum": 5000,
+            "prefill": 50
+        },
+        "fetchDetail": {
+            "title": "Also fetch full detail per process (open / awarded mode)",
+            "type": "boolean",
+            "description": "When true, also fetches each process's full detail page and merges it into a 'detail' sub-object on the same record. Slower -- one extra request per process.",
+            "default": false
+        },
+        "processId": {
+            "title": "Process ID (detail mode)",
+            "type": "integer",
+            "editor": "number",
+            "description": "A single numeric process ID to fetch (the 'id' field from an 'open' mode record, or the 'proceso_compra.id' field from an 'awarded' mode record -- NOT the human-readable 'codigo_proceso' string).",
+            "prefill": 135800
+        },
+        "processIds": {
+            "title": "Process IDs (detail mode)",
+            "type": "array",
+            "editor": "stringList",
+            "description": "Multiple numeric process IDs to fetch in one run. Combined with 'processId' if both are set."
+        },
+        "maxConcurrency": {
+            "title": "Max concurrent workers",
+            "type": "integer",
+            "description": "How many detail pages to fetch in parallel (used by 'detail' mode, and by 'open'/'awarded' mode when 'fetchDetail' is on).",
+            "default": 3,
+            "minimum": 1,
+            "maximum": 6,
+            "prefill": 3
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "editor": "proxy",
+            "description": "Apify Proxy configuration. Residential is on by default.",
+            "default": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            },
+            "prefill": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            }
+        }
+    },
+    "required": []
+}

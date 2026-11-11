@@ -1,0 +1,25 @@
+{
+    "actorSpecification": 1,
+    "name": "tiktok-all-in-one-scraper",
+    "version": "0.1",
+    "buildTag": "latest",
+    "title": "TikTok Scraper: Videos, Profiles, Hashtags, Sounds",
+    "description": "Scrape public TikTok without a login or API key: video engagement (views, likes, comments, shares) plus the uploader's follower and likes counts, account profiles, videos on a hashtag page, and videos using a sound. HTTP-only via TikTok's own embed and oEmbed surfaces - no browser.",
+    "categories": [
+        "SOCIAL_MEDIA",
+        "MARKETING"
+    ],
+    "minMemoryMbytes": 256,
+    "maxMemoryMbytes": 4096,
+    "defaultRunOptions": {
+        "build": "latest",
+        "memoryMbytes": 1024,
+        "timeoutSecs": 3600
+    },
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

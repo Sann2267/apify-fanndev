@@ -1,0 +1,111 @@
+{
+    "title": "LinkedIn Post Engagers Scraper",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "postUrls": {
+            "title": "Post URLs",
+            "type": "array",
+            "description": "The posts whose engagers you want. A post permalink (linkedin.com/posts/...-activity-7505114604155322368-abcd), a /feed/update/urn:li:activity:... link, a bare urn:li:activity:... or just the numeric activity id all work.",
+            "editor": "stringList",
+            "prefill": [
+                "https://www.linkedin.com/feed/update/urn:li:activity:7505114604155322368"
+            ]
+        },
+        "startUrls": {
+            "title": "Post URLs (request list)",
+            "type": "array",
+            "description": "The same post links in the request-list format, for callers that already keep one.",
+            "editor": "requestListSources"
+        },
+        "includeCommenters": {
+            "title": "Include people who commented",
+            "type": "boolean",
+            "description": "On by default and free: LinkedIn publishes the comment thread on the post's own public page, with each commenter's name, profile link and comment text. No login needed.",
+            "default": true
+        },
+        "includeReactors": {
+            "title": "Include people who only reacted",
+            "type": "boolean",
+            "description": "Requires a session cookie below. LinkedIn tells logged-out visitors HOW MANY people reacted and which reaction types were used, but never WHO - that list is only served to a signed-in session. Without a cookie this option is ignored and the run returns commenters only.",
+            "default": false
+        },
+        "sessionCookie": {
+            "title": "Your li_at session cookie",
+            "type": "string",
+            "description": "Optional. Only needed for reactor identities. Copy the li_at cookie from a browser where you are already signed in to LinkedIn (DevTools > Application > Cookies > www.linkedin.com > li_at) and paste its value. This actor never asks for your password and never signs in on your behalf. Scraping while signed in is against LinkedIn's User Agreement and can get the account restricted - use an account you are willing to risk, and keep the run caps low.",
+            "editor": "textfield",
+            "isSecret": true
+        },
+        "enrichProfiles": {
+            "title": "Open each engager's profile for employer and location",
+            "type": "boolean",
+            "description": "Off by default. Adds current title, employer, location and follower count by loading each person's public profile - one extra page load per person. A post with 100 commenters becomes 100 extra requests, which is slower and meets LinkedIn's rate gate sooner.",
+            "default": false
+        },
+        "maxEngagersPerPost": {
+            "title": "Maximum engagers per post",
+            "type": "integer",
+            "description": "Cap per post. LinkedIn's public page carries roughly the first 8-10 comments, so values above that only change anything when reactors are being read with a cookie.",
+            "default": 100,
+            "minimum": 1,
+            "maximum": 1000,
+            "unit": "people"
+        },
+        "maxEngagers": {
+            "title": "Maximum engagers in total",
+            "type": "integer",
+            "description": "Overall ceiling across every post. Keeping this modest is the single best protection for a session cookie: long, greedy runs are what LinkedIn's abuse scoring reacts to.",
+            "default": 500,
+            "minimum": 1,
+            "maximum": 5000,
+            "unit": "people"
+        },
+        "emitPostRecords": {
+            "title": "Also emit one row per post",
+            "type": "boolean",
+            "description": "Write each post as its own POST row: author, text, publish date, reaction and comment totals, reaction-type mix and hashtags.",
+            "default": true
+        },
+        "minDelaySeconds": {
+            "title": "Minimum delay between requests",
+            "type": "integer",
+            "description": "LinkedIn answers bursts with HTTP 999 and a near-empty page. A randomised gap between page loads is what keeps a run under that gate; this is the floor of that range.",
+            "default": 2,
+            "minimum": 0,
+            "maximum": 60,
+            "unit": "seconds"
+        },
+        "maxDelaySeconds": {
+            "title": "Maximum delay between requests",
+            "type": "integer",
+            "description": "The ceiling of the randomised gap. Raise both bounds if you see rate-gate warnings in the log.",
+            "default": 8,
+            "minimum": 0,
+            "maximum": 120,
+            "unit": "seconds"
+        },
+        "exportFormats": {
+            "title": "Extra export files",
+            "type": "array",
+            "description": "Besides the dataset, write ready-made files into this run's key-value store.",
+            "editor": "select",
+            "items": {
+                "type": "string",
+                "enum": ["json", "ndjson", "csv", "excel"],
+                "enumTitles": ["JSON", "NDJSON", "CSV", "Excel (XLSX)"]
+            },
+            "default": []
+        },
+        "proxyConfiguration": {
+            "title": "Proxy",
+            "type": "object",
+            "description": "Optional for the logged-out path, strongly advised whenever you supply a session cookie. LinkedIn weighs the exit IP against where your account normally signs in, and an Apify datacenter IP is precisely the mismatch that gets a session flagged - pick RESIDENTIAL in your own country.",
+            "editor": "proxy",
+            "default": {
+                "useApifyProxy": false
+            }
+        }
+    },
+    "required": []
+}

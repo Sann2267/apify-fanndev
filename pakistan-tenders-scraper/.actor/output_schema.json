@@ -1,0 +1,203 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "PPRA-EPMS tender record",
+        "description": "One record per row/tender. Shape depends on recordType: TENDER_LIST (mode=list, one row from the active-tenders/tenders-history table) or TENDER_DETAIL (mode=detail, a raw label/value passthrough of the tender's own detail page -- field set can vary per tender since PPRA renders some fields conditionally, e.g. Contact Person/Email/Phone, Estimated Cost). A single _error record is emitted instead of payload fields when a query/tender fails or is not found.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "For list records: 'latest' or a 'search:...' summary of the filters used. For detail records: the tenderNo or URL that was requested."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "S1-listing or S1-detail on success, 'none' on error."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed records (not_found, blocked_or_transient)."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "recordType": {
+                "type": "string",
+                "title": "Record type",
+                "description": "TENDER_LIST or TENDER_DETAIL."
+            },
+            "listingType": {
+                "type": "string",
+                "title": "Listing type",
+                "description": "TENDER_LIST only -- 'active' or 'history'."
+            },
+            "page": {
+                "type": "integer",
+                "title": "Page",
+                "description": "TENDER_LIST only -- which 50-row page this row came from."
+            },
+            "tenderNo": {
+                "title": "Tender number",
+                "description": "PPRA's own tender number, e.g. TS0000012236E."
+            },
+            "title": {
+                "title": "Title",
+                "description": "Tender title/subject."
+            },
+            "description": {
+                "title": "Description",
+                "description": "TENDER_LIST only -- short description snippet, if PPRA rendered one for this tender."
+            },
+            "tags": {
+                "type": "array",
+                "title": "Tags",
+                "description": "TENDER_LIST only -- raw badge text shown on the listing row (typically the sector and the procuring office's own reference number)."
+            },
+            "organizationName": {
+                "title": "Organization name",
+                "description": "The government organization/department running this procurement."
+            },
+            "officeName": {
+                "title": "Office name",
+                "description": "The specific office within the organization."
+            },
+            "location": {
+                "title": "Location",
+                "description": "TENDER_LIST only -- raw city/country text as shown on the listing row."
+            },
+            "status": {
+                "type": "array",
+                "title": "Status",
+                "description": "TENDER_LIST only -- badge text list, e.g. ['Published'], ['Published', 'Corrigendum'], ['Closed']."
+            },
+            "advertisedDate": {
+                "title": "Advertised date",
+                "description": "TENDER_LIST only."
+            },
+            "closingDate": {
+                "title": "Closing date",
+                "description": "TENDER_LIST only."
+            },
+            "closingTime": {
+                "title": "Closing time",
+                "description": "TENDER_LIST only."
+            },
+            "detailUrl": {
+                "title": "Detail URL",
+                "description": "Link to this tender's full detail page -- feed tenderNo into a mode=detail run for the full picture."
+            },
+            "invoiceUrl": {
+                "title": "Invoice URL",
+                "description": "Link to PPRA's own publication-fee invoice page for this tender (not fetched by this actor -- a minor bonus data point, the fee PPRA charges the procuring office to publish, not a bid/tender financial figure)."
+            },
+            "organizationAddress": {
+                "title": "Organization office address",
+                "description": "TENDER_DETAIL only."
+            },
+            "city": {
+                "title": "City",
+                "description": "TENDER_DETAIL only."
+            },
+            "contactPerson": {
+                "title": "Contact person",
+                "description": "TENDER_DETAIL only -- present only when the procuring office filled it in."
+            },
+            "contactEmail": {
+                "title": "Contact email",
+                "description": "TENDER_DETAIL only -- present only when the procuring office filled it in."
+            },
+            "contactPhone": {
+                "title": "Contact phone",
+                "description": "TENDER_DETAIL only -- present only when the procuring office filled it in."
+            },
+            "tenderType": {
+                "title": "Tender type",
+                "description": "TENDER_DETAIL only -- e.g. Request for Proposal (RFP)."
+            },
+            "tenderNoReferenceNoTenderInquiryNo": {
+                "title": "Tender/reference/inquiry number",
+                "description": "TENDER_DETAIL only -- the procuring office's own reference number (distinct from PPRA's own tenderNo)."
+            },
+            "procurementCategory": {
+                "title": "Procurement category",
+                "description": "TENDER_DETAIL only -- e.g. Goods, Works, Consultancy Services."
+            },
+            "procurementProcedure": {
+                "title": "Procurement procedure",
+                "description": "TENDER_DETAIL only -- e.g. Single Stage-Two Envelope."
+            },
+            "sector": {
+                "title": "Sector",
+                "description": "TENDER_DETAIL only."
+            },
+            "tenderNature": {
+                "title": "Tender nature",
+                "description": "TENDER_DETAIL only -- Local or International."
+            },
+            "advertisementDate": {
+                "title": "Advertisement date",
+                "description": "TENDER_DETAIL only."
+            },
+            "closingDateAndTime": {
+                "title": "Closing date & time",
+                "description": "TENDER_DETAIL only -- combined text, e.g. 'September 14, 2026 at 11:00 AM'."
+            },
+            "openingTime": {
+                "title": "Opening time",
+                "description": "TENDER_DETAIL only -- present only when set."
+            },
+            "bidSecurity": {
+                "title": "Bid security",
+                "description": "TENDER_DETAIL only -- amount in PKR, present only when set."
+            },
+            "bidValidity": {
+                "title": "Bid validity",
+                "description": "TENDER_DETAIL only -- e.g. '90 days'."
+            },
+            "method": {
+                "title": "Method",
+                "description": "TENDER_DETAIL only -- e.g. Competitive Bidding."
+            },
+            "workflowType": {
+                "title": "Workflow type",
+                "description": "TENDER_DETAIL only -- e.g. Standard Evaluation Process."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across both record types -- rows missing a given column render blank.",
+            "transformation": {
+                "fields": [
+                    "recordType",
+                    "tenderNo",
+                    "title",
+                    "organizationName",
+                    "officeName",
+                    "status",
+                    "advertisedDate",
+                    "closingDate",
+                    "closingTime",
+                    "_error",
+                    "_scrapedAt"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

@@ -1,0 +1,132 @@
+{
+    "title": "Medium Engagement Scraper input",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "mode": {
+            "title": "Mode",
+            "type": "string",
+            "description": "tag = articles for a topic, with clap counts (about 35 per tag). author = an author's recent articles, with clap counts (about 10). publication = a publication's latest articles including the article text, but without clap counts - that is all the source exposes for publications. post = one article with its full text. reference = check the source is live and report what each surface returns.",
+            "editor": "select",
+            "default": "tag",
+            "enum": [
+                "tag",
+                "author",
+                "publication",
+                "post",
+                "reference"
+            ],
+            "enumTitles": [
+                "tag - articles for a topic, with claps",
+                "author - an author's articles, with claps",
+                "publication - a publication's latest, with text",
+                "post - one article, full text",
+                "reference - is the source live, what does it return"
+            ]
+        },
+        "tag": {
+            "title": "Tag (tag mode)",
+            "type": "string",
+            "description": "A Medium topic. A name, a slug or a /tag/ URL all work, e.g. 'artificial-intelligence', 'Machine Learning'.",
+            "editor": "textfield",
+            "prefill": "artificial-intelligence"
+        },
+        "tags": {
+            "title": "Tags (tag mode)",
+            "type": "array",
+            "description": "Several topics in one run. One request each, about 35 articles per topic.",
+            "editor": "stringList",
+            "prefill": [
+                "artificial-intelligence",
+                "programming"
+            ]
+        },
+        "tagSection": {
+            "title": "Which part of the tag page",
+            "type": "string",
+            "description": "top = the main tag page, the largest set (about 35 articles). archive = the newest (about 20). recommended = the source's own picks (about 10).",
+            "editor": "select",
+            "default": "top",
+            "enum": [
+                "top",
+                "archive",
+                "recommended"
+            ],
+            "enumTitles": [
+                "top - main tag page, ~35 articles",
+                "archive - newest, ~20 articles",
+                "recommended - editor's picks, ~10 articles"
+            ]
+        },
+        "author": {
+            "title": "Author (author mode)",
+            "type": "string",
+            "description": "A Medium handle or profile URL, e.g. '@medium'.",
+            "editor": "textfield",
+            "prefill": "@medium"
+        },
+        "authors": {
+            "title": "Authors (author mode)",
+            "type": "array",
+            "description": "Several authors in one run, about 10 articles each.",
+            "editor": "stringList"
+        },
+        "publication": {
+            "title": "Publication (publication mode)",
+            "type": "string",
+            "description": "A publication slug or URL, e.g. 'better-programming'.",
+            "editor": "textfield",
+            "prefill": "better-programming"
+        },
+        "publications": {
+            "title": "Publications (publication mode)",
+            "type": "array",
+            "description": "Several publications in one run, 10 articles each.",
+            "editor": "stringList"
+        },
+        "postUrl": {
+            "title": "Article URL (post mode)",
+            "type": "string",
+            "description": "A full Medium article URL.",
+            "editor": "textfield"
+        },
+        "postUrls": {
+            "title": "Article URLs (post mode)",
+            "type": "array",
+            "description": "Several articles in one run. One request each.",
+            "editor": "stringList"
+        },
+        "maxItems": {
+            "title": "Max items",
+            "type": "integer",
+            "description": "Maximum records per run. A tag yields about 35 articles, an author or a publication about 10.",
+            "editor": "number",
+            "default": 200,
+            "minimum": 1
+        },
+        "maxConcurrency": {
+            "title": "Max concurrency",
+            "type": "integer",
+            "description": "How many pages to fetch in parallel.",
+            "editor": "number",
+            "default": 3,
+            "minimum": 1,
+            "maximum": 8
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "description": "Residential proxy is on by default. The source sits behind a protection layer that answers ordinary connections but tends to challenge datacenter addresses, so leave this on for scheduled runs.",
+            "editor": "proxy",
+            "default": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": [
+                    "RESIDENTIAL"
+                ]
+            }
+        }
+    },
+    "required": [
+        "mode"
+    ]
+}

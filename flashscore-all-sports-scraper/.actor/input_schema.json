@@ -1,0 +1,100 @@
+{
+    "title": "Flashscore Scraper input",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "mode": {
+            "title": "Mode",
+            "type": "string",
+            "description": "fixtures = every match of a day for the chosen sports (past, today or upcoming). live = in-play matches only. match = full detail for specific match IDs. reference = which sports are carrying data right now, probed live.",
+            "editor": "select",
+            "default": "fixtures",
+            "enum": ["fixtures", "live", "match", "reference"],
+            "enumTitles": [
+                "fixtures - matches by sport and day",
+                "live - in-play matches only",
+                "match - full detail for match IDs",
+                "reference - available sports (probed live)"
+            ]
+        },
+        "sportIds": {
+            "title": "Sports",
+            "type": "array",
+            "description": "Sport IDs to scrape. 1 Football, 2 Tennis, 3 Basketball, 4 Ice Hockey, 5 American Football, 6 Baseball, 7 Handball, 10 Bandy, 11 Futsal, 12 Volleyball, 13 Cricket, 14 Darts, 15 Snooker, 21 Badminton. Run 'reference' mode to see what is live today. In 'match' mode this only labels the output - the detail feed ignores it.",
+            "editor": "stringList",
+            "default": ["1"],
+            "prefill": ["1"]
+        },
+        "dayOffsets": {
+            "title": "Days (fixtures mode)",
+            "type": "array",
+            "description": "Which days to pull, relative to today: 0 = today, -1 = yesterday, 1 = tomorrow. Upstream serves roughly -7 to +7. Each sport/day combination gets an equal share of 'Max items'.",
+            "editor": "stringList",
+            "default": ["0"],
+            "prefill": ["0"]
+        },
+        "matchId": {
+            "title": "Match ID or URL (match mode)",
+            "type": "string",
+            "description": "A single Flashscore match ID (8 characters, e.g. WSSid6OM) or a full match URL. Match IDs come from the matchId field of fixtures/live runs.",
+            "editor": "textfield"
+        },
+        "matchIds": {
+            "title": "Match IDs or URLs (match mode)",
+            "type": "array",
+            "description": "Multiple match IDs or URLs to fetch in one run.",
+            "editor": "stringList"
+        },
+        "includeSummary": {
+            "title": "Include incidents (match mode)",
+            "type": "boolean",
+            "description": "Goals, cards and substitutions with minute, player and side.",
+            "default": true
+        },
+        "includeStatistics": {
+            "title": "Include statistics (match mode)",
+            "type": "boolean",
+            "description": "Per-period statistics. For football this includes expected goals (xG), ball possession, shots, big chances and corners; other sports return their own stat set (e.g. aces and double faults for tennis).",
+            "default": true
+        },
+        "includeLineups": {
+            "title": "Include lineups (match mode)",
+            "type": "boolean",
+            "description": "Formation, starting XI, bench and player ratings when the match published them. Not every match has lineups - the feed then returns nothing and the field is omitted.",
+            "default": false
+        },
+        "includeHeadToHead": {
+            "title": "Include head-to-head (match mode)",
+            "type": "boolean",
+            "description": "Previous meetings plus recent form for both teams.",
+            "default": false
+        },
+        "maxItems": {
+            "title": "Max items",
+            "type": "integer",
+            "description": "Maximum match records per run (fixtures and live modes). Split evenly across the requested sport/day combinations.",
+            "editor": "number",
+            "default": 200,
+            "minimum": 1
+        },
+        "maxConcurrency": {
+            "title": "Max concurrency (match mode)",
+            "type": "integer",
+            "description": "How many match IDs to fetch in parallel.",
+            "editor": "number",
+            "default": 4,
+            "minimum": 1,
+            "maximum": 10
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "description": "Optional. The feed host served every recon request without a proxy; use one only if your region or IP is rate-limited.",
+            "editor": "proxy",
+            "default": {
+                "useApifyProxy": false
+            }
+        }
+    },
+    "required": ["mode"]
+}

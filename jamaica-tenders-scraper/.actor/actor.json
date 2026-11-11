@@ -1,0 +1,14 @@
+{
+    "actorSpecification": 1,
+    "name": "jamaica-tenders-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Jamaica Government Tenders Scraper (GOJEP)",
+    "description": "Pull government call-for-tenders and contract-award notices from GOJEP, Jamaica's official e-procurement portal: reference number, title, procuring entity, procedure, deadline, status, award date, and PDF links. No account or API key needed.",
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

@@ -1,0 +1,84 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Business name search result",
+        "description": "One record per matching business name for a query (or a single _error/no_results record when a query has no matches or fails validation/transport). Raw passthrough from ORC's public Name Search tool -- name and entity type only; the registry does not expose registration numbers, status, address, or directors through this public search.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The exact query string that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which extraction strategy emitted this record (S1-name-search, or 'none' on error)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed/empty queries (no_results, invalid_query, blocked_or_transient)."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error (for invalid_query, this is ORC's own validation message)."
+            },
+            "searchType": {
+                "title": "Search type",
+                "description": "eq (exact) / sw (starts with) / ew (ends with) / cn (contains) -- as sent for this query."
+            },
+            "_totalAvailable": {
+                "title": "Total available matches",
+                "description": "Total matching business names ORC reported for this query, before any maxResultsPerQuery truncation."
+            },
+            "_truncated": {
+                "title": "Truncated",
+                "description": "True if _totalAvailable exceeded maxResultsPerQuery and not every match was pushed to the dataset."
+            },
+            "businessName": {
+                "title": "Business name",
+                "description": "A registered business name matching the query, exactly as returned by the registry."
+            },
+            "businessType": {
+                "title": "Business type",
+                "description": "Human-readable entity type label from the registry (e.g. \"Sole Proprietor\", \"Company Limited by Shares\", \"Company Limited by Guarantee\", \"Partnership\", \"External Company\", \"Subsidiary Business Name\")."
+            },
+            "businessTypeCode": {
+                "title": "Business type code",
+                "description": "The registry's internal short code for businessType (e.g. BN, CS, CG, PN, ET, SN)."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns for each search result.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "searchType",
+                    "businessName",
+                    "businessType",
+                    "businessTypeCode",
+                    "_totalAvailable",
+                    "_truncated",
+                    "_error",
+                    "_scrapedAt"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

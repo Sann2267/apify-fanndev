@@ -1,0 +1,207 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Instagram merchant profile record",
+        "description": "One row per public Instagram account: business profile, follower and engagement metrics, business contact details, and the bio links that are a merchant's actual storefront. NOTE: this actor does not return Instagram Shop products - that surface no longer exists publicly (see the actor README). `_source` records which strategy produced the row, because the richer fields (business contact/address, posts) come only from the JSON API. Every type is nullable accordingly.",
+        "properties": {
+            "_input": {
+                "type": ["string", "null"],
+                "title": "Input",
+                "description": "The username this record belongs to."
+            },
+            "_source": {
+                "type": ["string", "null"],
+                "title": "Source strategy",
+                "description": "S1-web-profile-info (richest: business contact + posts), S2-profile-html (page-embedded JSON: no business contact, no posts), S3-og-meta (degraded: rounded counts only), or none on failure."
+            },
+            "_scrapedAt": {
+                "type": ["string", "null"],
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this profile was scraped."
+            },
+            "_warning": {
+                "type": ["string", "null"],
+                "title": "Warning",
+                "description": "Non-fatal degradation marker. 'counts_are_rounded_og_values' means follower/post counts came from Instagram's og tags and are rounded (e.g. 680K), not exact."
+            },
+            "_error": {
+                "type": ["string", "null"],
+                "title": "Error",
+                "description": "Present only on failure rows (INVALID_INPUT, NOT_FOUND, BLOCKED_AFTER_RETRIES, UPSTREAM_SHAPE_CHANGED, EMPTY_RESULT)."
+            },
+            "_errorDetail": {
+                "type": ["string", "null"],
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "username": {
+                "type": ["string", "null"],
+                "title": "Username",
+                "description": "Instagram handle."
+            },
+            "userId": {
+                "type": ["string", "null"],
+                "title": "User ID",
+                "description": "Instagram's numeric account ID as a string."
+            },
+            "fullName": {
+                "type": ["string", "null"],
+                "title": "Display name",
+                "description": "Account display name."
+            },
+            "biography": {
+                "type": ["string", "null"],
+                "title": "Bio",
+                "description": "Profile bio text. For merchants this often carries store locations and ordering instructions."
+            },
+            "isVerified": {
+                "type": ["boolean", "null"],
+                "title": "Verified",
+                "description": "Whether the account carries a verification badge."
+            },
+            "isPrivate": {
+                "type": ["boolean", "null"],
+                "title": "Private",
+                "description": "Private accounts expose no posts."
+            },
+            "isBusinessAccount": {
+                "type": ["boolean", "null"],
+                "title": "Business account",
+                "description": "Whether Instagram flags this as a business account. API strategy only."
+            },
+            "isProfessionalAccount": {
+                "type": ["boolean", "null"],
+                "title": "Professional account",
+                "description": "Business or creator account. API strategy only."
+            },
+            "categoryName": {
+                "type": ["string", "null"],
+                "title": "Category",
+                "description": "Self-declared business category. API strategy only, and frequently null."
+            },
+            "followers": {
+                "type": ["number", "null"],
+                "title": "Followers",
+                "description": "Follower count. Exact from the API/HTML strategies; rounded when _warning says so."
+            },
+            "following": {
+                "type": ["number", "null"],
+                "title": "Following",
+                "description": "Accounts this profile follows."
+            },
+            "postCount": {
+                "type": ["number", "null"],
+                "title": "Post count",
+                "description": "Total posts on the account."
+            },
+            "profilePicUrl": {
+                "type": ["string", "null"],
+                "title": "Profile picture",
+                "description": "Profile image URL. Instagram CDN links are signed and expire."
+            },
+            "profileUrl": {
+                "type": ["string", "null"],
+                "title": "Profile URL",
+                "description": "Canonical instagram.com profile URL."
+            },
+            "businessEmail": {
+                "type": ["string", "null"],
+                "title": "Business email",
+                "description": "Public business email where the account publishes one. API strategy only."
+            },
+            "businessPhone": {
+                "type": ["string", "null"],
+                "title": "Business phone",
+                "description": "Public business phone number. API strategy only."
+            },
+            "businessContactMethod": {
+                "type": ["string", "null"],
+                "title": "Contact method",
+                "description": "How the account prefers to be contacted, e.g. CALL, EMAIL, TEXT. API strategy only."
+            },
+            "businessCity": {
+                "type": ["string", "null"],
+                "title": "Business city",
+                "description": "City from the account's business address. API strategy only."
+            },
+            "businessStreet": {
+                "type": ["string", "null"],
+                "title": "Business street",
+                "description": "Street address where published. API strategy only."
+            },
+            "businessZip": {
+                "type": ["string", "null"],
+                "title": "Business postcode",
+                "description": "Postcode where published. API strategy only."
+            },
+            "businessLatitude": {
+                "type": ["number", "null"],
+                "title": "Latitude",
+                "description": "Latitude of the business address. API strategy only."
+            },
+            "businessLongitude": {
+                "type": ["number", "null"],
+                "title": "Longitude",
+                "description": "Longitude of the business address. API strategy only."
+            },
+            "bioLinks": {
+                "type": ["array", "null"],
+                "title": "Bio links",
+                "description": "The links in the profile bio, each with url, title, linkType and a platform label. For a merchant this is the actual storefront - Instagram's l.instagram.com redirect wrapper is unwrapped to the real destination."
+            },
+            "bioLinkCount": {
+                "type": ["number", "null"],
+                "title": "Bio link count",
+                "description": "How many distinct bio links the profile publishes."
+            },
+            "primaryShopLink": {
+                "type": ["string", "null"],
+                "title": "Primary shop link",
+                "description": "The first bio link - in practice the merchant's main storefront or link aggregator."
+            },
+            "linkPlatforms": {
+                "type": ["array", "null"],
+                "title": "Link platforms",
+                "description": "Platform labels found across the bio links: SHOPEE, TOKOPEDIA, BLIBLI, LAZADA, TIKTOK, WHATSAPP, LINK_AGGREGATOR, SHOPIFY, OTHER, and so on."
+            },
+            "marketplaces": {
+                "type": ["array", "null"],
+                "title": "Marketplaces",
+                "description": "Just the marketplace platforms the merchant links to - where they actually sell."
+            },
+            "sellsOnMarketplace": {
+                "type": ["boolean", "null"],
+                "title": "Sells on a marketplace",
+                "description": "True when at least one bio link points to a marketplace rather than only a website or aggregator."
+            },
+            "hasWhatsApp": {
+                "type": ["boolean", "null"],
+                "title": "Has WhatsApp",
+                "description": "True when a bio link is a WhatsApp contact - the dominant order channel for many SEA merchants."
+            },
+            "postsPerFollower": {
+                "type": ["number", "null"],
+                "title": "Posts per follower",
+                "description": "Post count divided by followers - a crude posting-intensity measure."
+            },
+            "avgEngagementPerPost": {
+                "type": ["number", "null"],
+                "title": "Avg engagement per post",
+                "description": "Mean likes + comments across the fetched recent posts. Null when posts were not fetched."
+            },
+            "engagementRatePercent": {
+                "type": ["number", "null"],
+                "title": "Engagement rate %",
+                "description": "Average engagement per post as a percentage of followers, computed over the fetched posts only - a sample, not a lifetime average."
+            },
+            "recentPosts": {
+                "type": ["array", "null"],
+                "title": "Recent posts",
+                "description": "Recent posts with shortcode, url, caption, likes, comments, mediaUrl, videoUrl, mediaType and takenAt. Note `mediaType` is Instagram's media kind (feed/clips/igtv), not a shopping product type. Empty unless the API strategy succeeded and posts were requested."
+            }
+        }
+    }
+}

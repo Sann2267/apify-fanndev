@@ -1,0 +1,227 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Doctor record",
+        "description": "One record per doctor. Every record carries _input/_source/_scrapedAt (and _error/_errorDetail on failures). recordType discriminates: DOCTOR_CARD (specialty listing row), DOCTOR_PROFILE (full doctor page), SPECIALTY and CITY (reference mode).",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The listing scope or doctor URL that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "S1-jsonld, or none on failure."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp."
+            },
+            "recordType": {
+                "title": "Record type",
+                "description": "DOCTOR_CARD | DOCTOR_PROFILE | SPECIALTY | CITY."
+            },
+            "name": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Name",
+                "description": "Doctor's name with title as published, e.g. \"dr. Rifan Fauzie, Sp.A (K)\"."
+            },
+            "slug": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Slug",
+                "description": "Doctor slug, or the specialty / city slug in reference mode."
+            },
+            "profileUrl": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Profile URL",
+                "description": "Public doctor page."
+            },
+            "specialty": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Specialty",
+                "description": "Specialty as published (listing rows give the Indonesian sub-specialty, profiles give the schema.org term)."
+            },
+            "specialtyLabel": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Specialty label",
+                "description": "Profile records -- the Indonesian sub-specialty label."
+            },
+            "hospital": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Hospital",
+                "description": "Primary hospital / clinic."
+            },
+            "hospitalAddress": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Hospital address",
+                "description": "Address of the primary hospital."
+            },
+            "hospitals": {
+                "title": "All hospitals",
+                "description": "Every hospital the doctor practises at, with address (profiles often list several)."
+            },
+            "offers": {
+                "title": "Offers",
+                "description": "Consultation offers with price and currency, when the page lists more than one."
+            },
+            "addresses": {
+                "title": "Practice addresses",
+                "description": "Full postal addresses with locality and region."
+            },
+            "consultationPrice": {
+                "type": [
+                    "integer",
+                    "null"
+                ],
+                "title": "Consultation price",
+                "description": "Consultation fee as a plain number."
+            },
+            "priceCurrency": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Currency",
+                "description": "Currency of the consultation fee, e.g. IDR."
+            },
+            "rating": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Rating",
+                "description": "Patient satisfaction, published as a percentage string, e.g. \"98%\"."
+            },
+            "reviewCount": {
+                "type": [
+                    "integer",
+                    "null"
+                ],
+                "title": "Review count",
+                "description": "Number of patient reviews."
+            },
+            "nextSchedule": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Next schedule",
+                "description": "Next availability as published, e.g. \"Tersedia Hari Ini\" or \"Jadwal Berikutnya : Besok, 16.00 Siang\"."
+            },
+            "imageUrl": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Photo URL",
+                "description": "Doctor photo."
+            },
+            "description": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Description",
+                "description": "Profile summary line."
+            },
+            "listName": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "List name",
+                "description": "Listing rows -- the specialty list the row came from."
+            },
+            "listingUrl": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Listing URL",
+                "description": "Reference records -- the listing page for that specialty / city."
+            },
+            "doctorsOnFirstPage": {
+                "type": [
+                    "integer",
+                    "null"
+                ],
+                "title": "Doctors on first page",
+                "description": "Reference records -- how many doctors the specialty's first page returned when verified."
+            },
+            "_listingScope": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Listing scope",
+                "description": "Listing rows -- which specialty/city produced the row."
+            },
+            "_error": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Error",
+                "description": "Present only on failures (not_found, not_a_profile, blocked_or_transient)."
+            },
+            "_errorDetail": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across listing and profile records.",
+            "transformation": {
+                "fields": [
+                    "recordType",
+                    "name",
+                    "specialty",
+                    "hospital",
+                    "consultationPrice",
+                    "rating",
+                    "reviewCount",
+                    "nextSchedule",
+                    "profileUrl",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

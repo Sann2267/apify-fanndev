@@ -1,0 +1,239 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Facebook video record",
+        "description": "Dataset envelope (_input / _source / _scrapedAt / recordType) on top of one video per row. One VIDEO row per reel or video, one RUN_SUMMARY per run, ERROR rows when a tab or video cannot be read. Facebook changes its payload without notice, so unlisted fields pass through rather than failing the run.",
+        "additionalProperties": true,
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The page tab or video id this record came from."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source",
+                "description": "Always reels-and-videos."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was emitted."
+            },
+            "recordType": {
+                "type": "string",
+                "title": "Record type",
+                "description": "VIDEO, RUN_SUMMARY or ERROR."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Failure rows only: tab_unavailable, video_unavailable or unexpected_error."
+            },
+            "videoId": {
+                "title": "Video ID",
+                "description": "Facebook's numeric id for the video or reel."
+            },
+            "permalinkUrl": {
+                "title": "Permalink",
+                "description": "Canonical URL of the reel or video."
+            },
+            "isReel": {
+                "title": "Is a reel",
+                "description": "True when the permalink is a /reel/ URL."
+            },
+            "pageName": {
+                "title": "Page",
+                "description": "The page that published it."
+            },
+            "pageId": {
+                "title": "Page ID",
+                "description": "Numeric id of the publishing page."
+            },
+            "title": {
+                "title": "Video title",
+                "description": "The video's own title, where one was set."
+            },
+            "caption": {
+                "title": "Post caption",
+                "description": "The text the page published with the video."
+            },
+            "createdAtIso": {
+                "title": "Published at",
+                "description": "ISO 8601 UTC timestamp."
+            },
+            "playCount": {
+                "title": "Plays",
+                "description": "Play count. Exact on the videos tab; on the reels tab Facebook only publishes an abbreviation ('292K'), which is parsed to 292000 - read it together with playCountLabel."
+            },
+            "playCountLabel": {
+                "title": "Plays (as shown)",
+                "description": "Exactly what Facebook rendered, so an approximation is never mistaken for an exact figure."
+            },
+            "reactionCount": {
+                "title": "Reactions",
+                "description": "Reactions on the video's post."
+            },
+            "commentCount": {
+                "title": "Comments",
+                "description": "Comment count on the video's post."
+            },
+            "shareCount": {
+                "title": "Shares",
+                "description": "Share count, where Facebook reports one."
+            },
+            "engagementTotal": {
+                "title": "Engagement",
+                "description": "Reactions + comments + shares, over whichever of those Facebook published."
+            },
+            "engagementRatePercent": {
+                "title": "Engagement rate (%)",
+                "description": "engagementTotal as a percentage of plays. Null when the play count is unknown or zero - never computed against a placeholder."
+            },
+            "lengthSeconds": {
+                "title": "Duration (s)",
+                "description": "Video length in seconds."
+            },
+            "width": {
+                "title": "Width",
+                "description": "Pixel width of the playback video."
+            },
+            "height": {
+                "title": "Height",
+                "description": "Pixel height of the playback video."
+            },
+            "trackTitle": {
+                "title": "Audio track",
+                "description": "Name of the music track, where the reel uses one."
+            },
+            "isOriginalAudio": {
+                "title": "Original audio",
+                "description": "Whether the reel's audio is the creator's own."
+            },
+            "videoHdUrl": {
+                "title": "Video URL (HD)",
+                "description": "Direct MP4. A signed CDN link that expires - download during or shortly after the run."
+            },
+            "videoSdUrl": {
+                "title": "Video URL (SD)",
+                "description": "Direct MP4, lower quality."
+            },
+            "thumbnailUrl": {
+                "title": "Thumbnail",
+                "description": "First-frame image."
+            },
+            "hasCaptions": {
+                "title": "Has captions",
+                "description": "Whether Facebook published a caption file for this video."
+            },
+            "captionsUrl": {
+                "title": "Captions URL",
+                "description": "Signed link to the .srt caption file."
+            },
+            "captionLocales": {
+                "title": "Caption languages",
+                "description": "Other caption tracks, with how each was created (e.g. automatic translation)."
+            },
+            "transcript": {
+                "title": "Transcript",
+                "description": "The spoken words, parsed from Facebook's caption file. Null when the video has no captions - this actor does not run speech recognition of its own."
+            },
+            "transcriptSource": {
+                "title": "Transcript source",
+                "description": "Where the transcript came from, e.g. facebook-captions or the locale's creation method."
+            },
+            "sourceTab": {
+                "title": "Source tab",
+                "description": "reels, videos, or direct when the video was passed by URL."
+            }
+        }
+    },
+    "views": {
+        "overview": {
+            "title": "Videos",
+            "description": "One row per video: what it is, how it performed.",
+            "transformation": {
+                "fields": [
+                    "pageName",
+                    "caption",
+                    "isReel",
+                    "playCount",
+                    "playCountLabel",
+                    "reactionCount",
+                    "commentCount",
+                    "engagementRatePercent",
+                    "lengthSeconds",
+                    "createdAtIso",
+                    "permalinkUrl",
+                    "recordType",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        },
+        "performance": {
+            "title": "Performance",
+            "description": "Sort by plays or engagement rate to find what worked.",
+            "transformation": {
+                "fields": [
+                    "pageName",
+                    "playCount",
+                    "engagementTotal",
+                    "engagementRatePercent",
+                    "reactionCount",
+                    "commentCount",
+                    "shareCount",
+                    "lengthSeconds",
+                    "isReel",
+                    "createdAtIso",
+                    "permalinkUrl"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        },
+        "transcripts": {
+            "title": "Transcripts",
+            "description": "The spoken text of every captioned video.",
+            "transformation": {
+                "fields": [
+                    "pageName",
+                    "caption",
+                    "transcript",
+                    "transcriptSource",
+                    "lengthSeconds",
+                    "playCount",
+                    "permalinkUrl"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        },
+        "media": {
+            "title": "Media files",
+            "description": "Direct download links.",
+            "transformation": {
+                "fields": [
+                    "videoId",
+                    "pageName",
+                    "videoHdUrl",
+                    "videoSdUrl",
+                    "thumbnailUrl",
+                    "captionsUrl",
+                    "width",
+                    "height",
+                    "lengthSeconds"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

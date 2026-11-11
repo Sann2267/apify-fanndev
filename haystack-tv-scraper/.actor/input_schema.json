@@ -1,0 +1,102 @@
+{
+    "title": "Haystack News Scraper",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "mode": {
+            "title": "Mode",
+            "type": "string",
+            "editor": "select",
+            "description": "What to scrape. Each mode reads ONE of the input lists below. TARGET modes: videos (reads \"Feed targets\"), video-detail (reads \"Video URLs\"). QUERY modes: search, discover (both read \"Search queries\"). CATALOGUE modes need no input at all: channels, taxonomy, polls. LOCATION mode: local-events (reads \"Locations\").",
+            "enum": [
+                "videos",
+                "video-detail",
+                "search",
+                "discover",
+                "channels",
+                "taxonomy",
+                "polls",
+                "local-events"
+            ],
+            "enumTitles": [
+                "Videos -- headlines from a category, channel, topic or city",
+                "Video detail -- full metadata incl. AI tags and view analytics",
+                "Search -- find videos by keyword",
+                "Discover -- find channels, cities and topics by keyword",
+                "Channels -- the full channel directory (no input needed)",
+                "Taxonomy -- categories, live channels and cities (no input needed)",
+                "Polls -- every news poll with live vote counts (no input needed)",
+                "Local events -- what is happening in a city"
+            ],
+            "default": "videos",
+            "prefill": "videos"
+        },
+        "targets": {
+            "title": "Feed targets",
+            "type": "array",
+            "editor": "stringList",
+            "description": "Used by the VIDEOS mode. A full haystack.tv URL or a bare identifier, mixed freely: a category (news, sports, live, weather, business), a channel (channel/abc7), a topic (tag/trump), or a city (location/houston-tx). A bare word with no prefix is read as a category.",
+            "prefill": ["news", "channel/abc7", "tag/trump", "location/houston-tx"]
+        },
+        "videoUrls": {
+            "title": "Video URLs",
+            "type": "array",
+            "editor": "stringList",
+            "description": "Used by the VIDEO-DETAIL mode. A video page URL (https://www.haystack.tv/v/<slug>), a short id URL (https://www.haystack.tv/id/<id>), or the bare slug or id.",
+            "prefill": []
+        },
+        "queries": {
+            "title": "Search queries",
+            "type": "array",
+            "editor": "stringList",
+            "description": "Used by the SEARCH mode (finds videos) and the DISCOVER mode (finds channels, cities and topics). One keyword or phrase per line.",
+            "prefill": []
+        },
+        "locations": {
+            "title": "Locations",
+            "type": "array",
+            "editor": "stringList",
+            "description": "Used by the LOCAL-EVENTS mode. A city slug (houston-tx, new-york-city-ny, san-francisco-ca) or a full https://www.haystack.tv/location/<slug> URL.",
+            "prefill": []
+        },
+        "maxItemsPerTarget": {
+            "title": "Max videos per target",
+            "type": "integer",
+            "description": "Caps how many videos are pushed per feed target or search query. Haystack serves a fixed snapshot of roughly 15-30 videos per feed and offers no deeper pagination, so raising this above ~30 has no effect -- scrape more targets instead.",
+            "default": 50,
+            "minimum": 1,
+            "maximum": 200,
+            "unit": "videos"
+        },
+        "includeTagGroups": {
+            "title": "Include trending topics",
+            "type": "boolean",
+            "description": "VIDEOS mode only. Also emit one TAG_GROUP row per trending topic attached to each feed, with how many videos currently carry that topic.",
+            "default": false
+        },
+        "deepLocalEvents": {
+            "title": "Deep local-events harvest",
+            "type": "boolean",
+            "description": "LOCAL-EVENTS mode only. Haystack caps anonymous visitors at 10 events per query. Deep mode issues 18 differently-filtered queries per city and de-duplicates, which raises a typical city from 10 to roughly 60-70 events at 18x the request cost. Turn off for a fast 10-event sample.",
+            "default": true
+        },
+        "maxConcurrency": {
+            "title": "Max concurrent requests",
+            "type": "integer",
+            "description": "How many targets to process in parallel. Haystack has no anti-bot layer, but keep this modest to stay a polite client.",
+            "default": 4,
+            "minimum": 1,
+            "maximum": 16
+        },
+        "proxyConfiguration": {
+            "title": "Proxy",
+            "type": "object",
+            "editor": "proxy",
+            "description": "Optional. haystack.tv has no anti-bot protection and the actor runs fine with no proxy at all. Use a US residential or datacenter proxy if you want the personalised My Headlines feed (the bare / target) to be geo-located to the US.",
+            "default": {
+                "useApifyProxy": false
+            }
+        }
+    },
+    "required": ["mode"]
+}

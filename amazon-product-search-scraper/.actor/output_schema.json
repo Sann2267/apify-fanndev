@@ -1,0 +1,166 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Amazon search result record",
+        "description": "Two record shapes, discriminated by `recordType`. PRODUCT is one product from a search results page. CAPTCHA_ESCALATION marks a search term that was blocked, CAPTCHA'd, or supplied as a URL Amazon will not serve as a SERP, so a short run is never mistaken for a small market. Amazon's SERP carries no brand element, and Prime/delivery depend on the exit country, so those fields are nullable by nature — as is every other field.",
+        "properties": {
+            "_input": {
+                "type": ["string", "null"],
+                "title": "Input",
+                "description": "The search term or URL keyword this row came from."
+            },
+            "_source": {
+                "type": ["string", "null"],
+                "title": "Source strategy",
+                "description": "S1-search-page for a product, S0-diagnostic for a failure row."
+            },
+            "_scrapedAt": {
+                "type": ["string", "null"],
+                "title": "Scraped at",
+                "description": "UTC ISO-8601 timestamp of the fetch."
+            },
+            "recordType": {
+                "type": ["string", "null"],
+                "title": "Record type",
+                "description": "PRODUCT or CAPTCHA_ESCALATION."
+            },
+            "searchTerm": {
+                "type": ["string", "null"],
+                "title": "Search term",
+                "description": "Keyword this result was found under."
+            },
+            "targetUrl": {
+                "type": ["string", "null"],
+                "title": "Target URL",
+                "description": "The search URL that was scraped."
+            },
+            "marketplace": {
+                "type": ["string", "null"],
+                "title": "Marketplace",
+                "description": "Amazon domain suffix."
+            },
+            "page": {
+                "type": ["integer", "null"],
+                "title": "Page",
+                "description": "Results page this product appeared on."
+            },
+            "position": {
+                "type": ["integer", "null"],
+                "title": "Position",
+                "description": "Rank across all pages for this search term, 1-based."
+            },
+            "positionOnPage": {
+                "type": ["integer", "null"],
+                "title": "Position on page",
+                "description": "Rank within its own page, 1-based."
+            },
+            "asin": {
+                "type": ["string", "null"],
+                "title": "ASIN",
+                "description": "Amazon Standard Identification Number."
+            },
+            "title": {
+                "type": ["string", "null"],
+                "title": "Title",
+                "description": "Product title, with Amazon's 'Sponsored Ad - ' prefix stripped."
+            },
+            "brandGuess": {
+                "type": ["string", "null"],
+                "title": "Brand (derived)",
+                "description": "DERIVED from the leading words of the title, NOT scraped. Amazon's search results carry no brand element at all, so this is a heuristic and will be wrong for titles that open with a model or size. Do not treat it as authoritative."
+            },
+            "price": {
+                "type": ["number", "null"],
+                "title": "Price",
+                "description": "Current price. Null when the result showed no price, e.g. 'See options' multi-variant tiles."
+            },
+            "currency": {
+                "type": ["string", "null"],
+                "title": "Currency",
+                "description": "Currency symbol as displayed, pinned to the marketplace rather than the proxy country."
+            },
+            "listPrice": {
+                "type": ["number", "null"],
+                "title": "List price",
+                "description": "Struck-through 'was' or 'Typical' price, when shown."
+            },
+            "discountPercent": {
+                "type": ["number", "null"],
+                "title": "Discount percent",
+                "description": "Computed from list price versus price, only when the list price is genuinely higher."
+            },
+            "rating": {
+                "type": ["number", "null"],
+                "title": "Rating",
+                "description": "Average star rating out of 5."
+            },
+            "reviewCount": {
+                "type": ["integer", "null"],
+                "title": "Review count",
+                "description": "Exact number of ratings, taken from the aria-label. The visible text is abbreviated ('10.5K'); that abbreviation is only used as a fallback and is expanded to a number."
+            },
+            "boughtInPastMonth": {
+                "type": ["integer", "null"],
+                "title": "Bought in past month",
+                "description": "Units Amazon reports bought in the past month, expanded from '6K+' to 6000. A demand signal Amazon publishes on most results."
+            },
+            "isSponsored": {
+                "type": ["boolean", "null"],
+                "title": "Is sponsored",
+                "description": "True for paid placements."
+            },
+            "isBestSeller": {
+                "type": ["boolean", "null"],
+                "title": "Is best seller",
+                "description": "Carries Amazon's Best Seller badge."
+            },
+            "isAmazonsChoice": {
+                "type": ["boolean", "null"],
+                "title": "Is Amazon's Choice",
+                "description": "Carries the Amazon's Choice or Overall Pick badge."
+            },
+            "badges": {
+                "type": ["array", "null"],
+                "title": "Badges",
+                "description": "Raw badge labels found on the tile, e.g. Best Seller, Overall Pick."
+            },
+            "isPrime": {
+                "type": ["boolean", "null"],
+                "title": "Is Prime",
+                "description": "Prime eligibility. This depends on the delivery country Amazon infers from the exit IP — from a non-Prime country no result shows Prime at all, so use a residential proxy in the marketplace's country before trusting a false value."
+            },
+            "deliveryInfo": {
+                "type": ["string", "null"],
+                "title": "Delivery info",
+                "description": "Delivery line as shown, e.g. 'FREE delivery Mon, Sep 15'. Also geo-dependent."
+            },
+            "shipsTo": {
+                "type": ["string", "null"],
+                "title": "Ships to",
+                "description": "Destination country Amazon inferred from the request IP. If this is not the marketplace's own country, treat Prime and delivery as unreliable."
+            },
+            "imageUrl": {
+                "type": ["string", "null"],
+                "title": "Image URL",
+                "description": "Product thumbnail."
+            },
+            "productUrl": {
+                "type": ["string", "null"],
+                "title": "Product URL",
+                "description": "Canonical /dp/ URL."
+            },
+            "_error": {
+                "type": ["string", "null"],
+                "title": "Error",
+                "description": "BLOCKED, CAPTCHA or INVALID_TARGET on a diagnostic row, otherwise null."
+            },
+            "_errorDetail": {
+                "type": ["string", "null"],
+                "title": "Error detail",
+                "description": "Human-readable reason for the failure."
+            }
+        }
+    }
+}

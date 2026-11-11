@@ -1,0 +1,14 @@
+{
+    "actorSpecification": 1,
+    "name": "dailyft-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Daily FT Scraper",
+    "description": "Extract full article text or the newest headlines from Daily FT (ft.lk), Sri Lanka's leading business newspaper -- no account or API key needed.",
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

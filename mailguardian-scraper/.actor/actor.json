@@ -1,0 +1,14 @@
+{
+    "actorSpecification": 1,
+    "name": "mailguardian-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Mail & Guardian (South Africa) Scraper",
+    "description": "Extract full article text or the newest headlines from the Mail & Guardian (mg.co.za), a leading South African investigative newspaper -- no account or API key needed.",
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

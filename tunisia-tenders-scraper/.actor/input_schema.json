@@ -1,0 +1,76 @@
+{
+    "title": "Tunisia Government Tenders Scraper (TUNEPS)",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "mode": {
+            "title": "Mode",
+            "type": "string",
+            "editor": "select",
+            "description": "\"List\" browses TUNEPS's public tender listing (newest published, or open-only sorted by soonest deadline). \"Detail\" fetches one or more specific tenders by their internal TUNEPS bid id.",
+            "enum": ["list", "detail"],
+            "enumTitles": ["List (browse tenders)", "Detail (fetch specific bid ids)"],
+            "default": "list",
+            "prefill": "list"
+        },
+        "openOnly": {
+            "title": "Open only (mode=list only)",
+            "type": "boolean",
+            "description": "When true, only returns tenders whose submission deadline hasn't passed yet, sorted soonest-deadline-first. When false (default), returns all publicly-published tenders sorted most-recently-published-first.",
+            "default": false,
+            "prefill": false
+        },
+        "keyword": {
+            "title": "Keyword filter (mode=list only)",
+            "type": "string",
+            "editor": "textfield",
+            "description": "Optional case-insensitive substring filter on the tender's French title (accent-insensitive on TUNEPS's own server, e.g. \"hopital\" matches \"Hôpital\"). Leave blank to return all tenders.",
+            "prefill": ""
+        },
+        "maxResults": {
+            "title": "Max results (mode=list only)",
+            "type": "integer",
+            "description": "Caps how many tenders this run returns. The actor pages through TUNEPS's listing (up to 100 per request) until this cap is reached or no further tenders match.",
+            "default": 50,
+            "minimum": 1,
+            "maximum": 10000,
+            "prefill": 50
+        },
+        "bidId": {
+            "title": "Bid id (mode=detail only)",
+            "type": "string",
+            "editor": "textfield",
+            "description": "A single tender's internal TUNEPS id (the 'epBidMasterId' field from a 'list' mode run), e.g. 134251.",
+            "prefill": "134251"
+        },
+        "bidIds": {
+            "title": "Bid ids (mode=detail only)",
+            "type": "array",
+            "editor": "stringList",
+            "description": "Multiple bid ids to fetch full detail for in one run."
+        },
+        "maxConcurrency": {
+            "title": "Max concurrent workers (mode=detail only)",
+            "type": "integer",
+            "description": "How many bid id lookups to run in parallel.",
+            "default": 3,
+            "minimum": 1,
+            "maximum": 5,
+            "prefill": 3
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "editor": "proxy",
+            "description": "Apify Proxy configuration.",
+            "default": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            },
+            "prefill": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            }
+        }
+    }
+}

@@ -1,0 +1,111 @@
+{
+    "title": "Indonesia Government Tenders Scraper (SPSE Nasional / LKPP)",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "mode": {
+            "title": "Mode",
+            "type": "string",
+            "editor": "select",
+            "description": "\"List\" browses SPSE Nasional's public \"Cari Paket\" (search package) tender table for one fiscal year, optionally filtered by keyword. \"Detail\" fetches the full public announcement page for one or more specific tender codes.",
+            "enum": ["list", "detail"],
+            "enumTitles": ["List (browse recent tenders)", "Detail (fetch specific tender codes)"],
+            "default": "list",
+            "prefill": "list"
+        },
+        "tahunAnggaran": {
+            "title": "Fiscal year / Tahun Anggaran (mode=list only)",
+            "type": "integer",
+            "editor": "number",
+            "description": "Which budget year's tenders to browse -- SPSE Nasional's own year filter (observed range 2022-2028 at build time; multi-year construction contracts appear under every year they span). Defaults to the current year.",
+            "minimum": 2015,
+            "maximum": 2035
+        },
+        "kategoriId": {
+            "title": "Procurement category (mode=list only)",
+            "type": "string",
+            "editor": "select",
+            "description": "Optional filter by category of work. Leave as \"Semua\" (all) to browse every category.",
+            "enum": ["", "0", "2", "1", "5", "4", "6", "3", "7"],
+            "enumTitles": [
+                "Semua (all)",
+                "Pengadaan Barang (goods)",
+                "Pekerjaan Konstruksi (construction work)",
+                "Jasa Konsultansi Badan Usaha Non Konstruksi (non-construction consulting, firm)",
+                "Jasa Konsultansi Badan Usaha Konstruksi (construction consulting, firm)",
+                "Jasa Konsultansi Perorangan Non Konstruksi (non-construction consulting, individual)",
+                "Jasa Konsultansi Perorangan Konstruksi (construction consulting, individual)",
+                "Jasa Lainnya (other services)",
+                "Pekerjaan Konstruksi Terintegrasi (integrated/design-build construction)"
+            ],
+            "default": "",
+            "prefill": ""
+        },
+        "instansiId": {
+            "title": "Procuring agency ID (mode=list only)",
+            "type": "string",
+            "editor": "textfield",
+            "description": "Optional filter by a specific agency's internal SPSE ID, e.g. 'L4' (BKKBN) or 'L25' (Kementerian Keuangan). Find IDs from the site's own \"Nama K/L/PD/Instansi Lainnya\" dropdown at spse.inaproc.id/nasional/lelang, or from CRAWLING_METHOD.md. Leave blank to browse all agencies."
+        },
+        "rekanan": {
+            "title": "Winning contractor name (mode=list only)",
+            "type": "string",
+            "editor": "textfield",
+            "description": "Optional filter by the winning bidder/contractor's name (SPSE's own \"Nama Pemenang Berkontrak\" search) -- a genuine server-side full-text filter, unlike the tender-title search box (which the upstream site itself does not actually implement server-side -- see CRAWLING_METHOD.md). Leave blank to browse all tenders regardless of winner."
+        },
+        "maxResults": {
+            "title": "Max results (mode=list only)",
+            "type": "integer",
+            "description": "Caps how many tenders this run returns. The listing endpoint is paged internally in batches, so this actor makes as many requests as needed up to this cap or until no further tenders are available for the chosen year/keyword.",
+            "default": 25,
+            "minimum": 1,
+            "maximum": 5000,
+            "prefill": 25
+        },
+        "fetchDetail": {
+            "title": "Fetch full announcement detail for each list row (mode=list only)",
+            "type": "boolean",
+            "description": "When enabled, each list row is enriched with the same full announcement-page fields as mode=detail (procuring unit, budget ceiling, work location, qualification requirements, participant count, etc) -- one extra request per row, so runs take longer.",
+            "default": false,
+            "prefill": false
+        },
+        "kode": {
+            "title": "Tender code (mode=detail only)",
+            "type": "string",
+            "editor": "textfield",
+            "description": "A single tender's SPSE code, e.g. 10051479000. Find codes from a 'list' mode run's kode field.",
+            "prefill": "10051479000"
+        },
+        "kodes": {
+            "title": "Tender codes (mode=detail only)",
+            "type": "array",
+            "editor": "stringList",
+            "description": "Multiple tender codes to fetch full announcement detail for in one run."
+        },
+        "maxConcurrency": {
+            "title": "Max concurrent workers (mode=detail only)",
+            "type": "integer",
+            "description": "How many tender-code lookups to run in parallel.",
+            "default": 2,
+            "minimum": 1,
+            "maximum": 5,
+            "prefill": 2
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "editor": "proxy",
+            "description": "Apify Proxy configuration. Residential + Indonesia (ID) is strongly recommended: this site's Cloudflare configuration was confirmed to 403 non-Indonesian residential/datacenter exit IPs even with a clean browser TLS fingerprint, while Indonesian residential exits pass cleanly.",
+            "default": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"],
+                "apifyProxyCountry": "ID"
+            },
+            "prefill": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"],
+                "apifyProxyCountry": "ID"
+            }
+        }
+    }
+}

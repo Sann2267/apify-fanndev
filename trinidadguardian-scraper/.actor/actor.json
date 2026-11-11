@@ -1,0 +1,14 @@
+{
+    "actorSpecification": 1,
+    "name": "trinidadguardian-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Trinidad Guardian Scraper",
+    "description": "Extract full article text or the newest headlines from the Trinidad Guardian (guardian.co.tt), Trinidad and Tobago's major English-language newspaper -- no account or API key needed.",
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

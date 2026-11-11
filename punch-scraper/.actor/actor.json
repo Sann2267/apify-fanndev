@@ -1,0 +1,14 @@
+{
+    "actorSpecification": 1,
+    "name": "punch-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Punch Nigeria Scraper",
+    "description": "Extract full article text or the newest headlines from Punch (punchng.com), Nigeria's most-read newspaper -- no account or API key needed.",
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

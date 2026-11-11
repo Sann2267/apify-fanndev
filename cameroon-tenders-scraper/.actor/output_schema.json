@@ -1,0 +1,153 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "ARMP Cameroon publication record",
+        "description": "One record per row (mode=list) or per requested publication (mode=detail). A single _error record is emitted instead of payload fields when a page/publication fails or doesn't exist. mode=detail records have either a 'sections'/'sectionList' pair (structured shape, e.g. AO/DC/AMI notices) or a 'bodyText' field (free-form shape, e.g. DEC-ATTR/COMM/ADDITIF award decisions and communiques) -- never both, see CRAWLING_METHOD.md.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "For list records: 'list:<listType>'. For detail records: 'TYPE:ID' of the publication that was requested."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "S1-listing, S1-detail-structured, S1-detail-freeform, or 'none' on error."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed records (blocked_or_transient, not_found_or_restricted)."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "recordType": {
+                "type": "string",
+                "title": "Record type",
+                "description": "TENDER_LIST or TENDER_DETAIL."
+            },
+            "listType": {
+                "title": "List type",
+                "description": "mode=list only -- which listing this row came from (latest, national, international, quotation, proposal, expression_of_interest, restricted, agreement)."
+            },
+            "_page": {
+                "title": "Page",
+                "description": "Which page of the listing (10 rows/page) this row came from. mode=list only."
+            },
+            "_totalAvailable": {
+                "title": "Total available",
+                "description": "Exact total record count ARMP reports for this category (read live from its own sidebar badge), before any maxResults truncation. mode=list only; null for listType=latest, which has no single matching category badge."
+            },
+            "_lastPageSeen": {
+                "title": "Last page seen",
+                "description": "mode=list only. The highest page number visible in this response's own pagination nav -- a floor on total pages, not a firm total (Laravel's paginator only renders a window of nearby pages plus first/last)."
+            },
+            "typePublication": {
+                "title": "Publication type code",
+                "description": "ARMP's own internal document-type code, e.g. AO (tender notice), DC (request for quotation), AMI (expression of interest), DEC-ATTR (award decision), COMM (award communique), ADDITIF (addendum)."
+            },
+            "idPublication": {
+                "title": "Publication ID",
+                "description": "ARMP's own internal numeric publication ID."
+            },
+            "title": {
+                "title": "Title",
+                "description": "The publication's full title/header text as shown by ARMP."
+            },
+            "procuringEntity": {
+                "title": "Procuring entity",
+                "description": "The government body (Maitre d'Ouvrage/Autorite Contractante) running this procurement."
+            },
+            "type": {
+                "title": "Procurement category",
+                "description": "mode=list only -- e.g. 'Appels d'Offres National', 'Appels d'Offres International', 'Gre a Gre'."
+            },
+            "region": {
+                "title": "Region",
+                "description": "mode=list only -- Cameroonian region, or 'SERVICES CENTRAUX' for national-level bodies."
+            },
+            "amount": {
+                "title": "Amount",
+                "description": "mode=list only -- raw estimated/awarded amount text as shown by ARMP, usually in FCFA. Null when ARMP itself doesn't show one."
+            },
+            "publishedAt": {
+                "title": "Published at",
+                "description": "mode=list only -- raw publication timestamp text (ARMP's own format, dd-mm-yyyy HH:MM:SS)."
+            },
+            "closingDate": {
+                "title": "Closing date",
+                "description": "mode=list only -- bid submission closing date. Null when ARMP itself doesn't display one for this record (e.g. award decisions/communiques have no closing date)."
+            },
+            "closingTime": {
+                "title": "Closing time",
+                "description": "mode=list only -- companion to closingDate, same null convention."
+            },
+            "noticePdfUrl": {
+                "title": "Notice PDF URL",
+                "description": "Link to download the original publication document from ARMP's pridesoft.armp.cm file server."
+            },
+            "daoPdfUrl": {
+                "title": "Bidding document (DAO) URL",
+                "description": "Link to download the full bidding document, when ARMP has published one for this record (often absent for award decisions/communiques)."
+            },
+            "detailsUrl": {
+                "title": "Details URL",
+                "description": "Link to this publication's full detail page on armp.cm -- feed into a mode=detail run (as 'TYPE:ID' or this URL) for the full text."
+            },
+            "sourceFinancement": {
+                "title": "Funding source",
+                "description": "mode=detail only -- e.g. 'BUDGET INVESTISSEMENT PUBLIC(BIP)'. Null when ARMP doesn't show one for this publication."
+            },
+            "sections": {
+                "title": "Sections (by key)",
+                "description": "mode=detail, structured shape only (AO/DC/AMI-type notices) -- every numbered section ARMP itself publishes (Objet, Consistance des Prestations, Cout Previsionnel, Financement, Remises des Offres, etc.), keyed by a slug of its own label. The exact section set varies by procurement type."
+            },
+            "sectionList": {
+                "title": "Sections (ordered list)",
+                "description": "Same content as 'sections', kept in ARMP's own numbered order as {number, label, text} -- use this when order matters."
+            },
+            "bodyText": {
+                "title": "Body text",
+                "description": "mode=detail, free-form shape only (DEC-ATTR/COMM/ADDITIF-type award decisions, communiques, addenda) -- the full publication text, since these are pasted from Word with no numbered-section structure to key off of."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across all record types -- rows missing a given column render blank.",
+            "transformation": {
+                "fields": [
+                    "recordType",
+                    "typePublication",
+                    "idPublication",
+                    "title",
+                    "procuringEntity",
+                    "type",
+                    "region",
+                    "amount",
+                    "publishedAt",
+                    "closingDate",
+                    "_totalAvailable",
+                    "_error",
+                    "_scrapedAt"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

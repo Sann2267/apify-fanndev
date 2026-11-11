@@ -1,0 +1,22 @@
+{
+    "actorSpecification": 1,
+    "name": "blibli-promo-extractor",
+    "version": "0.1",
+    "buildTag": "latest",
+    "title": "Blibli Flash Sale & Promo Extractor",
+    "description": "Track how aggressively Blibli sellers discount. Scrapes live Flash Sale products (with discount % and how much of the flash-sale quota is already claimed), the full running promo campaign catalogue, and any product matching a minimum discount or promo tag. No login or API key needed.",
+    "categories": ["ECOMMERCE"],
+    "dockerfile": "./Dockerfile",
+    "minMemoryMbytes": 256,
+    "maxMemoryMbytes": 4096,
+    "defaultRunOptions": {
+        "build": "latest",
+        "memoryMbytes": 1024,
+        "timeoutSecs": 3600
+    },
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

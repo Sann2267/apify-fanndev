@@ -1,0 +1,102 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Article / latest-headline record",
+        "description": "Raw-passthrough dataset envelope. Every record carries _input/_source/_scrapedAt (failed URLs are not written to the dataset -- they are reported in the ERRORS record of the run's key-value store). Article-mode records (_source S1-html) carry headline/articleBody-style fields parsed from euronews.com ld+json NewsArticle blocks plus HTML body text. Latest-mode records (_source S2-rss, from the /rss feed) carry title/link/pubDate-style fields with a short teaser description instead of full body text.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The exact input value (article URL, or 'latest') that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which extraction strategy emitted this record (S1-html for article pages, S2-rss for the /rss latest feed, none for errors)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "headline": {
+                "title": "Headline",
+                "description": "Article headline (article mode; raw passthrough from JSON-LD NewsArticle)."
+            },
+            "description": {
+                "title": "Description",
+                "description": "In article mode, the JSON-LD NewsArticle description. In latest mode (RSS), a short teaser blurb, not the full article text."
+            },
+            "articleBody": {
+                "title": "Article body",
+                "description": "Full article text (article mode only), reassembled from direct-child <p> tags inside div.c-article-content -- subheadings are intentionally dropped."
+            },
+            "author": {
+                "title": "Author",
+                "description": "Article mode only. Comma-joined names of the article's Person authors from JSON-LD."
+            },
+            "publisher": {
+                "title": "Publisher",
+                "description": "Article mode only. Publisher name resolved from the JSON-LD Organization entry referenced by NewsArticle.publisher."
+            },
+            "datePublished": {
+                "title": "Date published",
+                "description": "Article mode only. Publication timestamp from JSON-LD NewsArticle.datePublished."
+            },
+            "dateModified": {
+                "title": "Date modified",
+                "description": "Article mode only. Last-modified timestamp from JSON-LD NewsArticle.dateModified."
+            },
+            "image": {
+                "title": "Image",
+                "description": "Article mode only. Main article image URL, resolved from JSON-LD NewsArticle.image (which may be a plain URL string or an object with a url field)."
+            },
+            "articleSection": {
+                "title": "Article section",
+                "description": "Article mode only. Section/category name from JSON-LD NewsArticle.articleSection (first entry if the source emits a list)."
+            },
+            "title": {
+                "title": "Title",
+                "description": "Latest mode (RSS) only. Headline text of the feed item."
+            },
+            "link": {
+                "title": "Link",
+                "description": "Latest mode (RSS) only. URL of the feed item's article."
+            },
+            "pubDate": {
+                "title": "Publication date",
+                "description": "Latest mode (RSS) only. Raw pubDate string of the feed item."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across both article and latest-headline (RSS) records.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "_source",
+                    "_scrapedAt",
+                    "headline",
+                    "title",
+                    "link",
+                    "description",
+                    "author",
+                    "publisher",
+                    "datePublished",
+                    "pubDate",
+                    "articleSection",
+                    "image"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

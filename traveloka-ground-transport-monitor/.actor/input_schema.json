@@ -1,0 +1,157 @@
+{
+    "title": "Traveloka Ground Transport (Bus & Shuttle) Monitor",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "routes": {
+            "title": "Routes",
+            "type": "array",
+            "description": "One route per line as ORIGIN-DESTINATION, using city names as Traveloka knows them, for example Jakarta-Bandung. Accepted separators: -, ->, > or the word 'to'.",
+            "editor": "stringList",
+            "prefill": [
+                "Jakarta-Bandung"
+            ]
+        },
+        "origin": {
+            "title": "Origin",
+            "type": "string",
+            "description": "Single-route alternative to the Routes list: departure city, terminal or landmark.",
+            "editor": "textfield"
+        },
+        "destination": {
+            "title": "Destination",
+            "type": "string",
+            "description": "Single-route alternative to the Routes list: arrival city, terminal or landmark.",
+            "editor": "textfield"
+        },
+        "departureDate": {
+            "title": "First departure date",
+            "type": "string",
+            "description": "First travel date to check, in YYYY-MM-DD. Defaults to seven days from today.",
+            "editor": "datepicker"
+        },
+        "daysToMonitor": {
+            "title": "Consecutive days",
+            "type": "integer",
+            "description": "How many consecutive travel dates to check per route, starting from the first departure date. One search per route per day.",
+            "default": 1,
+            "minimum": 1,
+            "maximum": 30
+        },
+        "adults": {
+            "title": "Passengers",
+            "type": "integer",
+            "description": "Adult passengers. Affects which inventory Traveloka shows and the seat counts returned.",
+            "default": 1,
+            "minimum": 1,
+            "maximum": 10
+        },
+        "maxDeparturesPerSearch": {
+            "title": "Max departures per search",
+            "type": "integer",
+            "description": "Cap on departures kept per route per date. Traveloka expands every pickup point by drop-off point combination, so one busy city pair can return several thousand rows; 200 is usually plenty.",
+            "default": 200,
+            "minimum": 1,
+            "maximum": 5000
+        },
+        "dedupeBy": {
+            "title": "De-duplicate by",
+            "type": "string",
+            "description": "The same trip is listed once per pickup point. 'Trip' keeps one row per physical departure and is what you normally want; 'None' keeps every boarding option; 'Operator' keeps one row per operator, time and class.",
+            "editor": "select",
+            "enum": [
+                "trip",
+                "none",
+                "operator"
+            ],
+            "enumTitles": [
+                "One row per trip (recommended)",
+                "Every boarding option",
+                "One row per operator and time"
+            ],
+            "default": "trip"
+        },
+        "productTypes": {
+            "title": "Vehicle types",
+            "type": "array",
+            "description": "Keep only these product types, for example BUS or SHUTTLE. Leave empty for both.",
+            "editor": "stringList"
+        },
+        "includeDepartures": {
+            "title": "Include individual departures",
+            "type": "boolean",
+            "description": "Emit one DEPARTURE row per trip with operator, fare, times, pickup and drop-off points and facilities.",
+            "default": true,
+            "groupCaption": "Output shape",
+            "groupDescription": "Filter the dataset on recordType to separate departures from route summaries."
+        },
+        "includeRouteSummary": {
+            "title": "Include a route summary",
+            "type": "boolean",
+            "description": "Emit one ROUTE_SUMMARY row per route and date with fare range, operator count and a per-operator breakdown.",
+            "default": true
+        },
+        "locale": {
+            "title": "Locale",
+            "type": "string",
+            "description": "Traveloka locale, which drives the language of facility and point labels.",
+            "editor": "select",
+            "enum": [
+                "en-id",
+                "id-id",
+                "en-my",
+                "th-th",
+                "vi-vn"
+            ],
+            "enumTitles": [
+                "English (Indonesia)",
+                "Bahasa Indonesia",
+                "English (Malaysia)",
+                "Thai",
+                "Vietnamese"
+            ],
+            "default": "en-id"
+        },
+        "currency": {
+            "title": "Currency",
+            "type": "string",
+            "description": "Currency for all fares in the output.",
+            "editor": "select",
+            "enum": [
+                "IDR",
+                "MYR",
+                "THB",
+                "VND",
+                "SGD",
+                "USD"
+            ],
+            "default": "IDR"
+        },
+        "requestDelaySeconds": {
+            "title": "Delay between requests",
+            "type": "string",
+            "description": "Seconds to pause between searches. Bus responses are large, so keep this above half a second on long runs.",
+            "editor": "textfield",
+            "default": "0.6"
+        },
+        "proxyConfiguration": {
+            "title": "Proxy",
+            "type": "object",
+            "description": "Proxy settings. Residential is the default: Traveloka's AWS WAF answers a captcha to the session bootstrap on most Apify datacenter IPs. If you pick a datacenter group, the actor tries it first and falls back to residential sessions when it is challenged.",
+            "editor": "proxy",
+            "default": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": [
+                    "RESIDENTIAL"
+                ]
+            },
+            "prefill": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": [
+                    "RESIDENTIAL"
+                ]
+            }
+        }
+    },
+    "required": []
+}

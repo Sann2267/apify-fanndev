@@ -1,0 +1,270 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Bulgarian foreclosure sale record",
+        "description": "Every record carries _input, _source, _scrapedAt and recordType. recordType is AUCTION for a sale, SURFACE for a reference probe and ERROR for a failure. Bulgarian field labels are mapped to English names, dates to ISO and prices to numbers in both published currencies - the portal's own labels and values always ship under 'fields'.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The sale ID or list page that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source",
+                "description": "S1-portal-html, or 'none' on failure rows."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was emitted."
+            },
+            "recordType": {
+                "type": ["string", "null"],
+                "title": "Record type",
+                "description": "AUCTION | SURFACE | ERROR."
+            },
+            "propertyId": {
+                "type": ["string", "null"],
+                "title": "Sale ID",
+                "description": "The portal's identifier for the sale. IDs are sequential."
+            },
+            "url": {
+                "type": ["string", "null"],
+                "title": "Sale URL",
+                "description": "Public page for the sale."
+            },
+            "locality": {
+                "type": ["string", "null"],
+                "title": "Locality",
+                "description": "Town or village where the property is, as published."
+            },
+            "districtCourt": {
+                "type": ["string", "null"],
+                "title": "District court",
+                "description": "District court the enforcement case belongs to."
+            },
+            "enforcementAgent": {
+                "type": ["string", "null"],
+                "title": "Enforcement agent",
+                "description": "The private enforcement agent running the sale."
+            },
+            "agentRegistrationNumber": {
+                "type": ["string", "null"],
+                "title": "Agent registration no.",
+                "description": "The agent's chamber registration number."
+            },
+            "agentAddress": {
+                "type": ["string", "null"],
+                "title": "Agent address",
+                "description": "Office address of the enforcement agent."
+            },
+            "agentPhone": {
+                "type": ["string", "null"],
+                "title": "Agent phone",
+                "description": "Office phone number."
+            },
+            "agentMobile": {
+                "type": ["string", "null"],
+                "title": "Agent mobile",
+                "description": "Mobile number where published."
+            },
+            "agentEmail": {
+                "type": ["string", "null"],
+                "title": "Agent email",
+                "description": "Contact email as published. The portal obfuscates it against harvesters, so it can arrive as a placeholder."
+            },
+            "propertyType": {
+                "type": ["string", "null"],
+                "title": "Property type",
+                "description": "Category as published, e.g. plot with house, apartment, industrial building."
+            },
+            "constructionType": {
+                "type": ["string", "null"],
+                "title": "Construction type",
+                "description": "Construction type where the sale publishes one."
+            },
+            "area": {
+                "type": ["number", "integer", "null"],
+                "title": "Area",
+                "description": "Numeric area of the property."
+            },
+            "areaUnit": {
+                "type": ["string", "null"],
+                "title": "Area unit",
+                "description": "Unit the area is published in - square metres or decares."
+            },
+            "startingPriceEur": {
+                "type": ["number", "integer", "null"],
+                "title": "Starting price (EUR)",
+                "description": "Opening price in euro, as published."
+            },
+            "startingPriceBgn": {
+                "type": ["number", "integer", "null"],
+                "title": "Starting price (BGN)",
+                "description": "Opening price in leva, as published. Both currencies are printed on the sale; neither is converted here."
+            },
+            "startingPriceRaw": {
+                "type": ["string", "null"],
+                "title": "Starting price (as published)",
+                "description": "The price line exactly as printed."
+            },
+            "biddingStart": {
+                "type": ["string", "null"],
+                "title": "Bidding opens",
+                "description": "First day bids are accepted, YYYY-MM-DD."
+            },
+            "biddingEnd": {
+                "type": ["string", "null"],
+                "title": "Bidding closes",
+                "description": "Last day bids are accepted, YYYY-MM-DD."
+            },
+            "biddingPeriodRaw": {
+                "type": ["string", "null"],
+                "title": "Bidding period (as published)",
+                "description": "The period exactly as printed by the portal."
+            },
+            "announcementAt": {
+                "type": ["string", "null"],
+                "title": "Result announcement",
+                "description": "When the result is announced, ISO date and time."
+            },
+            "announcementRaw": {
+                "type": ["string", "null"],
+                "title": "Result announcement (as published)",
+                "description": "The announcement date and time exactly as printed."
+            },
+            "publishedAt": {
+                "type": ["string", "null"],
+                "title": "Published at",
+                "description": "When the sale was published on the portal. Printed in Bulgarian words on the page and converted here."
+            },
+            "description": {
+                "type": ["string", "null"],
+                "title": "Description",
+                "description": "The legal description of the property as published."
+            },
+            "scannedAnnouncement": {
+                "type": ["string", "null"],
+                "title": "Scanned announcement",
+                "description": "Name of the scanned official announcement document attached to the sale."
+            },
+            "listPage": {
+                "type": ["integer", "null"],
+                "title": "List page",
+                "description": "Which page of the active list this sale came from."
+            },
+            "totalPages": {
+                "type": ["integer", "null"],
+                "title": "Total pages",
+                "description": "How many pages the active list had at that page size."
+            },
+            "detailFetched": {
+                "type": ["boolean", "null"],
+                "title": "Detail fetched",
+                "description": "True when the record came from the sale's own page rather than only its list card."
+            },
+            "fields": {
+                "title": "Published fields",
+                "description": "Every label/value pair the portal printed, under its own Bulgarian labels - including any this Actor does not map yet."
+            },
+            "isAvailable": {
+                "type": ["boolean", "null"],
+                "title": "Available (reference mode)",
+                "description": "Whether the portal answered with usable data."
+            },
+            "detail": {
+                "type": ["string", "null"],
+                "title": "Detail (reference mode)",
+                "description": "Human-readable probe result."
+            },
+            "sample": {
+                "title": "Sample (reference mode)",
+                "description": "Counts measured during the probe: cards per page, total pages, estimated active sales, newest sale ID."
+            },
+            "_detailError": {
+                "type": ["string", "null"],
+                "title": "Detail error",
+                "description": "Set when the list row was kept because its detail page could not be fetched."
+            },
+            "_error": {
+                "type": ["string", "null"],
+                "title": "Error kind",
+                "description": "not_found | invalid_id | shape_changed | blocked_or_transient."
+            },
+            "_errorDetail": {
+                "type": ["string", "null"],
+                "title": "Error detail",
+                "description": "Human-readable detail for the failure."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns for scanning the sale list.",
+            "transformation": {
+                "fields": [
+                    "propertyId",
+                    "propertyType",
+                    "locality",
+                    "districtCourt",
+                    "startingPriceEur",
+                    "area",
+                    "biddingStart",
+                    "biddingEnd",
+                    "url",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        },
+        "deals": {
+            "title": "Deal screen",
+            "description": "Everything needed to rank sales by price and deadline.",
+            "transformation": {
+                "fields": [
+                    "propertyType",
+                    "locality",
+                    "area",
+                    "areaUnit",
+                    "startingPriceEur",
+                    "startingPriceBgn",
+                    "biddingStart",
+                    "biddingEnd",
+                    "announcementAt",
+                    "districtCourt",
+                    "url"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        },
+        "agents": {
+            "title": "Enforcement agents",
+            "description": "Who is running each sale, with contact details.",
+            "transformation": {
+                "fields": [
+                    "enforcementAgent",
+                    "agentRegistrationNumber",
+                    "agentPhone",
+                    "agentMobile",
+                    "agentEmail",
+                    "agentAddress",
+                    "districtCourt",
+                    "propertyId"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

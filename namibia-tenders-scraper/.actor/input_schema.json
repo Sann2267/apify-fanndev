@@ -1,0 +1,81 @@
+{
+    "title": "Namibia Government Tenders Scraper (CPBN)",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "mode": {
+            "title": "Mode",
+            "type": "string",
+            "editor": "select",
+            "description": "\"List\" scrapes one of CPBN's public \"Bids\" listing pages (every row comes back in one response, no pagination). \"Detail\" fetches the full per-bid detail page for specific bid IDs/URLs.",
+            "enum": ["list", "detail"],
+            "enumTitles": ["List (browse a listing page)", "Detail (fetch specific bids)"],
+            "default": "list",
+            "prefill": "list"
+        },
+        "listType": {
+            "title": "List type (mode=list only)",
+            "type": "string",
+            "editor": "select",
+            "description": "Which CPBN \"Bids\" listing to scrape. \"Open\" = currently accepting submissions (can genuinely be empty between announcements). \"All\" = the full historical archive (largest, 600+ records).",
+            "enum": ["open", "underEvaluation", "cancelled", "awarded", "clarifications", "openingRegister", "notices", "all"],
+            "enumTitles": [
+                "Open (currently accepting bids)",
+                "Under Evaluation (submission closed)",
+                "Cancelled",
+                "Awarded (selection notices)",
+                "Clarifications",
+                "Bid Opening Register",
+                "Notices",
+                "All Bids (full historical archive)"
+            ],
+            "default": "all",
+            "prefill": "all"
+        },
+        "maxResults": {
+            "title": "Max results (mode=list only)",
+            "type": "integer",
+            "description": "Caps how many rows are kept from the listing. The full listing always downloads in one request (CPBN embeds every row server-side); this only trims the output, it doesn't reduce the number of requests made.",
+            "default": 100,
+            "minimum": 1,
+            "maximum": 2000,
+            "prefill": 100
+        },
+        "bidId": {
+            "title": "Bid ID or URL (mode=detail only)",
+            "type": "string",
+            "editor": "textfield",
+            "description": "A single CPBN bid's numeric id (e.g. 109), or its full bid URL. Find IDs from a 'list' mode run's bidUrl/bidId fields.",
+            "prefill": "109"
+        },
+        "bidIds": {
+            "title": "Bid IDs or URLs (mode=detail only)",
+            "type": "array",
+            "editor": "stringList",
+            "description": "Multiple CPBN bid ids (or full bid URLs) to fetch full detail for in one run."
+        },
+        "maxConcurrency": {
+            "title": "Max concurrent workers (mode=detail only)",
+            "type": "integer",
+            "description": "How many bid detail pages to fetch in parallel.",
+            "default": 3,
+            "minimum": 1,
+            "maximum": 5,
+            "prefill": 3
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "editor": "proxy",
+            "description": "Apify Proxy configuration.",
+            "default": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            },
+            "prefill": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            }
+        }
+    }
+}

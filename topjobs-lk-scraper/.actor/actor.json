@@ -1,0 +1,14 @@
+{
+    "actorSpecification": 1,
+    "name": "topjobs-lk-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "TopJobs.lk Scraper",
+    "description": "Search Sri Lanka's leading job board, TopJobs.lk, by keyword or category and pull full job details (location, closing date, job-type badges, description image, employer contact) -- no account or API key needed.",
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

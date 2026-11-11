@@ -1,0 +1,4 @@
+apify>=4.0.0,<5.0.0
+curl_cffi>=0.15.0
+# selectolax 1.0 removed selectolax.parser - pin below it.
+selectolax>=0.3.21,<1.0

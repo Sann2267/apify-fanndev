@@ -1,0 +1,216 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Bolpatra tender record",
+        "description": "One record per row/tender. Shape depends on recordType: TENDER_LIST (mode=list, one row from the listing table) or TENDER_DETAIL (mode=detail, a raw label/value passthrough of the tender's own detail page -- field set can vary slightly by procurement type, so extra fields beyond those listed below may appear). A single _error record is emitted instead of payload fields when a query/tender fails or is not found.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "For list records: 'latest' or a 'search:...' summary of the filters used. For detail records: the tenderId or URL that was requested."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "S1-listing or S1-detail on success, 'none' on error."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed records (not_found, blocked_or_transient)."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "recordType": {
+                "type": "string",
+                "title": "Record type",
+                "description": "TENDER_LIST or TENDER_DETAIL."
+            },
+            "_totalAvailable": {
+                "title": "Total available",
+                "description": "TENDER_LIST only -- total tenders bolpatra reports matching this query across its whole history (200,000+ for 'latest'/unfiltered), before this actor's maxResults truncation."
+            },
+            "_totalReturned": {
+                "title": "Total returned by this query",
+                "description": "TENDER_LIST only -- how many rows bolpatra actually returned for this one query (10-30 depending on which filters were set -- see CRAWLING_METHOD.md), before maxResults truncation."
+            },
+            "tenderId": {
+                "title": "Tender ID",
+                "description": "Bolpatra's internal numeric tender ID."
+            },
+            "tenderUrl": {
+                "title": "Tender detail URL",
+                "description": "Link to this tender's full detail page (this actor's own canonical URL form for mode=detail input, not necessarily how bolpatra's own UI links to it)."
+            },
+            "ifbNo": {
+                "title": "IFB/RFP/EOI/PQ No.",
+                "description": "TENDER_LIST only -- the procuring entity's own tender reference number."
+            },
+            "projectTitle": {
+                "title": "Project title",
+                "description": "TENDER_LIST only."
+            },
+            "publicEntityName": {
+                "title": "Public entity name",
+                "description": "The government office/entity running this procurement."
+            },
+            "procurementType": {
+                "title": "Procurement type",
+                "description": "TENDER_LIST only -- raw text combining category and method, e.g. 'Works NCB'."
+            },
+            "status": {
+                "title": "Status",
+                "description": "TENDER_LIST only -- often blank for a normally open tender; populated for amended/cancelled ones."
+            },
+            "noticePublishedDate": {
+                "title": "Notice published date",
+                "description": "TENDER_LIST only. Nepali government date/time as shown by bolpatra (dd-mm-yyyy HH:MM)."
+            },
+            "lastDateOfBidSubmission": {
+                "title": "Last date of bid submission",
+                "description": "TENDER_LIST only."
+            },
+            "daysLeft": {
+                "title": "Days left",
+                "description": "TENDER_LIST only -- raw text as shown by bolpatra, e.g. '20 days'."
+            },
+            "procurementCategory": {
+                "title": "Procurement category",
+                "description": "TENDER_DETAIL only -- e.g. Goods, Works, Consultancy."
+            },
+            "procurementMethod": {
+                "title": "Procurement method",
+                "description": "TENDER_DETAIL only -- e.g. NCB, ICB, Sealed Quotation."
+            },
+            "projectName": {
+                "title": "Project name",
+                "description": "TENDER_DETAIL only."
+            },
+            "currentStatus": {
+                "title": "Current status",
+                "description": "TENDER_DETAIL only -- e.g. 'Bid Published'."
+            },
+            "sourceOfFunds": {
+                "title": "Source of funds",
+                "description": "TENDER_DETAIL only -- e.g. 'Government Budget'."
+            },
+            "noticePublicationDate": {
+                "title": "Notice publication date",
+                "description": "TENDER_DETAIL only."
+            },
+            "briefDescriptionOfWork": {
+                "title": "Brief description of work",
+                "description": "TENDER_DETAIL only."
+            },
+            "biddingProcedure": {
+                "title": "Bidding procedure",
+                "description": "TENDER_DETAIL only -- e.g. 'Pre Qualification Not Needed'."
+            },
+            "biddingType": {
+                "title": "Bidding type",
+                "description": "TENDER_DETAIL only -- e.g. 'Open'."
+            },
+            "bidDocumentPublicationDate": {
+                "title": "Bid document publication date",
+                "description": "TENDER_DETAIL only."
+            },
+            "dateOfPreBidMeeting": {
+                "title": "Date of pre-bid meeting",
+                "description": "TENDER_DETAIL only."
+            },
+            "preBidMeetingAddress": {
+                "title": "Pre-bid meeting address",
+                "description": "TENDER_DETAIL only."
+            },
+            "lastDateForBidSubmission": {
+                "title": "Last date for bid submission",
+                "description": "TENDER_DETAIL only."
+            },
+            "bidOpeningDate": {
+                "title": "Bid opening date",
+                "description": "TENDER_DETAIL only."
+            },
+            "bidOpeningAddress": {
+                "title": "Bid opening address",
+                "description": "TENDER_DETAIL only."
+            },
+            "dateOfStartOfWorks": {
+                "title": "Date of start of works",
+                "description": "TENDER_DETAIL only."
+            },
+            "bidDocumentFeeInNpr": {
+                "title": "Bid document fee (NPR)",
+                "description": "TENDER_DETAIL only."
+            },
+            "bankName": {
+                "title": "Bank name",
+                "description": "TENDER_DETAIL only -- where the bid document fee is paid."
+            },
+            "nameOfOfficialInvitingBid": {
+                "title": "Name of official inviting bid",
+                "description": "TENDER_DETAIL only."
+            },
+            "contactOfTheOfficialInvitingBid": {
+                "title": "Contact of the official inviting bid",
+                "description": "TENDER_DETAIL only -- phone number."
+            },
+            "bidDocument": {
+                "type": "array",
+                "title": "Bid documents",
+                "description": "TENDER_DETAIL only -- list of {documentType, date, downloadUrl}."
+            },
+            "addendum": {
+                "type": "array",
+                "title": "Addenda",
+                "description": "TENDER_DETAIL only -- list of {documentType, date, downloadUrl}, usually empty."
+            },
+            "bidQueryResponse": {
+                "type": "array",
+                "title": "Bid query responses",
+                "description": "TENDER_DETAIL only -- list of {documentType, date, downloadUrl}, usually empty."
+            },
+            "loi": {
+                "type": "array",
+                "title": "Letter of Intent (LOI)",
+                "description": "TENDER_DETAIL only -- list of {documentType, date, downloadUrl}, usually empty until a winner is decided."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across both record types -- rows missing a given column render blank.",
+            "transformation": {
+                "fields": [
+                    "recordType",
+                    "tenderId",
+                    "ifbNo",
+                    "projectTitle",
+                    "publicEntityName",
+                    "procurementType",
+                    "noticePublishedDate",
+                    "lastDateOfBidSubmission",
+                    "daysLeft",
+                    "_totalAvailable",
+                    "_error",
+                    "_scrapedAt"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

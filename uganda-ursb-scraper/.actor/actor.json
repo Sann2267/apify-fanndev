@@ -1,0 +1,14 @@
+{
+    "actorSpecification": 1,
+    "name": "uganda-ursb-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Uganda URSB Business Registry Scraper",
+    "description": "Search Uganda's official company and business name register (URSB) by name or registration number and pull the public registry record: entity type, sub-type, status, registration number (ERN), and compliance status. No account or API key needed.",
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

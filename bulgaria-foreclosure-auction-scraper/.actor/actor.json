@@ -1,0 +1,18 @@
+{
+    "actorSpecification": 1,
+    "name": "bulgaria-foreclosure-auction-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Bulgaria Foreclosure Auction Scraper (BCPEA)",
+    "description": "Scrape every foreclosure property sale published by Bulgaria's private enforcement agents: starting price in EUR and BGN, area, locality, district court, bidding window, announcement date and the agent's contact details. About 1,400 active sales. No login.",
+    "categories": [
+        "REAL_ESTATE",
+        "BUSINESS"
+    ],
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

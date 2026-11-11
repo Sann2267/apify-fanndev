@@ -1,0 +1,14 @@
+{
+    "actorSpecification": 1,
+    "name": "antiguabarbuda-abipco-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Antigua and Barbuda ABIPCO Business Registry Scraper",
+    "description": "Search Antigua and Barbuda's official company, business name, and friendly society register (ABIPCO) by name or registration number. Free public name search -- no account or API key needed.",
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

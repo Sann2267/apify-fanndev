@@ -1,0 +1,107 @@
+{
+    "title": "Tech Stack Detector",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "domains": {
+            "title": "Domains",
+            "type": "array",
+            "description": "One domain or URL per line. 'allbirds.com', 'www.allbirds.com' and 'https://allbirds.com/collections/mens' are all accepted; paths are dropped because the homepage is what gets fingerprinted.",
+            "editor": "stringList",
+            "prefill": [
+                "allbirds.com",
+                "notion.com",
+                "wordpress.org"
+            ]
+        },
+        "startUrls": {
+            "title": "Start URLs",
+            "type": "array",
+            "description": "The same targets as a URL list, for pasting straight out of another actor's dataset.",
+            "editor": "requestListSources"
+        },
+        "requireTechnology": {
+            "title": "Must use any of these",
+            "type": "array",
+            "description": "Keep only sites running at least one of these technologies, matched by name (e.g. 'Shopify', 'Klaviyo'). This is the prospecting filter.",
+            "editor": "stringList"
+        },
+        "excludeTechnology": {
+            "title": "Must not use any of these",
+            "type": "array",
+            "description": "Drop sites running any of these. Pair with the filter above to find gaps - for example require 'Shopify' and exclude 'Klaviyo' to list stores with no email platform.",
+            "editor": "stringList"
+        },
+        "minTechnologies": {
+            "title": "Minimum technologies detected",
+            "type": "integer",
+            "description": "Drop sites with fewer detections than this. Useful for skipping parked domains and holding pages.",
+            "minimum": 0
+        },
+        "onlyReachable": {
+            "title": "Only reachable sites",
+            "type": "boolean",
+            "description": "Drop domains that could not be fetched. Leave this off when cleaning a list - an unreachable domain is a useful finding.",
+            "default": false,
+            "groupCaption": "Filters",
+            "groupDescription": "Applied after analysis, so the run summary still ranks everything."
+        },
+        "checkRobotsTxt": {
+            "title": "Also check robots.txt",
+            "type": "boolean",
+            "description": "One extra request per site. Catches platform-specific disallow paths on sites that render everything client-side and give the homepage away nothing.",
+            "default": true
+        },
+        "includeEvidence": {
+            "title": "Include evidence per detection",
+            "type": "boolean",
+            "description": "Keep the 'detections' array showing exactly which header, cookie, host or markup string proved each technology. Turn off for a slimmer dataset.",
+            "default": true
+        },
+        "concurrency": {
+            "title": "Concurrent requests",
+            "type": "integer",
+            "description": "How many sites to fetch at once. Each target is a different server, so this can go high without pressuring any one of them.",
+            "default": 8,
+            "minimum": 1,
+            "maximum": 30
+        },
+        "emitSummary": {
+            "title": "Add a run summary record",
+            "type": "boolean",
+            "description": "Append one RUN_SUMMARY record ranking which technologies appear across the whole list and on what share of sites.",
+            "default": true
+        },
+        "exportFormats": {
+            "title": "Extra export files",
+            "type": "array",
+            "description": "Also write the results to the key-value store in these formats. The dataset is always produced regardless.",
+            "editor": "select",
+            "items": {
+                "type": "string",
+                "enum": [
+                    "json",
+                    "ndjson",
+                    "csv",
+                    "xlsx"
+                ],
+                "enumTitles": [
+                    "JSON",
+                    "NDJSON",
+                    "CSV",
+                    "Excel (XLSX)"
+                ]
+            },
+            "default": []
+        },
+        "proxyConfiguration": {
+            "title": "Proxy",
+            "type": "object",
+            "description": "Optional. There is no single target site here, so there is nothing to be blocked by and the direct connection is normally fine. Enable it if you are scanning thousands of domains and want the requests spread across IPs.",
+            "editor": "proxy",
+            "default": {
+                "useApifyProxy": false
+            }
+        }
+    }
+}

@@ -1,0 +1,23 @@
+{
+    "actorSpecification": 1,
+    "name": "spotify-curator-profiler",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Spotify Curator & Playlist Owner Profiler",
+    "description": "Find the curators behind Spotify playlists in any niche and profile them: how many playlists they run, total follower reach, the artists they favour, how underground their picks are and whether they are still active. No Spotify account or API key.",
+    "categories": [
+        "ENTERTAINMENT",
+        "LEAD_GENERATION"
+    ],
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json",
+    "defaultRunOptions": {
+        "build": "latest",
+        "memoryMbytes": 512,
+        "timeoutSecs": 3600
+    }
+}

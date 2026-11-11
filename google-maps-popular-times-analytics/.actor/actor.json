@@ -1,0 +1,18 @@
+{
+    "actorSpecification": 1,
+    "name": "google-maps-popular-times-analytics",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Google Maps Popular Times & Traffic Analytics",
+    "description": "Collect Google Maps Popular Times foot-traffic curves in bulk: hour-by-hour busyness for every day of the week, plus live occupancy where available, for whole categories of venue in an area (every gym or cafe in a city). Wide or long format, JSON/CSV/Excel/NDJSON. No API key.",
+    "categories": [
+        "MAPS",
+        "BUSINESS"
+    ],
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

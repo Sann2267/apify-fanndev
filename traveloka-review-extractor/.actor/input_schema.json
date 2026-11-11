@@ -1,0 +1,210 @@
+{
+    "title": "Traveloka Review & Sentiment Extractor",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "startUrls": {
+            "title": "Property or activity URLs",
+            "type": "array",
+            "description": "Traveloka hotel, Xperience activity, bus, airport-transfer or car-rental page URLs. The product family is detected from the URL path, so you can mix them freely.",
+            "editor": "requestListSources",
+            "prefill": [
+                {
+                    "url": "https://www.traveloka.com/id-id/hotel/indonesia/hotel-indonesia-kempinski-jakarta-2000000113168"
+                }
+            ]
+        },
+        "objectIds": {
+            "title": "Object IDs",
+            "type": "array",
+            "description": "Bare numeric Traveloka object IDs. These use the Product type setting below, since there is no URL to infer it from.",
+            "editor": "stringList"
+        },
+        "productType": {
+            "title": "Product type",
+            "type": "string",
+            "description": "Which Traveloka product the IDs belong to. Only used for bare Object IDs and for URLs whose path cannot be classified.",
+            "editor": "select",
+            "enum": [
+                "hotel",
+                "experience",
+                "experience-attraction",
+                "experience-tour",
+                "experience-spa",
+                "experience-event",
+                "bus",
+                "airport-transfer",
+                "car-rental"
+            ],
+            "enumTitles": [
+                "Hotel / accommodation",
+                "Xperience (general)",
+                "Xperience - attraction",
+                "Xperience - tour",
+                "Xperience - spa & beauty",
+                "Xperience - event",
+                "Bus & shuttle operator",
+                "Airport transfer",
+                "Car rental"
+            ],
+            "default": "hotel"
+        },
+        "maxReviewsPerObject": {
+            "title": "Max reviews per object",
+            "type": "integer",
+            "description": "How many reviews to download for each property or activity. Reviews arrive in pages, so this is also the stopping point for pagination.",
+            "default": 200,
+            "minimum": 1,
+            "maximum": 10000
+        },
+        "sortBy": {
+            "title": "Sort order",
+            "type": "string",
+            "description": "Order Traveloka returns reviews in. Newest first is best for monitoring; lowest rating first is best for a complaint audit.",
+            "editor": "select",
+            "enum": [
+                "SORT_CREATED_DESCENDING",
+                "SORT_HELPFUL_DESCENDING",
+                "SORT_RATING_DESCENDING",
+                "SORT_RATING_ASCENDING"
+            ],
+            "enumTitles": [
+                "Newest first",
+                "Most helpful first",
+                "Highest rating first",
+                "Lowest rating first"
+            ],
+            "default": "SORT_CREATED_DESCENDING"
+        },
+        "ratingFilter": {
+            "title": "Rating filter",
+            "type": "string",
+            "description": "Keep only reviews in a rating band. Traveloka exposes bands, not exact score cut-offs.",
+            "editor": "select",
+            "enum": [
+                "RATING_VALUE_ALL",
+                "RATING_VALUE_EXCEPTIONAL",
+                "RATING_VALUE_VERY_GOOD",
+                "RATING_VALUE_PLEASANT"
+            ],
+            "enumTitles": [
+                "All ratings",
+                "Exceptional (9+)",
+                "Very good (8+)",
+                "Pleasant (6+)"
+            ],
+            "default": "RATING_VALUE_ALL"
+        },
+        "formatFilter": {
+            "title": "Format filter",
+            "type": "string",
+            "description": "Keep only reviews that have text, media, or both. Useful when you need photos, or when you want to drop score-only ratings before running NLP.",
+            "editor": "select",
+            "enum": [
+                "FORMAT_VALUE_ALL",
+                "FORMAT_VALUE_TEXT",
+                "FORMAT_VALUE_MEDIA",
+                "FORMAT_VALUE_TEXT_MEDIA"
+            ],
+            "enumTitles": [
+                "All reviews",
+                "With text",
+                "With photos or video",
+                "With text and media"
+            ],
+            "default": "FORMAT_VALUE_ALL"
+        },
+        "ratingTagIds": {
+            "title": "Aspect tag filter",
+            "type": "array",
+            "description": "Keep only reviews carrying these aspect tags, for example GOOD_STAFF_FRIENDLINESS or BAD_CLEANLINESS. Run once without this to see which tags an object has, listed in the summary record under ratingTags.",
+            "editor": "stringList"
+        },
+        "includeSummaryRecord": {
+            "title": "Include a summary record per object",
+            "type": "boolean",
+            "description": "Emit one OBJECT_SUMMARY row per property or activity holding the overall rating, total review count and aspect tags, alongside the individual reviews.",
+            "default": true,
+            "groupCaption": "Output shape",
+            "groupDescription": "The dataset mixes one summary row per object with one row per review; filter on recordType."
+        },
+        "includeRatingTags": {
+            "title": "Include aspect sentiment tags",
+            "type": "boolean",
+            "description": "Collect the aspect tag aggregate (cleanliness, staff, location and so on) with counts, split into positive and negative tag IDs.",
+            "default": true
+        },
+        "pageSize": {
+            "title": "Reviews per request",
+            "type": "integer",
+            "description": "How many reviews to ask for per API call. Twenty matches what Traveloka's own web client asks for.",
+            "default": 20,
+            "minimum": 1,
+            "maximum": 50
+        },
+        "locale": {
+            "title": "Locale",
+            "type": "string",
+            "description": "Traveloka locale. This affects the language of aspect tag labels and rating labels, and which translation of a review text you receive.",
+            "editor": "select",
+            "enum": [
+                "en-id",
+                "id-id",
+                "en-sg",
+                "en-my",
+                "th-th",
+                "vi-vn"
+            ],
+            "enumTitles": [
+                "English (Indonesia)",
+                "Bahasa Indonesia",
+                "English (Singapore)",
+                "English (Malaysia)",
+                "Thai",
+                "Vietnamese"
+            ],
+            "default": "en-id"
+        },
+        "currency": {
+            "title": "Currency",
+            "type": "string",
+            "description": "Currency context for the session. Reviews carry no prices, so this rarely matters.",
+            "editor": "select",
+            "enum": [
+                "IDR",
+                "USD",
+                "SGD",
+                "MYR",
+                "THB",
+                "VND"
+            ],
+            "default": "IDR"
+        },
+        "requestDelaySeconds": {
+            "title": "Delay between requests",
+            "type": "string",
+            "description": "Seconds to pause between API calls. Raise it if you see repeated 429 or 5xx responses on large pulls.",
+            "editor": "textfield",
+            "default": "0.4"
+        },
+        "proxyConfiguration": {
+            "title": "Proxy",
+            "type": "object",
+            "description": "Proxy settings. Residential is the default: Traveloka's AWS WAF answers a captcha to the session bootstrap on most Apify datacenter IPs. If you pick a datacenter group, the actor tries it first and falls back to residential sessions when it is challenged.",
+            "editor": "proxy",
+            "default": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": [
+                    "RESIDENTIAL"
+                ]
+            },
+            "prefill": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": [
+                    "RESIDENTIAL"
+                ]
+            }
+        }
+    },
+    "required": []
+}

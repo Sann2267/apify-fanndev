@@ -1,0 +1,128 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Article / latest-headline record",
+        "description": "Raw-passthrough dataset envelope. Every record carries _input/_source/_scrapedAt (and _error/_errorDetail on failures). Article-mode records (S1-jsonld+html) carry headline/articleBody-style fields extracted from a NewsArticle ld+json block plus HTML body paragraphs; latest-mode records (S2-rss, site-wide 'Latest News' feed) carry title/link-style fields, including a full-body description. Upstream fields are passed through close to verbatim, so extra fields beyond those listed here may also appear.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The exact input value (article URL, or 'latest') that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which extraction strategy emitted this record (S1-jsonld+html for articles, S2-rss for latest headlines, or 'none' on failure)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed extractions -- the error kind (e.g. not_found, http_5xx, blocked_or_transient)."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "headline": {
+                "title": "Headline",
+                "description": "Article headline (raw passthrough from JSON-LD NewsArticle)."
+            },
+            "description": {
+                "title": "Description",
+                "description": "Article dek/summary. Article mode: JSON-LD NewsArticle description, HTML-unescaped (some articles carry entity-escaped punctuation, e.g. &mdash;). Latest mode: cleaned (HTML-unescaped, tag-stripped, paragraph-joined) full body text from the RSS item description -- unusually, this feed carries the complete article body, not just a teaser."
+            },
+            "articleBody": {
+                "title": "Article body",
+                "description": "Full article text, paragraph-joined from div.article-body > p on the article page (the JSON-LD articleBody field exists but lacks paragraph breaks, so HTML is used instead)."
+            },
+            "articleSection": {
+                "title": "Section",
+                "description": "Article section/category, from JSON-LD NewsArticle."
+            },
+            "datePublished": {
+                "title": "Date published",
+                "description": "ISO 8601 publish date, from JSON-LD NewsArticle."
+            },
+            "dateModified": {
+                "title": "Date modified",
+                "description": "ISO 8601 last-modified date, from JSON-LD NewsArticle."
+            },
+            "author": {
+                "title": "Author",
+                "description": "Author/byline name. Article mode: joined name(s) from the JSON-LD author object/array (wire-service reprints carry the agency name, e.g. 'PR Newswire', 'Agence France-Presse'). Latest mode: raw RSS <dc:creator> text."
+            },
+            "keywords": {
+                "title": "Keywords",
+                "description": "Keywords as emitted upstream in JSON-LD NewsArticle (observed empty string on all sampled articles)."
+            },
+            "image": {
+                "title": "Image",
+                "description": "Lead image URL, from the JSON-LD NewsArticle image object (article mode only)."
+            },
+            "isAccessibleForFree": {
+                "title": "Accessible for free",
+                "description": "JSON-LD paywall marker (observed true on every sampled article -- no paywall found)."
+            },
+            "title": {
+                "title": "Title",
+                "description": "Headline from the RSS item (latest mode)."
+            },
+            "link": {
+                "title": "Link",
+                "description": "Article URL, from the RSS item (latest mode)."
+            },
+            "category": {
+                "title": "Category",
+                "description": "Section name, from the RSS item <category> (latest mode)."
+            },
+            "guid": {
+                "title": "GUID",
+                "description": "RSS item GUID (latest mode)."
+            },
+            "pubDate": {
+                "title": "Publish date",
+                "description": "RSS pubDate string (latest mode)."
+            },
+            "imageUrl": {
+                "title": "Image URL",
+                "description": "Lead image URL, from the RSS item's media:thumbnail/media:content (latest mode)."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across both article and latest-headline records.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "_source",
+                    "_scrapedAt",
+                    "headline",
+                    "title",
+                    "link",
+                    "datePublished",
+                    "pubDate",
+                    "author",
+                    "articleSection",
+                    "category",
+                    "description",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

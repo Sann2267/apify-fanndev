@@ -1,0 +1,131 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "gov.sr Suriname tender record",
+        "description": "One record per row. Shape depends on recordType: TENDER (listType=tenders, a thin ministry-level procurement notice from the `aanbestedingen` custom post type) or TENDER_NOTICE (listType=notices, a richer internationally/donor-financed solicitation from the 'Aanbestedingen' blog category, with full bid text). A single _error record is emitted instead of payload fields when a request fails or is unreachable.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "Which list this record came from: 'list:tenders' or 'list:notices'."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which extraction strategy emitted this record (S1-wp-rest-aanbestedingen-cpt, S1-wp-rest-posts-category-aanbestedingen, or 'none' on error)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on a failed run (blocked_or_transient or category_not_found)."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "recordType": {
+                "type": "string",
+                "title": "Record type",
+                "description": "TENDER or TENDER_NOTICE."
+            },
+            "id": {
+                "type": "integer",
+                "title": "WordPress post ID"
+            },
+            "title": {
+                "type": "string",
+                "title": "Title",
+                "description": "What is being procured. TENDER titles are usually Dutch; TENDER_NOTICE titles are usually English."
+            },
+            "slug": {
+                "type": "string",
+                "title": "Slug"
+            },
+            "link": {
+                "type": "string",
+                "title": "URL",
+                "description": "Canonical gov.sr URL for this notice's own page."
+            },
+            "status": {
+                "type": "string",
+                "title": "Status",
+                "description": "WordPress publish status, almost always 'publish'."
+            },
+            "publishedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Published at",
+                "description": "UTC ISO 8601 timestamp this notice was published on gov.sr."
+            },
+            "modifiedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Modified at",
+                "description": "UTC ISO 8601 timestamp this notice was last edited on gov.sr."
+            },
+            "ministry": {
+                "title": "Ministry / sector",
+                "description": "TENDER only -- the government body's WordPress category name, e.g. 'Openbare Werken & Ruimtelijke Ordening' (Public Works & Spatial Planning)."
+            },
+            "ministrySlug": {
+                "title": "Ministry / sector slug",
+                "description": "TENDER only -- the WordPress category slug for `ministry`, usable as the `categorySlug` input filter."
+            },
+            "ministryCategories": {
+                "title": "Additional ministry/sector tags",
+                "description": "TENDER only -- present only when a notice carries more than one category; the full list of names (ministry already includes the first one)."
+            },
+            "categoryIds": {
+                "title": "Category IDs",
+                "description": "TENDER only -- raw WordPress category term IDs, upstream passthrough."
+            },
+            "categories": {
+                "title": "Categories",
+                "description": "TENDER_NOTICE only -- WordPress category name(s) applied to this notice."
+            },
+            "excerptText": {
+                "title": "Excerpt (plain text)",
+                "description": "TENDER_NOTICE only -- WordPress auto-excerpt, HTML stripped."
+            },
+            "contentText": {
+                "title": "Full bid text (plain text)",
+                "description": "TENDER_NOTICE only -- the notice's full body (background, procurement method, eligibility, bid evaluation, submission deadline/address), HTML stripped to plain text."
+            },
+            "contentHtml": {
+                "title": "Full bid text (HTML)",
+                "description": "TENDER_NOTICE only -- the notice's full body exactly as rendered by WordPress, upstream passthrough."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across both record types -- rows missing a given column render blank.",
+            "transformation": {
+                "fields": [
+                    "recordType",
+                    "title",
+                    "ministry",
+                    "categories",
+                    "publishedAt",
+                    "link",
+                    "_error",
+                    "_scrapedAt"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

@@ -1,0 +1,14 @@
+{
+    "actorSpecification": 1,
+    "name": "standardmedia-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "The Standard (Kenya) Scraper",
+    "description": "Extract full article text or the newest headlines from The Standard (standardmedia.co.ke), one of Kenya's oldest daily newspapers -- no account or API key needed.",
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

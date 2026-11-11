@@ -1,0 +1,134 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Article / latest-headline record",
+        "description": "Raw-passthrough dataset envelope. Every record carries _input/_source/_scrapedAt (and _error/_errorDetail on failures). Article-mode records (S1-jsonld) are a near-verbatim spread of the page's NewsArticle JSON-LD block, so extra schema.org fields beyond those listed here may appear. Latest-mode records (S2-sitemap) carry title/link/pubDate/image fields from the Google News sitemap.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The exact input value (URL, or 'latest') that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which extraction strategy emitted this record (S1-jsonld or S2-sitemap)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed extractions -- the error kind."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "headline": {
+                "title": "Headline",
+                "description": "Article headline (raw passthrough from JSON-LD NewsArticle)."
+            },
+            "alternativeHeadline": {
+                "title": "Alternative headline",
+                "description": "Secondary headline variant, as emitted upstream."
+            },
+            "description": {
+                "title": "Description",
+                "description": "Short article description/dek (article-mode from JSON-LD, truncated with '...' by the CMS)."
+            },
+            "articleBody": {
+                "title": "Article body",
+                "description": "Full article text, when present on the upstream JSON-LD NewsArticle node."
+            },
+            "datePublished": {
+                "title": "Date published",
+                "description": "ISO 8601 publish date, with +05:30 (IST) offset."
+            },
+            "dateModified": {
+                "title": "Date modified",
+                "description": "ISO 8601 last-modified date, with +05:30 (IST) offset."
+            },
+            "author": {
+                "title": "Author",
+                "description": "Author object as emitted by upstream JSON-LD (raw passthrough object -- name is usually the generic 'MPost' desk byline, not a named reporter)."
+            },
+            "publisher": {
+                "title": "Publisher",
+                "description": "Publisher organization object, including logo."
+            },
+            "image": {
+                "title": "Image",
+                "description": "Lead image object (article-mode) or lead image URL string (latest-mode from the sitemap's image:loc)."
+            },
+            "mainEntityOfPage": {
+                "title": "Main entity of page",
+                "description": "Canonical WebPage reference."
+            },
+            "articleSection": {
+                "title": "Section",
+                "description": "Article section/category, e.g. Business, Nation, Bengal."
+            },
+            "keywords": {
+                "title": "Keywords",
+                "description": "Keywords string as emitted upstream (frequently empty on this CMS)."
+            },
+            "inLanguage": {
+                "title": "Language",
+                "description": "Article language code, e.g. 'en'."
+            },
+            "interactivityType": {
+                "title": "Interactivity type",
+                "description": "Upstream schema.org interactivityType field."
+            },
+            "url": {
+                "title": "Canonical URL",
+                "description": "Canonical article URL as emitted in the JSON-LD block."
+            },
+            "title": {
+                "title": "Title",
+                "description": "Headline from the sitemap entry (latest-mode)."
+            },
+            "link": {
+                "title": "Link",
+                "description": "Article URL (latest-mode)."
+            },
+            "pubDate": {
+                "title": "Publish date",
+                "description": "news:publication_date from the sitemap, ISO 8601 with +05:30 (IST) offset (latest-mode)."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across both article and latest-headline records.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "_source",
+                    "_scrapedAt",
+                    "headline",
+                    "title",
+                    "link",
+                    "datePublished",
+                    "pubDate",
+                    "articleSection",
+                    "author",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

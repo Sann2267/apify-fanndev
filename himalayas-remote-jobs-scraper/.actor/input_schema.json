@@ -1,0 +1,137 @@
+{
+    "title": "Himalayas Remote Jobs Scraper input",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "mode": {
+            "title": "Mode",
+            "type": "string",
+            "description": "jobs = the newest remote jobs, straight from the feed. search = the same feed narrowed by title, company, category, seniority, location, salary or currency. companies = one record per company with how many roles it is advertising, built from the same pages. reference = check the source is live and report what it returns.",
+            "editor": "select",
+            "default": "jobs",
+            "enum": [
+                "jobs",
+                "search",
+                "companies",
+                "reference"
+            ],
+            "enumTitles": [
+                "jobs - newest remote jobs",
+                "search - filtered jobs",
+                "companies - who is hiring, and how much",
+                "reference - is the source live, how many jobs"
+            ]
+        },
+        "titleContains": {
+            "title": "Job title contains (search mode)",
+            "type": "array",
+            "description": "Keep jobs whose title contains any of these words. Case-insensitive, e.g. 'engineer', 'designer'.",
+            "editor": "stringList",
+            "prefill": [
+                "engineer"
+            ]
+        },
+        "companyContains": {
+            "title": "Company name contains (search mode)",
+            "type": "array",
+            "description": "Keep jobs from companies whose name contains any of these words.",
+            "editor": "stringList"
+        },
+        "descriptionContains": {
+            "title": "Description contains (search mode)",
+            "type": "array",
+            "description": "Keep jobs whose description mentions any of these words - useful for skills and tools, e.g. 'Kubernetes', 'Figma'.",
+            "editor": "stringList"
+        },
+        "categories": {
+            "title": "Categories (search mode)",
+            "type": "array",
+            "description": "Keep jobs tagged with any of these detailed categories, e.g. 'Machine-Learning'. Use the exact tags you see in the output.",
+            "editor": "stringList"
+        },
+        "parentCategories": {
+            "title": "Broad categories (search mode)",
+            "type": "array",
+            "description": "Keep jobs in any of these broad families, e.g. 'Developer', 'Data Science', 'Sales', 'Design'.",
+            "editor": "stringList"
+        },
+        "seniority": {
+            "title": "Seniority (search mode)",
+            "type": "array",
+            "description": "Keep jobs at any of these levels, e.g. 'Entry-level', 'Mid-level', 'Senior', 'Lead'.",
+            "editor": "stringList"
+        },
+        "locationRestrictions": {
+            "title": "Location restrictions (search mode)",
+            "type": "array",
+            "description": "Keep jobs restricted to any of these places, e.g. 'United States', 'Germany'. Jobs with no restriction listed are open worldwide and will NOT match a place filter.",
+            "editor": "stringList"
+        },
+        "employmentType": {
+            "title": "Employment type (search mode)",
+            "type": "array",
+            "description": "Keep jobs of these types, e.g. 'Full Time', 'Contractor', 'Part Time'.",
+            "editor": "stringList"
+        },
+        "salaryPeriod": {
+            "title": "Pay period (search mode)",
+            "type": "array",
+            "description": "Keep jobs paid on these periods: 'annual', 'hourly', 'monthly' or 'weekly'.",
+            "editor": "stringList"
+        },
+        "currency": {
+            "title": "Currency (search mode)",
+            "type": "array",
+            "description": "Keep jobs quoting salary in these currencies, e.g. 'USD'. Worth setting whenever you filter by salary: the feed carries USD, INR, EUR, CAD, PLN and PHP, and salary numbers are never converted between them.",
+            "editor": "stringList"
+        },
+        "minSalary": {
+            "title": "Minimum salary per year (search mode)",
+            "type": "integer",
+            "description": "Keep jobs paying at least this much a year. Hourly, weekly and monthly rates are converted to a yearly equivalent first, so an hourly role is not judged against a yearly number. Jobs that publish no salary are excluded. The figure is NOT converted between currencies - pair this with the currency filter.",
+            "editor": "number",
+            "minimum": 0
+        },
+        "maxSalary": {
+            "title": "Maximum salary per year (search mode)",
+            "type": "integer",
+            "description": "Keep jobs paying no more than this a year, on the same yearly-equivalent basis.",
+            "editor": "number",
+            "minimum": 0
+        },
+        "salariedOnly": {
+            "title": "Only jobs that publish a salary (search mode)",
+            "type": "boolean",
+            "description": "About half the feed publishes no salary at all. Turn this on to drop those.",
+            "default": false
+        },
+        "maxItems": {
+            "title": "Max items",
+            "type": "integer",
+            "description": "Maximum records per run - jobs, or companies in companies mode.",
+            "editor": "number",
+            "default": 100,
+            "minimum": 1
+        },
+        "maxScannedJobs": {
+            "title": "Max jobs to scan",
+            "type": "integer",
+            "description": "Your budget for how deep to go into the feed. Filtering happens after fetching, and the source hands out 20 jobs per request, so a narrow filter over 100,000 jobs could otherwise run for thousands of requests. The run stops here and tells you how far it got, so raise this when a narrow search comes back short.",
+            "editor": "number",
+            "default": 2000,
+            "minimum": 20
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "description": "The source is a public feed and needs no proxy - it answered every request without one. Leave this off unless your own network requires it.",
+            "editor": "proxy",
+            "default": {
+                "useApifyProxy": false
+            }
+        }
+    },
+    "required": [
+        "mode"
+    ]
+}

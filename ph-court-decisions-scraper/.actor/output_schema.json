@@ -1,0 +1,72 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Philippine Supreme Court decision record",
+        "description": "Raw-passthrough dataset envelope on top of the Supreme Court E-Library's own displayed values (elibrary.judiciary.gov.ph, the Philippine Judiciary's official free decision archive). Every record carries _input/_source/_scrapedAt (and _error/_errorDetail on failures, _warning on partial degradation). With fetchFullText=false a lightweight summary row is emitted per decision; fetchFullText=true and \"decision\" mode both add the complete opinion plus division, ponente and document type.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "search mode: \"q=<searchPhrase>|corpus=<corpus>|type=<searchType>\". browse mode: \"years=<from>-<to>\". decision mode: the exact document id requested."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "S1-search (dtSearch hit row), S2-search (dtSearch hit enriched with the full document), S1-listing (monthly browse row), S2-decision (browse row enriched with the full decision), S1-decision (decision mode, direct lookup), or none on failure."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this specific record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed extractions: no_results, decision_not_found, unknown_corpus, search_index_unavailable (the corpus's dtSearch index is broken server-side), http_<code>, blocked_or_transient."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error or a _warning. For search_index_unavailable it carries dtSearch's own error string verbatim."
+            },
+            "_warning": {
+                "type": "string",
+                "title": "Warning",
+                "description": "Non-fatal degradation marker -- e.g. \"full_text_unavailable\" (fetchFullText=true but this one document's fetch failed; the summary fields are still returned)."
+            },
+
+            "docId": { "title": "Document ID", "description": "The portal's own numeric document id. Use it with mode='decision' to re-fetch the full text, or as https://elibrary.judiciary.gov.ph/thebookshelf/showdocs/1/<docId>. Present on browse and decision records, and on search records only after full-text enrichment." },
+            "dtSearchDocId": { "title": "dtSearch document ID", "description": "search mode -- the search engine's OWN internal document number. It is a separate id space from docId and the two are NOT interchangeable (confirmed live: the same decision is dtSearch 69244 but portal 70008)." },
+            "caseNumber": { "title": "Case number", "description": "The Court's own docket reference exactly as printed, e.g. \"G.R. No. 241587\", \"G.R. Nos. 216007-09\", \"A.M. No. P-26-390 [Formerly OCA IPI No. 19-4946-P]\"." },
+            "caseTitle": { "title": "Case title", "description": "The party line as printed, e.g. \"SILVINO C. EVANGELISTA, PETITIONER, VS. PEOPLE OF THE PHILIPPINES, RESPONDENT.\" Consolidated cases carry every docket number inline." },
+            "decisionDate": { "title": "Decision date", "description": "Promulgation date normalised to ISO (YYYY-MM-DD)." },
+            "decisionDateText": { "title": "Decision date (as displayed)", "description": "The date exactly as the portal prints it, e.g. \"August 06, 2025\"." },
+            "documentType": { "title": "Document type", "description": "DECISION or RESOLUTION, taken from the letter-spaced caption the Court prints (\"D E C I S I O N\")." },
+            "division": { "title": "Division", "description": "The deciding division as printed: \"EN BANC\", \"FIRST DIVISION\", \"SECOND DIVISION\", \"THIRD DIVISION\"." },
+            "ponente": { "title": "Ponente", "description": "The justice who wrote the opinion, as signed, e.g. \"ROSARIO, J.\", \"LEONEN, SAJ.\", \"PER CURIAM\"." },
+            "reporterCitation": { "title": "Philippine Reports citation", "description": "The official reporter citation when the decision has been reported, e.g. \"930 Phil. 215\". Absent for recent decisions not yet in Philippine Reports." },
+            "reporterPdfUrl": { "title": "Philippine Reports PDF", "description": "Link to the official Philippine Reports PDF, when the E-Library offers one for this decision." },
+            "snippet": { "title": "Search snippet", "description": "search mode -- dtSearch's own keyword-in-context extract around the matched terms." },
+            "hitCount": { "title": "Hit count", "description": "search mode -- how many times the query matched inside this document, as counted by dtSearch. Useful for ranking relevance." },
+            "month": { "title": "Month", "description": "browse mode -- the archive month this row was listed under (Jan..Dec)." },
+            "year": { "title": "Year", "description": "browse mode -- the archive year this row was listed under." },
+            "fullText": { "title": "Full decision text", "description": "Present when fetchFullText=true or in decision mode -- the complete opinion as plain text (whitespace normalised, portal chrome removed, nothing else altered). Frequently very long: a consolidated en banc decision was observed at 358,578 characters." },
+            "fullTextLength": { "title": "Full text length", "description": "Character count of fullText, handy for filtering out one-page minute resolutions." },
+            "documentUrl": { "title": "Document URL", "description": "Direct link to the document. For browse/decision records this is the portal's canonical showdocs page; for search records it is dtSearch's own document view (the two id spaces do not map onto each other)." }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across summary and full-decision records.",
+            "transformation": {
+                "fields": ["_input", "_source", "caseNumber", "caseTitle", "decisionDate", "division", "ponente", "documentType", "reporterCitation", "hitCount", "fullTextLength", "documentUrl", "_error"]
+            },
+            "display": {"component": "table"}
+        }
+    }
+}

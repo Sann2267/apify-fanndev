@@ -1,0 +1,117 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "additionalProperties": true,
+        "title": "Shopee flash sale record",
+        "description": "recordType ITEM is a product in a flash sale, SESSION is a calendar entry, EMPTY means the endpoint answered and listed nothing, GATED means Shopee's anti-bot refused that endpoint (retry via residential proxy) and ERROR is a transport failure. All money fields are plain numbers already divided out of Shopee's 100000-scaled integers - no currency symbols, no strings.",
+        "properties": {
+            "_input": { "type": ["string", "null"], "title": "Input" },
+            "_query": { "type": ["string", "null"], "title": "Query" },
+            "_source": {
+                "type": ["string", "null"],
+                "title": "Source",
+                "description": "flash-sale-sessions | flash-sale-items | reference."
+            },
+            "_country": { "type": ["string", "null"], "title": "Country" },
+            "_scrapedAt": { "type": ["string", "null"], "format": "date-time", "title": "Scraped at" },
+            "_attempts": { "type": ["integer", "null"], "title": "Attempts" },
+            "_tlsProfile": { "type": ["string", "null"], "title": "TLS profile" },
+            "recordType": {
+                "type": ["string", "null"],
+                "title": "Record type",
+                "description": "ITEM | SESSION | EMPTY | GATED | ERROR | SURFACE."
+            },
+            "promotionId": { "type": ["integer", "null"], "title": "Promotion ID" },
+            "sessionName": { "type": ["string", "null"], "title": "Session" },
+            "sessionIsOngoing": { "type": ["boolean", "null"], "title": "Live now" },
+            "sessionStartTime": { "type": ["string", "null"], "format": "date-time", "title": "Session start" },
+            "sessionEndTime": { "type": ["string", "null"], "format": "date-time", "title": "Session end" },
+            "sessionPosition": {
+                "type": ["integer", "null"],
+                "title": "Position",
+                "description": "Order within the session as Shopee returned it."
+            },
+            "name": { "type": ["string", "null"], "title": "Product / session name" },
+            "itemId": { "type": ["integer", "null"], "title": "Item ID" },
+            "shopId": { "type": ["integer", "null"], "title": "Shop ID" },
+            "url": { "type": ["string", "null"], "title": "Product URL" },
+            "currency": { "type": ["string", "null"], "title": "Currency" },
+            "price": {
+                "type": ["number", "null"],
+                "title": "Flash price",
+                "description": "Plain number in the site's currency."
+            },
+            "priceBeforeDiscount": { "type": ["number", "null"], "title": "Original price" },
+            "savingAmount": { "type": ["number", "null"], "title": "Saving" },
+            "discountPercent": {
+                "type": ["number", "null"],
+                "title": "Discount %",
+                "description": "Positive magnitude, parsed from Shopee's \"-39%\" string."
+            },
+            "flashSaleStock": { "type": ["integer", "null"], "title": "Stock left" },
+            "flashSaleSold": { "type": ["integer", "null"], "title": "Sold in this sale" },
+            "stockRemainingPercent": {
+                "type": ["number", "null"],
+                "title": "Stock left %",
+                "description": "How much of the allocation is unsold - the urgency signal."
+            },
+            "historicalSold": {
+                "type": ["integer", "null"],
+                "title": "Sold all-time",
+                "description": "Lifetime units for the listing, not just this sale."
+            },
+            "itemRating": { "type": ["number", "null"], "title": "Rating" },
+            "imageUrl": { "type": ["string", "null"], "title": "Image" },
+            "categoryId": { "type": ["integer", "null"], "title": "Flash category ID" },
+            "flashSaleType": { "type": ["integer", "null"], "title": "Flash sale type" },
+            "isMart": { "type": ["boolean", "null"], "title": "Shopee Mart" },
+            "startTime": { "type": ["string", "null"], "format": "date-time", "title": "Start" },
+            "endTime": { "type": ["string", "null"], "format": "date-time", "title": "End" },
+            "status": { "type": ["integer", "null"], "title": "Session status" },
+            "isOngoing": { "type": ["boolean", "null"], "title": "Ongoing" },
+            "error": { "type": ["string", "null"], "title": "Error" },
+            "message": { "type": ["string", "null"], "title": "Message" },
+            "hint": { "type": ["string", "null"], "title": "Hint" }
+        }
+    },
+    "views": {
+        "overview": {
+            "title": "Flash sale items",
+            "transformation": {
+                "fields": [
+                    "_country",
+                    "sessionName",
+                    "sessionIsOngoing",
+                    "name",
+                    "currency",
+                    "price",
+                    "priceBeforeDiscount",
+                    "discountPercent",
+                    "flashSaleStock",
+                    "stockRemainingPercent",
+                    "historicalSold",
+                    "url"
+                ]
+            },
+            "display": {
+                "component": "table",
+                "properties": {
+                    "_country": { "label": "Country" },
+                    "sessionName": { "label": "Session" },
+                    "sessionIsOngoing": { "label": "Live" },
+                    "name": { "label": "Product" },
+                    "currency": { "label": "Cur" },
+                    "price": { "label": "Flash price" },
+                    "priceBeforeDiscount": { "label": "Was" },
+                    "discountPercent": { "label": "Off %" },
+                    "flashSaleStock": { "label": "Stock" },
+                    "stockRemainingPercent": { "label": "Left %" },
+                    "historicalSold": { "label": "Sold" },
+                    "url": { "label": "URL" }
+                }
+            }
+        }
+    }
+}

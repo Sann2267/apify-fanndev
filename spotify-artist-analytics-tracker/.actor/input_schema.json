@@ -1,0 +1,95 @@
+{
+    "title": "Spotify Artist Analytics & Monthly Listeners Tracker",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "artistUrls": {
+            "title": "Artist URLs",
+            "type": "array",
+            "description": "Spotify artists to read. Share links, /intl-xx/ localised links, spotify:artist: URIs and bare artist ids all work.",
+            "editor": "stringList",
+            "prefill": [
+                "https://open.spotify.com/artist/0gxyHStUsqpMadRV0Di1Qt"
+            ]
+        },
+        "artistNames": {
+            "title": "Artist names",
+            "type": "array",
+            "description": "Artists to look up by name instead of by link, one per line. Each name costs one extra search request and the run logs which artist it matched, so check the log when a name is ambiguous.",
+            "editor": "stringList"
+        },
+        "startUrls": {
+            "title": "Artist URLs (request list)",
+            "type": "array",
+            "description": "The same artist links, in the request-list format, for callers that already keep one.",
+            "editor": "requestListSources"
+        },
+        "trackChanges": {
+            "title": "Report growth since the previous run",
+            "type": "boolean",
+            "description": "Remember this run's numbers and report the change next time: absolute delta, percentage, a per-day rate and an up/down/flat trend for monthly listeners, followers and the top track's play count. The first run has nothing to compare against and is marked isFirstReading.",
+            "default": true
+        },
+        "trackingStoreName": {
+            "title": "Tracking store name",
+            "type": "string",
+            "description": "Named key-value store that holds the previous reading. Scheduled runs pointed at the same name build one history; use different names to keep separate watchlists apart.",
+            "editor": "textfield",
+            "default": "spotify-artist-analytics"
+        },
+        "includeTopTracks": {
+            "title": "Include top tracks",
+            "type": "boolean",
+            "description": "Attach the artist's ten most-played tracks, each with its lifetime play count, as a nested field on the artist record.",
+            "default": true
+        },
+        "emitTopTrackRows": {
+            "title": "Also emit one row per top track",
+            "type": "boolean",
+            "description": "Write each top track as its own TOP_TRACK dataset row as well. Handy for spreadsheets, since nested fields flatten badly into CSV.",
+            "default": false
+        },
+        "includeDiscovery": {
+            "title": "Include discovery playlists and related artists",
+            "type": "boolean",
+            "description": "Attach the playlists Spotify says the artist is being discovered on - the most actionable list on the page for an artist team - plus the playlists featuring them and the artists Spotify considers similar.",
+            "default": true
+        },
+        "includeConcerts": {
+            "title": "Include upcoming concerts",
+            "type": "boolean",
+            "description": "Attach the upcoming dates Spotify lists for the artist, with venue, city and whether it is a festival.",
+            "default": true
+        },
+        "maxArtists": {
+            "title": "Maximum artists",
+            "type": "integer",
+            "description": "Ceiling on how many artists a single run reads, so an oversized watchlist cannot run away.",
+            "default": 200,
+            "minimum": 1,
+            "maximum": 2000,
+            "unit": "artists"
+        },
+        "exportFormats": {
+            "title": "Extra export files",
+            "type": "array",
+            "description": "Besides the dataset, write ready-made files into this run's key-value store.",
+            "editor": "select",
+            "items": {
+                "type": "string",
+                "enum": ["json", "ndjson", "csv", "excel"],
+                "enumTitles": ["JSON", "NDJSON", "CSV", "Excel (XLSX)"]
+            },
+            "default": []
+        },
+        "proxyConfiguration": {
+            "title": "Proxy",
+            "type": "object",
+            "description": "Off by default and genuinely optional: the endpoint this actor reads has no WAF and no IP block, so the platform's own address reaches it. Turn it on only for very large watchlists.",
+            "editor": "proxy",
+            "default": {
+                "useApifyProxy": false
+            }
+        }
+    }
+}

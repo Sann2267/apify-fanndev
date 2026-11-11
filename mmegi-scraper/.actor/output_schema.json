@@ -1,0 +1,133 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Article / latest-headline record",
+        "description": "Raw-passthrough dataset envelope. Every record carries _input/_source/_scrapedAt (and _error/_errorDetail on failures). Article-mode records (S1-jsonld -- full articleBody inline in the page's NewsArticle ld+json node, no HTML scraping needed) carry headline/articleBody-style fields; latest-mode records (S2-rss, Mmegi's News RSS feed at /rssFeed/1) carry title/link-style fields.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The exact input value (URL, or 'latest') that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which extraction strategy emitted this record: S1-jsonld or S2-rss."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed extractions -- the error kind (e.g. \"not_found\", \"http_500\", \"blocked_or_transient\")."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "headline": {
+                "title": "Headline",
+                "description": "Article headline, from the NewsArticle ld+json node (article mode only)."
+            },
+            "description": {
+                "title": "Description",
+                "description": "Short article summary -- from ld+json (article mode) or the RSS teaser text (latest mode)."
+            },
+            "articleBody": {
+                "title": "Article body",
+                "description": "Full article text, taken directly from ld+json's articleBody (article mode only). Single html-entity-unescaped -- see CRAWLING_METHOD.md."
+            },
+            "keywords": {
+                "title": "Keywords",
+                "description": "Comma-separated ld+json keywords string, split into a list (article mode only). Observed to just be the headline's words re-joined, not real topical tags."
+            },
+            "inLanguage": {
+                "title": "Language",
+                "description": "ISO language code from ld+json (article mode only)."
+            },
+            "author": {
+                "title": "Author",
+                "description": "Byline name -- resolved from the ld+json Person object (article mode) or the RSS <author> text (latest mode). Often a generic \"correspondent\"/\"staff writer\" rather than an individual, but real reporter names also appear (e.g. on opinion pieces)."
+            },
+            "dateCreated": {
+                "title": "Date created",
+                "description": "ISO 8601 creation date from ld+json (article mode only)."
+            },
+            "datePublished": {
+                "title": "Date published",
+                "description": "ISO 8601 publish date from ld+json (article mode only)."
+            },
+            "dateModified": {
+                "title": "Date modified",
+                "description": "ISO 8601 last-modified date from ld+json (article mode only)."
+            },
+            "thumbnailUrl": {
+                "title": "Thumbnail URL",
+                "description": "Lead image thumbnail URL -- from ld+json's thumbnailUrl (article mode) or the RSS media:thumbnail element (latest mode)."
+            },
+            "image": {
+                "title": "Image URL",
+                "description": "Lead image URL, resolved from ld+json's single ImageObject (article mode only)."
+            },
+            "publisher": {
+                "title": "Publisher",
+                "description": "Raw Organization object from ld+json (article mode only) -- name, url, sameAs social links, logo."
+            },
+            "copyrightHolder": {
+                "title": "Copyright holder",
+                "description": "Raw Organization object from ld+json (article mode only)."
+            },
+            "canonicalUrl": {
+                "title": "Canonical URL",
+                "description": "mainEntityOfPage.@id from ld+json (article mode only) -- the site's own canonical URL for the article."
+            },
+            "title": {
+                "title": "Title",
+                "description": "Headline text of a latest-mode RSS item."
+            },
+            "link": {
+                "title": "Link",
+                "description": "Article URL from the RSS item (latest mode only)."
+            },
+            "pubDate": {
+                "title": "Publish date (RSS)",
+                "description": "RFC-822 publish date string from the RSS item (latest mode only)."
+            },
+            "imageUrl": {
+                "title": "Image URL (RSS)",
+                "description": "Lead image URL from the RSS item's media:content element (latest mode only)."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across both article and latest-headline records.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "_source",
+                    "_scrapedAt",
+                    "headline",
+                    "title",
+                    "link",
+                    "datePublished",
+                    "pubDate",
+                    "author",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

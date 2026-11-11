@@ -1,0 +1,99 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Bahamas RGD search-result record",
+        "description": "Raw-passthrough dataset envelope. Every record carries _input/_source/_scrapedAt (and _error/_errorDetail on failures). Each successful record is one matched entity from RGD's free public name-search (top 3 matches only -- see README/CRAWLING_METHOD.md), with upstream's own field names passed through verbatim. Most upstream fields are null on the free tier -- only entityId/entityName/legacyMigrationStatus are reliably populated.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The exact query (company/business name) that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "S1-public-entities (current-name search), S2-public-entities-history (former-name search), or none (error record)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed searches -- not_found (search matched nothing), result_set_too_broad (query too short/common, upstream returned an empty response -- retry with a more specific name), or blocked_or_transient (network issue)."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "entityId": {
+                "title": "Entity ID",
+                "description": "RGD's internal numeric ID for this entity (used to reference it if paying for the full Company Search Report on rgd.gov.bs)."
+            },
+            "entityName": {
+                "title": "Entity name",
+                "description": "Registered company/business name exactly as on file."
+            },
+            "entityType": {
+                "title": "Entity type",
+                "description": "Upstream field -- null on every free-tier result seen during recon (part of the paid report)."
+            },
+            "entityNumber": {
+                "title": "Entity/registration number",
+                "description": "Upstream field -- null on every free-tier result seen during recon (part of the paid report)."
+            },
+            "entityStatus": {
+                "title": "Entity status",
+                "description": "Upstream field -- null on every free-tier result seen during recon (part of the paid report)."
+            },
+            "registrationDate": {
+                "title": "Registration date",
+                "description": "Upstream field -- null on every free-tier result seen during recon (part of the paid report)."
+            },
+            "legacyMigrationStatus": {
+                "title": "Legacy migration status",
+                "description": "Upstream internal tag, e.g. \"NONE\" -- populated on every sample seen."
+            },
+            "nameHistoryId": {
+                "title": "Name history ID",
+                "description": "Present only when includeHistory=true: RGD's internal ID for this former-name record."
+            },
+            "name": {
+                "title": "Former name",
+                "description": "Present only when includeHistory=true: the former/historical name that matched the query."
+            },
+            "entity": {
+                "title": "Entity (nested)",
+                "description": "Present only when includeHistory=true: the current entity record this former name belongs to, same shape as the plain search result."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns for matched entities and error rows.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "_source",
+                    "_scrapedAt",
+                    "entityName",
+                    "entityId",
+                    "name",
+                    "nameHistoryId",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

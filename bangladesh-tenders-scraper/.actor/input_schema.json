@@ -1,0 +1,78 @@
+{
+    "title": "Bangladesh Government Tenders Scraper (CPTU/BPPA e-GP)",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "mode": {
+            "title": "Mode",
+            "type": "string",
+            "editor": "select",
+            "description": "\"List\" scrapes eprocure.gov.bd's public live-tender listing (latest, or filtered by keyword/procurement nature). \"Awarded\" scrapes the awarded-contracts (Notice of Award) register, which includes winning supplier name and contract value. \"Detail\" fetches the full detail page (lots, dates, fees, contact, documents) for specific tender IDs/URLs.",
+            "enum": ["list", "awarded", "detail"],
+            "enumTitles": ["List (live tenders)", "Awarded (Notice of Award)", "Detail (fetch specific tenders)"],
+            "default": "list",
+            "prefill": "list"
+        },
+        "keyword": {
+            "title": "Keyword (mode=list/awarded only)",
+            "type": "string",
+            "editor": "textfield",
+            "description": "Free-text keyword matched against the tender/contract title and package description. Leave blank for the latest live tenders / awarded contracts with no filter."
+        },
+        "procurementNature": {
+            "title": "Procurement nature (mode=list only)",
+            "type": "string",
+            "editor": "select",
+            "description": "Restrict live-tender results to one procurement nature. Confirmed server-side quirk: this filter is silently ignored by eprocure.gov.bd whenever 'keyword' is also set (the site's own search endpoint gives keyword priority) -- use one or the other, not both, for a real filtered result. See CRAWLING_METHOD.md.",
+            "enum": ["all", "goods", "works", "service", "physicalServices"],
+            "enumTitles": ["All natures", "Goods", "Works", "Service", "Physical Services"],
+            "default": "all",
+            "prefill": "all"
+        },
+        "maxResults": {
+            "title": "Max results (mode=list/awarded only)",
+            "type": "integer",
+            "description": "How many rows to fetch from the first page of results. eprocure.gov.bd reports thousands of live tenders and hundreds of thousands of historical awarded contracts in total (see the run log / _totalPages on each record) -- narrow your keyword/procurementNature filter for a more targeted result if you need a specific subset rather than raising this further.",
+            "default": 30,
+            "minimum": 1,
+            "maximum": 100,
+            "prefill": 30
+        },
+        "tenderId": {
+            "title": "Tender ID or URL (mode=detail only)",
+            "type": "string",
+            "editor": "textfield",
+            "description": "A single tender's numeric ID (e.g. 1324093), or its full detail URL. Find IDs from a 'list' or 'awarded' mode run's tenderId field.",
+            "prefill": "1324093"
+        },
+        "tenderIds": {
+            "title": "Tender IDs or URLs (mode=detail only)",
+            "type": "array",
+            "editor": "stringList",
+            "description": "Multiple tender IDs (or full detail URLs) to fetch full detail for in one run."
+        },
+        "maxConcurrency": {
+            "title": "Max concurrent workers (mode=detail only)",
+            "type": "integer",
+            "description": "How many tender detail pages to fetch in parallel.",
+            "default": 4,
+            "minimum": 1,
+            "maximum": 10,
+            "prefill": 4
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "editor": "proxy",
+            "description": "Apify Proxy configuration.",
+            "default": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            },
+            "prefill": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            }
+        }
+    }
+}

@@ -1,0 +1,52 @@
+{
+    "title": "Madagascar Government Tenders Scraper (ARMP e-GP)",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "listType": {
+            "title": "List type",
+            "type": "string",
+            "editor": "select",
+            "description": "\"Avis\" = today's live calls for tender across every region (~450 at a time). \"Dossiers\" = the searchable multi-year archive (2015-present) by year. \"Contrats\" = awarded contracts for a given year, with supplier name, tax ID, declared beneficial owner, and contract amount.",
+            "enum": ["avis", "dossiers", "contrats"],
+            "enumTitles": [
+                "Avis (live calls for tender, all regions)",
+                "Dossiers (multi-year archive, by year)",
+                "Contrats (awarded contracts, by year)"
+            ],
+            "default": "avis",
+            "prefill": "avis"
+        },
+        "year": {
+            "title": "Year (dossiers/contrats only)",
+            "type": "string",
+            "editor": "textfield",
+            "description": "Which year to search. Ignored for listType=avis (always the live listing). Dossiers cover 2015-present; contrats cover 2015-present. Requesting an older/full year can return a very large result -- narrow with maxResults if you only need a sample.",
+            "default": "2026",
+            "prefill": "2026"
+        },
+        "maxResults": {
+            "title": "Max results",
+            "type": "integer",
+            "description": "Caps how many rows are kept in the output for this run. The underlying page/query for the requested year is always fetched in full first (there is no server-side pagination), so this only trims what gets saved to the dataset, not how much is downloaded.",
+            "default": 100,
+            "minimum": 1,
+            "maximum": 10000,
+            "prefill": 100
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "editor": "proxy",
+            "description": "Apify Proxy configuration.",
+            "default": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            },
+            "prefill": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            }
+        }
+    }
+}

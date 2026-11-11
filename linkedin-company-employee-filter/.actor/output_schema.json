@@ -1,0 +1,56 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "LinkedIn company employee record",
+        "description": "Dataset envelope (_input / _source / _scrapedAt / recordType) on top of LinkedIn company and people data. One COMPANY row per company - always, cookie or not - one EMPLOYEE row per matching person, NOTICE rows explaining any gap, and ERROR rows on failure. LinkedIn changes its markup and private API without notice, so unlisted fields pass through rather than failing the run.",
+        "additionalProperties": true,
+        "properties": {
+            "_input": { "type": "string", "title": "Input", "description": "The company URL that produced this record." },
+            "_source": { "type": "string", "title": "Source surface", "description": "guest-company-page for COMPANY rows, voyager-search-clusters for EMPLOYEE rows, or none on NOTICE and ERROR rows." },
+            "_scrapedAt": { "type": "string", "title": "Scraped at", "description": "UTC ISO 8601 timestamp when this record was emitted." },
+            "recordType": { "type": "string", "title": "Record type", "description": "COMPANY, EMPLOYEE, NOTICE or ERROR." },
+            "_error": { "type": "string", "title": "Error", "description": "Failure rows only: fetch_failed, auth_required or employee_search_failed." },
+            "_errorDetail": { "type": "string", "title": "Error detail", "description": "Free-form diagnostic accompanying _error." },
+            "_notice": { "type": "string", "title": "Notice", "description": "cookie_required_for_employees, company_id_not_found or no_role_matches." },
+            "_noticeDetail": { "type": "string", "title": "Notice detail", "description": "What the notice means and what to change." },
+            "companyName": { "title": "Company", "description": "The company's name." },
+            "companyUrl": { "title": "Company URL", "description": "Canonical LinkedIn page, tracking parameters stripped." },
+            "companySlug": { "title": "Company slug", "description": "Handle out of the URL - the stable key to join on." },
+            "companyId": { "title": "Company id", "description": "LinkedIn's internal numeric id. Never rendered on the page, but it leaks in the 'see all employees' call to action - and it is the key the people search facets on, so an employee run cannot proceed without it." },
+            "companyDomain": { "title": "Company domain", "description": "The company's own web domain, derived from their website. Bare domain only: no email address is guessed from it, because a fabricated address that bounces costs you your sending reputation." },
+            "website": { "title": "Website", "description": "The company's website as listed on LinkedIn." },
+            "tagline": { "title": "Tagline", "description": "The company's one-line slogan." },
+            "description": { "title": "Description", "description": "The company's About text." },
+            "followers": { "title": "Followers", "description": "LinkedIn follower count." },
+            "employeeCount": { "title": "Employees on LinkedIn", "description": "How many people list this company as their employer - useful as a sanity check on how much of the organisation an employee run could ever reach." },
+            "logoUrl": { "title": "Logo", "description": "Company logo image URL." },
+            "fullName": { "title": "Full name", "description": "EMPLOYEE rows: the person's display name." },
+            "firstName": { "title": "First name", "description": "Split from the display name with pronouns, emoji frames and credential suffixes removed." },
+            "lastName": { "title": "Last name", "description": "Last remaining name part after the same cleanup." },
+            "headline": { "title": "Headline", "description": "The person's LinkedIn headline - the field the role filter matches against." },
+            "matchedKeyword": { "title": "Matched role keyword", "description": "Which of your role keywords this person matched. Null when no include filter was set, so you can tell 'matched everything' from 'matched nothing in particular'." },
+            "profileUrl": { "title": "Profile URL", "description": "Canonical profile link, tracking parameters stripped and country subdomains folded onto www." },
+            "location": { "title": "Location", "description": "Where LinkedIn places the person." }
+        }
+    },
+    "views": {
+        "employees": {
+            "title": "Employees",
+            "transformation": {
+                "fields": ["fullName", "firstName", "lastName", "headline", "matchedKeyword", "profileUrl", "location", "companyName", "companyDomain"]
+            },
+            "display": {
+                "component": "table",
+                "properties": {
+                    "fullName": { "label": "Name" },
+                    "headline": { "label": "Headline" },
+                    "matchedKeyword": { "label": "Matched" },
+                    "profileUrl": { "label": "Profile" },
+                    "companyName": { "label": "Company" }
+                }
+            }
+        }
+    }
+}

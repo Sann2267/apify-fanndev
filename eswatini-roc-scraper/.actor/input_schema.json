@@ -1,0 +1,53 @@
+{
+    "title": "Eswatini Company Registry Scraper",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "query": {
+            "title": "Company name",
+            "type": "string",
+            "editor": "textfield",
+            "description": "A business/company name (or partial name, at least 3 characters) to search for on Eswatini's official company register.",
+            "prefill": "MTN"
+        },
+        "queries": {
+            "title": "Company names",
+            "type": "array",
+            "editor": "stringList",
+            "description": "Multiple names to search for in one run. Combined with 'query' if both are set."
+        },
+        "maxResultsPerQuery": {
+            "title": "Max matches per query",
+            "type": "integer",
+            "description": "Maximum number of matched rows to return per search query. The register has no server-side pagination -- a broad query can legitimately return thousands of rows, so this caps how many are kept.",
+            "default": 50,
+            "minimum": 1,
+            "maximum": 1000,
+            "prefill": 50
+        },
+        "maxConcurrency": {
+            "title": "Max concurrent workers",
+            "type": "integer",
+            "description": "How many search queries to run in parallel. Keep this low -- broad queries can take the register's server 20-30 seconds to render.",
+            "default": 3,
+            "minimum": 1,
+            "maximum": 8,
+            "prefill": 3
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "editor": "proxy",
+            "description": "Apify Proxy configuration. Residential is on by default.",
+            "default": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            },
+            "prefill": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            }
+        }
+    },
+    "required": []
+}

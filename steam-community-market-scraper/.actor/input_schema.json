@@ -1,0 +1,208 @@
+{
+    "title": "Steam Community Market Scraper",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "mode": {
+            "title": "What to collect",
+            "type": "string",
+            "description": "search: browse or search the market catalogue. itemOverview: one summary row per item (bid/ask, spread, 24h/7d/30d average price and volume, all-time high). priceHistory: the full median price and sales volume series. orderBook: every buy and sell price level. listings: individual items for sale with float, pattern seed and stickers. recentSales: the live feed of completed sales.",
+            "editor": "select",
+            "enum": ["search", "itemOverview", "priceHistory", "orderBook", "listings", "recentSales"],
+            "enumTitles": [
+                "Search the market catalogue",
+                "Item overview (price, spread, volume)",
+                "Price history",
+                "Order book (buy & sell orders)",
+                "Individual listings (float, pattern, stickers)",
+                "Recent sales feed"
+            ],
+            "default": "search",
+            "prefill": "itemOverview"
+        },
+        "items": {
+            "title": "Items",
+            "type": "array",
+            "editor": "stringList",
+            "description": "For the item modes. Each line is an exact market name (e.g. AK-47 | Redline (Field-Tested)) or a market page URL from your browser. Leave empty to take the items from a search instead (see the search settings below).",
+            "prefill": [
+                "AK-47 | Redline (Field-Tested)",
+                "https://steamcommunity.com/market/listings/730/Dreams%20%26%20Nightmares%20Case"
+            ]
+        },
+        "appId": {
+            "title": "Game",
+            "type": "string",
+            "description": "Which game's market. A Steam app id (730 = CS2, 570 = Dota 2, 440 = TF2, 252490 = Rust, 753 = Steam trading cards) or one of: cs2, dota2, tf2, rust, pubg, steam. Item URLs carry their own game and ignore this.",
+            "editor": "textfield",
+            "default": "730",
+            "prefill": "730"
+        },
+        "currency": {
+            "title": "Currency",
+            "type": "string",
+            "description": "Steam prices everything in the currency of the visitor's country, so this picks the proxy country for you (USD = United States, EUR = Germany, ...). Needs Apify Proxy. Leave empty to use the proxy settings as they are. Search results are always in USD.",
+            "editor": "select",
+            "enum": ["USD", "EUR", "GBP", "CAD", "AUD", "NZD", "JPY", "KRW", "CNY", "HKD", "TWD", "SGD", "MYR", "IDR", "PHP", "THB", "VND", "INR", "BRL", "MXN", "CLP", "PEN", "COP", "ARS", "UYU", "CRC", "PLN", "CHF", "NOK", "UAH", "TRY", "ZAR", "SAR", "AED", "ILS", "KZT", "KWD", "QAR", "RUB"],
+            "prefill": "USD"
+        },
+        "expandVariants": {
+            "title": "Include every variant of each item",
+            "type": "boolean",
+            "description": "Turn each item into all of its variants: every wear (Factory New ... Battle-Scarred), StatTrak and Souvenir version. A grouped market URL (ending in /G...) is always expanded.",
+            "default": false
+        },
+        "searchQuery": {
+            "title": "Search text",
+            "type": "string",
+            "description": "Search mode, or item modes with no Items: text to search for (e.g. knife, case, redline). Leave empty to browse everything.",
+            "editor": "textfield",
+            "sectionCaption": "Search settings",
+            "sectionDescription": "Used by the search mode, and by the item modes when the Items list is empty."
+        },
+        "searchFilters": {
+            "title": "Category filters",
+            "type": "object",
+            "description": "Market category filters, as {\"category\": [\"tag\", ...]}. Examples for CS2: {\"Type\": [\"CSGO_Type_WeaponCase\"]} (cases), {\"Exterior\": [\"WearCategory0\"]} (Factory New), {\"Rarity\": [\"Rarity_Ancient_Weapon\"]} (Covert), {\"Quality\": [\"strange\"]} (StatTrak).",
+            "editor": "json"
+        },
+        "sortBy": {
+            "title": "Sort search results by",
+            "type": "string",
+            "description": "Order of the search results.",
+            "editor": "select",
+            "enum": ["popular", "priceAsc", "priceDesc", "quantityDesc", "quantityAsc", "nameAsc", "nameDesc"],
+            "enumTitles": ["Popular", "Price: low to high", "Price: high to low", "Most listings", "Fewest listings", "Name A-Z", "Name Z-A"],
+            "default": "popular"
+        },
+        "minPrice": {
+            "title": "Minimum price (USD)",
+            "type": "integer",
+            "description": "Only items whose cheapest listing costs at least this much, in US dollars.",
+            "minimum": 0
+        },
+        "maxPrice": {
+            "title": "Maximum price (USD)",
+            "type": "integer",
+            "description": "Only items whose cheapest listing costs at most this much, in US dollars.",
+            "minimum": 0
+        },
+        "maxItems": {
+            "title": "Maximum items from search",
+            "type": "integer",
+            "description": "How many catalogue items to return (search mode) or to pick from the search (item modes with no Items). Up to 100 items per request.",
+            "default": 100,
+            "minimum": 1,
+            "maximum": 50000,
+            "prefill": 20
+        },
+        "historyDays": {
+            "title": "History window (days)",
+            "type": "integer",
+            "description": "Price history mode: keep only the last N days of data points. 0 = everything since the item was first sold. Summary statistics (averages, all-time high) always use the full history.",
+            "default": 0,
+            "minimum": 0,
+            "sectionCaption": "Price history, order book & listings"
+        },
+        "historyOutput": {
+            "title": "History output shape",
+            "type": "string",
+            "description": "perItem: one row per item with all data points in a 'prices' list. perPoint: one row per data point (best for spreadsheets and charts).",
+            "editor": "select",
+            "enum": ["perItem", "perPoint"],
+            "enumTitles": ["One row per item", "One row per data point"],
+            "default": "perItem"
+        },
+        "orderBookDepth": {
+            "title": "Order book depth",
+            "type": "integer",
+            "description": "How many price levels to return on each side of the order book. 0 = every level. Item overview always shows a 10-level preview.",
+            "default": 50,
+            "minimum": 0
+        },
+        "maxListingsPerItem": {
+            "title": "Maximum listings per item",
+            "type": "integer",
+            "description": "Listings mode: how many individual sell listings to collect for each item.",
+            "default": 100,
+            "minimum": 1,
+            "maximum": 10000
+        },
+        "listingSort": {
+            "title": "Sort listings by",
+            "type": "string",
+            "description": "Listings mode: price, float (wear) or pattern seed. Float sorting is how you find the lowest-wear copies of a skin.",
+            "editor": "select",
+            "enum": ["priceAsc", "priceDesc", "floatAsc", "floatDesc", "patternAsc", "patternDesc"],
+            "enumTitles": ["Price: low to high", "Price: high to low", "Float: lowest first", "Float: highest first", "Pattern seed: low to high", "Pattern seed: high to low"],
+            "default": "priceAsc"
+        },
+        "minFloat": {
+            "title": "Minimum float",
+            "type": "string",
+            "description": "Listings mode: skip listings with a float below this (e.g. 0.15). Leave empty for no limit.",
+            "editor": "textfield"
+        },
+        "maxFloat": {
+            "title": "Maximum float",
+            "type": "string",
+            "description": "Listings mode: skip listings with a float above this (e.g. 0.16). With 'Float: lowest first' sorting the run stops as soon as it passes this value.",
+            "editor": "textfield"
+        },
+        "includeFullDescription": {
+            "title": "Include full item description on every listing",
+            "type": "boolean",
+            "description": "Listings and recent sales: keep the full item description text and sticker artwork details on every row. Off keeps rows small.",
+            "default": false
+        },
+        "recentSalesPolls": {
+            "title": "Number of polls",
+            "type": "integer",
+            "description": "Recent sales mode: Steam shows the latest 50 sales and refreshes them about every 30 seconds. Poll several times to build a longer feed; duplicates are removed.",
+            "default": 1,
+            "minimum": 1,
+            "maximum": 720,
+            "sectionCaption": "Recent sales"
+        },
+        "recentSalesIntervalSecs": {
+            "title": "Seconds between polls",
+            "type": "integer",
+            "description": "Recent sales mode: wait between polls. The feed refreshes about every 30 seconds.",
+            "default": 30,
+            "minimum": 10,
+            "maximum": 3600
+        },
+        "filterRecentSalesByApp": {
+            "title": "Only sales from the selected game",
+            "type": "boolean",
+            "description": "Recent sales mode: keep only sales for the game in the Game field. Off returns sales from every game.",
+            "default": false
+        },
+        "maxConcurrency": {
+            "title": "Parallel requests",
+            "type": "integer",
+            "description": "How many requests run at the same time.",
+            "default": 4,
+            "minimum": 1,
+            "maximum": 16,
+            "sectionCaption": "Advanced"
+        },
+        "proxyConfiguration": {
+            "title": "Proxy",
+            "type": "object",
+            "description": "Residential proxy is recommended: it spreads requests over many IPs and its country sets the currency of every price. The Currency field above overrides the country.",
+            "editor": "proxy",
+            "default": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"],
+                "apifyProxyCountry": "US"
+            },
+            "prefill": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"],
+                "apifyProxyCountry": "US"
+            }
+        }
+    },
+    "required": ["mode"]
+}

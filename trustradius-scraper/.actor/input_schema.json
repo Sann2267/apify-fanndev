@@ -1,0 +1,186 @@
+{
+    "title": "TrustRadius Scraper",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "mode": {
+            "title": "What to scrape",
+            "type": "string",
+            "description": "Reviews: every review of the products below. Product details: rating, feature ratings, pricing, awards, competitors, install base. Category products: the ranked product list of the categories below. Alternatives: competitors and alternatives by company size. Compare: head-to-head comparison pages. Category tree: every category with its slug.",
+            "editor": "select",
+            "enum": [
+                "reviews",
+                "products",
+                "categoryProducts",
+                "alternatives",
+                "compare",
+                "categories"
+            ],
+            "enumTitles": [
+                "Reviews",
+                "Product details",
+                "Category products",
+                "Alternatives",
+                "Compare products",
+                "Category tree"
+            ],
+            "default": "reviews",
+            "prefill": "reviews"
+        },
+        "products": {
+            "title": "Products",
+            "type": "array",
+            "description": "For Reviews, Product details and Alternatives. A product slug (hubspot-crm) or any TrustRadius product URL (https://www.trustradius.com/products/hubspot-crm/reviews).",
+            "editor": "stringList",
+            "prefill": [
+                "hubspot-crm"
+            ]
+        },
+        "categories": {
+            "title": "Categories",
+            "type": "array",
+            "description": "For Category products. A category slug (crm) or a category URL (https://www.trustradius.com/categories/crm). Run the Category tree mode to see every slug.",
+            "editor": "stringList",
+            "prefill": [
+                "crm"
+            ]
+        },
+        "comparisons": {
+            "title": "Comparisons",
+            "type": "array",
+            "description": "For Compare products. Two product slugs as 'hubspot-crm-vs-pipedrive' or 'hubspot-crm, pipedrive', or a /compare-products/ URL.",
+            "editor": "stringList",
+            "prefill": [
+                "hubspot-crm-vs-pipedrive"
+            ]
+        },
+        "maxItems": {
+            "title": "Max results per input",
+            "type": "integer",
+            "description": "Reviews per product, or products per category. Other modes return everything on the page.",
+            "default": 100,
+            "prefill": 50,
+            "minimum": 1,
+            "maximum": 100000
+        },
+        "reviewsNewerThan": {
+            "title": "Only reviews published on or after",
+            "type": "string",
+            "description": "Reviews: stop at the first review older than this date (YYYY-MM-DD). Reviews are listed newest first, so this makes daily or weekly monitoring cheap.",
+            "editor": "datepicker",
+            "sectionCaption": "Reviews options"
+        },
+        "includeReviewDetails": {
+            "title": "Include the full review questionnaire",
+            "type": "boolean",
+            "description": "Reviews: also open each review's own page for the answers the list does not show -- feature-by-feature ratings, usability score, return on investment, alternatives the reviewer evaluated, other software used, reviewer's country and roles. One extra page per review.",
+            "default": false
+        },
+        "includePricing": {
+            "title": "Include the pricing page",
+            "type": "boolean",
+            "description": "Product details: also read the product's pricing page for reviewer price quotes, support channels, deployment types and priced alternatives. One extra page per product.",
+            "default": true,
+            "sectionCaption": "Product details options"
+        },
+        "companySize": {
+            "title": "Company size",
+            "type": "string",
+            "description": "Category products: rank the list for this company size.",
+            "editor": "select",
+            "enum": [
+                "any",
+                "small-business",
+                "mid-sized",
+                "enterprise"
+            ],
+            "enumTitles": [
+                "Any",
+                "Small business",
+                "Mid-sized",
+                "Enterprise"
+            ],
+            "default": "any",
+            "sectionCaption": "Category products options"
+        },
+        "topRatedOnly": {
+            "title": "Top Rated award winners only",
+            "type": "boolean",
+            "default": false,
+            "description": "Category products: only products holding a current TrustRadius Top Rated award."
+        },
+        "hasPricingOnly": {
+            "title": "Only products with published pricing",
+            "type": "boolean",
+            "default": false,
+            "description": "Category products: only products that publish pricing on TrustRadius."
+        },
+        "freeOptionOnly": {
+            "title": "Only products with a free option",
+            "type": "boolean",
+            "default": false,
+            "description": "Category products: only products with a free plan or free option."
+        },
+        "operatingSystem": {
+            "title": "Operating system",
+            "type": "string",
+            "editor": "select",
+            "enum": [
+                "any",
+                "windows",
+                "mac",
+                "linux"
+            ],
+            "enumTitles": [
+                "Any",
+                "Windows",
+                "Mac",
+                "Linux"
+            ],
+            "default": "any",
+            "description": "Category products: only products that run on this operating system."
+        },
+        "deepPagination": {
+            "title": "Go past the first 1,000 products",
+            "type": "boolean",
+            "description": "TrustRadius stops paging a category at 1,000 products. When no filter is set, this re-walks the category in its other orderings and slices and merges them without duplicates to reach further.",
+            "default": false
+        },
+        "filterCategoryTree": {
+            "title": "Category tree: only matching categories",
+            "type": "boolean",
+            "description": "Category tree: return only categories whose slug or name matches the Categories list above.",
+            "default": false
+        },
+        "maxConcurrency": {
+            "title": "Parallel requests",
+            "type": "integer",
+            "default": 3,
+            "minimum": 1,
+            "maximum": 10,
+            "sectionCaption": "Advanced",
+            "description": "How many pages are fetched at the same time. Higher is faster; lower is gentler and gets fewer refused pages (those are retried automatically)."
+        },
+        "proxyConfiguration": {
+            "title": "Proxy",
+            "type": "object",
+            "description": "Residential proxies are recommended for reliable results. A page that is refused is retried automatically from a new IP.",
+            "editor": "proxy",
+            "default": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": [
+                    "RESIDENTIAL"
+                ]
+            },
+            "prefill": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": [
+                    "RESIDENTIAL"
+                ]
+            }
+        }
+    },
+    "required": [
+        "mode"
+    ]
+}

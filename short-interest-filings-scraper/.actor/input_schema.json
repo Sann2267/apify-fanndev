@@ -1,0 +1,129 @@
+{
+    "title": "Short Interest & SEC Filings Scraper input",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "mode": {
+            "title": "Mode",
+            "type": "string",
+            "description": "short-interest = Nasdaq's bi-monthly short interest history per ticker. short-volume = FINRA's daily short-sale volume for every US symbol. filings = a company's SEC filing history. filing-search = full-text search across all EDGAR filings. company = SEC company profile. reference = check all sources live, including the newest FINRA date available.",
+            "editor": "select",
+            "default": "short-interest",
+            "enum": ["short-interest", "short-volume", "filings", "filing-search", "company", "reference"],
+            "enumTitles": [
+                "short-interest - Nasdaq bi-monthly short interest",
+                "short-volume - FINRA daily short volume (all symbols)",
+                "filings - SEC filing history for a company",
+                "filing-search - full-text search across EDGAR",
+                "company - SEC company profile",
+                "reference - which sources are live + newest data date"
+            ]
+        },
+        "symbol": {
+            "title": "Ticker or CIK",
+            "type": "string",
+            "description": "A single ticker (TSLA) or, for SEC modes, a CIK number. Case does not matter and a leading $ is ignored.",
+            "editor": "textfield",
+            "prefill": "TSLA"
+        },
+        "symbols": {
+            "title": "Tickers or CIKs",
+            "type": "array",
+            "description": "Several tickers (or CIKs for SEC modes) in one run. In short-volume mode this filters the daily file down to the symbols you list; leave it empty to get every symbol.",
+            "editor": "stringList",
+            "prefill": ["TSLA", "AAPL", "NVDA"]
+        },
+        "date": {
+            "title": "Date (short-volume mode)",
+            "type": "string",
+            "description": "Trading day in YYYY-MM-DD. Leave empty to use the newest file FINRA has published - it runs 1-2 days behind and never publishes on weekends or market holidays.",
+            "editor": "textfield"
+        },
+        "dates": {
+            "title": "Dates (short-volume mode)",
+            "type": "array",
+            "description": "Several trading days in YYYY-MM-DD to pull in one run.",
+            "editor": "stringList"
+        },
+        "venue": {
+            "title": "Venue (short-volume mode)",
+            "type": "string",
+            "description": "Which FINRA file to read. 'consolidated' covers all venues and is what most analyses want; the others isolate a single reporting facility.",
+            "editor": "select",
+            "default": "consolidated",
+            "enum": ["consolidated", "nasdaq-carteret", "nasdaq-chicago", "nyse", "finra-adf"],
+            "enumTitles": [
+                "consolidated - all venues (CNMS)",
+                "Nasdaq TRF Carteret",
+                "Nasdaq TRF Chicago",
+                "NYSE TRF",
+                "FINRA ADF"
+            ]
+        },
+        "forms": {
+            "title": "Form types (filings and filing-search modes)",
+            "type": "array",
+            "description": "Filter to specific SEC form types, e.g. 8-K, 10-Q, 10-K, 4, SC 13D. Leave empty for every form.",
+            "editor": "stringList",
+            "prefill": ["8-K"]
+        },
+        "since": {
+            "title": "Filed since (filings mode)",
+            "type": "string",
+            "description": "Only return filings on or after this date, in YYYY-MM-DD.",
+            "editor": "textfield"
+        },
+        "query": {
+            "title": "Search query (filing-search mode)",
+            "type": "string",
+            "description": "Full-text query across EDGAR documents. Wrap a phrase in double quotes for an exact match, e.g. \"reverse stock split\".",
+            "editor": "textfield",
+            "prefill": "\"reverse stock split\""
+        },
+        "startDate": {
+            "title": "Start date (filing-search mode)",
+            "type": "string",
+            "description": "Earliest filing date to search, in YYYY-MM-DD.",
+            "editor": "textfield"
+        },
+        "endDate": {
+            "title": "End date (filing-search mode)",
+            "type": "string",
+            "description": "Latest filing date to search, in YYYY-MM-DD.",
+            "editor": "textfield"
+        },
+        "assetClass": {
+            "title": "Asset class (short-interest mode)",
+            "type": "string",
+            "description": "Nasdaq's asset class for the symbol: stocks or etf.",
+            "editor": "select",
+            "default": "stocks",
+            "enum": ["stocks", "etf"],
+            "enumTitles": ["stocks", "etf"]
+        },
+        "includeSymbolInfo": {
+            "title": "Include exchange info (short-interest mode)",
+            "type": "boolean",
+            "description": "Adds company name, exchange and listing status to every short interest row. Costs one extra request per ticker.",
+            "default": true
+        },
+        "maxItems": {
+            "title": "Max items",
+            "type": "integer",
+            "description": "Maximum records per run. A single FINRA day holds about 12,300 symbols, so raise this when pulling a whole file.",
+            "editor": "number",
+            "default": 500,
+            "minimum": 1
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "description": "Optional. All three sources answered every request without a proxy.",
+            "editor": "proxy",
+            "default": {
+                "useApifyProxy": false
+            }
+        }
+    },
+    "required": ["mode"]
+}

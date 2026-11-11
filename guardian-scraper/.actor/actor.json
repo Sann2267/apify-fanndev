@@ -1,0 +1,16 @@
+{
+    "actorSpecification": 1,
+    "name": "guardian-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Guardian Scraper",
+    "description": "Extract public article metadata and latest headlines from The Guardian using HTTP-only requests.",
+    "dockerfile": "./Dockerfile",
+    "minMemoryMbytes": 256,
+    "maxMemoryMbytes": 1024,
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

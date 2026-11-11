@@ -1,0 +1,18 @@
+{
+    "actorSpecification": 1,
+    "name": "google-maps-business-status-monitor",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Google Maps Business Verification & Status Monitoring",
+    "description": "Find neglected Google Business Profiles in any area: unclaimed listings, businesses with no website or phone, thin profiles and closed locations - each scored as a GMB sales opportunity. Built for local SEO agencies prospecting claim and optimisation clients. JSON/CSV/Excel/NDJSON.",
+    "categories": [
+        "MAPS",
+        "LEAD_GENERATION"
+    ],
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

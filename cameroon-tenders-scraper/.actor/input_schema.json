@@ -1,0 +1,90 @@
+{
+    "title": "Cameroon Government Tenders Scraper (ARMP)",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "mode": {
+            "title": "Mode",
+            "type": "string",
+            "editor": "select",
+            "description": "\"List\" scrapes one of ARMP's public Journal des Marches Publics listing views (paginated). \"Detail\" fetches the full text of specific publications you already know.",
+            "enum": ["list", "detail"],
+            "enumTitles": ["List (browse a listing page)", "Detail (fetch specific publications)"],
+            "default": "list",
+            "prefill": "list"
+        },
+        "listType": {
+            "title": "List type (mode=list only)",
+            "type": "string",
+            "editor": "select",
+            "description": "Which ARMP listing to scrape. \"Latest\" mixes every publication type (notices, addenda, award decisions, award communiques) in one reverse-chronological feed. The others each filter to one procurement category (counts as of 2026-08-27).",
+            "enum": [
+                "latest",
+                "national",
+                "international",
+                "quotation",
+                "proposal",
+                "expression_of_interest",
+                "restricted",
+                "agreement"
+            ],
+            "enumTitles": [
+                "Latest (all types mixed)",
+                "National Call for Tenders (~7,038)",
+                "International Call for Tenders (~172)",
+                "Request for Quotation (~1,143)",
+                "Request for Proposal (~20)",
+                "Call for Expression of Interest (~557)",
+                "Restricted Call for Tenders (~5)",
+                "Agreement (~3)"
+            ],
+            "default": "latest",
+            "prefill": "latest"
+        },
+        "maxResults": {
+            "title": "Max results (mode=list only)",
+            "type": "integer",
+            "description": "Caps how many rows are scraped for this run, across as many pages as needed (10 rows per page server-side). \"Latest\" and \"national\" can have thousands of total rows -- raise this only as high as you actually need.",
+            "default": 50,
+            "minimum": 1,
+            "maximum": 5000,
+            "prefill": 50
+        },
+        "resourceId": {
+            "title": "Publication ID or URL (mode=detail only)",
+            "type": "string",
+            "editor": "textfield",
+            "description": "A single ARMP publication, as either its full detail URL, or a \"TYPE:ID\" pair (e.g. \"AO:64638\") -- both found in a 'list' mode run's detailsUrl/typePublication/idPublication fields.",
+            "prefill": "AO:64638"
+        },
+        "resourceIds": {
+            "title": "Publication IDs or URLs (mode=detail only)",
+            "type": "array",
+            "editor": "stringList",
+            "description": "Multiple publications (full detail URLs, or \"TYPE:ID\" pairs) to fetch full detail for in one run."
+        },
+        "maxConcurrency": {
+            "title": "Max concurrent workers (mode=detail only)",
+            "type": "integer",
+            "description": "How many publication detail pages to fetch in parallel.",
+            "default": 3,
+            "minimum": 1,
+            "maximum": 5,
+            "prefill": 3
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "editor": "proxy",
+            "description": "Apify Proxy configuration.",
+            "default": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            },
+            "prefill": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            }
+        }
+    }
+}

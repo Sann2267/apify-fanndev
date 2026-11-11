@@ -1,0 +1,134 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Article / latest-headline record",
+        "description": "Raw-passthrough dataset envelope. Every record carries _input/_source/_scrapedAt (and _error/_errorDetail on failures). Article-mode records (S1-html, articleBody pulled from HTML div.article-content-area since ld+json has no articleBody) carry headline/articleBody-style fields; latest-mode records (S2-sitemap, Google News sitemap at /sitemaps/news.xml) carry title/link-style fields.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The exact input value (URL, or 'latest') that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which extraction strategy emitted this record (e.g. S1-html, S2-sitemap)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed extractions -- the error kind."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "articleId": {
+                "title": "Article ID",
+                "description": "Internal numeric GhanaWeb article ID, taken from the trailing digits of the article URL."
+            },
+            "headline": {
+                "title": "Headline",
+                "description": "Article headline, from the NewsArticle ld+json node."
+            },
+            "description": {
+                "title": "Description",
+                "description": "Short article summary, from the NewsArticle ld+json node."
+            },
+            "articleBody": {
+                "title": "Article body",
+                "description": "Full article text, reconstructed from <br>-separated lines inside div.article-content-area, truncated before the trailing reporter-initials signature line and any promo/related-video content that follows it (see CRAWLING_METHOD.md)."
+            },
+            "reporterInitials": {
+                "title": "Reporter initials",
+                "description": "GhanaWeb's internal 2-part reporter/editor-initials signature (e.g. \"MRA/MA\"), found as a standalone line at the end of the real article body on staff-written pieces. Null on Opinions/Features pieces, which don't carry this signature."
+            },
+            "author": {
+                "title": "Author",
+                "description": "Name from the ld+json author object -- \"GhanaWeb\" (a NewsMediaOrganization, no individual byline) on staff-written News/Sports/Business/Entertainment pieces; null on Opinions/Features pieces."
+            },
+            "bylineLabel": {
+                "title": "Byline label",
+                "description": "Label of the <p class=\"floatRight\"> byline block on the page: \"Source\" on staff pieces, \"Columnist\" on opinion pieces."
+            },
+            "bylineName": {
+                "title": "Byline name",
+                "description": "Value of the byline block: \"www.ghanaweb.com\" on staff pieces, or the individual columnist's name on opinion pieces (the only place an individual author's name appears)."
+            },
+            "category": {
+                "title": "Category",
+                "description": "Section name from the ld+json NewsArticle node's articleSection field, e.g. \"News\", \"Opinions\"."
+            },
+            "datePublished": {
+                "title": "Date published",
+                "description": "ISO 8601 publish date from ld+json."
+            },
+            "dateModified": {
+                "title": "Date modified",
+                "description": "ISO 8601 last-modified date from ld+json."
+            },
+            "thumbnailUrl": {
+                "title": "Thumbnail URL",
+                "description": "Lead thumbnail image URL from ld+json."
+            },
+            "image": {
+                "title": "Image",
+                "description": "Lead image object (url/caption/width/height) from ld+json, passed through as-is."
+            },
+            "title": {
+                "title": "Title",
+                "description": "Headline text of a latest-mode sitemap item."
+            },
+            "link": {
+                "title": "Link",
+                "description": "Article URL from the sitemap item."
+            },
+            "section": {
+                "title": "Section",
+                "description": "URL path segment right after /GhanaHomePage/ (e.g. NewsArchive, SportsArchive, business, entertainment) -- latest mode only, since the sitemap carries no explicit category field."
+            },
+            "publicationDate": {
+                "title": "Publication date",
+                "description": "ISO 8601 publish date from the news:publication_date sitemap field -- latest mode only."
+            },
+            "language": {
+                "title": "Language",
+                "description": "ISO language code from the news:language sitemap field -- latest mode only."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across both article and latest-headline records.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "_source",
+                    "_scrapedAt",
+                    "headline",
+                    "title",
+                    "link",
+                    "datePublished",
+                    "publicationDate",
+                    "category",
+                    "section",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

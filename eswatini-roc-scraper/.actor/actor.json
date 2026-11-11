@@ -1,0 +1,14 @@
+{
+    "actorSpecification": 1,
+    "name": "eswatini-roc-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Eswatini Company Registry Scraper",
+    "description": "Search Eswatini's official government Company Name Search register by name and get the registered name, status (registered/reserved), and registration date for every match. No account or API key needed.",
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

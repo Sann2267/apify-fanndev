@@ -1,0 +1,134 @@
+{
+    "title": "Indotrading.com Scraper",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "mode": {
+            "title": "Mode",
+            "type": "string",
+            "description": "Which surface to scrape. Each mode reads one input list: categoryProducts and supplierDirectory read 'categories', searchProducts and searchSuppliers read 'searchTerms', productDetail reads 'productUrls', supplierProfile reads 'suppliers', and categoryTree needs no input at all.",
+            "editor": "select",
+            "default": "categoryProducts",
+            "enum": [
+                "categoryProducts",
+                "searchProducts",
+                "productDetail",
+                "supplierProfile",
+                "supplierDirectory",
+                "searchSuppliers",
+                "categoryTree"
+            ],
+            "enumTitles": [
+                "Category products - every product listed under a category",
+                "Search products - keyword product search",
+                "Product detail - full record for specific product URLs",
+                "Supplier profile - company profile, optionally with its catalogue",
+                "Supplier directory - every supplier listed under a category",
+                "Search suppliers - keyword company search",
+                "Category tree - all ~4,000 category slugs in one request"
+            ]
+        },
+        "categories": {
+            "title": "Categories",
+            "type": "array",
+            "description": "Category slugs or URLs, used by categoryProducts and supplierDirectory. All four shapes work: 'jual-pressure-washer', '/jual-pressure-washer', 'pressure-washer', or the full https://www.indotrading.com/jual-pressure-washer URL. Run the categoryTree mode first to get the full list of valid slugs.",
+            "editor": "stringList",
+            "prefill": [
+                "jual-pressure-washer"
+            ]
+        },
+        "searchTerms": {
+            "title": "Search terms",
+            "type": "array",
+            "description": "Keywords, used by searchProducts and searchSuppliers. A term that matches a category name is redirected to that whole category; a term that does not stays on the search results page with a narrower set.",
+            "editor": "stringList",
+            "prefill": [
+                "excavator komatsu pc200"
+            ]
+        },
+        "productUrls": {
+            "title": "Product URLs",
+            "type": "array",
+            "description": "Full product page URLs for productDetail mode, e.g. https://www.indotrading.com/solusijaya10/high-pressure-cleaner-w250-18dpt-with-engine-yanmar-p1146289.aspx. The productUrl field of any listing record can be fed straight back in here.",
+            "editor": "stringList"
+        },
+        "suppliers": {
+            "title": "Supplier slugs or URLs",
+            "type": "array",
+            "description": "Supplier profile slugs or URLs for supplierProfile mode, e.g. 'lavorpro' or https://www.indotrading.com/lavorpro. The companyUrl field of any listing record works here.",
+            "editor": "stringList"
+        },
+        "maxPages": {
+            "title": "Max pages per target",
+            "type": "integer",
+            "description": "How many listing pages to walk per category, search term or supplier. Product listings return 40 items per page, supplier directories about 5. Paging always stops early on the first empty page - indotrading's own 'Halaman 1 dari N' counter overstates how far a category can actually be paged, so it is recorded as metadata but never trusted as a stop condition.",
+            "default": 5,
+            "minimum": 1,
+            "maximum": 500,
+            "unit": "pages"
+        },
+        "maxItemsPerTarget": {
+            "title": "Max items per target",
+            "type": "integer",
+            "description": "Hard cap on records emitted per category or search term. Leave at 0 for no cap beyond maxPages.",
+            "default": 0,
+            "minimum": 0,
+            "unit": "items"
+        },
+        "includeContact": {
+            "title": "Include supplier WhatsApp number",
+            "type": "boolean",
+            "description": "Look up each product's supplier WhatsApp number. This costs one extra request per product, roughly doubling the run, so it is off by default. About two thirds of sellers have a number on file; the rest come back with whatsappNumber null and _warning 'no_whatsapp_number_on_file', which is a real absence rather than a failed lookup.",
+            "default": false
+        },
+        "includeLastLogin": {
+            "title": "Include supplier last-login activity",
+            "type": "boolean",
+            "description": "Add lastLoginMinutesAgo, how many minutes ago the supplier last signed in - the freshness signal indotrading renders as 'Online 2 Hari Lalu'. Batched into one request per page, so it is close to free.",
+            "default": false
+        },
+        "includeSupplierProducts": {
+            "title": "Include supplier catalogue",
+            "type": "boolean",
+            "description": "In supplierProfile mode, also emit every product on the supplier's own pages (20 per page, up to maxPages). Off by default so a profile run stays one record per supplier.",
+            "default": false
+        },
+        "concurrency": {
+            "title": "Concurrency",
+            "type": "integer",
+            "description": "Parallel requests for per-item fetches (product details and contact lookups). Listing pages are always walked in order because each page's referer is the previous page.",
+            "default": 4,
+            "minimum": 1,
+            "maximum": 16
+        },
+        "maxRetries": {
+            "title": "Max retries",
+            "type": "integer",
+            "description": "Attempts per request before giving up. Each retry backs off exponentially with jitter and rotates to the next TLS impersonation profile.",
+            "default": 4,
+            "minimum": 1,
+            "maximum": 10
+        },
+        "requestTimeoutSecs": {
+            "title": "Request timeout",
+            "type": "integer",
+            "description": "Per-request timeout in seconds. Category pages are large (500 KB and up), so do not set this too low.",
+            "default": 45,
+            "minimum": 10,
+            "maximum": 300,
+            "unit": "seconds"
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "description": "Optional. Indotrading has no IP-based gate - 25 sequential requests from a single datacenter address all returned full payloads during recon, and the only Cloudflare rule in play keys on the TLS fingerprint, which this actor already handles. So proxying is off by default; turn on residential if you want an Indonesian exit address or are running at high volume.",
+            "editor": "proxy",
+            "default": {
+                "useApifyProxy": false
+            }
+        }
+    },
+    "required": [
+        "mode"
+    ]
+}

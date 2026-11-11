@@ -1,0 +1,745 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "ESPN betting record",
+        "description": "Every record carries _input, _source, _scrapedAt and recordType. recordType is ODDS for a sportsbook line, PROP for a player prop market, FUTURE for a season market, EVENT for a fixture, PREDICTOR for ESPN's own win projection, PROVIDER for a sportsbook, SURFACE for a reference probe and ERROR for a failure. An ODDS record with hasOdds=false is a fixture no book has priced yet - the source answered normally and had nothing to quote, which is different from a fetch that failed.",
+        "additionalProperties": true,
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The league that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source",
+                "description": "espn-core-odds | espn-core-propbets | espn-core-futures | espn-core-events | espn-core-predictor | espn-core-providers | reference | error | none."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was emitted."
+            },
+            "recordType": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Record type",
+                "description": "ODDS | PROP | FUTURE | EVENT | PREDICTOR | PROVIDER | SURFACE | ERROR."
+            },
+            "sport": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Sport",
+                "description": "Sport as the source names it, e.g. football, basketball, soccer."
+            },
+            "league": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "League",
+                "description": "League slug as the source names it, e.g. nfl, eng.1."
+            },
+            "leagueKey": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "League key",
+                "description": "The league value you passed in."
+            },
+            "eventId": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Event ID",
+                "description": "The source's fixture identifier. Stable, and the key to join records across modes."
+            },
+            "competitionId": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Competition ID",
+                "description": "Identifier of the contest within the fixture. Usually equal to the event ID."
+            },
+            "eventName": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Fixture",
+                "description": "Full fixture name, e.g. 'Detroit Lions at Buffalo Bills'."
+            },
+            "eventShortName": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Fixture (short)",
+                "description": "Abbreviated fixture name, e.g. 'DET @ BUF'."
+            },
+            "eventDate": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Kick-off (UTC)",
+                "description": "Scheduled start, ISO 8601 UTC."
+            },
+            "seasonYear": {
+                "type": [
+                    "integer",
+                    "null"
+                ],
+                "title": "Season",
+                "description": "Season year."
+            },
+            "seasonType": {
+                "type": [
+                    "integer",
+                    "null"
+                ],
+                "title": "Season type",
+                "description": "Source's season-type code, e.g. 2 for regular season."
+            },
+            "week": {
+                "type": [
+                    "integer",
+                    "null"
+                ],
+                "title": "Week",
+                "description": "Week number, where the league has weeks."
+            },
+            "homeTeam": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Home team",
+                "description": "Home team name. Null when the name lookup budget was spent or the league has no team list (UFC, golf, tennis) - the ID is still present."
+            },
+            "awayTeam": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Away team",
+                "description": "Away team name."
+            },
+            "homeTeamAbbrev": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Home abbreviation",
+                "description": "Home team abbreviation."
+            },
+            "awayTeamAbbrev": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Away abbreviation",
+                "description": "Away team abbreviation."
+            },
+            "homeTeamId": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Home team ID",
+                "description": "Source identifier for the home team."
+            },
+            "awayTeamId": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Away team ID",
+                "description": "Source identifier for the away team."
+            },
+            "hasOdds": {
+                "type": [
+                    "boolean",
+                    "null"
+                ],
+                "title": "Priced",
+                "description": "False means the source answered normally with an empty provider list - the books have not posted a line for this fixture yet. It never means the request failed; failures are ERROR records."
+            },
+            "providerId": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Sportsbook ID",
+                "description": "Sportsbook identifier."
+            },
+            "providerName": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Sportsbook",
+                "description": "Sportsbook name, e.g. 'Draft Kings'. A fixture can carry a second entry for the same book's live in-play prices."
+            },
+            "providerPriority": {
+                "type": [
+                    "integer",
+                    "null"
+                ],
+                "title": "Sportsbook priority",
+                "description": "The source's own ordering of sportsbooks; 1 is the primary."
+            },
+            "isLiveOddsFeed": {
+                "type": [
+                    "boolean",
+                    "null"
+                ],
+                "title": "Live in-play feed",
+                "description": "True when this row is the sportsbook's live in-play feed rather than its pre-match board. Those rows carry a point spread but leave prices unset."
+            },
+            "hasPlaceholderZeros": {
+                "type": [
+                    "boolean",
+                    "null"
+                ],
+                "title": "Placeholder zeros in source",
+                "description": "True when the source wrote 0 in a price or total slot to mean 'not set'. Those fields are emitted as null so averages are not dragged toward zero; this flag tells you it happened."
+            },
+            "details": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Line summary",
+                "description": "The line as the source writes it, e.g. 'BUF -5.5'."
+            },
+            "spread": {
+                "type": [
+                    "number",
+                    "null"
+                ],
+                "title": "Spread",
+                "description": "Point spread relative to the home team; negative means the home team is favoured."
+            },
+            "overUnder": {
+                "type": [
+                    "number",
+                    "null"
+                ],
+                "title": "Total (over/under)",
+                "description": "Combined points line."
+            },
+            "overOdds": {
+                "type": [
+                    "number",
+                    "null"
+                ],
+                "title": "Over price",
+                "description": "American price on the over."
+            },
+            "underOdds": {
+                "type": [
+                    "number",
+                    "null"
+                ],
+                "title": "Under price",
+                "description": "American price on the under."
+            },
+            "homeMoneyline": {
+                "type": [
+                    "number",
+                    "null"
+                ],
+                "title": "Home moneyline",
+                "description": "American price on the home team to win outright."
+            },
+            "awayMoneyline": {
+                "type": [
+                    "number",
+                    "null"
+                ],
+                "title": "Away moneyline",
+                "description": "American price on the away team to win outright."
+            },
+            "homeImpliedProbability": {
+                "type": [
+                    "number",
+                    "null"
+                ],
+                "title": "Home implied probability",
+                "description": "Home moneyline converted to a probability, vig included - the two sides sum to slightly over 1 and the excess is the book's margin. Derived here; the source publishes prices only."
+            },
+            "awayImpliedProbability": {
+                "type": [
+                    "number",
+                    "null"
+                ],
+                "title": "Away implied probability",
+                "description": "Away moneyline as a probability, vig included."
+            },
+            "openSpread": {
+                "type": [
+                    "number",
+                    "null"
+                ],
+                "title": "Opening spread",
+                "description": "Spread when the book opened the market."
+            },
+            "openTotal": {
+                "type": [
+                    "number",
+                    "null"
+                ],
+                "title": "Opening total",
+                "description": "Total when the book opened the market."
+            },
+            "currentSpread": {
+                "type": [
+                    "number",
+                    "null"
+                ],
+                "title": "Current spread",
+                "description": "Spread as of this scrape."
+            },
+            "currentTotal": {
+                "type": [
+                    "number",
+                    "null"
+                ],
+                "title": "Current total",
+                "description": "Total as of this scrape."
+            },
+            "closeSpread": {
+                "type": [
+                    "number",
+                    "null"
+                ],
+                "title": "Closing spread",
+                "description": "Spread at close, once the market has closed."
+            },
+            "closeTotal": {
+                "type": [
+                    "number",
+                    "null"
+                ],
+                "title": "Closing total",
+                "description": "Total at close, once the market has closed."
+            },
+            "spreadMovement": {
+                "type": [
+                    "number",
+                    "null"
+                ],
+                "title": "Spread movement",
+                "description": "Current spread minus opening spread. Derived here - the source publishes the two ends and not the difference."
+            },
+            "totalMovement": {
+                "type": [
+                    "number",
+                    "null"
+                ],
+                "title": "Total movement",
+                "description": "Current total minus opening total. Derived here."
+            },
+            "favoriteFlippedSinceOpen": {
+                "type": [
+                    "boolean",
+                    "null"
+                ],
+                "title": "Favourite flipped",
+                "description": "True when the side the book favours today is not the side it favoured at open."
+            },
+            "moneylineWinner": {
+                "type": [
+                    "boolean",
+                    "null"
+                ],
+                "title": "Moneyline settled",
+                "description": "Whether the moneyline has settled in the home team's favour. Null before the fixture finishes."
+            },
+            "spreadWinner": {
+                "type": [
+                    "boolean",
+                    "null"
+                ],
+                "title": "Spread settled",
+                "description": "Whether the spread has settled in the home team's favour. Null before the fixture finishes."
+            },
+            "sportsbookUrl": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Sportsbook link",
+                "description": "The source's outbound link to the sportsbook for this market."
+            },
+            "propTypeId": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Prop market ID",
+                "description": "Identifier of the prop market type."
+            },
+            "propTypeName": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Prop market",
+                "description": "Prop market name, e.g. 'Total Passing Yards (incl. overtime)', 'Anytime Touchdown Scorer'."
+            },
+            "athleteId": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Player ID",
+                "description": "Source identifier for the player the prop is on."
+            },
+            "athleteName": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Player",
+                "description": "Player name. Null if the name lookup budget was spent - the ID is still present."
+            },
+            "athletePosition": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Position",
+                "description": "Player position abbreviation, e.g. QB."
+            },
+            "athleteJersey": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Jersey",
+                "description": "Shirt number."
+            },
+            "currentTarget": {
+                "type": [
+                    "number",
+                    "null"
+                ],
+                "title": "Prop line",
+                "description": "The number the market is set at right now, e.g. 257.5 passing yards."
+            },
+            "openTarget": {
+                "type": [
+                    "number",
+                    "null"
+                ],
+                "title": "Prop opening line",
+                "description": "The number the market opened at."
+            },
+            "targetMovement": {
+                "type": [
+                    "number",
+                    "null"
+                ],
+                "title": "Prop line movement",
+                "description": "Current prop line minus opening line. Derived here."
+            },
+            "lastUpdated": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Prop updated at",
+                "description": "When the sportsbook last moved this prop."
+            },
+            "marketId": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Futures market ID",
+                "description": "Identifier of the season-long market."
+            },
+            "marketName": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Futures market",
+                "description": "Season-long market name, e.g. 'Regular Season MVP', 'NFL - Super Bowl Winner'."
+            },
+            "entityType": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Runner type",
+                "description": "athlete or team."
+            },
+            "entityId": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Runner ID",
+                "description": "Source identifier of the player or team being priced."
+            },
+            "entityName": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Runner",
+                "description": "Name of the player or team being priced."
+            },
+            "price": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Price",
+                "description": "American price as the source writes it, e.g. '+400'."
+            },
+            "impliedProbability": {
+                "type": [
+                    "number",
+                    "null"
+                ],
+                "title": "Implied probability",
+                "description": "The price as a probability, vig included. Derived here so runners priced +400 and -245 can be compared directly."
+            },
+            "runnersInMarket": {
+                "type": [
+                    "integer",
+                    "null"
+                ],
+                "title": "Runners in market",
+                "description": "How many runners the sportsbook priced in this market."
+            },
+            "homeWinProbability": {
+                "type": [
+                    "number",
+                    "null"
+                ],
+                "title": "Model: home win %",
+                "description": "The source's own model projection for the home team, as a percentage. Compare against homeImpliedProbability x 100 to find fixtures where the model and the book disagree."
+            },
+            "awayWinProbability": {
+                "type": [
+                    "number",
+                    "null"
+                ],
+                "title": "Model: away win %",
+                "description": "Model projection for the away team, as a percentage."
+            },
+            "homePredictedPointDiff": {
+                "type": [
+                    "number",
+                    "null"
+                ],
+                "title": "Model: predicted margin",
+                "description": "Projected points margin for the home team. Compare against the spread."
+            },
+            "matchupQuality": {
+                "type": [
+                    "number",
+                    "null"
+                ],
+                "title": "Matchup quality",
+                "description": "The source's rating of how competitive the fixture should be."
+            },
+            "statusState": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Status",
+                "description": "pre, in or post."
+            },
+            "statusDetail": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Status detail",
+                "description": "Human-readable status, e.g. 'Final', 'Thu, September 18th at 12:15 AM UTC'."
+            },
+            "isCompleted": {
+                "type": [
+                    "boolean",
+                    "null"
+                ],
+                "title": "Completed",
+                "description": "Whether the fixture has finished."
+            },
+            "espnUrl": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Fixture page",
+                "description": "Public page for the fixture."
+            },
+            "isAvailable": {
+                "type": [
+                    "boolean",
+                    "null"
+                ],
+                "title": "Source available",
+                "description": "Reference records only: whether the source answered."
+            },
+            "note": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Note",
+                "description": "Reference and unpriced-fixture records: what the source did, in words."
+            },
+            "sample": {
+                "type": [
+                    "object",
+                    "null"
+                ],
+                "title": "Probe sample",
+                "description": "Reference records only: measured counts from the probe, including whether the source still behaves the way this Actor assumes."
+            },
+            "winningTlsProfile": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "TLS profile used",
+                "description": "Which browser fingerprint the source accepted on this run."
+            },
+            "errorReason": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Error reason",
+                "description": "Error records only: short machine-readable reason."
+            },
+            "errorDetail": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Error detail",
+                "description": "Error records only: the underlying failure."
+            }
+        }
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "The line every sportsbook is showing, per fixture.",
+            "transformation": {
+                "fields": [
+                    "eventName",
+                    "eventDate",
+                    "providerName",
+                    "details",
+                    "spread",
+                    "overUnder",
+                    "homeMoneyline",
+                    "awayMoneyline",
+                    "hasOdds"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        },
+        "movement": {
+            "title": "Line movement",
+            "description": "How far the spread and the total have moved since the book opened.",
+            "transformation": {
+                "fields": [
+                    "eventName",
+                    "providerName",
+                    "openSpread",
+                    "currentSpread",
+                    "spreadMovement",
+                    "openTotal",
+                    "currentTotal",
+                    "totalMovement",
+                    "favoriteFlippedSinceOpen"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        },
+        "modelVsBook": {
+            "title": "Model vs book",
+            "description": "The source's own win projection next to the price the book is offering.",
+            "transformation": {
+                "fields": [
+                    "eventName",
+                    "homeTeam",
+                    "homeWinProbability",
+                    "homeImpliedProbability",
+                    "awayTeam",
+                    "awayWinProbability",
+                    "awayImpliedProbability",
+                    "homePredictedPointDiff",
+                    "spread"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        },
+        "props": {
+            "title": "Player props",
+            "description": "Player markets with their opening and current lines.",
+            "transformation": {
+                "fields": [
+                    "eventName",
+                    "athleteName",
+                    "athletePosition",
+                    "propTypeName",
+                    "openTarget",
+                    "currentTarget",
+                    "targetMovement",
+                    "providerId",
+                    "lastUpdated"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        },
+        "futures": {
+            "title": "Futures board",
+            "description": "Season-long markets, sortable by implied probability.",
+            "transformation": {
+                "fields": [
+                    "marketName",
+                    "entityName",
+                    "entityType",
+                    "price",
+                    "impliedProbability",
+                    "providerName",
+                    "runnersInMarket",
+                    "seasonYear"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

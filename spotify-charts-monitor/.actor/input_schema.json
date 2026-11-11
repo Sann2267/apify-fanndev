@@ -1,0 +1,84 @@
+{
+    "title": "Spotify Global & Regional Charts Monitor",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "countries": {
+            "title": "Countries",
+            "type": "array",
+            "description": "Two-letter country codes, or GLOBAL. Daily charts are published for GLOBAL, AE, AR, AT, AU, BE, BR, CA, CH, CL, CO, CZ, DE, DK, ES, FI, FR, GB, GR, HK, HU, ID, IE, IL, IN, IT, JP, KR, MA, MX, MY, NG, NL, NO, NZ, PE, PH, PL, PT, RO, SA, SE, SG, TH, TR, TW, US, VN and ZA. Weekly charts cover fewer territories: GLOBAL, AR, AU, BR, CA, DE, ES, GB, IN, IT, JP, KR, MX and US. An unavailable code stops the run with the full list rather than returning an empty chart.",
+            "editor": "stringList",
+            "prefill": ["GLOBAL", "US", "ID"]
+        },
+        "recurrence": {
+            "title": "Chart recurrence",
+            "type": "string",
+            "description": "daily reads the Top 50 charts, recalculated every day. weekly reads the Top Songs charts, recalculated every Thursday and covering fewer countries.",
+            "editor": "select",
+            "enum": ["daily", "weekly"],
+            "enumTitles": ["Daily (Top 50)", "Weekly (Top Songs)"],
+            "default": "daily"
+        },
+        "includeGlobalWeeklyCharts": {
+            "title": "Include the global weekly track, album and artist charts",
+            "type": "boolean",
+            "description": "Read Spotify's public charts service as well. It needs no credential at all and is the only surface that publishes an ALBUM chart and an ARTIST chart, and the only one whose entries carry Spotify's own previousRank, peakRank, entryStatus and weeks-on-chart counters. It is limited to the three global weekly charts - per-country and historical charts there require a logged-in session.",
+            "default": true
+        },
+        "playlistUrls": {
+            "title": "Extra chart or playlist URLs",
+            "type": "array",
+            "description": "Any additional Spotify playlist to treat as a chart, for territories or editorial lists not in the built-in catalogue. Entries are ranked by playlist position.",
+            "editor": "stringList"
+        },
+        "maxEntriesPerChart": {
+            "title": "Maximum entries per chart",
+            "type": "integer",
+            "description": "Charts hold 50 entries. Lower this to capture only the top of each chart.",
+            "default": 50,
+            "minimum": 1,
+            "maximum": 200,
+            "unit": "entries"
+        },
+        "trackRankMovement": {
+            "title": "Report rank movement since the previous run",
+            "type": "boolean",
+            "description": "Spotify's chart playlists publish only today's order - nothing about climbing, falling or entering. Turn this on to remember each run's order and report previousRank, rankChange and entryStatus (MOVED_UP, MOVED_DOWN, NO_CHANGE, NEW_ENTRY) next time, plus a CHART_EXIT row for every track that fell off. The first run has nothing to compare against and marks its entries BASELINE.",
+            "default": true
+        },
+        "trackingStoreName": {
+            "title": "Tracking store name",
+            "type": "string",
+            "description": "Named key-value store holding the previous run's chart order. Scheduled runs pointed at the same name build one history; use different names to keep separate schedules apart.",
+            "editor": "textfield",
+            "default": "spotify-charts-monitor"
+        },
+        "emitChartSummary": {
+            "title": "Emit a summary row per chart",
+            "type": "boolean",
+            "description": "One CHART_SUMMARY record per chart: entry count, follower count, when Spotify last recalculated it, how many entries are new, how many climbed or fell, and the biggest climber.",
+            "default": true
+        },
+        "exportFormats": {
+            "title": "Extra export files",
+            "type": "array",
+            "description": "Besides the dataset, write ready-made files into this run's key-value store.",
+            "editor": "select",
+            "items": {
+                "type": "string",
+                "enum": ["json", "ndjson", "csv", "excel"],
+                "enumTitles": ["JSON", "NDJSON", "CSV", "Excel (XLSX)"]
+            },
+            "default": []
+        },
+        "proxyConfiguration": {
+            "title": "Proxy",
+            "type": "object",
+            "description": "Off by default and genuinely optional: neither endpoint this actor reads has a WAF or an IP block. Chart contents are the same from any exit IP, since the country comes from the chart id rather than from your address.",
+            "editor": "proxy",
+            "default": {
+                "useApifyProxy": false
+            }
+        }
+    }
+}

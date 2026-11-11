@@ -1,0 +1,202 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Affiliate-ready product record",
+        "description": "One row per qualifying product: Blibli's own fields passed through verbatim, plus parsed content (clean selling points, short description, full-size images), tracking links and a ready-to-post caption. IMPORTANT: `shareLink` and `trackedUrl` are tracking/deep links carrying your UTM values - they are NOT commission-attributing affiliate links, because Blibli's affiliate commission API requires an authenticated account (it returns 401 without one). Every type is nullable since optional enrichments may be off.",
+        "properties": {
+            "_input": {
+                "type": ["string", "null"],
+                "title": "Input",
+                "description": "The search term or category that produced this record."
+            },
+            "_source": {
+                "type": ["string", "null"],
+                "title": "Source strategy",
+                "description": "S1-search, or none on failure."
+            },
+            "_scrapedAt": {
+                "type": ["string", "null"],
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": ["string", "null"],
+                "title": "Error",
+                "description": "Present only on failure rows (INVALID_INPUT, BLOCKED_AFTER_RETRIES, UPSTREAM_SHAPE_CHANGED, EMPTY_RESULT)."
+            },
+            "_errorDetail": {
+                "type": ["string", "null"],
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "sku": {
+                "type": ["string", "null"],
+                "title": "SKU",
+                "description": "Blibli product SKU."
+            },
+            "name": {
+                "type": ["string", "null"],
+                "title": "Product name",
+                "description": "Full product title as listed."
+            },
+            "brand": {
+                "type": ["string", "null"],
+                "title": "Brand",
+                "description": "Brand name."
+            },
+            "merchantName": {
+                "type": ["string", "null"],
+                "title": "Seller",
+                "description": "Store selling the product."
+            },
+            "merchantCode": {
+                "type": ["string", "null"],
+                "title": "Seller code",
+                "description": "Blibli merchant code of the seller."
+            },
+            "isOfficialStore": {
+                "type": ["boolean", "null"],
+                "title": "Official store",
+                "description": "Whether the seller is an official brand store - the safest products to promote."
+            },
+            "merchantBadge": {
+                "type": ["string", "null"],
+                "title": "Seller badge",
+                "description": "Seller badge tier, e.g. Diamond."
+            },
+            "salePrice": {
+                "type": ["number", "null"],
+                "title": "Sale price (IDR)",
+                "description": "Current selling price in rupiah."
+            },
+            "listPrice": {
+                "type": ["number", "null"],
+                "title": "List price (IDR)",
+                "description": "Pre-discount price in rupiah."
+            },
+            "discountPercent": {
+                "type": ["number", "null"],
+                "title": "Discount %",
+                "description": "Discount off list price - the hook for a promo post."
+            },
+            "rating": {
+                "type": ["number", "null"],
+                "title": "Rating",
+                "description": "Product star rating (the precise decimal value where Blibli exposes it)."
+            },
+            "reviewCount": {
+                "type": ["number", "null"],
+                "title": "Review count",
+                "description": "Number of reviews behind the rating."
+            },
+            "soldCount": {
+                "type": ["number", "null"],
+                "title": "Units sold",
+                "description": "Total units sold - the strongest available proof of demand."
+            },
+            "categories": {
+                "type": ["array", "null"],
+                "title": "Category hierarchy",
+                "description": "Category path for the product."
+            },
+            "sellingPoints": {
+                "type": ["array", "null"],
+                "title": "Selling points",
+                "description": "Blibli's `uniqueSellingPoint` blob parsed into clean bullet strings, with its literal \\n<br> separators and markup removed."
+            },
+            "shortDescription": {
+                "type": ["string", "null"],
+                "title": "Short description",
+                "description": "Compact blurb assembled from the selling points, trimmed to fit a caption. Falls back to the product name when a listing has no selling points."
+            },
+            "seoDescription": {
+                "type": ["string", "null"],
+                "title": "SEO description",
+                "description": "Blibli's own meta description for the product. Only present when 'Enrich from product page' is on."
+            },
+            "primaryImage": {
+                "type": ["string", "null"],
+                "title": "Primary image",
+                "description": "First product image at the requested size - the one to attach to a post."
+            },
+            "images": {
+                "type": ["array", "null"],
+                "title": "Images",
+                "description": "All product images at the requested size."
+            },
+            "imageCount": {
+                "type": ["number", "null"],
+                "title": "Image count",
+                "description": "How many images the listing carries."
+            },
+            "warrantyType": {
+                "type": ["string", "null"],
+                "title": "Warranty type",
+                "description": "Warranty class, e.g. RESMI (official). Only present with page enrichment."
+            },
+            "warrantyText": {
+                "type": ["string", "null"],
+                "title": "Warranty text",
+                "description": "The exact warranty statement, e.g. 'Garansi resmi 2 tahun' - quotable in a post. Only present with page enrichment."
+            },
+            "warrantyDuration": {
+                "type": ["string", "null"],
+                "title": "Warranty duration",
+                "description": "Warranty length, e.g. '2 tahun'. Only present with page enrichment."
+            },
+            "hasOfficialWarranty": {
+                "type": ["boolean", "null"],
+                "title": "Has official warranty",
+                "description": "True when the warranty type is RESMI. Only present with page enrichment."
+            },
+            "stock": {
+                "type": ["number", "null"],
+                "title": "Stock",
+                "description": "Units available. Only present with page enrichment."
+            },
+            "productUrl": {
+                "type": ["string", "null"],
+                "title": "Product URL",
+                "description": "Clean product URL with Blibli's own session tracking query (ds, source, sid, metaData) stripped."
+            },
+            "trackedUrl": {
+                "type": ["string", "null"],
+                "title": "Tracked URL",
+                "description": "Product URL with your utm_campaign / utm_source / utm_medium appended. Built locally, always present, and works with no redirect."
+            },
+            "shareLink": {
+                "type": ["string", "null"],
+                "title": "Blibli share link",
+                "description": "Blibli's own OneLink short link (blibli.onelink.me/...) minted via their public endpoint, redirecting to the product with your UTM values attached. Null when link generation is off or a mint failed. A tracking link, not a commission link."
+            },
+            "caption": {
+                "type": ["string", "null"],
+                "title": "Ready-to-post caption",
+                "description": "Caption rendered from your template with this product's name, price, discount, rating, sold count, description and link filled in."
+            },
+            "queryType": {
+                "type": ["string", "null"],
+                "title": "Query type",
+                "description": "searchTerm or category."
+            },
+            "query": {
+                "type": ["string", "null"],
+                "title": "Query",
+                "description": "The search term or category code that produced this record."
+            },
+            "rankInQuery": {
+                "type": ["number", "null"],
+                "title": "Rank in query",
+                "description": "1-based position in Blibli's own result ordering before filtering."
+            },
+            "officialWarrantyFilterApplied": {
+                "type": ["boolean", "null"],
+                "title": "Official warranty filter applied",
+                "description": "Whether the run restricted results to products with an official warranty."
+            }
+        }
+    }
+}

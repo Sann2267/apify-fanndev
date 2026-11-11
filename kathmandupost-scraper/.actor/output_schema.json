@@ -1,0 +1,109 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Article / latest-headline record",
+        "description": "Raw-passthrough dataset envelope. Every record carries _input/_source/_scrapedAt (and _error/_errorDetail on failures). Article-mode records (S1-html, articleBody pulled from HTML section.story-section since ld+json has no articleBody) carry headline/articleBody-style fields; latest-mode records (S2-rss, /rss feed) carry title/link-style fields.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The exact input value (URL, or 'latest') that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which extraction strategy emitted this record (S1-html or S2-rss; 'none' on failures)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed extractions -- the error kind."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "headline": {
+                "title": "Headline",
+                "description": "Article headline, from the NewsArticle ld+json block."
+            },
+            "description": {
+                "title": "Description",
+                "description": "Short article description/deck, from the NewsArticle ld+json block."
+            },
+            "articleBody": {
+                "title": "Article body",
+                "description": "Full article text, joined from direct-child <p> tags of section.story-section (ld+json has no articleBody on this site)."
+            },
+            "author": {
+                "title": "Author",
+                "description": "Comma-joined byline name(s), extracted from <a href=\"/author/...\"> links on the page. Absent (null) on unsigned/editorial pieces."
+            },
+            "publisher": {
+                "title": "Publisher",
+                "description": "Publisher name from the ld+json publisher object -- always \"The Kathmandu Post\"."
+            },
+            "category": {
+                "title": "Category",
+                "description": "Section name taken from the article URL's first path segment (e.g. \"national\", \"world\", \"money\", \"opinion\") -- ld+json carries no BreadcrumbList on this site."
+            },
+            "publishedAt": {
+                "title": "Published at",
+                "description": "Raw upstream publish-date string as shown on the page (e.g. \"August 25, 2026\") -- no machine-parseable ISO date is available upstream."
+            },
+            "updatedAt": {
+                "title": "Updated at",
+                "description": "Raw upstream last-updated string as shown on the page (e.g. \"August 25, 2026 20:48\")."
+            },
+            "location": {
+                "title": "Location",
+                "description": "Dateline city shown on the page (e.g. \"Kathmandu\"), when present."
+            },
+            "image": {
+                "title": "Image",
+                "description": "Lead image object from ld+json (article mode)."
+            },
+            "title": {
+                "title": "Title",
+                "description": "Headline text of a latest-mode RSS item."
+            },
+            "link": {
+                "title": "Link",
+                "description": "Article URL from the RSS item."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across both article and latest-headline records.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "_source",
+                    "_scrapedAt",
+                    "headline",
+                    "title",
+                    "link",
+                    "publishedAt",
+                    "author",
+                    "category",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

@@ -1,0 +1,7 @@
+.git
+.venv
+storage
+__pycache__
+*.pyc
+apify_storage
+test_local.py

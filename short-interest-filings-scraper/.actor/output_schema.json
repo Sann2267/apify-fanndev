@@ -1,0 +1,470 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Short interest / short volume / SEC filing record",
+        "description": "Every record carries _input, _source, _scrapedAt and recordType. recordType discriminates the payload: SHORT_INTEREST (Nasdaq settlement-date rows), SHORT_VOLUME (FINRA daily per-symbol rows), FILING (one SEC filing), FILING_MATCH (an EDGAR full-text hit), COMPANY (SEC company profile), SYMBOL_INFO (Nasdaq listing info), SOURCE (reference mode) and ERROR. Dates are normalised to YYYY-MM-DD and formatted numbers are parsed, with the publisher's original values kept under _raw.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The ticker, CIK, date or query that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source",
+                "description": "S1-nasdaq, S1-finra, S1-sec, S1-sec-fulltext, S1-probe, or 'none' on failure rows."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was emitted."
+            },
+            "recordType": {
+                "type": ["string", "null"],
+                "title": "Record type",
+                "description": "SHORT_INTEREST | SHORT_VOLUME | FILING | FILING_MATCH | COMPANY | SYMBOL_INFO | SOURCE | ERROR."
+            },
+            "symbol": {
+                "type": ["string", "null"],
+                "title": "Symbol",
+                "description": "Ticker symbol."
+            },
+            "settlementDate": {
+                "type": ["string", "null"],
+                "title": "Settlement date",
+                "description": "Short interest settlement date, normalised to YYYY-MM-DD. Nasdaq publishes twice a month."
+            },
+            "settlementDateRaw": {
+                "type": ["string", "null"],
+                "title": "Settlement date (as published)",
+                "description": "Nasdaq's original MM/DD/YYYY string."
+            },
+            "shortInterest": {
+                "type": ["integer", "number", "null"],
+                "title": "Short interest",
+                "description": "Shares held short at the settlement date, parsed from Nasdaq's formatted number."
+            },
+            "avgDailyShareVolume": {
+                "type": ["integer", "number", "null"],
+                "title": "Avg daily share volume",
+                "description": "Average daily share volume over the period, as published by Nasdaq."
+            },
+            "daysToCover": {
+                "type": ["number", "null"],
+                "title": "Days to cover",
+                "description": "Nasdaq's own short interest / average daily volume ratio, passed through rather than recomputed."
+            },
+            "companyName": {
+                "type": ["string", "null"],
+                "title": "Company name",
+                "description": "Company name from Nasdaq or SEC, depending on the record type."
+            },
+            "exchange": {
+                "type": ["string", "null"],
+                "title": "Exchange",
+                "description": "Listing exchange, e.g. NASDAQ or NYSE."
+            },
+            "isNasdaqListed": {
+                "type": ["boolean", "null"],
+                "title": "Nasdaq listed",
+                "description": "Whether the symbol is Nasdaq-listed. Short interest is only published for symbols where this is true."
+            },
+            "isNasdaq100": {
+                "type": ["boolean", "null"],
+                "title": "Nasdaq-100 member",
+                "description": "Whether the symbol is part of the Nasdaq-100."
+            },
+            "stockType": {
+                "type": ["string", "null"],
+                "title": "Security type",
+                "description": "Security type as classified by Nasdaq, e.g. Common Stock."
+            },
+            "lastSalePrice": {
+                "type": ["number", "integer", "null"],
+                "title": "Last sale price",
+                "description": "Last traded price at scrape time (symbol info)."
+            },
+            "netChange": {
+                "type": ["number", "integer", "null"],
+                "title": "Net change",
+                "description": "Price change on the day (symbol info)."
+            },
+            "percentageChange": {
+                "type": ["string", "null"],
+                "title": "Percentage change",
+                "description": "Percentage change on the day, as published (symbol info)."
+            },
+            "date": {
+                "type": ["string", "null"],
+                "title": "Trading date",
+                "description": "Trading day of a short-volume row, YYYY-MM-DD."
+            },
+            "venue": {
+                "type": ["string", "null"],
+                "title": "Venue",
+                "description": "Which FINRA file the row came from: consolidated, nasdaq-carteret, nasdaq-chicago, nyse or finra-adf."
+            },
+            "shortVolume": {
+                "type": ["number", "integer", "null"],
+                "title": "Short volume",
+                "description": "Shares sold short that day. Fractional values are genuine - they come from odd-lot and fractional-share executions."
+            },
+            "shortExemptVolume": {
+                "type": ["number", "integer", "null"],
+                "title": "Short exempt volume",
+                "description": "Shares sold short under an exemption."
+            },
+            "totalVolume": {
+                "type": ["number", "integer", "null"],
+                "title": "Total volume",
+                "description": "Total reported share volume for that symbol and venue."
+            },
+            "shortVolumeRatio": {
+                "type": ["number", "null"],
+                "title": "Short volume ratio",
+                "description": "shortVolume / totalVolume, computed here so every consumer uses the same definition."
+            },
+            "market": {
+                "type": ["string", "null"],
+                "title": "Market codes",
+                "description": "Reporting market codes as published by FINRA, e.g. B,Q,N."
+            },
+            "cik": {
+                "type": ["string", "null"],
+                "title": "CIK",
+                "description": "SEC Central Index Key, zero-padded to 10 digits."
+            },
+            "tickers": {
+                "title": "Tickers",
+                "description": "All tickers SEC associates with the company."
+            },
+            "exchanges": {
+                "title": "Exchanges",
+                "description": "Exchanges SEC associates with the company."
+            },
+            "entityType": {
+                "type": ["string", "null"],
+                "title": "Entity type",
+                "description": "SEC entity classification, e.g. operating."
+            },
+            "sic": {
+                "type": ["string", "null"],
+                "title": "SIC code",
+                "description": "Standard Industrial Classification code."
+            },
+            "sicDescription": {
+                "type": ["string", "null"],
+                "title": "Industry",
+                "description": "Human-readable SIC description."
+            },
+            "category": {
+                "type": ["string", "null"],
+                "title": "Filer category",
+                "description": "SEC filer category, e.g. Large accelerated filer."
+            },
+            "stateOfIncorporation": {
+                "type": ["string", "null"],
+                "title": "State of incorporation",
+                "description": "Where the company is incorporated."
+            },
+            "fiscalYearEnd": {
+                "type": ["string", "null"],
+                "title": "Fiscal year end",
+                "description": "Fiscal year end as MMDD."
+            },
+            "ein": {
+                "type": ["string", "null"],
+                "title": "EIN",
+                "description": "Employer Identification Number as filed."
+            },
+            "website": {
+                "type": ["string", "null"],
+                "title": "Website",
+                "description": "Company website as filed with the SEC."
+            },
+            "phone": {
+                "type": ["string", "null"],
+                "title": "Phone",
+                "description": "Business phone as filed with the SEC."
+            },
+            "businessAddress": {
+                "type": ["string", "null"],
+                "title": "Business address",
+                "description": "Business address as filed, joined into one line."
+            },
+            "filingCount": {
+                "type": ["integer", "null"],
+                "title": "Recent filings",
+                "description": "How many filings the company's recent-history block carries (SEC caps it at 1,000)."
+            },
+            "latestFilingDate": {
+                "type": ["string", "null"],
+                "title": "Latest filing date",
+                "description": "Date of the company's most recent filing."
+            },
+            "latestFilingForm": {
+                "type": ["string", "null"],
+                "title": "Latest filing form",
+                "description": "Form type of the most recent filing."
+            },
+            "formerNames": {
+                "title": "Former names",
+                "description": "Previous registered names of the company."
+            },
+            "hasOlderFilingShards": {
+                "type": ["boolean", "null"],
+                "title": "Has older history",
+                "description": "True when the company has filings older than the 1,000 returned here, stored in SEC's archive shards."
+            },
+            "form": {
+                "type": ["string", "null"],
+                "title": "Form",
+                "description": "SEC form type, e.g. 8-K, 10-Q, 4."
+            },
+            "rootForms": {
+                "title": "Root forms",
+                "description": "Base form types for a full-text match, e.g. ['8-K'] for an 8-K/A."
+            },
+            "accessionNumber": {
+                "type": ["string", "null"],
+                "title": "Accession number",
+                "description": "SEC's unique identifier for the filing."
+            },
+            "filingDate": {
+                "type": ["string", "null"],
+                "title": "Filing date",
+                "description": "Date the filing was submitted."
+            },
+            "reportDate": {
+                "type": ["string", "null"],
+                "title": "Report date",
+                "description": "Period the filing reports on."
+            },
+            "acceptanceDateTime": {
+                "type": ["string", "null"],
+                "title": "Accepted at",
+                "description": "When SEC accepted the submission."
+            },
+            "items": {
+                "title": "Items",
+                "description": "Reported items for the form, e.g. 8-K item numbers."
+            },
+            "primaryDocument": {
+                "type": ["string", "null"],
+                "title": "Primary document",
+                "description": "Filename of the filing's main document."
+            },
+            "primaryDocDescription": {
+                "type": ["string", "null"],
+                "title": "Document description",
+                "description": "SEC's description of the main document."
+            },
+            "sizeBytes": {
+                "type": ["integer", "number", "null"],
+                "title": "Size (bytes)",
+                "description": "Filing size in bytes."
+            },
+            "isXBRL": {
+                "type": ["boolean", "null"],
+                "title": "XBRL",
+                "description": "Whether the filing carries XBRL data."
+            },
+            "isInlineXBRL": {
+                "type": ["boolean", "null"],
+                "title": "Inline XBRL",
+                "description": "Whether the filing uses inline XBRL."
+            },
+            "filingUrl": {
+                "type": ["string", "null"],
+                "title": "Filing URL",
+                "description": "Direct link to the filing's main document on sec.gov."
+            },
+            "filingIndexUrl": {
+                "type": ["string", "null"],
+                "title": "Filing index URL",
+                "description": "Link to the filing's index page, which lists every attached document."
+            },
+            "companyDisplayName": {
+                "type": ["string", "null"],
+                "title": "Company (search hit)",
+                "description": "Company label as EDGAR full-text search returns it, including tickers and CIK."
+            },
+            "fileDate": {
+                "type": ["string", "null"],
+                "title": "File date (search hit)",
+                "description": "Filing date of a full-text match."
+            },
+            "periodEnding": {
+                "type": ["string", "null"],
+                "title": "Period ending (search hit)",
+                "description": "Reporting period of a full-text match."
+            },
+            "fileType": {
+                "type": ["string", "null"],
+                "title": "File type",
+                "description": "Exhibit or document type of the matched file, e.g. EX-99.1."
+            },
+            "fileDescription": {
+                "type": ["string", "null"],
+                "title": "File description",
+                "description": "SEC's description of the matched document."
+            },
+            "documentId": {
+                "type": ["string", "null"],
+                "title": "Document ID",
+                "description": "EDGAR's accession:filename identifier for the matched document."
+            },
+            "documentUrl": {
+                "type": ["string", "null"],
+                "title": "Document URL",
+                "description": "Direct link to the matched document."
+            },
+            "businessState": {
+                "type": ["string", "null"],
+                "title": "Business state",
+                "description": "State of the filer's business address."
+            },
+            "incorporationState": {
+                "type": ["string", "null"],
+                "title": "Incorporation state",
+                "description": "State of incorporation on the matched filing."
+            },
+            "relevanceScore": {
+                "type": ["number", "null"],
+                "title": "Relevance",
+                "description": "EDGAR's own relevance score for the match."
+            },
+            "totalMatches": {
+                "type": ["integer", "null"],
+                "title": "Total matches",
+                "description": "How many documents matched the query in total. EDGAR caps a result set at 10,000."
+            },
+            "source": {
+                "type": ["string", "null"],
+                "title": "Source (reference mode)",
+                "description": "Which upstream source was probed."
+            },
+            "url": {
+                "type": ["string", "null"],
+                "title": "Probed URL",
+                "description": "Exact URL used for the probe."
+            },
+            "isAvailable": {
+                "type": ["boolean", "null"],
+                "title": "Available",
+                "description": "Whether that source answered with usable data right now."
+            },
+            "detail": {
+                "type": ["string", "null"],
+                "title": "Detail",
+                "description": "Human-readable probe result."
+            },
+            "sample": {
+                "title": "Sample",
+                "description": "Evidence measured during the probe, including the newest published FINRA date and row count."
+            },
+            "_raw": {
+                "title": "Raw upstream record",
+                "description": "The publisher's untouched row or object, so the formatted originals survive alongside the parsed values."
+            },
+            "_error": {
+                "type": ["string", "null"],
+                "title": "Error kind",
+                "description": "not_found | not_published | not_in_file | empty_response | empty_section | invalid_symbol | invalid_date | no_matches | shape_changed | blocked_or_transient."
+            },
+            "_errorDetail": {
+                "type": ["string", "null"],
+                "title": "Error detail",
+                "description": "Human-readable detail, including what to do instead where the limit is the publisher's."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across every record type.",
+            "transformation": {
+                "fields": [
+                    "recordType",
+                    "symbol",
+                    "companyName",
+                    "settlementDate",
+                    "shortInterest",
+                    "daysToCover",
+                    "date",
+                    "shortVolumeRatio",
+                    "form",
+                    "filingDate",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        },
+        "shortInterest": {
+            "title": "Short interest",
+            "description": "Nasdaq bi-monthly short interest history.",
+            "transformation": {
+                "fields": [
+                    "symbol",
+                    "companyName",
+                    "settlementDate",
+                    "shortInterest",
+                    "avgDailyShareVolume",
+                    "daysToCover",
+                    "exchange",
+                    "isNasdaqListed"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        },
+        "shortVolume": {
+            "title": "Short volume",
+            "description": "FINRA daily short-sale volume.",
+            "transformation": {
+                "fields": [
+                    "symbol",
+                    "date",
+                    "venue",
+                    "shortVolume",
+                    "shortExemptVolume",
+                    "totalVolume",
+                    "shortVolumeRatio",
+                    "market"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        },
+        "filings": {
+            "title": "Filings",
+            "description": "SEC filings and full-text matches.",
+            "transformation": {
+                "fields": [
+                    "companyName",
+                    "companyDisplayName",
+                    "cik",
+                    "form",
+                    "filingDate",
+                    "fileDate",
+                    "reportDate",
+                    "items",
+                    "accessionNumber",
+                    "filingUrl",
+                    "documentUrl"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

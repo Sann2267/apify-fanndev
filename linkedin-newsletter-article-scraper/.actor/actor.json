@@ -1,0 +1,14 @@
+{
+    "actorSpecification": 1,
+    "name": "linkedin-newsletter-article-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "LinkedIn Newsletter & Article Scraper",
+    "description": "Read LinkedIn long-form articles in full: body text, author, publish and edit dates, reactions and comments, with reading time and engagement-per-thousand-followers computed. Discover an author's articles from their profile. No login required.",
+    "categories": ["NEWS", "SOCIAL_MEDIA"],
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": { "dataset": "./output_schema.json" },
+    "output": "./actor_output_links.json",
+    "defaultRunOptions": { "build": "latest", "memoryMbytes": 1024, "timeoutSecs": 3600 }
+}

@@ -1,0 +1,12 @@
+{
+    "actorOutputSchemaVersion": 1,
+    "title": "LinkedIn Article Results",
+    "properties": {
+        "results": {
+            "type": "string",
+            "title": "Dataset results",
+            "template": "{{links.apiDefaultDatasetUrl}}/items",
+            "description": "One ARTICLE row per article, a SUMMARY row for the run, plus NOTICE and ERROR rows."
+        }
+    }
+}

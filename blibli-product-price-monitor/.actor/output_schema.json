@@ -1,0 +1,342 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Baris produk Blibli",
+        "description": "Satu baris per produk per query. Field dasar berasal dari API pencarian Blibli dan selalu ada. Field yang ditandai \"hanya dengan fetchProductDetails\" cuma terisi kalau opsi itu diaktifkan, karena datanya hanya ada di halaman produk. Halaman produk lebih otoritatif soal harga dan stok daripada indeks pencarian, jadi nilainya menimpa — tapi harga listing tetap disimpan di listingSalePrice supaya selisihnya terlihat. Semua tipe nullable karena Blibli tidak mengisi setiap field untuk setiap produk.",
+        "properties": {
+            "productSku": {
+                "type": ["string", "null"],
+                "title": "SKU produk",
+                "description": "SKU produk Blibli, mis. ps--MTA-1234567. Kunci stabil untuk mencocokkan baris antar-run."
+            },
+            "itemSku": {
+                "type": ["string", "null"],
+                "title": "SKU varian",
+                "description": "SKU tingkat varian (warna/ukuran), kalau produknya punya varian."
+            },
+            "name": {
+                "type": ["string", "null"],
+                "title": "Nama produk",
+                "description": "Judul produk seperti yang ditampilkan Blibli."
+            },
+            "brand": {
+                "type": ["string", "null"],
+                "title": "Merek",
+                "description": "Merek produk."
+            },
+            "url": {
+                "type": ["string", "null"],
+                "title": "Tautan produk",
+                "description": "URL absolut blibli.com, tanpa query string pelacakan."
+            },
+            "imageUrl": {
+                "type": ["string", "null"],
+                "title": "Gambar",
+                "description": "Gambar utama produk."
+            },
+            "salePrice": {
+                "type": ["number", "null"],
+                "title": "Harga jual (Rp)",
+                "description": "Harga yang dibayar pembeli sekarang, dalam rupiah. Diambil dari halaman produk kalau fetchProductDetails aktif, kalau tidak dari hasil pencarian."
+            },
+            "listPrice": {
+                "type": ["number", "null"],
+                "title": "Harga normal (Rp)",
+                "description": "Harga sebelum diskon (harga coret). Null kalau produk tidak sedang didiskon."
+            },
+            "discountPercentage": {
+                "type": ["number", "null"],
+                "title": "Diskon (%)",
+                "description": "Potongan terhadap harga normal, dalam persen."
+            },
+            "discountAmount": {
+                "type": ["number", "null"],
+                "title": "Nilai diskon (Rp)",
+                "description": "Besar potongan dalam rupiah."
+            },
+            "priceDisplay": {
+                "type": ["string", "null"],
+                "title": "Harga (teks)",
+                "description": "Harga jual apa adanya sebagaimana dirender Blibli, mis. \"Rp 1.299.000\"."
+            },
+            "listPriceDisplay": {
+                "type": ["string", "null"],
+                "title": "Harga normal (teks)",
+                "description": "Harga coret apa adanya sebagaimana dirender Blibli."
+            },
+            "isPriceRange": {
+                "type": ["boolean", "null"],
+                "title": "Harga rentang",
+                "description": "True kalau varian produk berbeda-beda harganya; salePrice berarti harga terendah, bukan harga tunggal."
+            },
+            "currency": {
+                "type": ["string", "null"],
+                "title": "Mata uang",
+                "description": "Selalu IDR."
+            },
+            "rating": {
+                "type": ["number", "null"],
+                "title": "Rating",
+                "description": "Rating desimal, mis. 4.8. Null kalau produk belum pernah diulas."
+            },
+            "ratingRounded": {
+                "type": ["number", "null"],
+                "title": "Rating (bulat)",
+                "description": "Rating yang sudah dibulatkan ke bintang penuh, seperti yang ditampilkan Blibli."
+            },
+            "reviewCount": {
+                "type": ["number", "null"],
+                "title": "Jumlah ulasan",
+                "description": "Berapa ulasan yang diterima produk ini."
+            },
+            "stockStatus": {
+                "type": ["string", "null"],
+                "title": "Status stok",
+                "description": "AVAILABLE atau OUT_OF_STOCK. Dengan fetchProductDetails, status dihitung ulang dari jumlah stok sebenarnya, bukan dari indeks pencarian yang bisa tertinggal."
+            },
+            "inStock": {
+                "type": ["boolean", "null"],
+                "title": "Tersedia",
+                "description": "Bentuk boolean dari stockStatus."
+            },
+            "stockQuantity": {
+                "type": ["number", "null"],
+                "title": "Sisa stok",
+                "description": "Jumlah unit tersisa. Hanya dengan fetchProductDetails — hasil pencarian tidak memuat angka ini."
+            },
+            "soldCount": {
+                "type": ["number", "null"],
+                "title": "Terjual",
+                "description": "Total unit terjual, sejauh yang diekspos Blibli. Proksi permintaan terbaik yang tersedia."
+            },
+            "soldLabel": {
+                "type": ["string", "null"],
+                "title": "Terjual (label)",
+                "description": "Label penjualan bulanan versi Blibli, mis. \"Terjual 50+\"."
+            },
+            "merchantName": {
+                "type": ["string", "null"],
+                "title": "Penjual",
+                "description": "Nama toko yang menjual produk ini."
+            },
+            "merchantCode": {
+                "type": ["string", "null"],
+                "title": "Kode penjual",
+                "description": "Kode merchant Blibli, mis. BLL-70058. Dipakai untuk mengelompokkan baris per pesaing."
+            },
+            "merchantBadge": {
+                "type": ["string", "null"],
+                "title": "Badge penjual",
+                "description": "Tingkat badge penjual, mis. Diamond."
+            },
+            "merchantRating": {
+                "type": ["number", "null"],
+                "title": "Rating penjual",
+                "description": "Rating toko, 0-5."
+            },
+            "merchantIsOfficial": {
+                "type": ["boolean", "null"],
+                "title": "Official store",
+                "description": "Apakah toko ini official store merek. Hanya dengan fetchProductDetails."
+            },
+            "merchantReviewCount": {
+                "type": ["number", "null"],
+                "title": "Ulasan penjual",
+                "description": "Jumlah ulasan seluruh toko. Hanya dengan fetchProductDetails."
+            },
+            "location": {
+                "type": ["string", "null"],
+                "title": "Lokasi kirim",
+                "description": "Kota asal pengiriman — menentukan ongkir dan lama kirim ke pembeli."
+            },
+            "categoryId": {
+                "type": ["string", "null"],
+                "title": "ID kategori induk",
+                "description": "Kode kategori level teratas produk ini."
+            },
+            "categoryName": {
+                "type": ["string", "null"],
+                "title": "Kategori induk",
+                "description": "Nama kategori level teratas."
+            },
+            "categoryHierarchy": {
+                "type": ["array", "null"],
+                "title": "Jalur kategori",
+                "description": "Jalur kategori dari akar ke daun, sebagai daftar nama."
+            },
+            "tags": {
+                "type": ["array", "null"],
+                "title": "Tag",
+                "description": "Tag promosi mentah dari Blibli, mis. FREE_SHIPPING, BEST_SELLING."
+            },
+            "isFreeShipping": {
+                "type": ["boolean", "null"],
+                "title": "Gratis ongkir",
+                "description": "Turunan dari tags: apakah produk menawarkan gratis ongkir."
+            },
+            "isBestSelling": {
+                "type": ["boolean", "null"],
+                "title": "Terlaris",
+                "description": "Turunan dari tags: apakah Blibli menandai produk ini terlaris."
+            },
+            "deliveryEstimate": {
+                "type": ["string", "null"],
+                "title": "Estimasi kirim",
+                "description": "Perkiraan waktu pengiriman yang ditampilkan di hasil pencarian."
+            },
+            "seenCount": {
+                "type": ["number", "null"],
+                "title": "Dilihat",
+                "description": "Berapa kali halaman produk dilihat. Hanya dengan fetchProductDetails."
+            },
+            "bestSellingRank": {
+                "type": ["number", "null"],
+                "title": "Peringkat terlaris",
+                "description": "Peringkat produk di daftar \"Paling Laris\" kategorinya. Hanya dengan fetchProductDetails, dan hanya untuk produk yang memang berperingkat."
+            },
+            "uniqueSellingPoint": {
+                "type": ["string", "null"],
+                "title": "Keunggulan",
+                "description": "Teks keunggulan yang ditulis penjual. Hanya dengan fetchProductDetails."
+            },
+            "warranty": {
+                "type": ["object", "null"],
+                "title": "Garansi",
+                "description": "Rincian garansi. Null kalau penjual tidak mencantumkannya. Hanya dengan fetchProductDetails."
+            },
+            "listingSalePrice": {
+                "type": ["number", "null"],
+                "title": "Harga di hasil cari (Rp)",
+                "description": "Harga yang dilaporkan indeks pencarian sebelum ditimpa harga halaman produk. Hanya dengan fetchProductDetails."
+            },
+            "priceMovedSinceListing": {
+                "type": ["boolean", "null"],
+                "title": "Harga berubah",
+                "description": "True kalau harga di halaman produk berbeda dari harga di hasil pencarian. Indeks Blibli bisa tertinggal beberapa menit, jadi selisih ini justru sinyal perubahan harga yang baru terjadi. Hanya dengan fetchProductDetails."
+            },
+            "hasDetail": {
+                "type": ["boolean", "null"],
+                "title": "Detail terambil",
+                "description": "Apakah halaman produk berhasil diurai. False berarti baris ini hanya berisi data listing, sehingga field \"hanya dengan fetchProductDetails\" kosong."
+            },
+            "queryType": {
+                "type": ["string", "null"],
+                "title": "Jenis query",
+                "description": "search atau category — asal baris ini."
+            },
+            "query": {
+                "type": ["string", "null"],
+                "title": "Query",
+                "description": "Kata kunci atau kode kategori yang memunculkan produk ini. Produk yang cocok untuk dua query muncul sebagai dua baris."
+            },
+            "rankInQuery": {
+                "type": ["number", "null"],
+                "title": "Posisi di hasil",
+                "description": "Posisi produk dalam hasil query ini, dihitung dari 1 dan mengikuti urutan sortBy."
+            },
+            "scrapedAt": {
+                "type": ["string", "null"],
+                "format": "date-time",
+                "title": "Waktu ambil",
+                "description": "Timestamp UTC ISO 8601 saat baris ini diambil. Sumbu waktu untuk analisis tren harga antar-run."
+            }
+        }
+    },
+    "views": {
+        "overview": {
+            "title": "Ringkasan harga",
+            "description": "Kolom inti untuk membandingkan harga, diskon, dan penerimaan pasar antar produk.",
+            "transformation": {
+                "fields": [
+                    "name",
+                    "brand",
+                    "salePrice",
+                    "listPrice",
+                    "discountPercentage",
+                    "rating",
+                    "reviewCount",
+                    "stockStatus",
+                    "soldCount",
+                    "merchantName",
+                    "query",
+                    "url"
+                ]
+            },
+            "display": {
+                "component": "table",
+                "properties": {
+                    "name": { "label": "Produk" },
+                    "brand": { "label": "Merek" },
+                    "salePrice": { "label": "Harga jual" },
+                    "listPrice": { "label": "Harga normal" },
+                    "discountPercentage": { "label": "Diskon %" },
+                    "rating": { "label": "Rating" },
+                    "reviewCount": { "label": "Ulasan" },
+                    "stockStatus": { "label": "Stok" },
+                    "soldCount": { "label": "Terjual" },
+                    "merchantName": { "label": "Penjual" },
+                    "query": { "label": "Query" },
+                    "url": { "label": "Tautan" }
+                }
+            }
+        },
+        "stock": {
+            "title": "Pemantauan stok",
+            "description": "Ketersediaan per produk. Sisa stok hanya terisi kalau \"Ambil detail tiap produk\" aktif.",
+            "transformation": {
+                "fields": [
+                    "name",
+                    "productSku",
+                    "stockStatus",
+                    "stockQuantity",
+                    "inStock",
+                    "salePrice",
+                    "merchantName",
+                    "scrapedAt"
+                ]
+            },
+            "display": {
+                "component": "table",
+                "properties": {
+                    "name": { "label": "Produk" },
+                    "productSku": { "label": "SKU" },
+                    "stockStatus": { "label": "Status" },
+                    "stockQuantity": { "label": "Sisa stok" },
+                    "inStock": { "label": "Tersedia" },
+                    "salePrice": { "label": "Harga" },
+                    "merchantName": { "label": "Penjual" },
+                    "scrapedAt": { "label": "Waktu ambil" }
+                }
+            }
+        },
+        "priceMovement": {
+            "title": "Selisih harga listing vs halaman produk",
+            "description": "Hanya bermakna kalau \"Ambil detail tiap produk\" aktif: menyorot produk yang harganya sudah berubah tapi belum tercermin di indeks pencarian Blibli.",
+            "transformation": {
+                "fields": [
+                    "name",
+                    "listingSalePrice",
+                    "salePrice",
+                    "priceMovedSinceListing",
+                    "discountPercentage",
+                    "merchantName",
+                    "url"
+                ]
+            },
+            "display": {
+                "component": "table",
+                "properties": {
+                    "name": { "label": "Produk" },
+                    "listingSalePrice": { "label": "Harga di hasil cari" },
+                    "salePrice": { "label": "Harga di halaman produk" },
+                    "priceMovedSinceListing": { "label": "Berubah" },
+                    "discountPercentage": { "label": "Diskon %" },
+                    "merchantName": { "label": "Penjual" },
+                    "url": { "label": "Tautan" }
+                }
+            }
+        }
+    }
+}

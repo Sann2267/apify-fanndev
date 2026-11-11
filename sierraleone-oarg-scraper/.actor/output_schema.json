@@ -1,0 +1,78 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Business name search result",
+        "description": "One record per matching business name for a query (or a single _error/nameExists=false record when a query has no matches, is invalid, or fails). Raw passthrough from OARG's public Company Search tool -- name only; the registry does not expose registration numbers, status, address, or directors through this public search.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The exact query string that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which extraction strategy emitted this record (S1-company-search, or 'none' on error)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "nameExists": {
+                "type": "boolean",
+                "title": "Name exists",
+                "description": "True if the query matched one or more existing registered business names; false if the name is available."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed/invalid queries (invalid_query, unsafe_query, upstream_backend_error, blocked_or_transient)."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "_totalMatches": {
+                "type": "integer",
+                "title": "Total matches",
+                "description": "Total matching business names OARG reported for this query, before any maxResultsPerQuery truncation."
+            },
+            "_truncated": {
+                "type": "boolean",
+                "title": "Truncated",
+                "description": "True if _totalMatches exceeded maxResultsPerQuery and not every match was pushed to the dataset."
+            },
+            "matchedBusinessName": {
+                "type": "string",
+                "title": "Matched business name",
+                "description": "An existing registered business name matching the query, exactly as returned by the registry. Present only on rows where nameExists is true."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns for each search result.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "nameExists",
+                    "matchedBusinessName",
+                    "_totalMatches",
+                    "_truncated",
+                    "_error",
+                    "_scrapedAt"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

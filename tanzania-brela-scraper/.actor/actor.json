@@ -1,0 +1,14 @@
+{
+    "actorSpecification": 1,
+    "name": "tanzania-brela-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Tanzania BRELA Business Registry Scraper",
+    "description": "Search Tanzania's official business and company register (BRELA Online Registration System) by name or registration/incorporation number. Returns registration status, dates, address, and entity type for every match. No account or API key needed.",
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

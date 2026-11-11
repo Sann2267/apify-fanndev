@@ -1,0 +1,12 @@
+{
+    "actorOutputSchemaVersion": 1,
+    "title": "AEO & GEO Tracker Results",
+    "properties": {
+        "results": {
+            "type": "string",
+            "title": "Dataset results",
+            "template": "{{links.apiDefaultDatasetUrl}}/items",
+            "description": "All scraped Bing SERP / Google AI Overview / DuckDuckGo AI Chat records produced by this run."
+        }
+    }
+}

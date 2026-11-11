@@ -1,0 +1,88 @@
+{
+    "title": "DR Congo Government Tenders Scraper (SIGMAP / ARMP)",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "listType": {
+            "title": "List type",
+            "type": "string",
+            "editor": "select",
+            "description": "Which SIGMAP publication-type listing to scrape. Each option mirrors one leaf item in the site's own \"Publications\" menu. \"All\" crawls every type in one run (cheap -- SIGMAP's entire catalogue was only a handful of records at last check, see README).",
+            "enum": [
+                "all",
+                "procurement_plan",
+                "call_for_tenders",
+                "tender_postponement",
+                "tender_addenda",
+                "tender_cancellation",
+                "tender_unsuccessful",
+                "tender_provisional_award",
+                "tender_final_award",
+                "tender_contract_termination",
+                "expression_of_interest",
+                "ami_postponement",
+                "ami_cancellation",
+                "ami_addenda",
+                "ami_unsuccessful",
+                "ami_provisional_award",
+                "ami_final_award",
+                "ami_recruitment_notice",
+                "ami_contract_termination",
+                "non_objection_notice",
+                "special_authorization",
+                "approval_decision",
+                "levy_certificate"
+            ],
+            "enumTitles": [
+                "All types (crawl every category)",
+                "Procurement plans (PPM)",
+                "Calls for tenders (AAO)",
+                "Tender postponement notice (AAO)",
+                "Tender dossier addenda (AAO)",
+                "Tender cancellation notice (AAO)",
+                "Unsuccessful-bid declaration (AAO)",
+                "Provisional award notice (AAO)",
+                "Final award notice (AAO)",
+                "Contract termination (AAO)",
+                "Expressions of interest (AMI)",
+                "Postponement notice (AMI)",
+                "Cancellation notice (AMI)",
+                "Proposal-request addenda (AMI)",
+                "Unsuccessful-bid declaration (AMI)",
+                "Provisional award notice (AMI)",
+                "Final award notice (AMI)",
+                "Recruitment notice (AMI)",
+                "Contract termination (AMI)",
+                "Non-objection notice (ANO)",
+                "Special authorization (AS)",
+                "Approval decision",
+                "Levy/royalty certificate"
+            ],
+            "default": "all",
+            "prefill": "all"
+        },
+        "maxResults": {
+            "title": "Max results",
+            "type": "integer",
+            "description": "Caps how many records this run keeps in total (across all types, when listType=\"all\"). SIGMAP's own catalogue was extremely small at last check (a handful of records total, see README) -- this cap mostly guards against a future data surge.",
+            "default": 200,
+            "minimum": 1,
+            "maximum": 2000,
+            "prefill": 200
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "editor": "proxy",
+            "description": "Apify Proxy configuration.",
+            "default": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            },
+            "prefill": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            }
+        }
+    }
+}

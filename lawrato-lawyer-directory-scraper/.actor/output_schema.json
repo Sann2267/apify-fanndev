@@ -1,0 +1,224 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Lawyer record",
+        "description": "One record per lawyer. Every record carries _input/_source/_scrapedAt (and _error/_errorDetail on failures). recordType discriminates: LAWYER_CARD (directory listing row), LAWYER_PROFILE (full profile page), CITY and PRACTICE_AREA (reference mode).",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The listing scope or profile URL that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "S1-html, or none on failure."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp."
+            },
+            "recordType": {
+                "title": "Record type",
+                "description": "LAWYER_CARD | LAWYER_PROFILE | CITY | PRACTICE_AREA."
+            },
+            "name": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Name",
+                "description": "Lawyer's name as published, e.g. \"Advocate Sunil Kumar Bakshi\"."
+            },
+            "profileUrl": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Profile URL",
+                "description": "Public profile address."
+            },
+            "slug": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Slug",
+                "description": "Profile slug, or the city / practice-area slug in reference mode."
+            },
+            "rating": {
+                "type": [
+                    "number",
+                    "null"
+                ],
+                "title": "Rating",
+                "description": "Average user rating out of 5."
+            },
+            "ratingCount": {
+                "type": [
+                    "integer",
+                    "null"
+                ],
+                "title": "Rating count",
+                "description": "Number of user ratings. Upstream publishes rounded-down buckets (\"100+\"), so treat it as a floor -- see ratingCountIsMinimum."
+            },
+            "ratingCountIsMinimum": {
+                "type": [
+                    "boolean",
+                    "null"
+                ],
+                "title": "Rating count is a minimum",
+                "description": "True when upstream showed the count as \"N+\" rather than an exact number."
+            },
+            "experienceYears": {
+                "type": [
+                    "integer",
+                    "null"
+                ],
+                "title": "Years of experience",
+                "description": "Years in practice as published."
+            },
+            "locality": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Locality",
+                "description": "Listing rows -- neighbourhood + city as shown on the card."
+            },
+            "city": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "City",
+                "description": "Profile records -- the city the lawyer is listed under."
+            },
+            "isVerified": {
+                "type": [
+                    "boolean",
+                    "null"
+                ],
+                "title": "Verified",
+                "description": "Profile records -- whether the directory marks the lawyer as verified."
+            },
+            "languages": {
+                "title": "Languages",
+                "description": "Profile records -- languages spoken."
+            },
+            "practiceAreas": {
+                "title": "Practice areas",
+                "description": "Profile records -- practice area groups followed by their skill lists."
+            },
+            "specializations": {
+                "title": "Specializations",
+                "description": "Profile records -- specific services offered."
+            },
+            "courts": {
+                "title": "Courts",
+                "description": "Profile records -- courts the lawyer appears before."
+            },
+            "barCouncil": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Bar council",
+                "description": "Profile records -- bar council of enrolment, parsed from the biography."
+            },
+            "enrolledYear": {
+                "type": [
+                    "integer",
+                    "null"
+                ],
+                "title": "Enrolled year",
+                "description": "Profile records -- year of enrolment."
+            },
+            "answeredQuestions": {
+                "type": [
+                    "integer",
+                    "null"
+                ],
+                "title": "Answered questions",
+                "description": "Profile records -- number of public Q&A answers."
+            },
+            "imageUrl": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Photo URL",
+                "description": "Profile photo."
+            },
+            "listingUrl": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Listing URL",
+                "description": "Reference records -- the listing page for that city / practice area."
+            },
+            "cardText": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Card text",
+                "description": "Listing rows -- the raw card text, kept so nothing shown on the page is lost if a field fails to parse."
+            },
+            "_listingScope": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Listing scope",
+                "description": "Listing rows -- all-india, city:<x>, or area:<x>."
+            },
+            "_error": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Error",
+                "description": "Present only on failures (not_found, not_a_profile, blocked_or_transient)."
+            },
+            "_errorDetail": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across listing and profile records.",
+            "transformation": {
+                "fields": [
+                    "recordType",
+                    "name",
+                    "city",
+                    "locality",
+                    "rating",
+                    "ratingCount",
+                    "experienceYears",
+                    "barCouncil",
+                    "enrolledYear",
+                    "profileUrl",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

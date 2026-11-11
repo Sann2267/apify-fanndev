@@ -1,0 +1,142 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "UMUCYO Rwanda tender notice record",
+        "description": "Raw-passthrough dataset envelope. Every record carries _mode/_source/_scrapedAt (plus _error/_errorDetail on failures, or _warning on partial results). 'list' records carry listing fields (and, if fetchDetails was on, the enriched detail_page_heading/fields/attachments/raw_text); 'detail' records carry only the enriched detail fields for the requested detail_ref(s).",
+        "properties": {
+            "_mode": {
+                "type": "string",
+                "title": "Mode",
+                "description": "Which run mode produced this record: list or detail."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "S1-advertising-list-gu (listing row, mode=list), S1-advertising-detail-page (direct detail-mode fetch), or none (error record)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed fetches -- invalid_detail_ref or blocked_or_transient."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "tender_name": {
+                "title": "Tender name",
+                "description": "The tender's title as shown in the listing (mode=list)."
+            },
+            "tender_no": {
+                "title": "Tender number (display)",
+                "description": "The human-readable tender reference shown in the listing table, e.g. \"000001/NC/NCB/2026/2027/R-CAMD\" -- ends in the procuring entity's abbreviation, NOT the same string needed to fetch the detail page (see tend_refer_no)."
+            },
+            "tend_refer_no": {
+                "title": "Tender reference (internal)",
+                "description": "The internal reference used to fetch this tender's detail page, e.g. \"000001/NC/NCB/2026/2027/1207000001\" -- ends in the procuring entity's internal numeric code, parsed from the listing row's own hidden form value."
+            },
+            "tend_stage_cd": {
+                "title": "Stage code",
+                "description": "Internal tender-stage code (values seen: O, F -- undocumented upstream, passed through opaquely), required alongside tend_refer_no and tend_type_cd to fetch the detail page."
+            },
+            "tend_mthod_cd": {
+                "title": "Method code",
+                "description": "Procurement method code: NCB (National Competitive Bidding) or ICB (International Competitive Bidding)."
+            },
+            "tend_type_cd": {
+                "title": "Type code",
+                "description": "Procurement type code: G (Goods), C (Consultant Services), NC (Non Consultant Services), or W (Works)."
+            },
+            "status_cd": {
+                "title": "Status code",
+                "description": "Internal one-letter advertisement status code (e.g. P for Published), parsed from the listing row's hidden form value -- a different taxonomy from the tenderStatus filter's ADV/OPE/EVA/SIG/CAN/A codes."
+            },
+            "status": {
+                "title": "Status",
+                "description": "Human-readable status as shown in the listing's Status column, e.g. \"Published\"."
+            },
+            "advertising_date": {
+                "title": "Advertising date",
+                "description": "Date this tender was advertised, format dd/MM/yyyy."
+            },
+            "deadline_of_submitting": {
+                "title": "Submission deadline",
+                "description": "Bid/proposal submission deadline, format dd/MM/yyyy HH:mm."
+            },
+            "planned_open_date": {
+                "title": "Planned bid opening date",
+                "description": "Scheduled bid-opening date/time, format dd/MM/yyyy HH:mm."
+            },
+            "stage_type": {
+                "title": "Stage type",
+                "description": "\"one stage\" or \"two stage\" procurement process."
+            },
+            "detail_ref": {
+                "title": "Detail ref",
+                "description": "Pass this exact string back as one of `detailRefs` in mode='detail' to re-fetch this tender's full detail directly. Format: \"tend_refer_no|tend_stage_cd|tend_type_cd\"."
+            },
+            "detail_page_heading": {
+                "title": "Detail page heading",
+                "description": "The detail page's own heading, e.g. \"View Details of One Stage Advertising (Services)\" (present when fetchDetails is on, or in mode='detail')."
+            },
+            "fields": {
+                "title": "Detail fields",
+                "description": "Every upstream label/value pair from the tender's detail page (Tender No, Procurement Plan Name, Advertising/Procuring Entity, Tender Type, Tender Method, Brief Description, Deadline for Bids Submission, Opening Date, Tender Fee, Tender Security, Local preference, Margin of Preference, and more -- the exact set varies by tender type/stage), passed through with upstream's own labels as keys.",
+                "type": "object"
+            },
+            "attachments": {
+                "title": "Attachments",
+                "description": "Downloadable tender-document metadata (file_id, file_name, document_name, upload_date) listed on the detail page. Actually downloading the files was not reverse-engineered (out of scope) -- only metadata is captured.",
+                "type": "array"
+            },
+            "raw_text": {
+                "title": "Raw detail text",
+                "description": "The full visible text of the detail page's main content area, whitespace-normalized -- a fallback so nothing is lost for template variants (e.g. older \"Request for Expressions of Interest\" pages) whose key info is embedded as inline paragraph text rather than in the labeled fields table."
+            },
+            "_detailError": {
+                "title": "Detail fetch error",
+                "description": "Present if fetchDetails was on but the per-notice detail page could not be fetched/parsed -- listing fields are still included."
+            },
+            "_warning": {
+                "title": "Warning",
+                "description": "Set on partial results, e.g. if pagination stopped early after a transient error."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across all modes.",
+            "transformation": {
+                "fields": [
+                    "_mode",
+                    "_source",
+                    "_scrapedAt",
+                    "tender_no",
+                    "tender_name",
+                    "status",
+                    "advertising_date",
+                    "deadline_of_submitting",
+                    "planned_open_date",
+                    "stage_type",
+                    "detail_ref",
+                    "_error",
+                    "_warning"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

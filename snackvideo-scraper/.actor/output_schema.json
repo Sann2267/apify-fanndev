@@ -1,0 +1,86 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "SnackVideo record",
+        "description": "recordType is VIDEO, PROFILE, PLAYLIST or ERROR. Upstream SnackVideo fields are passed through verbatim (e.g. photo_id_str, caption, view_count, like_count, comment_count, forward_count, kwai_id, user_name, music, main_mv_urls, userProfile.ownerCount), so extra fields may appear beyond those listed. photo_id is a 64-bit integer that JavaScript cannot hold exactly - use photo_id_str / id.",
+        "additionalProperties": true,
+        "properties": {
+            "_input": {"type": "string", "title": "Input", "description": "The input value (username, URL, hashtag, keyword or 'foryou') that produced this record."},
+            "_source": {"type": "string", "title": "Source", "description": "Endpoint that produced the record (S1-api-profile, S1-api-profile-feed, S1-api-slides, S1-api-topic, S1-api-search, S1-api-foryou, S1-api-album) or 'none' for errors."},
+            "_scrapedAt": {"type": "string", "title": "Scraped at", "description": "UTC ISO 8601 time the record was produced."},
+            "recordType": {"type": "string", "title": "Record type", "description": "VIDEO, PROFILE, PLAYLIST or ERROR."},
+            "_error": {"type": "string", "title": "Error", "description": "Only on ERROR records: invalid_input, not_found, no_results, blocked, api_error or exception."},
+            "_errorDetail": {"type": "string", "title": "Error detail", "description": "Only on ERROR records: what went wrong."},
+            "id": {"title": "ID", "description": "Video ID (photo_id_str), creator handle (kwai_id) or playlist ID. Null on ERROR records."},
+            "videoUrl": {"title": "Video URL", "description": "Canonical snackvideo.com video page."},
+            "profileUrl": {"title": "Profile URL", "description": "Creator's snackvideo.com profile."},
+            "playlistUrl": {"title": "Playlist URL", "description": "PLAYLIST records: the playlist page."},
+            "caption": {"title": "Caption", "description": "Video caption text."},
+            "hashtags": {"title": "Hashtags", "description": "Hashtags parsed from the caption."},
+            "createdAt": {"title": "Posted at", "description": "UTC ISO 8601 upload time (from timestamp)."},
+            "view_count": {"title": "Views", "description": "Video play count."},
+            "like_count": {"title": "Likes", "description": "Video like count."},
+            "comment_count": {"title": "Comments", "description": "Video comment count."},
+            "forward_count": {"title": "Shares", "description": "Video share count."},
+            "durationMs": {"title": "Duration (ms)", "description": "Video length in milliseconds."},
+            "playUrl": {"title": "Play URL", "description": "Direct MP4 URL (signed, expires)."},
+            "coverUrl": {"title": "Cover URL", "description": "Cover image URL."},
+            "kwai_id": {"title": "Handle", "description": "Creator handle (the part after @ in the URL)."},
+            "user_name": {"title": "Creator name", "description": "Creator display name."},
+            "followers": {"title": "Followers", "description": "PROFILE records: follower count (userProfile.ownerCount.fan)."},
+            "publicVideos": {"title": "Public videos", "description": "PROFILE records: number of public videos."},
+            "hashtag": {"title": "Hashtag", "description": "Hashtag mode: the hashtag queried."},
+            "searchKeyword": {"title": "Search keyword", "description": "Search mode: the keyword queried."},
+            "keywordMatched": {"title": "Keyword in caption", "description": "Search mode: whether the caption contains every word of the keyword."},
+            "feedRank": {"title": "Feed rank", "description": "Trending mode: position in the sampled For You feed."}
+        }
+    },
+    "views": {
+        "overview": {
+            "title": "Videos",
+            "transformation": {
+                "fields": ["recordType", "videoUrl", "caption", "user_name", "kwai_id", "view_count", "like_count", "comment_count", "forward_count", "createdAt", "hashtags", "keywordMatched", "_input", "_error"]
+            },
+            "display": {
+                "component": "table",
+                "properties": {
+                    "recordType": {"label": "Type", "format": "text"},
+                    "videoUrl": {"label": "Video", "format": "link"},
+                    "caption": {"label": "Caption", "format": "text"},
+                    "user_name": {"label": "Creator", "format": "text"},
+                    "kwai_id": {"label": "Handle", "format": "text"},
+                    "view_count": {"label": "Views", "format": "number"},
+                    "like_count": {"label": "Likes", "format": "number"},
+                    "comment_count": {"label": "Comments", "format": "number"},
+                    "forward_count": {"label": "Shares", "format": "number"},
+                    "createdAt": {"label": "Posted", "format": "date"},
+                    "hashtags": {"label": "Hashtags", "format": "array"},
+                    "keywordMatched": {"label": "Keyword match", "format": "boolean"},
+                    "_input": {"label": "Input", "format": "text"},
+                    "_error": {"label": "Error", "format": "text"}
+                }
+            }
+        },
+        "profiles": {
+            "title": "Profiles",
+            "transformation": {
+                "fields": ["profileUrl", "user_name", "kwai_id", "followers", "following", "publicVideos", "user_id", "_input"]
+            },
+            "display": {
+                "component": "table",
+                "properties": {
+                    "profileUrl": {"label": "Profile", "format": "link"},
+                    "user_name": {"label": "Name", "format": "text"},
+                    "kwai_id": {"label": "Handle", "format": "text"},
+                    "followers": {"label": "Followers", "format": "number"},
+                    "following": {"label": "Following", "format": "number"},
+                    "publicVideos": {"label": "Videos", "format": "number"},
+                    "user_id": {"label": "User ID", "format": "text"},
+                    "_input": {"label": "Input", "format": "text"}
+                }
+            }
+        }
+    }
+}

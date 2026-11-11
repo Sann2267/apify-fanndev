@@ -1,0 +1,217 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Match / match detail / sport record",
+        "description": "Every record carries _input/_source/_scrapedAt (and _error/_errorDetail on failures). recordType discriminates: MATCH (fixtures and live rows), MATCH_DETAIL (meta + incidents + statistics + lineups + head-to-head), SPORT (reference mode). Friendly field names are derived on top of Flashscore's own two-letter keys; the untouched upstream record always ships alongside them under _raw, because the upstream key set is undocumented and changes without notice.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The sport/day/match input that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which extraction strategy emitted this record (S1-feed, or none on failure)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "recordType": {
+                "title": "Record type",
+                "description": "MATCH | MATCH_DETAIL | SPORT."
+            },
+            "matchId": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Match ID",
+                "description": "Flashscore's 8-character match ID. Feed this back into 'match' mode for full detail."
+            },
+            "matchUrl": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Match URL",
+                "description": "Public flashscore.com page for the match."
+            },
+            "sportId": {
+                "title": "Sport ID",
+                "description": "Numeric Flashscore sport ID."
+            },
+            "sportName": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Sport",
+                "description": "Human-readable sport name for sportId."
+            },
+            "country": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Country",
+                "description": "Country or region of the tournament, from the tournament header record."
+            },
+            "tournament": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Tournament",
+                "description": "Tournament label as published, e.g. 'ENGLAND: Premier League'."
+            },
+            "tournamentId": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Tournament ID",
+                "description": "Flashscore tournament identifier."
+            },
+            "tournamentStageId": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Tournament stage ID",
+                "description": "Identifier for the season/stage the match belongs to."
+            },
+            "homeTeam": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Home team",
+                "description": "Home team (or first competitor in individual sports)."
+            },
+            "awayTeam": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Away team",
+                "description": "Away team (or second competitor in individual sports)."
+            },
+            "homeScore": {
+                "title": "Home score",
+                "description": "Absent before kick-off - an unstarted match has no score key at all, which is deliberately not collapsed into 0."
+            },
+            "awayScore": {
+                "title": "Away score",
+                "description": "Absent before kick-off, same as homeScore."
+            },
+            "score": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Score",
+                "description": "Convenience 'home-away' string, present only when both scores exist."
+            },
+            "status": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Status",
+                "description": "SCHEDULED | LIVE | FINISHED, mapped from the coarse status key. UNKNOWN when upstream sends a value outside that set."
+            },
+            "statusCode": {
+                "title": "Status code (raw)",
+                "description": "Fine-grained upstream status code. Values observed include 1, 3, 4, 11, 12, 13, 38 and 45; the full enumeration is not published upstream, so it ships raw rather than guessed."
+            },
+            "winner": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Winner",
+                "description": "HOME | AWAY | DRAW, present only once the match is decided."
+            },
+            "startTime": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "format": "date-time",
+                "title": "Start time",
+                "description": "Kick-off in UTC ISO 8601, converted from the upstream epoch."
+            },
+            "finishedAt": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "format": "date-time",
+                "title": "Finished at",
+                "description": "When the match ended, when upstream published it."
+            },
+            "statistics": {
+                "title": "Statistics (match mode)",
+                "description": "List of {period, statId, name, home, away}. Football includes expected goals (xG), ball possession, shots, big chances and corners; other sports return their own set."
+            },
+            "incidents": {
+                "title": "Incidents (match mode)",
+                "description": "List of {stage, minute, player, side, incidentTypeId, note, _raw}. Incident type IDs are undocumented upstream and ship raw."
+            },
+            "lineups": {
+                "title": "Lineups (match mode)",
+                "description": "Decoded lineup feed blocks: formation, starting players, bench and ratings when published."
+            },
+            "headToHead": {
+                "title": "Head-to-head (match mode)",
+                "description": "Decoded H2H feed blocks: previous meetings and recent form for both teams."
+            },
+            "meta": {
+                "title": "Match meta (match mode)",
+                "description": "Upstream detail record: kickoff, finish timestamp and stage flags, passed through verbatim."
+            },
+            "matchesToday": {
+                "title": "Matches today (reference mode)",
+                "description": "How many matches that sport is carrying today, measured live at run time."
+            },
+            "sampleTournament": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Sample tournament (reference mode)",
+                "description": "First tournament seen for that sport today - evidence of what the sport ID actually contains."
+            },
+            "isNamed": {
+                "title": "Is named (reference mode)",
+                "description": "Whether this sport ID has a verified human-readable name in the Actor's table."
+            },
+            "_raw": {
+                "title": "Raw upstream record",
+                "description": "The untouched decoded key/value pairs from Flashscore's feed, so nothing is lost when upstream adds keys this Actor does not name yet."
+            },
+            "_error": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Error kind",
+                "description": "invalid_match_id | not_found | unauthorized | blocked_or_transient."
+            },
+            "_errorDetail": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Error detail",
+                "description": "Human-readable detail for the failure."
+            }
+        }
+    }
+}

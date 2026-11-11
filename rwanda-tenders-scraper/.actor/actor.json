@@ -1,0 +1,14 @@
+{
+    "actorSpecification": 1,
+    "name": "rwanda-tenders-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Rwanda Government Tenders Scraper (UMUCYO e-GP)",
+    "description": "Pull public government tender/procurement notices from Rwanda's official UMUCYO e-Government Procurement portal (RPPA). Browse/search 38,000+ notices back to 2016, or fetch full tender detail -- entity, fee, security, documents. No account needed.",
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

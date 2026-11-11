@@ -1,0 +1,23 @@
+{
+    "actorSpecification": 1,
+    "name": "steam-sales-discount-tracker",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Steam Sales & Discount Tracker - Deals, Prices, Events",
+    "description": "Track every Steam discount: all ~9,500 deals with end dates and deal type, Daily/Weekend Deals, free-to-keep games, regional prices in USD, sale page items and the seasonal sale and Fest calendar. Built-in price-drop and ended-deal detection.",
+    "categories": [
+        "ECOMMERCE",
+        "DEVELOPER_TOOLS"
+    ],
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json",
+    "defaultRunOptions": {
+        "build": "latest",
+        "memoryMbytes": 256,
+        "timeoutSecs": 3600
+    }
+}

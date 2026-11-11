@@ -1,0 +1,81 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Yellow Pages Indonesia record",
+        "description": "Dataset envelope (_input / _source / _scrapedAt / recordType) wrapped around the site's own field shape. One row per business, company, product, market-insight or geo node; ERROR rows carry _error instead of a payload. Split a run by recordType. Unlisted fields pass through rather than failing the run.",
+        "additionalProperties": true,
+        "properties": {
+            "_input": {"type": "string", "title": "Input", "description": "The keyword, slug, URL or province code that produced this record."},
+            "_source": {"type": "string", "title": "Source strategy", "description": "S1-listing-search, S2-category-page, S3-profile, S4-product-search, S5-facets or S6-citymap."},
+            "_scrapedAt": {"type": "string", "title": "Scraped at", "description": "UTC ISO 8601 timestamp when this record was emitted."},
+            "recordType": {"type": "string", "title": "Record type", "description": "BUSINESS, COMPANY, PRODUCT, MARKET_INSIGHT, GEO_NODE or ERROR."},
+            "_error": {"type": "string", "title": "Error", "description": "Failure rows only: not_found, no_results, unresolvable_input, BlockedError or UnexpectedShape."},
+            "_errorDetail": {"type": "string", "title": "Error detail", "description": "Free-form diagnostic accompanying _error."},
+            "_warning": {"type": "string", "title": "Warning", "description": "Non-fatal note, e.g. upstream_page_cap_reached when the 250-row ceiling truncated the query."},
+            "_enriched": {"type": "boolean", "title": "Enriched", "description": "True when the company's profile page was merged into this listing row."},
+            "entryId": {"title": "Entry ID", "description": "Listing identifier. Numeric for claimed company pages, IDEN-prefixed for phone-directory records."},
+            "entryType": {"title": "Entry type", "description": "COMPANY (claimed profile page) or PHONE_LISTING (phone-book record with no profile page)."},
+            "companyId": {"title": "Company ID", "description": "Numeric ID used in /profil-<id>-<slug>.html. Null for phone-directory entries."},
+            "name": {"title": "Business name", "description": "Business name as listed."},
+            "description": {"title": "Description", "description": "Company blurb; truncated with an ellipsis on listing pages."},
+            "phone": {"title": "Phone", "description": "Primary phone number in the site's display format."},
+            "phones": {"title": "Phones", "description": "Company details mode: every number with its label (Utama, WhatsApp, Seluler, Fax)."},
+            "emails": {"title": "Emails", "description": "Email addresses recovered from Cloudflare's obfuscated markup. Often empty - most listings publish no email."},
+            "website": {"title": "Website", "description": "External website as published by the business. Passed through verbatim, so occasional malformed values from upstream appear as-is."},
+            "categorySlug": {"title": "Category slug", "description": "Category inferred from a phone-directory entry's URL."},
+            "categories": {"title": "Categories", "description": "Company details mode: category slugs and names assigned to the company."},
+            "address": {"title": "Address", "description": "street, locality, region, postalCode, country."},
+            "geo": {"title": "Coordinates", "description": "latitude / longitude. Present on listing rows; profile pages publish no coordinates, so enrichment preserves the listing value."},
+            "image": {"title": "Image", "description": "Logo or map-tile image URL."},
+            "foundedYear": {"title": "Founded year", "description": "Company details mode: 'Tahun pendirian' as published."},
+            "legalForm": {"title": "Legal form", "description": "Company details mode: 'Bentuk hukum'."},
+            "activityForm": {"title": "Activity form", "description": "Company details mode: 'Formulir kegiatan'."},
+            "productId": {"title": "Product ID", "description": "Product search mode: numeric ID from /product-<slug>_<id>.html."},
+            "priceValue": {"title": "Price", "description": "Product search mode: numeric price as printed."},
+            "priceCurrency": {"title": "Currency", "description": "Product search mode: USD, IDR or Rp."},
+            "companyName": {"title": "Seller name", "description": "Product search mode: the company offering the product."},
+            "companyUrl": {"title": "Seller URL", "description": "Product search mode: the seller's profile URL."},
+            "keyword": {"title": "Keyword", "description": "Market insights mode: the keyword these facets describe."},
+            "advertisedTotal": {"title": "Advertised total", "description": "Hit count the site prints. Marketing figure - only the first 250 rows are actually reachable."},
+            "reachableTotal": {"title": "Reachable total", "description": "Rows a single query can actually return (250)."},
+            "regions": {"title": "Regions", "description": "Market insights mode: province name, listing count and the region filter value to pass back in."},
+            "cities": {"title": "Cities", "description": "Market insights mode: city name, listing count and the city filter value. In Geo directory mode, the province's cities."},
+            "similarKeywords": {"title": "Similar keywords", "description": "Market insights mode: related search terms the site suggests - useful for expanding a crawl."},
+            "provinceCode": {"title": "Province code", "description": "Geo directory mode: two-digit province code."},
+            "provinceName": {"title": "Province name", "description": "Geo directory mode: province name."},
+            "cityCount": {"title": "City count", "description": "Geo directory mode: number of cities listed for the province."},
+            "detailUrl": {"title": "Detail URL", "description": "Page this record was read from, on the data host."},
+            "yellowpagesUrl": {"title": "Yellow Pages URL", "description": "The same page on www.yellowpages.id, for citation and manual checking."},
+            "sourceUrl": {"title": "Source URL", "description": "Resolved URL of the page this record was parsed from."}
+        }
+    },
+    "views": {
+        "overview": {
+            "title": "Businesses",
+            "transformation": {"fields": ["name", "phone", "emails", "website", "address", "geo", "companyId", "yellowpagesUrl", "recordType"]},
+            "display": {"component": "table"}
+        },
+        "leads": {
+            "title": "Lead list",
+            "transformation": {"fields": ["name", "phone", "emails", "website", "address", "categorySlug", "yellowpagesUrl"]},
+            "display": {"component": "table"}
+        },
+        "insights": {
+            "title": "Market insights",
+            "transformation": {"fields": ["keyword", "advertisedTotal", "reachableTotal", "regions", "cities", "similarKeywords"]},
+            "display": {"component": "table"}
+        },
+        "products": {
+            "title": "Products",
+            "transformation": {"fields": ["name", "priceValue", "priceCurrency", "companyName", "yellowpagesUrl"]},
+            "display": {"component": "table"}
+        },
+        "errors": {
+            "title": "Errors",
+            "transformation": {"fields": ["_input", "_source", "_error", "_errorDetail", "_scrapedAt"]},
+            "display": {"component": "table"}
+        }
+    }
+}

@@ -1,0 +1,16 @@
+{
+    "actorSpecification": 1,
+    "name": "businessrecorder-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Business Recorder Scraper",
+    "description": "Extract full article text or the newest headlines from Business Recorder (brecorder.com), Pakistan's leading financial/business daily -- no account or API key needed.",
+    "dockerfile": "./Dockerfile",
+    "minMemoryMbytes": 256,
+    "maxMemoryMbytes": 1024,
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

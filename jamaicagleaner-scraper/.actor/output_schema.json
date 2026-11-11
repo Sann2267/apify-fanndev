@@ -1,0 +1,109 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Article / latest-headline record",
+        "description": "Raw-passthrough dataset envelope. Every record carries _input/_source/_scrapedAt (and _error/_errorDetail on failures). Article-mode records (S1-html) carry headline/articleBody-style fields parsed from ld+json plus HTML fallback; latest-mode records (S2-html-listing, homepage link scan since sitemap.xml/rss.xml are both broken) carry title/link-style fields with only day-precision urlDate.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The exact input value (URL, or 'latest') that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which extraction strategy emitted this record (e.g. S1-html, S2-html-listing)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed extractions -- the error kind."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "headline": {
+                "title": "Headline",
+                "description": "Article headline, from .article--title HTML element (falls back to ld+json Article headline)."
+            },
+            "articleBody": {
+                "title": "Article body",
+                "description": "Full article text, joined from div.article--body > p paragraphs. The last paragraph is sometimes a reporter's byline email, left in as real editorial content."
+            },
+            "postedDate": {
+                "title": "Posted date (readable)",
+                "description": "Human-readable, non-ISO date string from .article--posted-date (e.g. 'August 23 2026') -- secondary/redundant to datePublished."
+            },
+            "datePublished": {
+                "title": "Date published",
+                "description": "ISO 8601 publish date from ld+json Article block."
+            },
+            "dateModified": {
+                "title": "Date modified",
+                "description": "ISO 8601 last-modified date from ld+json Article block."
+            },
+            "image": {
+                "title": "Image",
+                "description": "Lead image, as emitted in ld+json Article block."
+            },
+            "isAccessibleForFree": {
+                "title": "Accessible for free",
+                "description": "Upstream paywall metering flag from ld+json."
+            },
+            "_paywalled": {
+                "title": "Paywalled",
+                "description": "True when isAccessibleForFree is explicitly false."
+            },
+            "title": {
+                "title": "Title",
+                "description": "Headline text of a latest-mode homepage listing item (best/longest anchor text found for the link)."
+            },
+            "link": {
+                "title": "Link",
+                "description": "Article URL, normalized to an absolute https:// URL."
+            },
+            "section": {
+                "title": "Section",
+                "description": "Section slug parsed from the article URL path (e.g. 'news', 'sports')."
+            },
+            "urlDate": {
+                "title": "URL date",
+                "description": "Day-precision date (YYYY-MM-DD) parsed from the article URL path -- not a true publish timestamp. Fetch the article in article mode for the exact datePublished."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across both article and latest-headline records.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "_source",
+                    "_scrapedAt",
+                    "headline",
+                    "title",
+                    "link",
+                    "datePublished",
+                    "urlDate",
+                    "section",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

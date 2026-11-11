@@ -1,0 +1,131 @@
+{
+    "title": "TopJobs.lk Scraper",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "mode": {
+            "title": "Mode",
+            "type": "string",
+            "editor": "select",
+            "description": "\"search\" runs a keyword or category search and (by default) hydrates each result into a full job record. \"detail\" fetches full detail for specific job URL(s) directly.",
+            "enum": ["search", "detail"],
+            "enumTitles": ["Keyword / category search", "Job detail (by URL)"],
+            "default": "search",
+            "prefill": "search"
+        },
+        "keyword": {
+            "title": "Keyword",
+            "type": "string",
+            "editor": "textfield",
+            "description": "\"search\" mode -- free-text search (e.g. \"accountant\", \"software engineer\"). Leave empty to list all currently open vacancies. Ignored if \"Functional area\" below is set -- topjobs.lk's own search page treats category-browse and keyword-search as mutually exclusive, category wins.",
+            "prefill": "accountant"
+        },
+        "functionalArea": {
+            "title": "Functional area (browse by category)",
+            "type": "string",
+            "editor": "select",
+            "description": "\"search\" mode -- browse one of topjobs.lk's own job categories instead of a keyword search. When set, \"Keyword\" above is ignored server-side (confirmed live).",
+            "enum": ["", "SDQ", "HNS", "ACA", "BAF", "SMM", "HAT", "COM", "OAS", "CCE", "ITT", "CUR", "LWT", "MAE", "POS", "MAC", "HRF", "HOT", "SRF", "MHN", "LEL", "SQC", "APC", "AIM", "TAL", "RLT", "AGD", "SEC", "BEC", "IDV", "KPO", "IME"],
+            "enumTitles": ["(none -- use keyword search)", "IT-Sware/DB/QA/Web/Graphics/GIS", "IT-HWare/Networks/Systems", "Accounting/Auditing/Finance", "Banking & Finance/Insurance", "Sales/Marketing/Merchandising", "HR/Training", "Corporate Management/Analysts", "Office Admin/Secretary/Receptionist", "Civil Eng/Interior Design/Architecture", "IT-Telecoms", "Customer Relations/Public Relations", "Logistics/Warehouse/Transport", "Eng-Mech/Auto/Elec", "Manufacturing/Operations", "Media/Advert/Communication", "Hotel/Restaurant/Hospitality", "Travel/Tourism", "Sports/Fitness/Recreation", "Medical/Nursing/Healthcare", "Legal/Law", "Supervision/Quality Control", "Apparel/Clothing", "Ticketing/Airline/Marine", "Education", "R&D/Science/Research", "Agriculture/Dairy/Environment", "Security", "Fashion/Design/Beauty", "International Development", "KPO/BPO", "Imports/Exports"],
+            "default": "",
+            "prefill": ""
+        },
+        "government": {
+            "title": "Government sector only",
+            "type": "boolean",
+            "editor": "checkbox",
+            "description": "\"search\" mode -- optional filter checkbox, combines with Keyword (does NOT combine with Functional area).",
+            "default": false
+        },
+        "ngo": {
+            "title": "NGO sector only",
+            "type": "boolean",
+            "editor": "checkbox",
+            "description": "\"search\" mode -- optional filter checkbox, combines with Keyword.",
+            "default": false
+        },
+        "partTime": {
+            "title": "Part-time only",
+            "type": "boolean",
+            "editor": "checkbox",
+            "description": "\"search\" mode -- optional filter checkbox, combines with Keyword.",
+            "default": false
+        },
+        "walkIn": {
+            "title": "Walk-in interview only",
+            "type": "boolean",
+            "editor": "checkbox",
+            "description": "\"search\" mode -- optional filter checkbox, combines with Keyword.",
+            "default": false
+        },
+        "foreign": {
+            "title": "Foreign employment only",
+            "type": "boolean",
+            "editor": "checkbox",
+            "description": "\"search\" mode -- optional filter checkbox, combines with Keyword.",
+            "default": false
+        },
+        "internship": {
+            "title": "Internships only",
+            "type": "boolean",
+            "editor": "checkbox",
+            "description": "\"search\" mode -- optional filter checkbox, combines with Keyword.",
+            "default": false
+        },
+        "maxResults": {
+            "title": "Max results",
+            "type": "integer",
+            "editor": "number",
+            "description": "\"search\" mode -- maximum number of job listings to return. Pagination is followed automatically (1000 results/page) until this cap or the end of the result set.",
+            "default": 50,
+            "minimum": 1,
+            "maximum": 5000,
+            "prefill": 50
+        },
+        "fetchFullDetails": {
+            "title": "Fetch full details for each result",
+            "type": "boolean",
+            "editor": "checkbox",
+            "description": "\"search\" mode -- when on (default), each search result is hydrated into a full job record (location, closing date, job-type badges, description image, employer contact) with one extra request per job. Turn off for faster/cheaper runs that only need the compact search-result fields (title, employer, town, dates).",
+            "default": true,
+            "prefill": true
+        },
+        "jobUrl": {
+            "title": "Job detail URL",
+            "type": "string",
+            "editor": "textfield",
+            "description": "\"detail\" mode -- a single job's full topjobs.lk detail URL (from this actor's own `detailUrl` search-result field, or copied from the site).",
+            "prefill": "https://topjobs.lk/employer/JobAdvertismentServlet?rid=0&ac=DEFZZZ&jc=0001541024&ec=DEFZZZ&pg=applicant/vacancybyfunctionalarea.jsp"
+        },
+        "jobUrls": {
+            "title": "Job detail URLs",
+            "type": "array",
+            "editor": "stringList",
+            "description": "\"detail\" mode only -- multiple job detail URLs to fetch full detail for in one run."
+        },
+        "maxConcurrency": {
+            "title": "Max concurrent workers",
+            "type": "integer",
+            "description": "How many detail requests to run in parallel (used in \"search\" mode when hydrating results, and in \"detail\" mode across multiple URLs).",
+            "default": 4,
+            "minimum": 1,
+            "maximum": 16,
+            "prefill": 4
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "editor": "proxy",
+            "description": "Apify Proxy configuration. Residential is on by default.",
+            "default": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            },
+            "prefill": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            }
+        }
+    },
+    "required": ["mode"]
+}

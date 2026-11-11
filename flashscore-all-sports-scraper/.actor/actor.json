@@ -1,0 +1,18 @@
+{
+    "actorSpecification": 1,
+    "name": "flashscore-all-sports-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Flashscore Scraper - Live Scores, Fixtures & Match Stats",
+    "description": "Scrape Flashscore live scores, fixtures and results across 14 sports in one Actor: football, tennis, basketball, ice hockey, cricket and more. Pull a whole day per sport, in-play games only, or full match detail with expected goals (xG), possession, incidents, lineups and head-to-head.",
+    "categories": [
+        "SPORTS",
+        "OTHER"
+    ],
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

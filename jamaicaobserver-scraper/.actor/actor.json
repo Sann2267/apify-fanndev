@@ -1,0 +1,14 @@
+{
+    "actorSpecification": 1,
+    "name": "jamaicaobserver-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Jamaica Observer Scraper",
+    "description": "Extract full article text or the newest headlines from the Jamaica Observer (jamaicaobserver.com), one of Jamaica's two main daily newspapers -- no account or API key needed.",
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

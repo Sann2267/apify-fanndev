@@ -1,0 +1,132 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Article / latest-headline record",
+        "description": "Raw-passthrough dataset envelope. Every record carries _input/_source/_scrapedAt (and _error/_errorDetail on failures). Both article-mode and latest-mode records share the SAME rich shape (id/slug/headline/articleBody/author/...), sourced primarily from the WordPress REST API (S1-wpapi) -- this site's RSS feed is broken (see CRAWLING_METHOD.md), so latest mode also uses the REST API rather than a thin title/link feed shape. A degraded HTML-only fallback (S2-html, headline + body only) is used only if the REST API call itself fails.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The exact input value (URL, or 'latest') that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which extraction strategy emitted this record: S1-wpapi (WordPress REST API, primary -- used for both article and latest mode), S2-html (degraded fallback, used only if the REST API call fails)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed extractions -- the error kind (e.g. not_found, http_500, blocked_or_transient)."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "id": {
+                "title": "Post ID",
+                "description": "Internal numeric WordPress post ID. S1-wpapi only."
+            },
+            "slug": {
+                "title": "Slug",
+                "description": "URL slug of the post. S1-wpapi only. Can be a bare numeric string (the post's own ID) for a small number of posts with an empty title -- a genuine CMS publish-workflow glitch, not a parse failure -- see CRAWLING_METHOD.md."
+            },
+            "link": {
+                "title": "Link",
+                "description": "Canonical article URL, as reported by the WordPress REST API."
+            },
+            "headline": {
+                "title": "Headline",
+                "description": "Article headline, HTML-entity-decoded and tag-stripped. Can be null/empty for the rare empty-title posts described above (S1-wpapi)."
+            },
+            "description": {
+                "title": "Description",
+                "description": "Short article summary from the WordPress excerpt (S1-wpapi). Always null on the S2-html fallback -- this site has no meta description or ld+json to fall back on."
+            },
+            "articleBody": {
+                "title": "Article body",
+                "description": "Full article text, paragraphs joined with a blank line."
+            },
+            "date": {
+                "title": "Date",
+                "description": "Publish date/time, verbatim from WordPress (site-local time, no timezone suffix). S1-wpapi only; always null on S2-html (no reliable date source in raw HTML on this site)."
+            },
+            "date_gmt": {
+                "title": "Date (UTC)",
+                "description": "Publish date/time in UTC, verbatim from the WordPress REST API (field name kept as upstream: date_gmt). S1-wpapi only."
+            },
+            "modified": {
+                "title": "Modified",
+                "description": "Last-modified date/time in site-local time, verbatim from WordPress. S1-wpapi only."
+            },
+            "modified_gmt": {
+                "title": "Modified (UTC)",
+                "description": "Last-modified date/time in UTC, verbatim from WordPress. S1-wpapi only."
+            },
+            "author": {
+                "title": "Author",
+                "description": "Byline name, from the WP REST API's embedded author object (S1-wpapi). Always null on S2-html -- no reliable author element found in raw HTML on this site."
+            },
+            "authorSlug": {
+                "title": "Author slug",
+                "description": "WordPress author archive slug. S1-wpapi only."
+            },
+            "authorLink": {
+                "title": "Author link",
+                "description": "URL of the author's archive page on the site. S1-wpapi only."
+            },
+            "categories": {
+                "title": "Categories",
+                "description": "List of category names attached to the post (e.g. [\"Featured\"], [\"Sport\"]). S1-wpapi only."
+            },
+            "tags": {
+                "title": "Tags",
+                "description": "List of tag names attached to the post. S1-wpapi only."
+            },
+            "featuredImage": {
+                "title": "Featured image",
+                "description": "Lead image object (url/width/height/altText). S1-wpapi only."
+            },
+            "guid": {
+                "title": "GUID",
+                "description": "WordPress-internal GUID URL (e.g. https://www.thisdaylive.com/?p=1240499). S1-wpapi only."
+            },
+            "contentProtected": {
+                "title": "Content protected",
+                "description": "WordPress's own paywall/protected-content flag on the post body -- observed false on every sampled article (no paywall found on this site). S1-wpapi only."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across both article and latest-headline records.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "_source",
+                    "_scrapedAt",
+                    "headline",
+                    "link",
+                    "date",
+                    "categories",
+                    "author",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

@@ -1,0 +1,75 @@
+{
+    "title": "Jamaica Government Tenders Scraper (GOJEP)",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "noticeType": {
+            "title": "Notice type",
+            "type": "string",
+            "editor": "select",
+            "description": "Which GOJEP register to pull from. 'Opened bid details' is GOJEP's combined feed of currently-open and historical calls for tenders (title, reference number, procuring entity, description, submission deadline, procurement method, status, award date). 'Contract award notices' lists already-awarded contracts, each with a downloadable Contract Award Notice PDF.",
+            "enum": ["opened", "awarded"],
+            "enumTitles": ["Opened bid details (open + historical tenders)", "Contract award notices (awarded contracts + PDF)"],
+            "default": "opened",
+            "prefill": "opened"
+        },
+        "maxItems": {
+            "title": "Max items",
+            "type": "integer",
+            "description": "Maximum number of records to fetch (10 per page upstream). The 'opened' register has roughly 80,000 records and 'awarded' roughly 13,000 at last check, so this caps how deep the run pages into that history.",
+            "default": 50,
+            "minimum": 1,
+            "maximum": 5000,
+            "prefill": 50
+        },
+        "sortBy": {
+            "title": "Sort by",
+            "type": "string",
+            "editor": "select",
+            "description": "Column to sort by. Leave blank to use the register's own default order. Options differ by notice type -- when 'Notice type' is 'awarded', only 'procuringEntity', 'title', 'contractAmount', and 'datePublished' apply (others are ignored).",
+            "enum": ["", "title", "referenceNumber", "procuringEntity", "submissionDeadline", "procedure", "status", "awardDate", "contractAmount", "datePublished"],
+            "enumTitles": ["(register default order)", "Title", "Reference number", "Procuring entity", "Submission deadline", "Procedure/method", "Status", "Award date", "Contract amount", "Date published"],
+            "default": "",
+            "prefill": "submissionDeadline"
+        },
+        "sortOrder": {
+            "title": "Sort order",
+            "type": "string",
+            "editor": "select",
+            "description": "Only applies when 'Sort by' is set.",
+            "enum": ["desc", "asc"],
+            "enumTitles": ["Descending (newest/highest first)", "Ascending (oldest/lowest first)"],
+            "default": "desc",
+            "prefill": "desc"
+        },
+        "includeBidders": {
+            "title": "Include bidder list (opened bids only)",
+            "type": "boolean",
+            "description": "For each 'opened' record, additionally fetch its public bidder/supplier list (name, internal bid id, financial value when disclosed) via one extra request per record. Slower for large runs -- leave off unless you need this detail. Ignored when 'Notice type' is 'awarded'.",
+            "default": false
+        },
+        "maxConcurrency": {
+            "title": "Max concurrent requests",
+            "type": "integer",
+            "description": "How many pages (or bidder-list lookups) to fetch in parallel.",
+            "default": 3,
+            "minimum": 1,
+            "maximum": 10,
+            "prefill": 3
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "editor": "proxy",
+            "description": "Apify Proxy configuration. Residential is on by default.",
+            "default": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            },
+            "prefill": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            }
+        }
+    }
+}

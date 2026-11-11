@@ -1,0 +1,125 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Article / latest-headline record",
+        "description": "Raw-passthrough dataset envelope. Every record carries _input/_source/_scrapedAt (failed URLs are not written to the dataset -- they are reported in the ERRORS record of the run's key-value store). Article-mode records (S1-jsonld) carry headline/articleBody-style fields extracted from the page's NewsArticle ld+json block. Latest-mode records (S2-rss) carry title/link-style fields from the RSS feed. Upstream JSON-LD/RSS is passed through close to verbatim, so field shapes (e.g. author as a string vs a joined list) can vary between articles.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The exact input value that produced this record: the article URL in article mode, or the literal string 'latest' in latest mode."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which extraction strategy emitted this record: S1-jsonld (article NewsArticle ld+json), S2-rss (RSS feed item), or none (error record)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_paywalled": {
+                "title": "Paywalled",
+                "description": "Article mode only. True when the NewsArticle ld+json's isAccessibleForFree field was explicitly False; derived defensively, not hardcoded."
+            },
+            "headline": {
+                "title": "Headline",
+                "description": "Article mode only. Article headline, raw passthrough from JSON-LD NewsArticle.headline."
+            },
+            "description": {
+                "title": "Description",
+                "description": "Article-mode: JSON-LD NewsArticle.description (dek/summary). Latest-mode: RSS <description> teaser text (not full article body)."
+            },
+            "articleBody": {
+                "title": "Article body",
+                "description": "Article mode only. Full article text, raw passthrough from JSON-LD NewsArticle.articleBody."
+            },
+            "author": {
+                "title": "Author",
+                "description": "Article mode only. Author name(s) flattened from JSON-LD NewsArticle.author, which upstream may be a bare string, a single {name} object, or a list of {name} objects (joined with ', ' when a list)."
+            },
+            "publisher": {
+                "title": "Publisher",
+                "description": "Article mode only. Publisher name flattened from JSON-LD NewsArticle.publisher (string, object, or list of objects, same flattening as author)."
+            },
+            "datePublished": {
+                "title": "Date published",
+                "description": "Article mode only. Raw passthrough of JSON-LD NewsArticle.datePublished."
+            },
+            "dateModified": {
+                "title": "Date modified",
+                "description": "Article mode only. Raw passthrough of JSON-LD NewsArticle.dateModified."
+            },
+            "articleSection": {
+                "title": "Article section",
+                "description": "Article mode only. Raw passthrough of JSON-LD NewsArticle.articleSection (e.g. usa, international, technology, society, opinion, climate, economy-and-business)."
+            },
+            "keywords": {
+                "title": "Keywords",
+                "description": "Article mode only. Raw passthrough of JSON-LD NewsArticle.keywords."
+            },
+            "image": {
+                "title": "Image",
+                "description": "Article mode: raw passthrough of JSON-LD NewsArticle.image. Latest mode: the media:content url attribute from the RSS item, or null when absent."
+            },
+            "isAccessibleForFree": {
+                "title": "Is accessible for free",
+                "description": "Article mode only. Raw passthrough of JSON-LD NewsArticle.isAccessibleForFree (the source field _paywalled is derived from)."
+            },
+            "title": {
+                "title": "Title",
+                "description": "Latest mode only. RSS <title> of the headline item."
+            },
+            "link": {
+                "title": "Link",
+                "description": "Latest mode only. RSS <link> -- the article URL for this headline."
+            },
+            "guid": {
+                "title": "GUID",
+                "description": "Latest mode only. RSS <guid> for the item."
+            },
+            "pubDate": {
+                "title": "Publication date",
+                "description": "Latest mode only. Raw RSS <pubDate> string for the item."
+            },
+            "creator": {
+                "title": "Creator",
+                "description": "Latest mode only. RSS dc:creator (author) of the item."
+            },
+            "categories": {
+                "title": "Categories",
+                "description": "Latest mode only. List of RSS <category> values for the item, or null when none present."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across both article and latest-headline records.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "_source",
+                    "_scrapedAt",
+                    "headline",
+                    "title",
+                    "link",
+                    "author",
+                    "creator",
+                    "datePublished",
+                    "pubDate",
+                    "articleSection",
+                    "_paywalled"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

@@ -1,0 +1,14 @@
+{
+    "actorSpecification": 1,
+    "name": "linkedin-event-attendees-extractor",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "LinkedIn Event Attendees Extractor",
+    "description": "Turn a LinkedIn event into a list of the people who registered for it - an audience that has already raised its hand on your topic. Requires your own li_at session cookie: LinkedIn shows logged-out visitors no event page at all.",
+    "categories": ["LEAD_GENERATION", "SOCIAL_MEDIA"],
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": { "dataset": "./output_schema.json" },
+    "output": "./actor_output_links.json",
+    "defaultRunOptions": { "build": "latest", "memoryMbytes": 1024, "timeoutSecs": 3600 }
+}

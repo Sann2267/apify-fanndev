@@ -1,0 +1,12 @@
+{
+    "actorOutputSchemaVersion": 1,
+    "title": "LinkedIn Job & Recruiter Results",
+    "properties": {
+        "results": {
+            "type": "string",
+            "title": "Dataset results",
+            "template": "{{links.apiDefaultDatasetUrl}}/items",
+            "description": "One JOB row per posting with its parsed tech stack, certifications and pay range, plus NOTICE and ERROR rows."
+        }
+    }
+}

@@ -1,0 +1,93 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+            "recordType": { "type": "string" },
+            "hotelId": { "type": ["string", "null"] },
+            "name": { "type": ["string", "null"] },
+            "displayName": { "type": ["string", "null"] },
+            "url": { "type": ["string", "null"] },
+            "accommodationType": { "type": ["string", "null"] },
+            "accommodationTypeCode": { "type": ["string", "null"] },
+            "starRating": { "type": ["number", "integer", "null"] },
+            "address": { "type": ["string", "null"] },
+            "city": { "type": ["string", "null"] },
+            "province": { "type": ["string", "null"] },
+            "country": { "type": ["string", "null"] },
+            "postalCode": { "type": ["string", "null"] },
+            "latitude": { "type": ["number", "integer", "null"] },
+            "longitude": { "type": ["number", "integer", "null"] },
+            "areaName": { "type": ["string", "null"] },
+            "areaGeoId": { "type": ["string", "null"] },
+            "checkInTime": { "type": ["string", "null"] },
+            "checkOutTime": { "type": ["string", "null"] },
+            "facilityCodes": { "type": ["array", "null"] },
+            "facilityNames": { "type": ["array", "null"] },
+            "supportedRateTypes": { "type": ["array", "null"] },
+            "images": { "type": ["array", "null"] },
+            "rooms": { "type": ["array", "null"] },
+            "roomCount": { "type": ["integer", "null"] },
+            "priceCalendar": { "type": ["array", "null"] },
+            "priceSummary": { "type": ["object", "null"] },
+            "reviewSummary": { "type": ["object", "null"] },
+            "currency": { "type": ["string", "null"] },
+            "locale": { "type": ["string", "null"] },
+            "inputSource": { "type": ["string", "null"] },
+            "warnings": { "type": ["array", "null"] },
+            "error": { "type": ["string", "null"] },
+            "scrapedAt": { "type": "string" }
+        },
+        "required": ["recordType", "scrapedAt"]
+    },
+    "views": {
+        "overview": {
+            "title": "Properties",
+            "transformation": {
+                "fields": [
+                    "name", "accommodationType", "starRating", "city", "country",
+                    "latitude", "longitude", "reviewSummary", "priceSummary",
+                    "roomCount", "url", "recordType"
+                ]
+            },
+            "display": {
+                "component": "table",
+                "properties": {
+                    "name": { "label": "Property" },
+                    "accommodationType": { "label": "Type" },
+                    "starRating": { "label": "Stars" },
+                    "city": { "label": "City" },
+                    "country": { "label": "Country" },
+                    "latitude": { "label": "Lat" },
+                    "longitude": { "label": "Lng" },
+                    "reviewSummary": { "label": "Reviews" },
+                    "priceSummary": { "label": "Price summary" },
+                    "roomCount": { "label": "Rooms" },
+                    "url": { "label": "URL" },
+                    "recordType": { "label": "Status" }
+                }
+            }
+        },
+        "pricing": {
+            "title": "Weekday vs weekend pricing",
+            "transformation": {
+                "fields": [
+                    "name", "city", "currency", "priceSummary", "priceCalendar",
+                    "recordType"
+                ]
+            },
+            "display": {
+                "component": "table",
+                "properties": {
+                    "name": { "label": "Property" },
+                    "city": { "label": "City" },
+                    "currency": { "label": "Currency" },
+                    "priceSummary": { "label": "Summary" },
+                    "priceCalendar": { "label": "Nightly rates" },
+                    "recordType": { "label": "Status" }
+                }
+            }
+        }
+    }
+}

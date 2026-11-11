@@ -1,0 +1,216 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Socios.com record",
+        "description": "The dataset envelope (_input / _source / _scrapedAt / recordType) on top of Chiliz's own field shape. One POLL row per fan vote with its results already counted, PARTNER rows for clubs, FAN_TOKEN and VOTE_TOKEN rows for the token catalogue, LEAGUE / SPORT / COUNTRY rows for the reference tables, and ERROR rows on failure. Chiliz adds and removes fields without notice, so fields not listed here pass through instead of failing the run.",
+        "additionalProperties": true,
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The club, token or table this record came from."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "S1-chiliz-acl for real records, none on error rows."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was emitted."
+            },
+            "recordType": {
+                "type": "string",
+                "title": "Record type",
+                "description": "POLL, PARTNER, FAN_TOKEN, VOTE_TOKEN, LEAGUE, SPORT, COUNTRY or ERROR."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Failure rows only: partner_not_found, forbidden_by_acl or request_failed."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic accompanying _error."
+            },
+            "question": {
+                "title": "Question",
+                "description": "POLL rows: the question put to fans."
+            },
+            "partnerName": {
+                "title": "Club",
+                "description": "The club, esports org or brand that ran the poll or owns the token."
+            },
+            "partnerShortName": {
+                "title": "Club short name",
+                "description": "Three-letter club code, for example ACM."
+            },
+            "status": {
+                "title": "Status",
+                "description": "POLL rows: opened, closed, cancelled, error and so on. PARTNER rows: active, inactive or created."
+            },
+            "type": {
+                "title": "Type",
+                "description": "POLL rows: engagement, integrity or prediction. PARTNER rows: sport_teams, esport_teams, brand, events or league_tokens. FAN_TOKEN rows: voteToken, nonDecimalVoteToken, externalToken, fiat, crypto or polygon."
+            },
+            "answers": {
+                "title": "Answers",
+                "description": "POLL rows: every option with its own totalVoteTokensUsed and votePercentage, plus isCorrect and hasWon on settled prediction polls."
+            },
+            "answerCount": {
+                "title": "Answer count",
+                "description": "Computed. How many options the poll offered."
+            },
+            "leadingAnswer": {
+                "title": "Leading answer",
+                "description": "Computed. The option with the most vote tokens behind it, so the result is readable without opening the answers array. Null on a poll where nothing has been cast yet."
+            },
+            "leadingAnswerVotes": {
+                "title": "Leading answer votes",
+                "description": "Computed. Vote tokens cast for the leading answer."
+            },
+            "leadingAnswerPercentage": {
+                "title": "Leading answer %",
+                "description": "Computed. Chiliz's own percentage for the leading answer, as a number."
+            },
+            "totalVoteTokensUsed": {
+                "title": "Total votes cast",
+                "description": "Computed. Vote tokens summed across every answer. On an open poll this runs ahead of usedTokenCount, which counts only what the chain has confirmed."
+            },
+            "isDisclosed": {
+                "title": "Result disclosed",
+                "description": "Computed. Whether Socios has published the poll's outcome."
+            },
+            "openAt": {
+                "title": "Opens at",
+                "description": "POLL rows: when voting opened."
+            },
+            "closeAt": {
+                "title": "Closes at",
+                "description": "POLL rows: when voting closed or will close."
+            },
+            "quorum": {
+                "title": "Quorum",
+                "description": "POLL rows: the participation threshold the vote needed."
+            },
+            "currentQuorumPercentage": {
+                "title": "Quorum reached %",
+                "description": "POLL rows: how much of the quorum has been met."
+            },
+            "isQuorumReached": {
+                "title": "Quorum reached",
+                "description": "POLL rows: whether the vote cleared its quorum."
+            },
+            "usedTokenCount": {
+                "title": "Tokens used",
+                "description": "POLL rows: Chiliz's own count of vote tokens spent."
+            },
+            "blockchainAddress": {
+                "title": "Poll contract",
+                "description": "POLL rows: the on-chain address the vote was recorded at."
+            },
+            "tokenSymbol": {
+                "title": "Token symbol",
+                "description": "The club's fan token ticker, for example $ACM."
+            },
+            "smartContractAddress": {
+                "title": "Token contract",
+                "description": "Computed on FAN_TOKEN rows: the token's contract address on its primary network."
+            },
+            "decimals": {
+                "title": "Decimals",
+                "description": "Computed on FAN_TOKEN rows: decimal precision on the primary network."
+            },
+            "logoUrl": {
+                "title": "Logo URL",
+                "description": "Computed on FAN_TOKEN rows: the token's logo on assets.chiliz.com."
+            },
+            "supply": {
+                "title": "Supply",
+                "description": "VOTE_TOKEN rows: total token supply."
+            },
+            "description": {
+                "title": "Description",
+                "description": "The club's or token's own description text as Socios publishes it."
+            },
+            "tokenSupportingPlatforms": {
+                "title": "Listed on",
+                "description": "PARTNER rows: the exchanges that list this club's fan token."
+            },
+            "mainColour": {
+                "title": "Club colour",
+                "description": "PARTNER rows: the club's brand colour as a hex code."
+            },
+            "leagueIds": {
+                "title": "League ids",
+                "description": "PARTNER rows: leagues this club belongs to. Resolve the names with reference mode."
+            },
+            "sportName": {
+                "title": "Sport",
+                "description": "Computed on LEAGUE rows: the sport this league belongs to."
+            },
+            "countryName": {
+                "title": "Country",
+                "description": "Computed on LEAGUE rows: the league's country."
+            }
+        }
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "transformation": {
+                "fields": [
+                    "recordType", "partnerName", "question", "status", "type",
+                    "leadingAnswer", "leadingAnswerPercentage", "totalVoteTokensUsed",
+                    "answerCount", "openAt", "closeAt", "_scrapedAt"
+                ]
+            },
+            "display": {
+                "component": "table",
+                "properties": {
+                    "recordType": {"label": "Kind"},
+                    "partnerName": {"label": "Club"},
+                    "question": {"label": "Question"},
+                    "status": {"label": "Status"},
+                    "type": {"label": "Type"},
+                    "leadingAnswer": {"label": "Winning answer"},
+                    "leadingAnswerPercentage": {"label": "Win %"},
+                    "totalVoteTokensUsed": {"label": "Votes"},
+                    "answerCount": {"label": "Options"},
+                    "openAt": {"label": "Opened"},
+                    "closeAt": {"label": "Closed"},
+                    "_scrapedAt": {"label": "Scraped"}
+                }
+            }
+        },
+        "tokens": {
+            "title": "Tokens & clubs",
+            "transformation": {
+                "fields": [
+                    "recordType", "partnerName", "tokenSymbol", "shortCode",
+                    "type", "status", "smartContractAddress", "supply",
+                    "logoUrl", "mainColour"
+                ]
+            },
+            "display": {
+                "component": "table",
+                "properties": {
+                    "recordType": {"label": "Kind"},
+                    "partnerName": {"label": "Club"},
+                    "tokenSymbol": {"label": "Symbol"},
+                    "shortCode": {"label": "Code"},
+                    "type": {"label": "Type"},
+                    "status": {"label": "Status"},
+                    "smartContractAddress": {"label": "Contract"},
+                    "supply": {"label": "Supply"},
+                    "logoUrl": {"label": "Logo"},
+                    "mainColour": {"label": "Colour"}
+                }
+            }
+        }
+    }
+}

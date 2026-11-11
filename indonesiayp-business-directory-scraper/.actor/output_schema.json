@@ -1,0 +1,297 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Business record",
+        "description": "One record per business. Every record carries _input/_source/_scrapedAt (and _error/_errorDetail on failures). recordType discriminates: BUSINESS_CARD (category listing row), BUSINESS_PROFILE (full business page), CATEGORY and CITY (reference mode).",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The listing scope or business URL that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "S1-html, or none on failure."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp."
+            },
+            "recordType": {
+                "title": "Record type",
+                "description": "BUSINESS_CARD | BUSINESS_PROFILE | CATEGORY | CITY."
+            },
+            "companyId": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Business ID",
+                "description": "Upstream numeric business ID -- stable key for deduplication."
+            },
+            "name": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Name",
+                "description": "Business name as published."
+            },
+            "profileUrl": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Profile URL",
+                "description": "Public business page."
+            },
+            "address": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Address",
+                "description": "Listing rows -- full address line."
+            },
+            "streetAddress": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Street address",
+                "description": "Profile records -- street part only."
+            },
+            "city": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "City",
+                "description": "City the business is listed under."
+            },
+            "region": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Region",
+                "description": "Profile records -- province."
+            },
+            "country": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Country",
+                "description": "Profile records -- ISO country code."
+            },
+            "phone": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Phone",
+                "description": "Landline / main contact number."
+            },
+            "mobilePhone": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Mobile phone",
+                "description": "Profile records -- mobile number when published."
+            },
+            "website": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Website",
+                "description": "Profile records -- business website."
+            },
+            "latitude": {
+                "type": [
+                    "number",
+                    "null"
+                ],
+                "title": "Latitude",
+                "description": "Profile records -- GPS latitude."
+            },
+            "longitude": {
+                "type": [
+                    "number",
+                    "null"
+                ],
+                "title": "Longitude",
+                "description": "Profile records -- GPS longitude."
+            },
+            "rating": {
+                "type": [
+                    "number",
+                    "null"
+                ],
+                "title": "Rating",
+                "description": "Average rating out of 5 (only businesses with reviews have one)."
+            },
+            "reviewCount": {
+                "type": [
+                    "integer",
+                    "null"
+                ],
+                "title": "Review count",
+                "description": "Number of reviews."
+            },
+            "workingHours": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Working hours",
+                "description": "Profile records -- opening hours per day, as published."
+            },
+            "manager": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Manager",
+                "description": "Profile records -- named company manager."
+            },
+            "establishedYear": {
+                "type": [
+                    "integer",
+                    "null"
+                ],
+                "title": "Established year",
+                "description": "Year the business was established."
+            },
+            "employees": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Employees",
+                "description": "Profile records -- employee count band, e.g. \"11-15\"."
+            },
+            "description": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Description",
+                "description": "Profile records -- business description."
+            },
+            "categories": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Categories",
+                "description": "Profile records -- all categories the business is listed in."
+            },
+            "isVerified": {
+                "type": [
+                    "boolean",
+                    "null"
+                ],
+                "title": "Verified",
+                "description": "Listing rows -- whether the directory marks the listing verified."
+            },
+            "yearsListed": {
+                "type": [
+                    "integer",
+                    "null"
+                ],
+                "title": "Years listed",
+                "description": "Listing rows -- how many years the business has been in the directory."
+            },
+            "photoCount": {
+                "type": [
+                    "integer",
+                    "null"
+                ],
+                "title": "Photo count",
+                "description": "Listing rows -- number of photos on the listing."
+            },
+            "hasWebsite": {
+                "type": [
+                    "boolean",
+                    "null"
+                ],
+                "title": "Has website",
+                "description": "Listing rows -- whether a website is on file (fetch the profile for the address)."
+            },
+            "hasEmail": {
+                "type": [
+                    "boolean",
+                    "null"
+                ],
+                "title": "Has e-mail",
+                "description": "Listing rows -- whether an e-mail is on file. The address itself is not published publicly."
+            },
+            "imageUrl": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Image URL",
+                "description": "Listing photo."
+            },
+            "_listingScope": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Listing scope",
+                "description": "Listing rows -- which category/city produced the row."
+            },
+            "_error": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Error",
+                "description": "Present only on failures."
+            },
+            "_errorDetail": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across listing and profile records.",
+            "transformation": {
+                "fields": [
+                    "recordType",
+                    "name",
+                    "city",
+                    "phone",
+                    "mobilePhone",
+                    "website",
+                    "address",
+                    "rating",
+                    "reviewCount",
+                    "establishedYear",
+                    "profileUrl",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

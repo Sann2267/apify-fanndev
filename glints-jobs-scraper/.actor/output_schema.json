@@ -1,0 +1,411 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Glints record",
+        "description": "Dataset envelope (_input / _source / _scrapedAt / recordType) on top of Glints' own field shape. Upstream field names pass through verbatim, with derived conveniences such as descriptionText and jobUrl added alongside rather than replacing them. Record types: JOB (search or company vacancy card), JOB_DETAIL (full posting), COMPANY, SEARCH_FACETS, SUGGESTION, SKILL, ERROR. Glints adds and removes fields without notice, so unlisted fields pass through rather than failing the run.",
+        "additionalProperties": true,
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The search term, URL or id this record came from."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which call produced the row: S1-gql-searchJobsV3, S1-gql-getJobById, S1-gql-getCompanyById, S1-gql-getSimilarJobs, S1-gql-getJobSearchFiltersV2, S1-gql-getJobTitleSuggestions, S1-gql-skills, S2-sitemap, or none on failure rows."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was emitted."
+            },
+            "recordType": {
+                "type": "string",
+                "title": "Record type",
+                "description": "JOB, JOB_DETAIL, COMPANY, SEARCH_FACETS, SUGGESTION, SKILL or ERROR."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Failure rows only: not_found, unparsable_input, login_required, no_results, search_failed, detail_failed, company_failed, similar_failed, filters_failed, suggestions_failed, skills_failed, sitemap_index_failed or run_failed."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic accompanying _error."
+            },
+            "_warning": {
+                "type": "string",
+                "title": "Warning",
+                "description": "Non-fatal degradation marker. anon_page_1_only means Glints reported more results than anonymous access can reach, so this query returned only its first page."
+            },
+            "id": {
+                "title": "Job id",
+                "description": "Glints UUID for the posting."
+            },
+            "title": {
+                "title": "Job title",
+                "description": "Job title as the employer wrote it."
+            },
+            "jobUrl": {
+                "title": "Job URL",
+                "description": "Public glints.com link to the posting."
+            },
+            "status": {
+                "title": "Status",
+                "description": "OPEN, CLOSED or another Glints lifecycle state."
+            },
+            "type": {
+                "title": "Employment type",
+                "description": "FULL_TIME, PART_TIME, INTERNSHIP, CONTRACT, TEMPORARY, FREELANCE, DAILY or PROJECT_BASED."
+            },
+            "workArrangementOption": {
+                "title": "Work arrangement",
+                "description": "ONSITE, HYBRID or REMOTE."
+            },
+            "educationLevel": {
+                "title": "Education level",
+                "description": "Minimum education the posting asks for."
+            },
+            "createdAt": {
+                "title": "Posted at",
+                "description": "When the posting was first created."
+            },
+            "updatedAt": {
+                "title": "Updated at",
+                "description": "When the employer last edited the posting."
+            },
+            "expiryDate": {
+                "title": "Expires at",
+                "description": "Detail rows only: when the posting is scheduled to close."
+            },
+            "isHot": {
+                "title": "Hot",
+                "description": "Glints flags the posting as high-demand."
+            },
+            "isActivelyHiring": {
+                "title": "Actively hiring",
+                "description": "Detail rows only: the employer is currently processing applications."
+            },
+            "salaryMin": {
+                "title": "Salary min",
+                "description": "Lower bound of the headline (BASIC) salary row, flattened out of the salaries array."
+            },
+            "salaryMax": {
+                "title": "Salary max",
+                "description": "Upper bound of the headline salary row. Often null: Glints lets employers publish a floor only."
+            },
+            "salaryCurrency": {
+                "title": "Currency",
+                "description": "Currency of the flattened salary figures, for example IDR."
+            },
+            "salaryMode": {
+                "title": "Salary period",
+                "description": "What the salary figure covers: MONTH, YEAR, HOUR, DAY or PROJECT. Compare figures only within one period."
+            },
+            "shouldShowSalary": {
+                "title": "Salary published",
+                "description": "False when the employer chose to hide pay. The salary fields are then empty by the employer's choice, not because the scrape failed."
+            },
+            "salaries": {
+                "title": "All salary rows",
+                "description": "Glints' full salary array, including allowance rows beyond the headline figure."
+            },
+            "salaryEstimate": {
+                "title": "Salary estimate",
+                "description": "Detail rows only: Glints' own estimated range for postings that publish no figure."
+            },
+            "companyName": {
+                "title": "Company",
+                "description": "Employer's brand name where it has one, otherwise its registered name."
+            },
+            "companyUrl": {
+                "title": "Company URL",
+                "description": "Public glints.com link to the employer profile."
+            },
+            "companyLogoUrl": {
+                "title": "Company logo",
+                "description": "Fetchable image URL built from the storage key Glints returns."
+            },
+            "companyIsVerified": {
+                "title": "Verified employer",
+                "description": "True when Glints has verified the employer's identity."
+            },
+            "company": {
+                "title": "Company object",
+                "description": "Glints' full nested employer object as returned with the job."
+            },
+            "locationName": {
+                "title": "Location",
+                "description": "Formatted location name, for example Kab. Badung."
+            },
+            "countryCode": {
+                "title": "Country",
+                "description": "Two-letter market code: ID, SG, VN, MY, PH or TW."
+            },
+            "location": {
+                "title": "Location object",
+                "description": "Full hierarchical location including coordinates and the district/city/province/country chain."
+            },
+            "categoryName": {
+                "title": "Category",
+                "description": "Most specific job category Glints assigned."
+            },
+            "categoryPath": {
+                "title": "Category path",
+                "description": "Full category chain, for example Computer & Software > Data > Data Scientist."
+            },
+            "skillNames": {
+                "title": "Skills",
+                "description": "Skill names required or preferred for the role."
+            },
+            "skills": {
+                "title": "Skills object",
+                "description": "Glints' skill array, each entry carrying the skill id and whether it is mandatory."
+            },
+            "minYearsOfExperience": {
+                "title": "Min experience (years)",
+                "description": "Lower bound of the experience the posting asks for."
+            },
+            "maxYearsOfExperience": {
+                "title": "Max experience (years)",
+                "description": "Upper bound of the experience the posting asks for."
+            },
+            "descriptionText": {
+                "title": "Description",
+                "description": "Job description flattened to plain text from Glints' Draft.js document."
+            },
+            "descriptionJsonString": {
+                "title": "Description (raw)",
+                "description": "The original Draft.js document, kept so formatting and links are recoverable."
+            },
+            "interviewProcessText": {
+                "title": "Interview process",
+                "description": "Detail rows only: the employer's described hiring steps, as plain text."
+            },
+            "benefitTitles": {
+                "title": "Benefits",
+                "description": "Detail rows only: benefit names such as Health Insurance or Career Path."
+            },
+            "benefits": {
+                "title": "Benefits object",
+                "description": "Detail rows only: Glints' full benefits array with codes and descriptions."
+            },
+            "companyAddress": {
+                "title": "Workplace address",
+                "description": "Detail rows only: the street address and point of interest for the workplace."
+            },
+            "metadata": {
+                "title": "Schedule",
+                "description": "Detail rows only: working days per week, weekend/holiday requirement and shift pattern."
+            },
+            "externalApplyURL": {
+                "title": "External apply URL",
+                "description": "For aggregated postings, the third-party board where the application actually goes."
+            },
+            "jobSource": {
+                "title": "Job source",
+                "description": "EMPLOYER for postings made on Glints, SOURCED for postings aggregated from other boards."
+            },
+            "isHighResponseRate": {
+                "title": "Responsive employer",
+                "description": "Glints flags this employer as replying quickly to applicants."
+            },
+            "creatorResponseRate": {
+                "title": "Response rate",
+                "description": "Share of applications the hiring side responds to."
+            },
+            "creatorResponseTime": {
+                "title": "Response time",
+                "description": "How quickly the hiring side typically responds."
+            },
+            "searchTerm": {
+                "title": "Search term",
+                "description": "Which keyword in your input surfaced this row."
+            },
+            "similarToJobId": {
+                "title": "Similar to",
+                "description": "similarJobs rows: the posting this recommendation was drawn from."
+            },
+            "name": {
+                "title": "Company name",
+                "description": "COMPANY rows: the employer's registered name."
+            },
+            "jobCount": {
+                "title": "Open vacancies",
+                "description": "COMPANY rows: how many open postings the employer has."
+            },
+            "size": {
+                "title": "Company size",
+                "description": "COMPANY rows: headcount band the employer reports."
+            },
+            "website": {
+                "title": "Website",
+                "description": "COMPANY rows: the employer's own site."
+            },
+            "tagline": {
+                "title": "Tagline",
+                "description": "COMPANY rows: the employer's one-line pitch."
+            },
+            "cultureText": {
+                "title": "Culture",
+                "description": "COMPANY rows: the employer's culture blurb as plain text."
+            },
+            "socialMediaSites": {
+                "title": "Social links",
+                "description": "COMPANY rows: decoded social media links."
+            },
+            "isVerified": {
+                "title": "Verified",
+                "description": "COMPANY rows: Glints has verified the employer's identity."
+            },
+            "verificationTier": {
+                "title": "Verification tier",
+                "description": "COMPANY rows: how the employer was verified, for example LEGAL_DOCUMENTS."
+            },
+            "topCompanyNames": {
+                "title": "Top employers",
+                "description": "SEARCH_FACETS rows: employers with the most postings for this keyword."
+            },
+            "topLocationNames": {
+                "title": "Top locations",
+                "description": "SEARCH_FACETS rows: districts and cities with the most postings for this keyword. Glints' own `cities` facet is always empty, so this is built from its hierarchical location facet instead."
+            },
+            "topJobRoleNames": {
+                "title": "Top roles",
+                "description": "SEARCH_FACETS rows: job categories this keyword resolves into."
+            },
+            "currencies": {
+                "title": "Currencies",
+                "description": "SEARCH_FACETS rows: salary currencies present in this keyword's results."
+            },
+            "hasRemoteJobs": {
+                "title": "Has remote jobs",
+                "description": "SEARCH_FACETS rows: whether any posting for this keyword is remote."
+            },
+            "suggestion": {
+                "title": "Suggestion",
+                "description": "SUGGESTION rows: the suggested job title or company name."
+            },
+            "suggestionType": {
+                "title": "Suggestion type",
+                "description": "SUGGESTION rows: 'job' for a job title, 'company' for an employer name."
+            },
+            "keyword": {
+                "title": "Keyword",
+                "description": "SUGGESTION rows: the keyword that was completed."
+            },
+            "skillId": {
+                "title": "Skill id",
+                "description": "SKILL rows: the UUID to pass back as a search skill filter."
+            },
+            "skillName": {
+                "title": "Skill name",
+                "description": "SKILL rows: the skill as Glints names it."
+            },
+            "totalSkills": {
+                "title": "Total skills",
+                "description": "SKILL rows: how many skills matched the query."
+            }
+        }
+    },
+    "views": {
+        "overview": {
+            "title": "Jobs",
+            "transformation": {
+                "fields": [
+                    "title",
+                    "companyName",
+                    "locationName",
+                    "type",
+                    "workArrangementOption",
+                    "salaryMin",
+                    "salaryMax",
+                    "salaryCurrency",
+                    "salaryMode",
+                    "minYearsOfExperience",
+                    "categoryName",
+                    "createdAt",
+                    "jobUrl"
+                ]
+            },
+            "display": {
+                "component": "table",
+                "properties": {
+                    "title": { "label": "Job" },
+                    "companyName": { "label": "Company" },
+                    "locationName": { "label": "Location" },
+                    "type": { "label": "Type" },
+                    "workArrangementOption": { "label": "Arrangement" },
+                    "salaryMin": { "label": "Pay from" },
+                    "salaryMax": { "label": "Pay to" },
+                    "salaryCurrency": { "label": "Cur" },
+                    "salaryMode": { "label": "Per" },
+                    "minYearsOfExperience": { "label": "Exp" },
+                    "categoryName": { "label": "Category" },
+                    "createdAt": { "label": "Posted" },
+                    "jobUrl": { "label": "Link" }
+                }
+            }
+        },
+        "companies": {
+            "title": "Companies",
+            "transformation": {
+                "fields": [
+                    "name",
+                    "industry",
+                    "size",
+                    "locationName",
+                    "jobCount",
+                    "isVerified",
+                    "verificationTier",
+                    "website",
+                    "companyUrl"
+                ]
+            },
+            "display": {
+                "component": "table",
+                "properties": {
+                    "name": { "label": "Company" },
+                    "industry": { "label": "Industry" },
+                    "size": { "label": "Size" },
+                    "locationName": { "label": "Location" },
+                    "jobCount": { "label": "Open jobs" },
+                    "isVerified": { "label": "Verified" },
+                    "verificationTier": { "label": "Tier" },
+                    "website": { "label": "Website" },
+                    "companyUrl": { "label": "Link" }
+                }
+            }
+        },
+        "market": {
+            "title": "Market structure",
+            "transformation": {
+                "fields": [
+                    "searchTerm",
+                    "countryCode",
+                    "topCompanyNames",
+                    "topLocationNames",
+                    "topJobRoleNames",
+                    "currencies",
+                    "hasRemoteJobs"
+                ]
+            },
+            "display": {
+                "component": "table",
+                "properties": {
+                    "searchTerm": { "label": "Keyword" },
+                    "countryCode": { "label": "Market" },
+                    "topCompanyNames": { "label": "Top employers" },
+                    "topLocationNames": { "label": "Top locations" },
+                    "topJobRoleNames": { "label": "Top roles" },
+                    "currencies": { "label": "Currencies" },
+                    "hasRemoteJobs": { "label": "Remote?" }
+                }
+            }
+        }
+    }
+}

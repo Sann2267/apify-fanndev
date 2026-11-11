@@ -1,0 +1,99 @@
+{
+    "title": "Comoros ANPI Business Registry Scraper",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "query": {
+            "title": "Company name contains",
+            "type": "string",
+            "editor": "textfield",
+            "description": "Free-text search matched against the registered company name. Leave blank to browse the directory using only the filters below (or with no filters at all, to list every company on file).",
+            "prefill": "SARL"
+        },
+        "queries": {
+            "title": "Company name searches",
+            "type": "array",
+            "editor": "stringList",
+            "description": "Multiple name searches to run in one job, each combined with the same island/year/city/sector/RCCM filters below. Combined with 'query' if both are set."
+        },
+        "island": {
+            "title": "Island",
+            "type": "string",
+            "editor": "select",
+            "description": "Restrict results to one island. \"Any\" searches across all three.",
+            "enum": ["any", "grande_comore", "anjouan", "moheli"],
+            "enumTitles": ["Any", "Grande Comore", "Anjouan", "Mohéli"],
+            "default": "any",
+            "prefill": "any"
+        },
+        "year": {
+            "title": "Registration year",
+            "type": "string",
+            "editor": "textfield",
+            "description": "Filter by registration year on file (e.g. 2024). Leave blank for any year."
+        },
+        "city": {
+            "title": "Headquarters / city contains",
+            "type": "string",
+            "editor": "textfield",
+            "description": "Free-text filter against the registered headquarters address/city (e.g. Moroni)."
+        },
+        "sector": {
+            "title": "Business sector",
+            "type": "string",
+            "editor": "select",
+            "description": "Restrict results to one business sector. Note: as of this actor's last verification, ANPI's own directory has this field empty for every company on file, so any value other than \"Any\" currently returns zero results -- kept here in case ANPI populates this field later.",
+            "enum": [
+                "any", "commerce", "btp", "numerique", "tourisme", "peche",
+                "agriculture", "finance", "sante", "transport", "education",
+                "industrie", "autre"
+            ],
+            "enumTitles": [
+                "Any", "Commerce & distribution", "BTP & infrastructures",
+                "Numérique & télécoms", "Tourisme & hôtellerie", "Pêche & maritime",
+                "Agriculture & agro", "Finance & assurances", "Santé & pharmacie",
+                "Transport & logistique", "Éducation & formation", "Industrie", "Autre"
+            ],
+            "default": "any",
+            "prefill": "any"
+        },
+        "rccm": {
+            "title": "RCCM number",
+            "type": "string",
+            "editor": "textfield",
+            "description": "Filter by RCCM (Registre du Commerce et du Crédit Mobilier) number. Note: as of this actor's last verification, this field is empty for every company in ANPI's directory, so this filter currently returns zero results for any non-blank value -- kept here in case ANPI populates this field later."
+        },
+        "maxResultsPerQuery": {
+            "title": "Max results per job",
+            "type": "integer",
+            "description": "Maximum number of company records to return per search/browse job.",
+            "default": 200,
+            "minimum": 1,
+            "maximum": 6400,
+            "prefill": 200
+        },
+        "maxConcurrency": {
+            "title": "Max concurrent workers",
+            "type": "integer",
+            "description": "How many jobs/page-fetches may be in flight at once. The site's robots.txt sets Crawl-delay: 10, which this actor always honors for the actual outgoing request rate (max 1 request/10s) regardless of this setting -- this only bounds how much work is queued.",
+            "default": 4,
+            "minimum": 1,
+            "maximum": 16,
+            "prefill": 4
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "editor": "proxy",
+            "description": "Apify Proxy configuration. Residential is on by default.",
+            "default": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            },
+            "prefill": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            }
+        }
+    }
+}

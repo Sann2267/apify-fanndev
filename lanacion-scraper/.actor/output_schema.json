@@ -1,0 +1,129 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Article / latest-headline record",
+        "description": "Raw-passthrough dataset envelope. Every record carries _input/_source/_scrapedAt (and _error/_errorDetail on failures). Article-mode records (S1-jsonld, Arc Publishing CMS -- NewsArticle or OpinionNewsArticle ld+json with full articleBody inline) carry headline/articleBody-style fields; latest-mode records (S2-rss, /arc/outboundfeeds/rss/) carry title/link-style headline fields.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The exact input value (URL, or 'latest'/'latest:<section>') that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which extraction strategy emitted this record (e.g. S1-jsonld, S2-rss)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed extractions -- the error kind."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "headline": {
+                "title": "Headline",
+                "description": "Article headline, from the NewsArticle/OpinionNewsArticle ld+json node."
+            },
+            "description": {
+                "title": "Description",
+                "description": "Short article description/dek from ld+json."
+            },
+            "articleBody": {
+                "title": "Article body",
+                "description": "Full article text, carried inline in the ld+json article node (no HTML fallback needed on this site)."
+            },
+            "datePublished": {
+                "title": "Date published",
+                "description": "ISO 8601 publish date from ld+json."
+            },
+            "dateModified": {
+                "title": "Date modified",
+                "description": "ISO 8601 last-modified date from ld+json."
+            },
+            "author": {
+                "title": "Author",
+                "description": "Comma-joined byline name(s), normalized from either an Organization author dict (staff/wire content) or a list of Person author dicts (bylined opinion columns)."
+            },
+            "articleSection": {
+                "title": "Section",
+                "description": "Article section/category from ld+json."
+            },
+            "isAccessibleForFree": {
+                "title": "Accessible for free",
+                "description": "Upstream paywall metering flag from ld+json."
+            },
+            "_paywalled": {
+                "title": "Paywalled",
+                "description": "True when isAccessibleForFree is explicitly false."
+            },
+            "isPartOf": {
+                "title": "Is part of",
+                "description": "Subscription-product block naming the paywall tier (e.g. 'Acceso Digital Monthly Test'), present on some articles -- raw passthrough."
+            },
+            "keywords": {
+                "title": "Keywords",
+                "description": "List of keywords, already list-shaped in the upstream ld+json."
+            },
+            "image": {
+                "title": "Image",
+                "description": "Lead image, list-shaped, from ld+json."
+            },
+            "publisher": {
+                "title": "Publisher",
+                "description": "Publisher reference -- only a JSON-LD @id reference (not a resolved name), passed through raw."
+            },
+            "title": {
+                "title": "Title",
+                "description": "Headline text of a latest-mode RSS item."
+            },
+            "link": {
+                "title": "Link",
+                "description": "Article URL from the RSS item."
+            },
+            "pubDate": {
+                "title": "Publish date",
+                "description": "RSS pubDate string."
+            },
+            "category": {
+                "title": "Category",
+                "description": "RSS <category> value of a latest-mode item."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across both article and latest-headline records.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "_source",
+                    "_scrapedAt",
+                    "headline",
+                    "title",
+                    "link",
+                    "datePublished",
+                    "pubDate",
+                    "author",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

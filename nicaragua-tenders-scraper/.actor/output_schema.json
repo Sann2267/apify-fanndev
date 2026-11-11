@@ -1,0 +1,100 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Nicaragua SISCAE procurement procedure record",
+        "description": "One record per procurement procedure matching the search filters. A single _error record is emitted instead of payload fields when the search itself fails or matches zero procedures.",
+        "properties": {
+            "_input": {
+                "type": "object",
+                "title": "Input",
+                "description": "The resolved filters used for this search (keyword, numero, estados, institucion/institucionValue, departamento/departamentoValue, resultadosItems)."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which strategy emitted this record (S1-jsf-portlet-grid, or 'none' on error)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed records (blocked_or_transient, not_found)."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "tipoProcedimiento": {
+                "title": "Procedure type",
+                "description": "SISCAE's Spanish-language procurement modality, e.g. 'LICITACION PUBLICA', 'LICITACION O CONCURSO PUBLICO INTERNACIONAL', 'CONCURSO PARA CONSULTORES'."
+            },
+            "numeroProcedimiento": {
+                "title": "Procedure number",
+                "description": "The institution's own reference number for this procedure, e.g. '16/2026'."
+            },
+            "estado": {
+                "title": "Status",
+                "description": "Current status as shown by SISCAE, e.g. 'Vigente' (open), 'Adjudicado' (awarded)."
+            },
+            "codigoSigaf": {
+                "title": "SIGAF code",
+                "description": "Government financial-system (SIGAF) reference code, when assigned. Frequently '#' (not yet assigned) upstream -- passed through as-is."
+            },
+            "publicacion": {
+                "title": "Publication date",
+                "description": "The date this procedure was published, as shown by SISCAE."
+            },
+            "cierre": {
+                "title": "Closing date/time",
+                "description": "The offer-submission closing date/time, as shown by SISCAE (label text varies slightly by status, e.g. 'Cierre' vs a status-specific variant -- this field normalizes to whichever one is present)."
+            },
+            "ultimaActualizacion": {
+                "title": "Last updated",
+                "description": "When SISCAE itself last updated this procedure's record."
+            },
+            "institucion": {
+                "title": "Institution",
+                "description": "The government institution running this procedure."
+            },
+            "clasificaciones": {
+                "title": "Classifications",
+                "description": "Procurement category/classification code(s) and description(s), e.g. 'Servicios de construccion general (72130000)'."
+            },
+            "objeto": {
+                "title": "Object / title",
+                "description": "The free-text description of what is being procured."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns for every result -- rows missing a given column render blank.",
+            "transformation": {
+                "fields": [
+                    "tipoProcedimiento",
+                    "numeroProcedimiento",
+                    "institucion",
+                    "objeto",
+                    "estado",
+                    "publicacion",
+                    "cierre",
+                    "_error",
+                    "_scrapedAt"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

@@ -1,0 +1,51 @@
+{
+    "title": "Suriname Government Tenders Scraper (gov.sr)",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "listType": {
+            "title": "List type",
+            "type": "string",
+            "editor": "select",
+            "description": "\"Tenders\" = routine procurement notices posted government-wide by individual ministries (671+ since May 2022, mostly Dutch, one line per notice: title, ministry, date, link). \"Notices\" = larger internationally/donor-financed solicitations (World Bank, IDB, Social Bond program) with full bid details -- background, procurement method, eligibility, deadline, submission address -- mostly English, currently-open only (~11 at a time).",
+            "enum": ["tenders", "notices"],
+            "enumTitles": [
+                "Tenders (all ministries, thin notices, since 2022)",
+                "Notices (donor-financed, full bid details, currently open)"
+            ],
+            "default": "tenders",
+            "prefill": "tenders"
+        },
+        "categorySlug": {
+            "title": "Ministry/category filter (tenders only)",
+            "type": "string",
+            "editor": "textfield",
+            "description": "Optional. Restrict \"tenders\" results to one ministry/sector's WordPress category slug, e.g. \"openbare-werken-ruimtelijke-ordening\" (Public Works & Spatial Planning), \"landbouw-veeteelt-en-visserij\" (Agriculture, Livestock & Fisheries), \"olie-gas-en-milieu\" (Oil, Gas & Environment). Leave blank for every ministry. Ignored for listType=notices.",
+            "default": "",
+            "prefill": ""
+        },
+        "maxResults": {
+            "title": "Max results",
+            "type": "integer",
+            "description": "Caps how many records are kept in the output for this run.",
+            "default": 100,
+            "minimum": 1,
+            "maximum": 10000,
+            "prefill": 100
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "editor": "proxy",
+            "description": "Apify Proxy configuration.",
+            "default": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            },
+            "prefill": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            }
+        }
+    }
+}

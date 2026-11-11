@@ -1,0 +1,24 @@
+{
+    "actorSpecification": 1,
+    "name": "blibli-store-review-analyzer",
+    "version": "0.1",
+    "buildTag": "latest",
+    "title": "Blibli Store Review & Sentiment Analyzer",
+    "description": "Collect buyer reviews from any Blibli store or product - yours or a competitor's - as clean text for AI sentiment analysis. Captures nearly all negative reviews, plus the rating histogram and Blibli's own topic breakdown. No login needed.",
+    "categories": [
+        "ECOMMERCE"
+    ],
+    "minMemoryMbytes": 256,
+    "maxMemoryMbytes": 4096,
+    "defaultRunOptions": {
+        "build": "latest",
+        "memoryMbytes": 1024,
+        "timeoutSecs": 3600
+    },
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

@@ -1,0 +1,376 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Instagram public content record",
+        "description": "One row per scraped entity. The five modes share this envelope, so every field is nullable and only the fields relevant to a row's `_mode` are populated. Read `_mode` first, then `_source` (which tells you whether the row came from the server-rendered page or from a paginated GraphQL replay) and `_warning` (which records surface limits such as the profile grid not publishing engagement counts). Rows that failed carry `_error` instead of data - every input produces at least one row.",
+        "properties": {
+            "_mode": {
+                "type": ["string", "null"],
+                "title": "Mode",
+                "description": "Which surface produced this row: profile, posts, reels, post_detail or location."
+            },
+            "_input": {
+                "type": ["string", "null"],
+                "title": "Input",
+                "description": "The username, shortcode or location id this row belongs to, as resolved from your input entry."
+            },
+            "_source": {
+                "type": ["string", "null"],
+                "title": "Source",
+                "description": "ssr-relay-island when the row came from the server-rendered page (page 1 of any surface), api-graphql-replay when it came from a paginated /api/graphql/ request, or none on a failure row."
+            },
+            "_scrapedAt": {
+                "type": ["string", "null"],
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp of the scrape."
+            },
+            "_page": {
+                "type": ["number", "null"],
+                "title": "Page",
+                "description": "Which page of the connection this item came from. 1 means it was server-rendered into the entity page."
+            },
+            "_warning": {
+                "type": ["string", "null"],
+                "title": "Warning",
+                "description": "Non-fatal limitation affecting this row. Common values: engagement_not_published_on_this_surface (the profile grid omits like/comment counts - use post_detail or reels), comments_truncated (Instagram serves only the first ~13 comments to logged-out viewers), single_page_surface (the location tab ignores pagination cursors), private_account, pagination_stopped_at_page_N."
+            },
+            "_error": {
+                "type": ["string", "null"],
+                "title": "Error",
+                "description": "Present only on failure rows: INVALID_INPUT, NOT_FOUND, PRIVATE_ACCOUNT, BLOCKED_AFTER_RETRIES, UPSTREAM_SHAPE_CHANGED, EMPTY_RESULT or GATED_FOR_LOGGED_OUT."
+            },
+            "_errorDetail": {
+                "type": ["string", "null"],
+                "title": "Error detail",
+                "description": "Diagnostic detail, present only alongside _error."
+            },
+
+            "username": {
+                "type": ["string", "null"],
+                "title": "Username",
+                "description": "Account handle. Profile mode."
+            },
+            "id": {
+                "type": ["string", "null"],
+                "title": "ID",
+                "description": "Instagram numeric id of the account (profile mode) or of the media (media modes)."
+            },
+            "url": {
+                "type": ["string", "null"],
+                "title": "URL",
+                "description": "Canonical instagram.com URL of the profile or the post."
+            },
+            "fullName": {
+                "type": ["string", "null"],
+                "title": "Full name",
+                "description": "Display name on the profile."
+            },
+            "biography": {
+                "type": ["string", "null"],
+                "title": "Biography",
+                "description": "Profile bio text."
+            },
+            "isVerified": {
+                "type": ["boolean", "null"],
+                "title": "Verified",
+                "description": "Whether the account carries a verified badge."
+            },
+            "isPrivate": {
+                "type": ["boolean", "null"],
+                "title": "Private",
+                "description": "Whether the account is private. Private accounts expose profile metadata but no media to logged-out viewers."
+            },
+            "isUnpublished": {
+                "type": ["boolean", "null"],
+                "title": "Unpublished",
+                "description": "Whether Instagram has unpublished the account."
+            },
+            "isMemorialized": {
+                "type": ["boolean", "null"],
+                "title": "Memorialized",
+                "description": "Whether the account is memorialized."
+            },
+            "followerCount": {
+                "type": ["number", "null"],
+                "title": "Followers",
+                "description": "Exact follower count - not the rounded value shown in Instagram's meta tags."
+            },
+            "followingCount": {
+                "type": ["number", "null"],
+                "title": "Following",
+                "description": "Exact number of accounts this account follows."
+            },
+            "mediaCount": {
+                "type": ["number", "null"],
+                "title": "Media count",
+                "description": "Total media the account has published."
+            },
+            "hasClips": {
+                "type": ["boolean", "null"],
+                "title": "Has reels",
+                "description": "Whether the account has a reels tab worth scraping with mode 'reels'."
+            },
+            "pronouns": {
+                "type": ["array", "null"],
+                "title": "Pronouns",
+                "description": "Pronouns declared on the profile."
+            },
+            "profilePicUrl": {
+                "type": ["string", "null"],
+                "title": "Profile picture URL",
+                "description": "Profile picture. Instagram CDN URLs are signed and expire - download promptly if the image matters."
+            },
+            "accountBadges": {
+                "type": ["array", "null"],
+                "title": "Account badges",
+                "description": "Badges Instagram attaches to the account."
+            },
+            "bioLinks": {
+                "type": ["array", "null"],
+                "title": "Bio links",
+                "description": "Links in the profile bio, each with url, title and linkType."
+            },
+            "hasThreadsBadge": {
+                "type": ["boolean", "null"],
+                "title": "Has Threads badge",
+                "description": "Whether the profile shows a Threads badge."
+            },
+            "threadsBadgeLabel": {
+                "type": ["string", "null"],
+                "title": "Threads handle",
+                "description": "The Threads handle shown on the badge."
+            },
+            "linkedFacebookPage": {
+                "type": ["string", "null"],
+                "title": "Linked Facebook page",
+                "description": "Facebook page linked to the account, when published."
+            },
+            "highlights": {
+                "type": ["array", "null"],
+                "title": "Story highlights",
+                "description": "Highlight reels on the profile, each with id, title and coverUrl. Titles and covers only - highlight contents require a login."
+            },
+
+            "shortcode": {
+                "type": ["string", "null"],
+                "title": "Shortcode",
+                "description": "The post's short code, the segment in /p/<code>/."
+            },
+            "typename": {
+                "type": ["string", "null"],
+                "title": "GraphQL typename",
+                "description": "Instagram's own type for the media, e.g. XIGPolarisImageMedia."
+            },
+            "mediaType": {
+                "type": ["string", "null"],
+                "title": "Media type",
+                "description": "IMAGE, VIDEO or CAROUSEL."
+            },
+            "productType": {
+                "type": ["string", "null"],
+                "title": "Product type",
+                "description": "Instagram's media kind: feed, clips (reel) or igtv. This is a media format, not a shopping product."
+            },
+            "takenAt": {
+                "type": ["string", "null"],
+                "format": "date-time",
+                "title": "Taken at",
+                "description": "When the media was published, UTC ISO 8601. Not published on the profile grid surface - null for posts-mode rows."
+            },
+            "caption": {
+                "type": ["string", "null"],
+                "title": "Caption",
+                "description": "Caption text."
+            },
+            "hashtags": {
+                "type": ["array", "null"],
+                "title": "Hashtags",
+                "description": "Hashtags parsed out of the caption, without the leading #."
+            },
+            "mentions": {
+                "type": ["array", "null"],
+                "title": "Mentions",
+                "description": "@mentions parsed out of the caption, without the leading @."
+            },
+            "accessibilityCaption": {
+                "type": ["string", "null"],
+                "title": "Accessibility caption",
+                "description": "Instagram's auto-generated description of the image."
+            },
+            "likeCount": {
+                "type": ["number", "null"],
+                "title": "Likes",
+                "description": "Like count. Null - never 0 - when the serving surface does not publish it, which is the case for every posts-mode row."
+            },
+            "commentCount": {
+                "type": ["number", "null"],
+                "title": "Comments",
+                "description": "Total comments on the media, as Instagram reports it. This is the true total even when only the first few comments were scraped."
+            },
+            "playCount": {
+                "type": ["number", "null"],
+                "title": "Plays",
+                "description": "Video plays. Populated on reels-mode rows."
+            },
+            "viewCount": {
+                "type": ["number", "null"],
+                "title": "Views",
+                "description": "View count, where Instagram publishes it."
+            },
+            "countsDisabled": {
+                "type": ["boolean", "null"],
+                "title": "Counts hidden",
+                "description": "True when the author hid like and view counts - distinguishes a deliberately hidden count from a surface that simply does not publish one."
+            },
+            "commentsDisabled": {
+                "type": ["boolean", "null"],
+                "title": "Comments disabled",
+                "description": "Whether commenting is turned off for this media."
+            },
+            "isPaidPartnership": {
+                "type": ["boolean", "null"],
+                "title": "Paid partnership",
+                "description": "Whether the post is flagged as a paid partnership."
+            },
+            "imageUrl": {
+                "type": ["string", "null"],
+                "title": "Image URL",
+                "description": "Highest-resolution still available on the serving surface. Instagram CDN URLs are signed and expire."
+            },
+            "videoUrl": {
+                "type": ["string", "null"],
+                "title": "Video URL",
+                "description": "Highest-resolution video file, where the surface publishes one (location mode does; the profile grid does not)."
+            },
+            "hasAudio": {
+                "type": ["boolean", "null"],
+                "title": "Has audio",
+                "description": "Whether the video carries an audio track."
+            },
+            "width": {
+                "type": ["number", "null"],
+                "title": "Width",
+                "description": "Original media width in pixels."
+            },
+            "height": {
+                "type": ["number", "null"],
+                "title": "Height",
+                "description": "Original media height in pixels."
+            },
+            "carouselCount": {
+                "type": ["number", "null"],
+                "title": "Carousel items",
+                "description": "Number of items in a carousel post."
+            },
+            "taggedUsers": {
+                "type": ["array", "null"],
+                "title": "Tagged users",
+                "description": "Usernames tagged in the media."
+            },
+            "coauthors": {
+                "type": ["array", "null"],
+                "title": "Coauthors",
+                "description": "Collaborators credited on the post."
+            },
+            "ownerUsername": {
+                "type": ["string", "null"],
+                "title": "Owner username",
+                "description": "Handle of the account that published the media."
+            },
+            "ownerId": {
+                "type": ["string", "null"],
+                "title": "Owner ID",
+                "description": "Numeric id of the publishing account."
+            },
+            "ownerFullName": {
+                "type": ["string", "null"],
+                "title": "Owner full name",
+                "description": "Display name of the publishing account."
+            },
+            "ownerIsVerified": {
+                "type": ["boolean", "null"],
+                "title": "Owner verified",
+                "description": "Whether the publishing account is verified."
+            },
+            "comments": {
+                "type": ["array", "null"],
+                "title": "Comments",
+                "description": "Comments attached to a post_detail row, each with text, createdAt, likeCount, replyCount and author fields. Limited to what Instagram serves logged-out viewers - about the first 13 - because its comment pagination endpoint requires a login. Check _warning and compare against commentCount."
+            },
+            "commentsScraped": {
+                "type": ["number", "null"],
+                "title": "Comments scraped",
+                "description": "How many comments this row actually carries, as opposed to commentCount, which is the post's true total."
+            },
+
+            "locationId": {
+                "type": ["string", "null"],
+                "title": "Location ID",
+                "description": "Instagram numeric id of the place."
+            },
+            "locationName": {
+                "type": ["string", "null"],
+                "title": "Location name",
+                "description": "Name of the place."
+            },
+            "locationSlug": {
+                "type": ["string", "null"],
+                "title": "Location slug",
+                "description": "URL slug of the place."
+            },
+            "locationCategory": {
+                "type": ["string", "null"],
+                "title": "Location category",
+                "description": "Instagram's category for the place, e.g. City or Restaurant."
+            },
+            "locationMediaCount": {
+                "type": ["number", "null"],
+                "title": "Location media count",
+                "description": "Total media tagged at this place - far larger than the page of media this actor can retrieve."
+            },
+            "latitude": {
+                "type": ["number", "null"],
+                "title": "Latitude",
+                "description": "Latitude of the place."
+            },
+            "longitude": {
+                "type": ["number", "null"],
+                "title": "Longitude",
+                "description": "Longitude of the place."
+            },
+            "phone": {
+                "type": ["string", "null"],
+                "title": "Phone",
+                "description": "Public phone number for the place, when it publishes one."
+            },
+            "priceRange": {
+                "type": ["number", "null"],
+                "title": "Price range",
+                "description": "Instagram's price tier for the place."
+            },
+            "street": {
+                "type": ["string", "null"],
+                "title": "Street",
+                "description": "Street address, when the place publishes one."
+            },
+            "city": {
+                "type": ["string", "null"],
+                "title": "City",
+                "description": "City of the place."
+            },
+            "zipCode": {
+                "type": ["string", "null"],
+                "title": "ZIP code",
+                "description": "Postal code of the place."
+            },
+            "openingHoursStatus": {
+                "type": ["string", "null"],
+                "title": "Opening hours status",
+                "description": "Opening-hours status string for the place."
+            }
+        }
+    }
+}

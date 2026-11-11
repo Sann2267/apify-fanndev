@@ -1,0 +1,294 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Google Maps review record",
+        "description": "Dataset envelope (_input / _source / _scrapedAt / recordType) on top of Google's own review payload. A run emits one PLACE row per input carrying the aggregated sentiment summary, one REVIEW row per review, plus SKIPPED or ERROR rows when an input is filtered out or fails. Split a mixed run by recordType. Google adds and removes fields without notice, so unlisted fields pass through rather than failing the run.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The exact URL or identifier you supplied that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "S1-getlocalboqproxy, or none on failure rows."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was emitted."
+            },
+            "recordType": {
+                "type": "string",
+                "title": "Record type",
+                "description": "PLACE, REVIEW, SKIPPED or ERROR."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Failure rows only: unresolvable_input, blocked, or schema_changed."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic accompanying _error."
+            },
+            "_warning": {
+                "type": "string",
+                "title": "Warning",
+                "description": "Non-fatal marker on SKIPPED rows, e.g. outside_geo_filter or no_coordinates_for_geo_filter."
+            },
+            "featureId": {
+                "title": "Feature ID",
+                "description": "Google's internal place identifier, 0x...:0x... The second half is the CID in hex."
+            },
+            "placeId": {
+                "title": "Place ID",
+                "description": "Google Place ID (ChIJ...) when the input supplied one."
+            },
+            "cid": {
+                "title": "CID",
+                "description": "Decimal customer ID, derived from the feature ID."
+            },
+            "placeName": {
+                "title": "Place name",
+                "description": "Place name taken from the /maps/place/<Name>/ segment of the URL you supplied. Google's resolver itself returns no name, so this is null when you supply a bare Place ID, CID or feature ID."
+            },
+            "latitude": {
+                "title": "Latitude",
+                "description": "Latitude parsed from the supplied Maps URL (!3d or @lat,lng). Null when the URL carried no coordinates -- Google's resolver returns a default world viewport, not the place's own point."
+            },
+            "longitude": {
+                "title": "Longitude",
+                "description": "Parsed from the supplied Maps URL."
+            },
+            "mapsUrl": {
+                "title": "Maps URL",
+                "description": "Canonical Google Maps URL rebuilt from the feature ID."
+            },
+            "resolvedVia": {
+                "title": "Resolved via",
+                "description": "How the identifier was resolved: input-feature-id, url-feature-id, resolver-place-id, or cid-derived (a CID needs no lookup)."
+            },
+            "reviewId": {
+                "title": "Review ID",
+                "description": "Stable Google review identifier, used for de-duplication across pages."
+            },
+            "rating": {
+                "title": "Rating",
+                "description": "Star rating, 1-5."
+            },
+            "ratingMax": {
+                "title": "Rating maximum",
+                "description": "Rating scale maximum, normally 5."
+            },
+            "text": {
+                "title": "Review text",
+                "description": "Review body in its original language. Null for rating-only reviews."
+            },
+            "textTranslated": {
+                "title": "Translated text",
+                "description": "Google's translation into the requested language, when it supplies one."
+            },
+            "language": {
+                "title": "Language",
+                "description": "Detected language code of the original review text."
+            },
+            "sourceLanguageName": {
+                "title": "Source language name",
+                "description": "Human-readable source language, e.g. Ukrainian."
+            },
+            "targetLanguageName": {
+                "title": "Target language name",
+                "description": "Human-readable language the translation is in."
+            },
+            "publishedAt": {
+                "title": "Published at",
+                "description": "Absolute UTC publish time, converted from Google's epoch milliseconds."
+            },
+            "publishedAtTimestamp": {
+                "title": "Published at (epoch ms)",
+                "description": "Raw epoch-millisecond timestamp as Google returns it."
+            },
+            "relativeTime": {
+                "title": "Relative time",
+                "description": "Google's own wording, e.g. '2 months ago'."
+            },
+            "reviewer": {
+                "title": "Reviewer",
+                "description": "name, avatarUrl, profileUrl, totalReviews, totalPhotos, isLocalGuide."
+            },
+            "likesCount": {
+                "title": "Likes",
+                "description": "Thumbs-up count the Maps UI shows on the review (reaction category 3)."
+            },
+            "reactionCounts": {
+                "title": "Reaction counts",
+                "description": "Full per-category reaction breakdown, keyed by Google's category number."
+            },
+            "ownerResponse": {
+                "title": "Owner response",
+                "description": "The business reply: text, relativeTime, reportUrl. Null when the owner has not replied."
+            },
+            "photos": {
+                "title": "Photos",
+                "description": "Photos attached to the review: url, id, aspectRatio."
+            },
+            "attributes": {
+                "title": "Structured attributes",
+                "description": "Google's structured prompts answered by the reviewer, e.g. 'When did you visit?' -> 'Weekday'."
+            },
+            "visitedText": {
+                "title": "Visited",
+                "description": "Google's visit wording, e.g. 'Visited in June'."
+            },
+            "visitedMonth": {
+                "title": "Visited month",
+                "description": "Short visit month, e.g. 'Jun 2026'."
+            },
+            "permalink": {
+                "title": "Permalink",
+                "description": "Direct Google Maps link to this single review."
+            },
+            "reportUrl": {
+                "title": "Report URL",
+                "description": "Google's report-this-review link for the review."
+            },
+            "sourcePlatform": {
+                "title": "Source platform",
+                "description": "Platform the review originated on, normally Google."
+            },
+            "sentiment": {
+                "title": "Sentiment",
+                "description": "label (positive/neutral/negative), score (-1..1), method (text+rating, translated+rating, rating-only or none), textScore, ratingScore, language, and ratingTextConflict - true when a confident text polarity contradicted an extreme star rating, which is how sarcastic and mixed reviews surface."
+            },
+            "reviewsAnalysed": {
+                "title": "Reviews analysed",
+                "description": "PLACE rows: how many reviews the summary covers."
+            },
+            "sentimentCounts": {
+                "title": "Sentiment counts",
+                "description": "PLACE rows: review counts per sentiment label."
+            },
+            "sentimentPercent": {
+                "title": "Sentiment percentages",
+                "description": "PLACE rows: share of reviews per sentiment label."
+            },
+            "averageSentimentScore": {
+                "title": "Average sentiment score",
+                "description": "PLACE rows: mean blended sentiment score across the analysed reviews."
+            },
+            "averageRating": {
+                "title": "Average rating",
+                "description": "PLACE rows: mean star rating across the analysed reviews (not Google's lifetime average)."
+            },
+            "ratingHistogram": {
+                "title": "Rating histogram",
+                "description": "PLACE rows: review counts keyed by star rating 1-5."
+            },
+            "reviewsWithText": {
+                "title": "Reviews with text",
+                "description": "PLACE rows: how many analysed reviews carry a written body."
+            },
+            "reviewsWithOwnerResponse": {
+                "title": "Reviews with owner response",
+                "description": "PLACE rows: how many analysed reviews the business replied to."
+            },
+            "ownerResponseRatePercent": {
+                "title": "Owner response rate",
+                "description": "PLACE rows: percentage of analysed reviews that received a reply."
+            },
+            "reviewsWithPhotos": {
+                "title": "Reviews with photos",
+                "description": "PLACE rows: how many analysed reviews include photos."
+            },
+            "totalLikes": {
+                "title": "Total likes",
+                "description": "PLACE rows: sum of like counts across the analysed reviews."
+            },
+            "ratingTextConflicts": {
+                "title": "Rating/text conflicts",
+                "description": "PLACE rows: how many analysed reviews had review text whose tone contradicted the star rating. A high count is a useful signal of sarcastic or mixed feedback."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across every record type this actor emits.",
+            "transformation": {
+                "fields": [
+                    "recordType",
+                    "placeName",
+                    "rating",
+                    "text",
+                    "likesCount",
+                    "publishedAt",
+                    "relativeTime",
+                    "language",
+                    "_input",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        },
+        "reviews": {
+            "title": "Reviews",
+            "description": "One row per review: rating, text, sentiment, likes and the owner's reply.",
+            "transformation": {
+                "fields": [
+                    "placeName",
+                    "rating",
+                    "sentiment",
+                    "text",
+                    "likesCount",
+                    "ownerResponse",
+                    "reviewer",
+                    "publishedAt",
+                    "relativeTime",
+                    "language",
+                    "textTranslated",
+                    "photos",
+                    "permalink",
+                    "reviewId"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        },
+        "places": {
+            "title": "Place summaries",
+            "description": "One row per place: aggregated sentiment, rating spread and owner-response rate.",
+            "transformation": {
+                "fields": [
+                    "placeName",
+                    "reviewsAnalysed",
+                    "averageRating",
+                    "averageSentimentScore",
+                    "sentimentCounts",
+                    "sentimentPercent",
+                    "ratingHistogram",
+                    "reviewsWithOwnerResponse",
+                    "ownerResponseRatePercent",
+                    "ratingTextConflicts",
+                    "totalLikes",
+                    "reviewsWithPhotos",
+                    "featureId",
+                    "placeId",
+                    "mapsUrl"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

@@ -1,0 +1,70 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Singapore court judgment record",
+        "description": "Raw-passthrough dataset envelope on top of elitigation.sg's own displayed values (the Singapore Judiciary's official free Grounds of Decision archive). Every record carries _input/_source/_scrapedAt (and _error/_errorDetail on failures, _warning on partial degradation). \"search\" mode with fetchFullText=false emits a lightweight summary row per judgment; fetchFullText=true and \"judgment\" mode both add the full written opinion plus court/judge/hearing detail.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "search mode: \"q=<searchPhrase>|year=<year>|sort=<sortBy>\" that produced this record. judgment mode: the exact judgment ID requested."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "S1-listing (summary row from the search listing), S2-judgment (listing row enriched with full judgment text), S1-judgment (judgment mode, direct lookup), or none on failure."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this specific record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed extractions (no_results, judgment_not_found, http_5xx, blocked_or_transient)."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error or a _warning."
+            },
+            "_warning": {
+                "type": "string",
+                "title": "Warning",
+                "description": "Non-fatal degradation marker -- e.g. \"full_text_unavailable\" (fetchFullText=true but this one judgment's full-text fetch failed; the summary fields are still returned) or \"missing_judgment_id\"."
+            },
+
+            "judgmentId": { "title": "Judgment ID", "description": "The portal's own identifier, \"<year>_<court>_<number>\" (e.g. 2026_SGHC_175). Use it with mode='judgment' to fetch the full text directly." },
+            "caseTitle": { "title": "Case title", "description": "S1-listing / S2-judgment -- the parties as displayed, e.g. \"Reformd Pte Ltd v Kopigi Pte Ltd\"." },
+            "citation": { "title": "Neutral citation", "description": "The official neutral citation exactly as printed, e.g. \"[2026] SGHC 175\"." },
+            "decisionDate": { "title": "Decision date", "description": "S1-listing / S2-judgment -- ISO date (YYYY-MM-DD), read from the portal's own machine-readable filter value rather than the display string." },
+            "decisionDateText": { "title": "Decision date (as displayed)", "description": "S1-listing / S2-judgment -- the human-formatted date the portal shows, e.g. \"28 Aug 2026\"." },
+            "caseNumber": { "title": "Case number", "description": "The court's own case reference, e.g. \"Originating Claim No 483 of 2024\" (detail page) or \"HC/OC 483/2024\" (listing)." },
+            "catchwords": { "title": "Catchwords", "description": "The court's own legal-topic tags for the judgment, e.g. [\"Contract — Termination\", \"Contract — Damages — Nominal Damages\"]. These are the judiciary's classification, not derived by this actor." },
+            "year": { "title": "Year", "description": "Decision year, parsed from the judgment ID." },
+            "courtCode": { "title": "Court code", "description": "Court abbreviation parsed from the judgment ID -- e.g. SGHC (General Division of the High Court), SGHCA (Appellate Division), SGCA (Court of Appeal), SGDC (District Court), SGMC (Magistrates' Court), SGHCF (Family Division)." },
+            "judgmentUrl": { "title": "Judgment URL", "description": "Direct elitigation.sg link to the full written judgment." },
+
+            "courtName": { "title": "Court name", "description": "S2-judgment / S1-judgment only -- the court as printed in the judgment header, e.g. \"In the GENERAL DIVISION OF THE high court of the republic of singapore\"." },
+            "coram": { "title": "Coram", "description": "S2-judgment / S1-judgment only -- the court/case/judge/hearing-dates line, e.g. \"General Division of the High Court — Originating Claim No 483 of 2024 S Mohan J 3–5, 11–12 February, 10 April 2026\"." },
+            "judgeAuthor": { "title": "Authoring judge", "description": "S2-judgment / S1-judgment only -- the judge who delivered the judgment, e.g. \"S Mohan J:\"." },
+            "fullText": { "title": "Full judgment text", "description": "S2-judgment / S1-judgment only -- the complete written judgment as plain text (whitespace normalised, nothing else altered). Frequently very long: a single commercial judgment observed at 111,056 characters." },
+            "fullTextLength": { "title": "Full text length", "description": "S2-judgment / S1-judgment only -- character count of fullText, handy for filtering out procedural one-pagers." }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across summary and full-judgment records.",
+            "transformation": {
+                "fields": ["_input", "_source", "citation", "caseTitle", "decisionDate", "courtCode", "caseNumber", "catchwords", "fullTextLength", "judgmentUrl", "_error"]
+            },
+            "display": {"component": "table"}
+        }
+    }
+}

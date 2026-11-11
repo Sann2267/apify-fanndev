@@ -1,0 +1,117 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Article / latest-headline record",
+        "description": "Raw-passthrough dataset envelope. Every record carries _input/_source/_scrapedAt (and _error/_errorDetail on failures). Article-mode records (S1-jsonld+html) combine fields resolved from the page's AIOSEO @graph JSON-LD block with the full article body scraped from HTML. Latest-mode records (S2-rss) carry title/link-style fields from the site-wide RSS feed.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The exact input value (URL, or 'latest') that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which extraction strategy emitted this record (S1-jsonld+html or S2-rss)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed extractions -- the error kind."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "headline": {
+                "title": "Headline",
+                "description": "Article headline (article mode, from the JSON-LD Article node)."
+            },
+            "description": {
+                "title": "Description",
+                "description": "Short article description/dek (article mode, from <meta name=\"description\">, falling back to the JSON-LD WebPage node)."
+            },
+            "articleBody": {
+                "title": "Article body",
+                "description": "Full article text, scraped from the HTML content area (article mode only -- the JSON-LD does not carry articleBody on this site)."
+            },
+            "author": {
+                "title": "Author",
+                "description": "Byline name (article mode) -- resolved from the JSON-LD Person node the Article's author reference points to; comma-joined if more than one."
+            },
+            "publisher": {
+                "title": "Publisher",
+                "description": "Publisher organization name (article mode) -- resolved from the JSON-LD Organization node, falling back to <meta property=\"og:site_name\">."
+            },
+            "articleSection": {
+                "title": "Section",
+                "description": "Comma-separated categories and tags (article mode, raw passthrough from JSON-LD -- not a clean single category)."
+            },
+            "image": {
+                "title": "Image",
+                "description": "Lead image URL (article mode)."
+            },
+            "datePublished": {
+                "title": "Date published",
+                "description": "ISO 8601 publish date."
+            },
+            "dateModified": {
+                "title": "Date modified",
+                "description": "ISO 8601 last-modified date."
+            },
+            "title": {
+                "title": "Title",
+                "description": "Headline from the RSS item (latest mode)."
+            },
+            "link": {
+                "title": "Link",
+                "description": "Article URL (latest mode)."
+            },
+            "guid": {
+                "title": "GUID",
+                "description": "RSS item guid (latest mode)."
+            },
+            "pubDate": {
+                "title": "Publish date",
+                "description": "RSS pubDate string (latest mode)."
+            },
+            "category": {
+                "title": "Category",
+                "description": "First RSS <category> value on the item (latest mode)."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across both article and latest-headline records.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "_source",
+                    "_scrapedAt",
+                    "headline",
+                    "title",
+                    "link",
+                    "datePublished",
+                    "pubDate",
+                    "author",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

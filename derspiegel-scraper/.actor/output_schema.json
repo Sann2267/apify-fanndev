@@ -1,0 +1,134 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Article / latest-headline record",
+        "description": "Raw-passthrough dataset envelope. Every record carries _input/_source/_scrapedAt (and _error/_errorDetail on failures). Article-mode records (S1-html) spread the upstream ld+json NewsArticle/ReportageNewsArticle/Article node close to verbatim plus a scraped articleBody and a computed _paywalled flag (SPIEGEL+ premium articles have no HTML body at all, so articleBody is null and _paywalled is true rather than fabricating text), so extra schema.org fields beyond those listed here may appear. Latest-mode records (S2-rss) carry title/link-style fields from the site-wide RSS feed.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The exact input value (URL, or 'latest') that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which extraction strategy emitted this record (e.g. S1-html, S2-rss)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed extractions -- the error kind."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "@type": {
+                "title": "Schema.org type",
+                "description": "Upstream ld+json node type: NewsArticle, ReportageNewsArticle, or Article."
+            },
+            "headline": {
+                "title": "Headline",
+                "description": "Article headline (raw passthrough from ld+json)."
+            },
+            "description": {
+                "title": "Description",
+                "description": "Short article description/dek."
+            },
+            "articleBody": {
+                "title": "Article body",
+                "description": "Full article text, joined from div[data-area=body] > div[data-area=text] > p paragraphs. Null on SPIEGEL+ premium articles, which replace the text divs with a paywall placeholder and expose no body text at all (see _paywalled)."
+            },
+            "_paywalled": {
+                "title": "Paywalled",
+                "description": "True when the article page renders div[data-area=paywall] instead of body text -- a hard paywall (no articleBody available), not a teaser."
+            },
+            "datePublished": {
+                "title": "Date published",
+                "description": "ISO 8601 publish date."
+            },
+            "dateModified": {
+                "title": "Date modified",
+                "description": "ISO 8601 last-modified date."
+            },
+            "author": {
+                "title": "Author",
+                "description": "Author object(s) as emitted by upstream ld+json (raw passthrough)."
+            },
+            "publisher": {
+                "title": "Publisher",
+                "description": "Publisher organization object."
+            },
+            "image": {
+                "title": "Image",
+                "description": "Lead image object (raw passthrough)."
+            },
+            "articleSection": {
+                "title": "Section",
+                "description": "Article section/category."
+            },
+            "keywords": {
+                "title": "Keywords",
+                "description": "Comma-separated or array of keywords, as emitted upstream."
+            },
+            "isAccessibleForFree": {
+                "title": "Accessible for free",
+                "description": "Upstream ld+json paywall metering flag."
+            },
+            "title": {
+                "title": "Title",
+                "description": "Headline from the RSS item (latest mode)."
+            },
+            "link": {
+                "title": "Link",
+                "description": "Article URL, with any URL fragment stripped (latest mode)."
+            },
+            "guid": {
+                "title": "GUID",
+                "description": "RSS item GUID (latest mode)."
+            },
+            "pubDate": {
+                "title": "Publish date",
+                "description": "RSS pubDate string (latest mode)."
+            },
+            "categories": {
+                "title": "Categories",
+                "description": "List of RSS item <category> values (latest mode)."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across both article and latest-headline records.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "_source",
+                    "_scrapedAt",
+                    "headline",
+                    "title",
+                    "link",
+                    "datePublished",
+                    "pubDate",
+                    "author",
+                    "_paywalled",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

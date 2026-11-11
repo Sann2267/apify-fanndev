@@ -1,0 +1,94 @@
+{
+    "title": "Spotify Curator & Playlist Owner Profiler",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "keywords": {
+            "title": "Keywords",
+            "type": "array",
+            "description": "Genres, moods or scenes to find curators in - 'indie folk', 'lofi study', 'afrobeats 2026', 'dangdut koplo'. Spotify returns at most 30 mixed results per keyword and ignores paging entirely, so coverage comes from using more keywords, not from asking for more per keyword. Results are also biased by the exit IP's country.",
+            "editor": "stringList",
+            "prefill": ["indie folk", "lofi study"]
+        },
+        "playlistUrls": {
+            "title": "Playlist URLs",
+            "type": "array",
+            "description": "Specific playlists whose owners you want profiled. Share links, spotify:playlist: URIs and bare playlist ids all work.",
+            "editor": "stringList"
+        },
+        "startUrls": {
+            "title": "Playlist URLs (request list)",
+            "type": "array",
+            "description": "The same playlist links in the request-list format, for callers that already keep one.",
+            "editor": "requestListSources"
+        },
+        "trackSampleSize": {
+            "title": "Tracks sampled per playlist",
+            "type": "integer",
+            "description": "How many tracks to read from each playlist in order to describe the curator's taste. The sample costs nothing extra - the tracks arrive in the same request as the playlist's follower count. Set it to 0 to skip taste profiling and keep only reach numbers.",
+            "default": 50,
+            "minimum": 0,
+            "maximum": 100,
+            "unit": "tracks"
+        },
+        "maxPlaylistsPerKeyword": {
+            "title": "Maximum playlists per keyword",
+            "type": "integer",
+            "description": "Cap on how many of each keyword's playlist results to profile. Spotify never returns more than 30 results of all types combined, so values above roughly 20 rarely change anything.",
+            "default": 15,
+            "minimum": 1,
+            "maximum": 30,
+            "unit": "playlists"
+        },
+        "maxPlaylists": {
+            "title": "Maximum playlists in total",
+            "type": "integer",
+            "description": "Overall ceiling across every keyword and URL, after de-duplication. Each playlist costs one request.",
+            "default": 200,
+            "minimum": 1,
+            "maximum": 2000,
+            "unit": "playlists"
+        },
+        "minFollowers": {
+            "title": "Minimum playlist followers",
+            "type": "integer",
+            "description": "Skip playlists below this follower count. Useful for filtering out the long tail of personal playlists when you are looking for curators worth pitching to.",
+            "default": 0,
+            "minimum": 0,
+            "unit": "followers"
+        },
+        "includeEditorialPlaylists": {
+            "title": "Include Spotify's own editorial playlists",
+            "type": "boolean",
+            "description": "Off by default. Spotify's editorial account owns the largest playlists in almost every niche, so leaving it in means 'Spotify' tops every ranking - true, but useless if you are looking for independent curators to approach. Turn it on when you want the editorial benchmark alongside them.",
+            "default": false
+        },
+        "emitPlaylistRecords": {
+            "title": "Also emit one row per playlist",
+            "type": "boolean",
+            "description": "Write each profiled playlist as its own PLAYLIST row alongside the CURATOR rows: name, description, followers, track count, last update and owner.",
+            "default": true
+        },
+        "exportFormats": {
+            "title": "Extra export files",
+            "type": "array",
+            "description": "Besides the dataset, write ready-made files into this run's key-value store.",
+            "editor": "select",
+            "items": {
+                "type": "string",
+                "enum": ["json", "ndjson", "csv", "excel"],
+                "enumTitles": ["JSON", "NDJSON", "CSV", "Excel (XLSX)"]
+            },
+            "default": []
+        },
+        "proxyConfiguration": {
+            "title": "Proxy",
+            "type": "object",
+            "description": "Off by default and genuinely optional: neither endpoint has a WAF or an IP block. It does change one thing - search results are geo-biased, so an exit IP in the market you care about surfaces local curators that a default one will not.",
+            "editor": "proxy",
+            "default": {
+                "useApifyProxy": false
+            }
+        }
+    }
+}

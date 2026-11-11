@@ -1,0 +1,16 @@
+{
+    "actorSpecification": 1,
+    "name": "business-standard-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Business Standard Scraper",
+    "description": "Extract full article text or the newest headlines from Business Standard, one of India's leading business and financial dailies -- no account or API key needed.",
+    "dockerfile": "./Dockerfile",
+    "minMemoryMbytes": 256,
+    "maxMemoryMbytes": 1024,
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

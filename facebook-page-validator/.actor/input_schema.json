@@ -1,0 +1,112 @@
+{
+    "title": "Facebook Page Validator",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "slugs": {
+            "title": "Facebook slugs or URLs",
+            "type": "array",
+            "description": "One vanity slug or profile URL per line. 'nike', 'facebook.com/nike' and 'https://www.facebook.com/nike/' are all accepted and reduce to the same slug.",
+            "editor": "stringList",
+            "prefill": [
+                "nike",
+                "bukalapak",
+                "zzqq-not-a-real-page-9876543"
+            ]
+        },
+        "pages": {
+            "title": "Slugs with an expected brand",
+            "type": "array",
+            "description": "Use this instead of 'slugs' when you know which brand each slug is supposed to belong to. Each entry is {\"slug\": \"nike\", \"expectedBrand\": \"Nike\"}. Only entries given here are brand-checked; the others are existence-checked only.",
+            "editor": "json",
+            "prefill": [
+                {
+                    "slug": "bukalapak",
+                    "expectedBrand": "Bukalapak"
+                },
+                {
+                    "slug": "tokopedia",
+                    "expectedBrand": "Tokopedia"
+                }
+            ]
+        },
+        "startUrls": {
+            "title": "Start URLs",
+            "type": "array",
+            "description": "Facebook page URLs, for pasting a list straight out of another actor's dataset.",
+            "editor": "requestListSources"
+        },
+        "onlyExisting": {
+            "title": "Only pages that exist",
+            "type": "boolean",
+            "description": "Drop every slug that does not resolve to a page.",
+            "default": false,
+            "groupCaption": "Filters",
+            "groupDescription": "Applied after checking, so the run summary still counts everything."
+        },
+        "onlyNotFound": {
+            "title": "Only slugs that do not exist",
+            "type": "boolean",
+            "description": "Keep only the dead slugs - the list-cleaning view. Cannot be combined with 'Only pages that exist'.",
+            "default": false
+        },
+        "onlyBrandMismatch": {
+            "title": "Only brand mismatches",
+            "type": "boolean",
+            "description": "Keep only slugs whose page belongs to a different brand than expected, or matches it only weakly. Needs 'pages' with an expectedBrand.",
+            "default": false
+        },
+        "minFollowers": {
+            "title": "Minimum followers",
+            "type": "integer",
+            "description": "Drop pages below this follower count. Pages whose follower count could not be read are dropped too, since an unknown count cannot be shown to clear the bar.",
+            "minimum": 0,
+            "unit": "followers"
+        },
+        "concurrency": {
+            "title": "Concurrent requests",
+            "type": "integer",
+            "description": "How many slugs to fetch at once. Facebook pages are large (up to ~20 MB each), so raising this speeds the run up but costs memory.",
+            "default": 5,
+            "minimum": 1,
+            "maximum": 15
+        },
+        "emitSummary": {
+            "title": "Add a run summary record",
+            "type": "boolean",
+            "description": "Append one RUN_SUMMARY record with the totals: how many exist, how many are dead, how many brand mismatches.",
+            "default": true
+        },
+        "exportFormats": {
+            "title": "Extra export files",
+            "type": "array",
+            "description": "Also write the results to the key-value store in these formats. The dataset is always produced regardless.",
+            "editor": "select",
+            "items": {
+                "type": "string",
+                "enum": [
+                    "json",
+                    "ndjson",
+                    "csv",
+                    "xlsx"
+                ],
+                "enumTitles": [
+                    "JSON",
+                    "NDJSON",
+                    "CSV",
+                    "Excel (XLSX)"
+                ]
+            },
+            "default": []
+        },
+        "proxyConfiguration": {
+            "title": "Proxy",
+            "type": "object",
+            "description": "Optional. This surface applies no TLS or IP gate, so the default direct connection works and a proxy only adds latency and cost. Enable it only if your own network is restricted.",
+            "editor": "proxy",
+            "default": {
+                "useApifyProxy": false
+            }
+        }
+    }
+}

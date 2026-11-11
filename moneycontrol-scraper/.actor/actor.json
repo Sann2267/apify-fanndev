@@ -1,0 +1,12 @@
+{
+    "actorSpecification": 1,
+    "name": "moneycontrol-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Moneycontrol Scraper",
+    "description": "Extract article metadata and headlines from Moneycontrol (India's leading financial/markets news portal) -- no account or API key needed.",
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {"dataset": "./output_schema.json"},
+    "output": "./actor_output_links.json"
+}

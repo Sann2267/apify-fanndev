@@ -1,0 +1,200 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "GHANEPS tender record",
+        "description": "One record per row/tender. Shape depends on recordType: TENDER_CURRENT / TENDER_OPENED / TENDER_AWARDED (one per listing mode=list can produce) or TENDER_DETAIL (mode=detail, a raw dt/dd key-value passthrough of the tender's own detail page -- field set varies by procurement type, so extra fields beyond those listed below may appear). A single _error record is emitted instead of payload fields when a page/tender fails or is inaccessible.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "For list records: 'list:<listType>'. For detail records: the resourceId or URL that was requested."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which extraction strategy emitted this record (S1-current-listing, S1-opened-listing, S1-awarded-listing, S1-detail, or 'none' on error)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed records (blocked_or_transient, not_found_or_restricted)."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "recordType": {
+                "type": "string",
+                "title": "Record type",
+                "description": "TENDER_CURRENT, TENDER_OPENED, TENDER_AWARDED, or TENDER_DETAIL."
+            },
+            "_page": {
+                "title": "Page",
+                "description": "Which page of the listing (10 rows/page) this row came from. mode=list only."
+            },
+            "_totalAvailable": {
+                "title": "Total available",
+                "description": "Total rows GHANEPS reports for this listing, before any maxResults truncation. mode=list only."
+            },
+            "resourceId": {
+                "title": "Resource ID",
+                "description": "GHANEPS's internal numeric tender ID."
+            },
+            "tenderUrl": {
+                "title": "Tender URL",
+                "description": "Link to the tender's full detail page on GHANEPS."
+            },
+            "title": {
+                "title": "Tender title",
+                "description": "The tender's title/name."
+            },
+            "procuringEntity": {
+                "title": "Procuring entity",
+                "description": "The government body running this procurement."
+            },
+            "description": {
+                "title": "Description",
+                "description": "Short description (TENDER_CURRENT rows only, from the listing's info tooltip; TENDER_DETAIL rows have their own separate 'description' field from the detail page)."
+            },
+            "bidsSubmissionDeadline": {
+                "title": "Bids submission deadline",
+                "description": "TENDER_CURRENT / TENDER_OPENED only. GHANEPS's own date format (dd/mm/yyyy HH:MM:SS)."
+            },
+            "procedure": {
+                "title": "Procedure",
+                "description": "TENDER_CURRENT only -- procurement procedure (e.g. National Competitive Tendering)."
+            },
+            "status": {
+                "title": "Status",
+                "description": "TENDER_CURRENT / TENDER_OPENED only -- e.g. Bid Submission, Evaluation."
+            },
+            "noticePdfUrl": {
+                "title": "Notice PDF URL",
+                "description": "TENDER_CURRENT / TENDER_AWARDED only -- link to the official notice PDF, when published."
+            },
+            "publicationDate": {
+                "title": "Publication date",
+                "description": "TENDER_CURRENT only."
+            },
+            "referenceNumber": {
+                "title": "Reference number",
+                "description": "TENDER_OPENED only -- the procuring entity's own tender reference number."
+            },
+            "procurementMethod": {
+                "title": "Procurement method",
+                "description": "TENDER_OPENED only -- e.g. Request for Quotation (RFQ)."
+            },
+            "openedBidsUrl": {
+                "title": "Opened bids URL",
+                "description": "TENDER_OPENED only -- link to the opened-bids detail view."
+            },
+            "openedBidsLabel": {
+                "title": "Opened bids label",
+                "description": "TENDER_OPENED only -- link text, usually 'View Opened Bids'."
+            },
+            "awardDate": {
+                "title": "Award date",
+                "description": "TENDER_OPENED (often blank pre-award) / TENDER_AWARDED."
+            },
+            "supplierName": {
+                "title": "Supplier name",
+                "description": "TENDER_AWARDED only -- the winning bidder."
+            },
+            "awardAmount": {
+                "title": "Award amount",
+                "description": "TENDER_AWARDED only -- raw text as shown by GHANEPS, e.g. '160920.00 (GHS)' or 'N/A' when not disclosed."
+            },
+            "lotName": {
+                "title": "Lot name",
+                "description": "TENDER_AWARDED only -- raw text, 'N/A' when the contract wasn't split into lots."
+            },
+            "tenderHeaderTitle": {
+                "title": "Tender header title",
+                "description": "TENDER_DETAIL only -- the title shown in the detail page's own header bar."
+            },
+            "nameOfProcuringEntity": {
+                "title": "Name of procuring entity",
+                "description": "TENDER_DETAIL only."
+            },
+            "nameOfProcuringEntityUrl": {
+                "title": "Procuring entity URL",
+                "description": "TENDER_DETAIL only -- link to the procuring entity's organisation profile page."
+            },
+            "appReferenceNumber": {
+                "title": "APP reference number",
+                "description": "TENDER_DETAIL only -- Annual Procurement Plan reference."
+            },
+            "tenderUniqueId": {
+                "title": "Tender unique ID",
+                "description": "TENDER_DETAIL only."
+            },
+            "tenderTitle": {
+                "title": "Tender title (detail)",
+                "description": "TENDER_DETAIL only."
+            },
+            "requisitionNumber": {
+                "title": "Requisition number",
+                "description": "TENDER_DETAIL only."
+            },
+            "procurementType": {
+                "title": "Procurement type",
+                "description": "TENDER_DETAIL only -- e.g. Goods, Works, Consultancy."
+            },
+            "bidSubmissionDeadlineDate": {
+                "title": "Bid submission deadline (detail)",
+                "description": "TENDER_DETAIL only."
+            },
+            "bidOpeningDate": {
+                "title": "Bid opening date",
+                "description": "TENDER_DETAIL only."
+            },
+            "dateOfPublicationInvitation": {
+                "title": "Date of publication/invitation",
+                "description": "TENDER_DETAIL only."
+            },
+            "numberOfLots": {
+                "title": "Number of lots",
+                "description": "TENDER_DETAIL only -- when present, individual lots appear as lotName1, lotName2, ... (additionalProperties)."
+            },
+            "unspscCodes": {
+                "title": "UNSPSC codes",
+                "description": "TENDER_DETAIL only -- UN Standard Products and Services Classification code(s) for this tender."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across all record types -- rows missing a given column render blank.",
+            "transformation": {
+                "fields": [
+                    "recordType",
+                    "resourceId",
+                    "title",
+                    "procuringEntity",
+                    "supplierName",
+                    "bidsSubmissionDeadline",
+                    "status",
+                    "awardDate",
+                    "awardAmount",
+                    "_totalAvailable",
+                    "_error",
+                    "_scrapedAt"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

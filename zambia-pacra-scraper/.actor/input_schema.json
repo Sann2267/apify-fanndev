@@ -1,0 +1,42 @@
+{
+    "title": "Zambia PACRA Business Registry Scraper",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "companyName": {
+            "title": "Company / business name",
+            "type": "string",
+            "editor": "textfield",
+            "description": "A single registered business name (or part of one) to search for in the PACRA registry, e.g. \"Zambia Sugar\" or \"MTN\". The live site recommends at least 4 characters for a meaningful match.",
+            "prefill": "Zambia Sugar"
+        },
+        "companyNames": {
+            "title": "Company / business names",
+            "type": "array",
+            "editor": "stringList",
+            "description": "Multiple business names to search for in one run -- each string runs as a separate search query, up to 50 matching entities returned per query (a server-side cap, not adjustable)."
+        },
+        "maxConcurrency": {
+            "title": "Max concurrent workers",
+            "type": "integer",
+            "description": "How many search queries to run in parallel.",
+            "default": 4,
+            "minimum": 1,
+            "maximum": 16,
+            "prefill": 4
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "editor": "proxy",
+            "description": "Apify Proxy configuration. Off by default -- no anti-bot protection (WAF/CAPTCHA) was found on this target's public search API, so a direct connection works reliably. Turn on if you run a very high query volume.",
+            "default": {
+                "useApifyProxy": false
+            },
+            "prefill": {
+                "useApifyProxy": false
+            }
+        }
+    },
+    "required": []
+}

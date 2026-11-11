@@ -1,0 +1,14 @@
+{
+    "actorSpecification": 1,
+    "name": "dominicanrepublic-tenders-scraper",
+    "version": "0.1",
+    "buildTag": "latest",
+    "title": "Dominican Republic Government Tenders Scraper (DGCP)",
+    "description": "Scrapes the Dominican Republic's official DGCP procurement open-data API -- browse or filter tender/procurement processes, and fetch full detail (contracts, offers, line items) for any process. No login needed.",
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

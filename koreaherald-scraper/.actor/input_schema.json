@@ -1,0 +1,62 @@
+{
+    "title": "Korea Herald Scraper",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "mode": {
+            "title": "Mode",
+            "type": "string",
+            "editor": "select",
+            "description": "\"article\" extracts one or more article URLs. \"latest\" fetches the newest headlines from the site's rolling news sitemap.",
+            "enum": ["article", "latest"],
+            "enumTitles": ["Article", "Latest headlines"],
+            "default": "article",
+            "prefill": "article"
+        },
+        "url": {
+            "title": "Article URL",
+            "type": "string",
+            "editor": "textfield",
+            "description": "A single koreaherald.com article URL to extract. Used when mode is \"article\".",
+            "prefill": "https://www.koreaherald.com/article/10848093"
+        },
+        "urls": {
+            "title": "Article URLs",
+            "type": "array",
+            "editor": "stringList",
+            "description": "Multiple koreaherald.com article URLs to extract in one run. Used when mode is \"article\"."
+        },
+        "limit": {
+            "title": "Max headlines (latest mode)",
+            "type": "integer",
+            "description": "Maximum number of headlines to return in \"latest\" mode.",
+            "default": 10,
+            "minimum": 1,
+            "maximum": 50,
+            "prefill": 10
+        },
+        "maxConcurrency": {
+            "title": "Max concurrent workers",
+            "type": "integer",
+            "description": "How many article pages to fetch in parallel in \"article\" mode.",
+            "default": 4,
+            "minimum": 1,
+            "maximum": 16,
+            "prefill": 4
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "editor": "proxy",
+            "description": "Apify Proxy configuration. Residential is on by default.",
+            "default": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            },
+            "prefill": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            }
+        }
+    }
+}

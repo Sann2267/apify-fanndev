@@ -1,0 +1,92 @@
+{
+    "title": "Amazon Best Sellers & Movers Tracker",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "categories": {
+            "title": "Categories to track",
+            "type": "array",
+            "description": "Category slugs (\"electronics\", \"toys-and-games\"), sub-category node paths (\"electronics/172541\"), or full Amazon list URLs. A full URL overrides the marketplace and list type below, so one run can mix marketplaces.",
+            "editor": "stringList",
+            "prefill": ["electronics"],
+            "default": []
+        },
+        "listType": {
+            "title": "List type",
+            "type": "string",
+            "description": "Which ranked list to track. Use 'bestsellers' and let this actor compute the movers - Amazon's own Movers & Shakers pages returned no data in every category tested (see the README).",
+            "editor": "select",
+            "enum": ["bestsellers", "new-releases", "most-wished-for", "movers-and-shakers"],
+            "enumTitles": [
+                "Best Sellers (recommended)",
+                "New Releases",
+                "Most Wished For",
+                "Movers & Shakers (Amazon's own - often empty)"
+            ],
+            "default": "bestsellers"
+        },
+        "marketplace": {
+            "title": "Marketplace",
+            "type": "string",
+            "description": "Amazon domain to track.",
+            "editor": "select",
+            "enum": ["com", "co.uk", "de", "fr", "it", "es", "ca", "com.au", "co.jp", "in"],
+            "enumTitles": [
+                "amazon.com (US)", "amazon.co.uk", "amazon.de", "amazon.fr", "amazon.it",
+                "amazon.es", "amazon.ca", "amazon.com.au", "amazon.co.jp", "amazon.in"
+            ],
+            "default": "com"
+        },
+        "maxRank": {
+            "title": "Max rank",
+            "type": "integer",
+            "description": "How deep to track. Amazon serves 50 ranks per page and stops at 100, so 100 is the maximum and costs two requests per category.",
+            "editor": "number",
+            "minimum": 1,
+            "maximum": 100,
+            "default": 100
+        },
+        "trackMovement": {
+            "title": "Track rank movement between runs",
+            "type": "boolean",
+            "description": "Compare each run against the previous one and label every product NEW_ENTRY, RISING, FALLING, UNCHANGED or DROPPED_OUT, with the exact rank change. This is what turns the actor into a Movers & Shakers tracker; the snapshot lives in a named key-value store so it survives scheduled runs.",
+            "default": true
+        },
+        "onlyMovers": {
+            "title": "Only output movers",
+            "type": "boolean",
+            "description": "Emit only products that moved significantly (5+ ranks), entered the list, or dropped out - the shortlist for winning-product research. On the very first run everything counts as NEW_ENTRY because there is nothing to compare against yet.",
+            "default": false
+        },
+        "includeDroppedOut": {
+            "title": "Include dropped-out products",
+            "type": "boolean",
+            "description": "Emit a row for products that were ranked last run and are not any more. Only visible by diffing snapshots, and a useful signal in its own right.",
+            "default": true
+        },
+        "stateStoreName": {
+            "title": "State store name",
+            "type": "string",
+            "description": "Named key-value store holding the previous run's ranks. Use different names to track separate watchlists independently.",
+            "editor": "textfield",
+            "default": "amazon-rank-state"
+        },
+        "delaySeconds": {
+            "title": "Delay between requests (seconds)",
+            "type": "integer",
+            "description": "Pause between page fetches. Amazon serves a CAPTCHA to traffic it dislikes, and this actor never solves CAPTCHAs - pacing is what keeps a run clean.",
+            "editor": "number",
+            "minimum": 0,
+            "maximum": 60,
+            "default": 2
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "description": "Recommended for scheduled runs. Amazon serves CAPTCHAs to datacentre IPs it dislikes; a residential proxy plus the built-in fingerprint rotation avoids them.",
+            "editor": "proxy",
+            "default": { "useApifyProxy": true, "apifyProxyGroups": ["RESIDENTIAL"] }
+        }
+    },
+    "required": ["categories"]
+}

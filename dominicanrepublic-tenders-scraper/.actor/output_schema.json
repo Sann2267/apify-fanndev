@@ -1,0 +1,236 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "DGCP procurement process record",
+        "description": "One record per Dominican Republic DGCP procurement process, produced by mode=list (a filtered page of /procesos results, optionally enriched with full detail) or mode=detail (one specific process code's full detail: contracts, offers received, requested line items). A single _error record is emitted instead of payload fields when a record can't be fetched.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "For list records: 'list:<filters applied>'. For detail records: the process code that was requested."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which strategy emitted this record (S1-api-procesos, S1-api-procesos+contratos+ofertas+articulos, or 'none' on error)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed records (blocked_or_transient, not_found)."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "_detailError": {
+                "type": "string",
+                "title": "Detail enrichment error",
+                "description": "Present only on a list-mode row when fetchDetail=true and that row's own detail fetch failed -- the rest of the row's list fields are still valid."
+            },
+            "codigo_proceso": {
+                "title": "Process code",
+                "description": "DGCP's stable identifier for this procurement process, e.g. 'SUPERATE-CCC-CP-2026-0012'."
+            },
+            "codigo_unidad_compra": {
+                "title": "Buyer unit code",
+                "description": "Internal DGCP code for the purchasing government institution."
+            },
+            "unidad_compra": {
+                "title": "Buyer unit name",
+                "description": "The purchasing government institution's name, e.g. 'Direccion de Desarrollo Social Superate'."
+            },
+            "modalidad": {
+                "title": "Procurement modality",
+                "description": "e.g. 'Comparacion de Precios', 'Licitacion Publica Nacional', 'Procesos de Excepcion'."
+            },
+            "tipo_excepcion": {
+                "title": "Exception type",
+                "description": "Sub-type for 'Procesos de Excepcion' modality processes (e.g. 'Publicidad'); 'Proceso ordinario' for normal processes."
+            },
+            "titulo": {
+                "title": "Title",
+                "description": "The process's title, as published."
+            },
+            "descripcion": {
+                "title": "Description",
+                "description": "The process's free-text description, as published."
+            },
+            "estado_proceso": {
+                "title": "Process status",
+                "description": "e.g. 'Proceso publicado' (open for bids), 'Proceso adjudicado y celebrado' (awarded), 'Proceso desierto' (no bids), 'Cancelado'."
+            },
+            "divisa": {
+                "title": "Currency",
+                "description": "Currency code for monto_estimado, typically DOP (Dominican peso)."
+            },
+            "monto_estimado": {
+                "title": "Estimated amount",
+                "description": "The process's estimated total value."
+            },
+            "fecha_publicacion": {
+                "title": "Publication date",
+                "description": "When this process was published."
+            },
+            "fecha_enmienda": {
+                "title": "Amendment deadline"
+            },
+            "fecha_fin_recepcion_ofertas": {
+                "title": "Bid submission deadline"
+            },
+            "fecha_apertura_ofertas": {
+                "title": "Bid opening date"
+            },
+            "fecha_apertura_ofertas2": {
+                "title": "Second bid opening date (technical/economic envelopes, when applicable)"
+            },
+            "fecha_estimada_adjudicacion": {
+                "title": "Estimated award date"
+            },
+            "fecha_suscripcion": {
+                "title": "Estimated contract signing date"
+            },
+            "fecha_habilitacion_oferente": {
+                "title": "Bidder qualification date"
+            },
+            "dirigido_mipymes": {
+                "title": "Targeted at MSMEs",
+                "description": "'Si'/'No' -- whether this process is reserved for MSMEs (micro/small/medium enterprises)."
+            },
+            "dirigido_mipymes_mujeres": {
+                "title": "Targeted at women-owned MSMEs",
+                "description": "'Si'/'No'."
+            },
+            "proceso_lotificado": {
+                "title": "Split into lots",
+                "description": "'Si'/'No'."
+            },
+            "es_snip": {
+                "title": "Is SNIP project",
+                "description": "'Si'/'No' -- linked to the National Public Investment System (Sistema Nacional de Inversion Publica)."
+            },
+            "codigo_snip": {
+                "title": "SNIP project code",
+                "description": "'N/A' when not a SNIP-linked project."
+            },
+            "numero_proveedores_notificados": {
+                "title": "Suppliers notified",
+                "description": "How many registered suppliers were auto-notified of this process."
+            },
+            "area_requiriente": {
+                "title": "Requesting area/department"
+            },
+            "url": {
+                "title": "Public listing URL",
+                "description": "Link to this process on the Comprasdominicana transactional portal (comunidad.comprasdominicana.gob.do), verbatim."
+            },
+            "adquisicion_planeada": {
+                "title": "Planned acquisition",
+                "description": "'Si'/'No' -- whether this was in the buyer's Annual Procurement Plan (PACC)."
+            },
+            "justificacion_no_pacc": {
+                "title": "Justification",
+                "description": "Free text -- justification for the acquisition, or for its absence from the PACC."
+            },
+            "objeto_proceso": {
+                "title": "Procurement object",
+                "description": "e.g. 'Bienes' (goods), 'Servicios' (services), 'Obras' (works)."
+            },
+            "subobjeto_proceso": {
+                "title": "Procurement sub-object"
+            },
+            "decreto_presidencial": {
+                "title": "Presidential decree",
+                "description": "'Si'/'No'."
+            },
+            "resolucion_maxima_autoridad": {
+                "title": "Top-authority resolution",
+                "description": "'Si'/'No'."
+            },
+            "organismo_financiero_externo": {
+                "title": "External financing body",
+                "description": "'Si'/'No' -- financed via an external body (e.g. World Bank, IDB)."
+            },
+            "marco_decreto_3122": {
+                "title": "Under Decree 312-22 framework",
+                "description": "'Si'/'No'."
+            },
+            "compra_verde": {
+                "title": "Green procurement",
+                "description": "'Si'/'No'."
+            },
+            "compra_conjunta": {
+                "title": "Joint procurement",
+                "description": "'Si'/'No'."
+            },
+            "duracion_contrato": {
+                "title": "Contract duration"
+            },
+            "contratos": {
+                "title": "Contracts (detail records only)",
+                "description": "Every contract awarded under this process, verbatim from DGCP's /contratos endpoint -- includes winning supplier (razon_social/rpe), contracted value (valor_contratado), status, and payment terms. Empty for processes not yet awarded."
+            },
+            "contratosCount": {
+                "title": "Contracts count (detail records only)"
+            },
+            "contratosTotalUpstream": {
+                "title": "Contracts total upstream (detail records only)",
+                "description": "Upstream totalResults for this process's /contratos query -- compare against contratosCount to detect truncation (this actor fetches up to 1000 per process)."
+            },
+            "ofertas": {
+                "title": "Offers/bids (detail records only)",
+                "description": "Every offer submitted under this process, verbatim from DGCP's /ofertas endpoint -- includes bidder (razon_social/rpe), offer value (valor_oferta), and evaluation status."
+            },
+            "ofertasCount": {
+                "title": "Offers count (detail records only)"
+            },
+            "ofertasTotalUpstream": {
+                "title": "Offers total upstream (detail records only)"
+            },
+            "articulos": {
+                "title": "Line items (detail records only)",
+                "description": "Every requested line item under this process, verbatim from DGCP's /procesos/articulos endpoint -- includes UNSPSC classification, description, quantity, unit, and estimated pricing."
+            },
+            "articulosCount": {
+                "title": "Line items count (detail records only)"
+            },
+            "articulosTotalUpstream": {
+                "title": "Line items total upstream (detail records only)"
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across list and detail records -- rows missing a given column render blank.",
+            "transformation": {
+                "fields": [
+                    "codigo_proceso",
+                    "unidad_compra",
+                    "titulo",
+                    "modalidad",
+                    "estado_proceso",
+                    "monto_estimado",
+                    "divisa",
+                    "fecha_publicacion",
+                    "contratosCount",
+                    "_error",
+                    "_scrapedAt"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

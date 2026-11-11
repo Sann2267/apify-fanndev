@@ -1,0 +1,14 @@
+{
+    "actorSpecification": 1,
+    "name": "ghana-rgd-scraper",
+    "version": "0.1",
+    "buildTag": "latest",
+    "title": "Ghana Business Registry Name Search",
+    "description": "Search Ghana's official Office of the Registrar of Companies (ORC) business registry for matching business names and their entity type (Sole Proprietor, Company Ltd by Shares/Guarantee, Partnership, etc.). No account or login needed.",
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

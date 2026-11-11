@@ -1,0 +1,15 @@
+{
+    "actorSpecification": 1,
+    "name": "point2homes-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Point2Homes Scraper",
+    "description": "Browse Point2Homes (US/Canada) rental listings by location, and extract full listing/apartment-complex detail -- no account or API key needed.",
+    "categories": ["REAL_ESTATE", "LEAD_GENERATION"],
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

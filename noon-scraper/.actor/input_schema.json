@@ -1,0 +1,272 @@
+{
+    "title": "noon.com Scraper",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "mode": {
+            "title": "What do you want to scrape?",
+            "type": "string",
+            "description": "Pick one job per run. Search / Category / Brand return product listings. Product detail and Seller offers take SKUs or product URLs. Category tree and Filters & facets are research helpers. noon Minutes searches the 15-minute grocery catalogue instead of the main marketplace.",
+            "editor": "select",
+            "default": "search",
+            "enum": [
+                "search",
+                "category",
+                "brand",
+                "product",
+                "offers",
+                "categoryTree",
+                "facets",
+                "minutesSearch"
+            ],
+            "enumTitles": [
+                "Search - products for a keyword",
+                "Category - products in a category",
+                "Brand - products from a brand",
+                "Product detail - full PDP for a SKU",
+                "Seller offers - every seller selling a SKU",
+                "Category tree - noon's whole category hierarchy",
+                "Filters & facets - brands and filters in a category",
+                "noon Minutes - 15-minute grocery search"
+            ]
+        },
+        "searchKeywords": {
+            "title": "Search keywords",
+            "type": "array",
+            "description": "Used by Search, Filters & facets and noon Minutes. One keyword per line, for example: iphone",
+            "editor": "stringList",
+            "prefill": [
+                "iphone"
+            ]
+        },
+        "categoryPaths": {
+            "title": "Category paths or URLs",
+            "type": "array",
+            "description": "Used by Category, Category tree and Filters & facets. Paste a noon category URL or just its path, for example: electronics-and-mobiles/mobiles-and-accessories/mobiles-20905/smartphones",
+            "editor": "stringList",
+            "prefill": [
+                "electronics-and-mobiles"
+            ]
+        },
+        "brandCodes": {
+            "title": "Brand codes",
+            "type": "array",
+            "description": "Used by Brand. The brand's code as it appears in its noon URL, lowercase, for example: apple",
+            "editor": "stringList",
+            "prefill": [
+                "apple"
+            ]
+        },
+        "productSkus": {
+            "title": "Product SKUs or product URLs",
+            "type": "array",
+            "description": "Used by Product detail and Seller offers. Paste a full noon product URL or just the SKU, for example: N70211544V",
+            "editor": "stringList",
+            "prefill": [
+                "N70211544V"
+            ]
+        },
+        "targets": {
+            "title": "Targets (generic)",
+            "type": "array",
+            "description": "Optional. A single list that is routed into whichever field the chosen mode needs, so this actor can be chained from another one without rewiring the input.",
+            "editor": "stringList"
+        },
+        "country": {
+            "title": "Country",
+            "type": "string",
+            "description": "Which noon storefront to read. This sets the catalogue, the prices and the currency.",
+            "editor": "select",
+            "default": "ae",
+            "enum": [
+                "ae",
+                "sa",
+                "eg",
+                "kw",
+                "qa",
+                "bh",
+                "om"
+            ],
+            "enumTitles": [
+                "United Arab Emirates (AED)",
+                "Saudi Arabia (SAR)",
+                "Egypt (EGP)",
+                "Kuwait (KWD)",
+                "Qatar (QAR)",
+                "Bahrain (BHD)",
+                "Oman (OMR)"
+            ]
+        },
+        "language": {
+            "title": "Language",
+            "type": "string",
+            "description": "English or Arabic product titles and descriptions. Prices are identical either way.",
+            "editor": "select",
+            "default": "en",
+            "enum": [
+                "en",
+                "ar"
+            ],
+            "enumTitles": [
+                "English",
+                "Arabic"
+            ]
+        },
+        "maxItems": {
+            "title": "Maximum items",
+            "type": "integer",
+            "description": "Stop after this many records in total. Leave empty or 0 for no limit.",
+            "editor": "number",
+            "minimum": 0,
+            "default": 200
+        },
+        "maxPages": {
+            "title": "Maximum pages per input",
+            "type": "integer",
+            "description": "How deep to paginate each keyword, category or brand. noon stops serving results after page 50 no matter what is set here.",
+            "editor": "number",
+            "minimum": 1,
+            "maximum": 50,
+            "default": 10
+        },
+        "limitPerPage": {
+            "title": "Products per page",
+            "type": "integer",
+            "description": "How many products to request per page. noon accepts up to 200 and quietly caps anything higher, so 200 means four times fewer requests than the website's own 50.",
+            "editor": "number",
+            "minimum": 1,
+            "maximum": 200,
+            "default": 200
+        },
+        "sortBy": {
+            "title": "Sort by",
+            "type": "string",
+            "description": "Ordering for listing modes. Popularity is noon's own default.",
+            "editor": "select",
+            "default": "popularity",
+            "enum": [
+                "popularity",
+                "price",
+                "new_arrivals",
+                "discount",
+                "rating"
+            ],
+            "enumTitles": [
+                "Popularity (noon default)",
+                "Price",
+                "New arrivals",
+                "Discount",
+                "Rating"
+            ]
+        },
+        "sortDir": {
+            "title": "Sort direction",
+            "type": "string",
+            "description": "Ascending or descending. Only applies when Sort by is not Popularity.",
+            "editor": "select",
+            "default": "desc",
+            "enum": [
+                "asc",
+                "desc"
+            ],
+            "enumTitles": [
+                "Ascending (cheapest first)",
+                "Descending (most expensive first)"
+            ]
+        },
+        "priceMin": {
+            "title": "Minimum price",
+            "type": "integer",
+            "description": "Optional price floor, in the selected country's currency.",
+            "editor": "number",
+            "minimum": 0
+        },
+        "priceMax": {
+            "title": "Maximum price",
+            "type": "integer",
+            "description": "Optional price ceiling, in the selected country's currency.",
+            "editor": "number",
+            "minimum": 0
+        },
+        "brandFilter": {
+            "title": "Filter by brand",
+            "type": "string",
+            "description": "Optional. Narrow Search and Category results to one brand, using the brand's lowercase code, for example: apple",
+            "editor": "textfield"
+        },
+        "concurrency": {
+            "title": "Concurrent requests",
+            "type": "integer",
+            "description": "How many product pages to fetch at once in Product detail and Seller offers modes.",
+            "editor": "number",
+            "minimum": 1,
+            "maximum": 10,
+            "default": 4
+        },
+        "instantLat": {
+            "title": "noon Minutes: latitude",
+            "type": "string",
+            "description": "Advanced, noon Minutes only. Delivery point latitude as noon encodes it (degrees times 10 million). The default is Downtown Dubai.",
+            "editor": "textfield",
+            "sectionCaption": "noon Minutes delivery zone"
+        },
+        "instantLng": {
+            "title": "noon Minutes: longitude",
+            "type": "string",
+            "description": "Advanced, noon Minutes only. Delivery point longitude as noon encodes it (degrees times 10 million).",
+            "editor": "textfield"
+        },
+        "instantEcomZone": {
+            "title": "noon Minutes: zone code",
+            "type": "string",
+            "description": "Advanced, noon Minutes only. Overrides the delivery zone, for example AE_DXB-S14.",
+            "editor": "textfield"
+        },
+        "instantZoneCode": {
+            "title": "noon Minutes: warehouse code",
+            "type": "string",
+            "description": "Advanced, noon Minutes only. Overrides which dark store's stock is read, for example W00050759A.",
+            "editor": "textfield"
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "description": "Leave this off for search, category, brand, product, seller offers, category tree and filters - they do not need a proxy. Switch on Residential proxy (in the country you want) for noon Minutes, which noon serves only to ordinary consumer connections.",
+            "editor": "proxy",
+            "default": {
+                "useApifyProxy": false
+            },
+            "sectionCaption": "Advanced network settings"
+        },
+        "maxRetries": {
+            "title": "Maximum retries",
+            "type": "integer",
+            "description": "How many times to retry a failed request before giving up on it and writing an error row.",
+            "editor": "number",
+            "minimum": 1,
+            "maximum": 10,
+            "default": 4
+        },
+        "requestTimeoutSecs": {
+            "title": "Request timeout (seconds)",
+            "type": "integer",
+            "description": "How long to wait for a single response before treating it as failed.",
+            "editor": "number",
+            "minimum": 5,
+            "maximum": 300,
+            "default": 60
+        },
+        "requestDelaySecs": {
+            "title": "Delay between requests (seconds)",
+            "type": "integer",
+            "description": "Optional pause before each request. Leave at 0 unless you are deliberately running slowly.",
+            "editor": "number",
+            "minimum": 0,
+            "maximum": 60,
+            "default": 0
+        }
+    },
+    "required": [
+        "mode"
+    ]
+}

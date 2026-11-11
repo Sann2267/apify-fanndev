@@ -1,0 +1,22 @@
+{
+    "actorSpecification": 1,
+    "name": "blibli-dropshipper-sync",
+    "version": "0.1",
+    "buildTag": "latest",
+    "title": "Blibli Drop-shipper Data Sync",
+    "description": "Keep your reseller catalogue accurate: bulk-check Blibli prices, stock and descriptions for the SKUs you sell, and get exactly what changed since the last run - price moves, stock flips and removed listings. No login needed.",
+    "categories": ["ECOMMERCE"],
+    "minMemoryMbytes": 256,
+    "maxMemoryMbytes": 4096,
+    "defaultRunOptions": {
+        "build": "latest",
+        "memoryMbytes": 1024,
+        "timeoutSecs": 3600
+    },
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

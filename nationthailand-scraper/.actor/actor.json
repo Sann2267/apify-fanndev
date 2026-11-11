@@ -1,0 +1,14 @@
+{
+    "actorSpecification": 1,
+    "name": "nationthailand-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "The Nation Thailand Scraper",
+    "description": "Extract full article text or the newest headlines from The Nation Thailand (nationthailand.com), a major Thai English-language business/general daily -- no account or API key needed.",
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

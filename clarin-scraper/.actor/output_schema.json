@@ -1,0 +1,130 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Article / latest-headline record",
+        "description": "Raw-passthrough dataset envelope. Every record carries _input/_source/_scrapedAt (and _error/_errorDetail on failures). Article-mode records (S1-jsonld+html) carry headline/articleBody-style fields; latest-mode records (S2-sitemap) carry title/link-style fields from the Google News sitemap.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The exact input value (URL, or 'latest') that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which extraction strategy emitted this record (e.g. S1-jsonld+html, S2-sitemap)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed extractions -- the error kind."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "headline": {
+                "title": "Headline",
+                "description": "Article headline (from ld+json NewsArticle node)."
+            },
+            "description": {
+                "title": "Description",
+                "description": "Short article description/dek."
+            },
+            "articleBody": {
+                "title": "Article body",
+                "description": "Full article text, joined from <p> tags inside #cuerpo (NOT the ld+json articleBody field, which was found to strip commas from numbers e.g. '1,8%' -> '18%'). Boilerplate lines (JS warning, subscribers-only badge, newsletter CTA, print-edition footer) are filtered out. Always the complete article regardless of paywall status -- Clarin server-renders full HTML even for paywalled pieces."
+            },
+            "author": {
+                "title": "Author",
+                "description": "Author name(s), joined comma-separated when ld+json author is a Person list; single org name for wire-style news."
+            },
+            "publisher": {
+                "title": "Publisher",
+                "description": "Publisher name, extracted from the ld+json publisher object's name."
+            },
+            "datePublished": {
+                "title": "Date published",
+                "description": "ISO 8601 publish date, from ld+json."
+            },
+            "dateModified": {
+                "title": "Date modified",
+                "description": "ISO 8601 last-modified date, from ld+json."
+            },
+            "articleSection": {
+                "title": "Section",
+                "description": "Article section/category, from ld+json."
+            },
+            "keywords": {
+                "title": "Keywords",
+                "description": "List of keywords, split from the ld+json comma-separated keywords string."
+            },
+            "image": {
+                "title": "Image",
+                "description": "Lead image URL, picked from the first ld+json image list item with a url."
+            },
+            "isAccessibleForFree": {
+                "title": "Accessible for free",
+                "description": "Upstream ld+json paywall flag -- a genuine mixed signal on this site (both true and false observed). Never means truncated text; articleBody is always complete regardless."
+            },
+            "_paywalled": {
+                "title": "Paywalled",
+                "description": "True when isAccessibleForFree is explicitly false."
+            },
+            "title": {
+                "title": "Title",
+                "description": "Headline from the Google News sitemap news:title (latest mode)."
+            },
+            "link": {
+                "title": "Link",
+                "description": "Article URL, from sitemap <loc> (latest mode)."
+            },
+            "publicationDate": {
+                "title": "Publication date",
+                "description": "Sitemap news:publication_date string (latest mode)."
+            },
+            "imageUrl": {
+                "title": "Image URL",
+                "description": "Sitemap image:loc value (latest mode)."
+            },
+            "imageCaption": {
+                "title": "Image caption",
+                "description": "Sitemap image:caption value, CDATA-wrapped upstream and passed through as-is (latest mode)."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across both article and latest-headline records.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "_source",
+                    "_scrapedAt",
+                    "headline",
+                    "title",
+                    "link",
+                    "datePublished",
+                    "publicationDate",
+                    "author",
+                    "_paywalled",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

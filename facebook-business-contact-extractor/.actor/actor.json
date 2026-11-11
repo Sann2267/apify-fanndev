@@ -1,0 +1,23 @@
+{
+    "actorSpecification": 1,
+    "name": "facebook-business-contact-extractor",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Facebook Business Contact Extractor",
+    "description": "Pull public contact details from Facebook business pages at scale: email, phone, website, address, category, price range, services and followers. Feed it a list of pages, or discover them by keyword and country through the Ad Library, since Facebook's page search is closed to logged-out clients.",
+    "categories": [
+        "LEAD_GENERATION",
+        "BUSINESS"
+    ],
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json",
+    "defaultRunOptions": {
+        "build": "latest",
+        "timeoutSecs": 3600,
+        "memoryMbytes": 2048
+    }
+}

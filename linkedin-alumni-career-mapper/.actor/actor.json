@@ -1,0 +1,14 @@
+{
+    "actorSpecification": 1,
+    "name": "linkedin-alumni-career-mapper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "LinkedIn University Alumni Career Mapper",
+    "description": "Map where a university's graduates ended up: employer, role, location and graduation year, aggregated into top employers and destinations. Requires your own li_at session cookie - LinkedIn blocks school pages outright for logged-out visitors.",
+    "categories": ["LEAD_GENERATION", "BUSINESS"],
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": { "dataset": "./output_schema.json" },
+    "output": "./actor_output_links.json",
+    "defaultRunOptions": { "build": "latest", "memoryMbytes": 1024, "timeoutSecs": 7200 }
+}

@@ -1,0 +1,14 @@
+{
+    "actorSpecification": 1,
+    "name": "jamaica-coj-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Jamaica COJ Business Registry Scraper",
+    "description": "Search the Companies Office of Jamaica (COJ) register by company/business name or registration number and pull each matching entity's registration details: registration number, status, entity type, registration date, registered address, and officer on file. No account or API key needed.",
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

@@ -1,0 +1,85 @@
+{
+    "title": "Klikindomaret (Indomaret Xpress) Scraper",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "mode": {
+            "title": "Mode",
+            "type": "string",
+            "description": "What to extract. 'productSearch' = product listings by keyword or category (with price, discount, promo, stock). 'categoryTree' = the full category hierarchy. 'promoBanners' = homepage promo banners plus the promo-type filters. 'searchSuggestions' = popular keywords and recommendations. 'stores' = resolve store/area info for one or more district IDs.",
+            "editor": "select",
+            "enum": ["productSearch", "categoryTree", "promoBanners", "searchSuggestions", "stores"],
+            "enumTitles": [
+                "Product search (keyword / category)",
+                "Category tree",
+                "Promo banners",
+                "Search suggestions",
+                "Stores (resolve by district)"
+            ],
+            "default": "productSearch"
+        },
+        "searchTerms": {
+            "title": "Search terms",
+            "type": "array",
+            "description": "productSearch mode. Keywords to sweep, e.g. [\"indomie\", \"susu\"]. Each is paged until exhausted or Max items. If left empty and no Category IDs are given, the run falls back to the keyword 'indomie'.",
+            "editor": "stringList",
+            "prefill": ["indomie"],
+            "default": ["indomie"]
+        },
+        "categoryIds": {
+            "title": "Category IDs",
+            "type": "array",
+            "description": "productSearch mode. Category IDs to list products for (get them from a 'categoryTree' run's `id` field). Combined with searchTerms if both are given.",
+            "editor": "stringList",
+            "default": []
+        },
+        "storeCode": {
+            "title": "Store code",
+            "type": "string",
+            "description": "Optional. The Indomaret Xpress store to scope catalog data to (e.g. 'TJKT'). Leave empty to resolve automatically from District ID. Everything on this site is store-scoped (click-and-collect).",
+            "editor": "textfield"
+        },
+        "districtId": {
+            "title": "District ID",
+            "type": "string",
+            "description": "Optional. Indonesian district (kecamatan) ID used to resolve the nearest store when Store code is empty. Defaults to 141100100 (Gambir, Jakarta Pusat).",
+            "editor": "textfield"
+        },
+        "districtIds": {
+            "title": "District IDs (stores mode)",
+            "type": "array",
+            "description": "stores mode only. One or more district IDs to resolve store/area info for.",
+            "editor": "stringList",
+            "default": []
+        },
+        "latitude": {
+            "title": "Latitude",
+            "type": "string",
+            "description": "Optional. Latitude for the store context. Auto-resolved from the store/district when empty.",
+            "editor": "textfield"
+        },
+        "longitude": {
+            "title": "Longitude",
+            "type": "string",
+            "description": "Optional. Longitude for the store context. Auto-resolved from the store/district when empty.",
+            "editor": "textfield"
+        },
+        "maxItems": {
+            "title": "Max items",
+            "type": "integer",
+            "description": "Stop after this many records (per query in productSearch mode). 0 means no limit -- scrape until the source is exhausted.",
+            "editor": "number",
+            "minimum": 0,
+            "prefill": 100,
+            "default": 0
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "description": "Klikindomaret is behind Cloudflare + AWS WAF. Apify Residential proxy with country 'ID' is recommended for reliability; short runs often succeed without a proxy.",
+            "editor": "proxy",
+            "default": { "useApifyProxy": true, "apifyProxyGroups": ["RESIDENTIAL"] }
+        }
+    },
+    "required": ["mode"]
+}

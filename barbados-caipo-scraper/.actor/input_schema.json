@@ -1,0 +1,151 @@
+{
+    "title": "Barbados CAIPO Business Registry Scraper",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "query": {
+            "title": "Company name or registration number",
+            "type": "string",
+            "editor": "textfield",
+            "description": "A single business/company name (or partial name) or CAIPO registration number to search for.",
+            "prefill": "Bank"
+        },
+        "queries": {
+            "title": "Company names or registration numbers",
+            "type": "array",
+            "editor": "stringList",
+            "description": "Multiple names/registration numbers to search for in one run. Combined with 'query' if both are set."
+        },
+        "searchField": {
+            "title": "Search field",
+            "type": "string",
+            "editor": "select",
+            "description": "Whether 'query'/'queries' values are company names or registration numbers.",
+            "enum": ["name", "number"],
+            "enumTitles": ["Company name", "Registration number"],
+            "default": "name",
+            "prefill": "name"
+        },
+        "condition": {
+            "title": "Match condition",
+            "type": "string",
+            "editor": "select",
+            "description": "How the query text is matched against the search field.",
+            "enum": ["Contains", "Equals", "Starts with"],
+            "default": "Contains",
+            "prefill": "Contains"
+        },
+        "category": {
+            "title": "Register category filter",
+            "type": "string",
+            "editor": "select",
+            "description": "Optionally restrict results to one CAIPO register category. Leave blank for all categories. Can be used alone (without a name/number query) to list an entire category.",
+            "enum": [
+                "",
+                "AMALGAMATED EXEMPT MANAGEMENT REGISTER ",
+                "AMALGAMATED SRL ",
+                "AMALGAMATION (DOMESTIC) REGISTER ",
+                "AMALGAMATION (EXEMPT INS.) REGISTER ",
+                "AMALGAMATION (I.B.C.) REGISTER ",
+                "AMALGAMATION (OFF-SHORE BANK) REGISTER",
+                "BUSINESS NAMES  ",
+                "CHARITY REGISTER ",
+                "DISCONTINUANCE UNDER SEC. 356.6 ",
+                "DOMESTIC REGISTER ",
+                "DOMESTIC REGISTER - FOREIGN CURR. PERMIT",
+                "DOMESTIC SOCIETY (SRL) REGISTER ",
+                "Exempt Charity ",
+                "EXEMPT INSURANCE HOLDING REGISTER ",
+                "EXEMPT INSURANCE MANAGEMENT REGISTER ",
+                "EXEMPT INSURANCE REGISTER ",
+                "EXEMPT SOCIETY (SRL) REGISTER ",
+                "EXTERNAL COMPANY REGISTER ",
+                "EXTERNAL EXEMPT INSURANCE REGISTER ",
+                "EXTERNAL I.B.C. REGISTER ",
+                "EXTERNAL NON-PROFIT REGISTER ",
+                "EXTERNAL REGISTER - FOREIGN CURR. PERMIT ",
+                "FOREIGN SALES CORPORATION REGISTER ",
+                "FORMER ACT COMPANIES (NOT CONTINUED) ",
+                "INTERNATIONAL BUSINESS COMPANY ",
+                "NON PROFIT REGISTER ",
+                "OFF-SHORE BANK REGISTER ",
+                "PHARMACIES REGISTER ",
+                "PRIVATE TRUST COMPANY ",
+                "QUALIFYING INSURANCE COMPANY REGISTER ",
+                "REINCORPORATION REGISTER",
+                "SRL REGISTER - FOREIGN CURRENCY PERMIT ",
+                "TRADE UNION REGISTER "
+            ],
+            "enumTitles": [
+                "All categories",
+                "Amalgamated exempt management register",
+                "Amalgamated SRL",
+                "Amalgamation (domestic) register",
+                "Amalgamation (exempt insurance) register",
+                "Amalgamation (I.B.C.) register",
+                "Amalgamation (off-shore bank) register",
+                "Business names",
+                "Charity register",
+                "Discontinuance under sec. 356.6",
+                "Domestic register",
+                "Domestic register - foreign currency permit",
+                "Domestic society (SRL) register",
+                "Exempt charity",
+                "Exempt insurance holding register",
+                "Exempt insurance management register",
+                "Exempt insurance register",
+                "Exempt society (SRL) register",
+                "External company register",
+                "External exempt insurance register",
+                "External I.B.C. register",
+                "External non-profit register",
+                "External register - foreign currency permit",
+                "Foreign sales corporation register",
+                "Former act companies (not continued)",
+                "International business company",
+                "Non profit register",
+                "Off-shore bank register",
+                "Pharmacies register",
+                "Private trust company",
+                "Qualifying insurance company register",
+                "Reincorporation register",
+                "SRL register - foreign currency permit",
+                "Trade union register"
+            ],
+            "default": "",
+            "prefill": ""
+        },
+        "maxResultsPerQuery": {
+            "title": "Max results per query",
+            "type": "integer",
+            "description": "Maximum number of matched rows to return per query. The registry itself caps any single search at 2,000 rows (returns 'truncated: true' beyond that) -- refine your query/category if you hit that ceiling.",
+            "default": 100,
+            "minimum": 1,
+            "maximum": 2000,
+            "prefill": 100
+        },
+        "maxConcurrency": {
+            "title": "Max concurrent workers",
+            "type": "integer",
+            "description": "How many search requests to run in parallel.",
+            "default": 3,
+            "minimum": 1,
+            "maximum": 10,
+            "prefill": 3
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "editor": "proxy",
+            "description": "Apify Proxy configuration. Residential is on by default.",
+            "default": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            },
+            "prefill": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            }
+        }
+    }
+}

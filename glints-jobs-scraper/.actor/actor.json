@@ -1,0 +1,23 @@
+{
+    "actorSpecification": 1,
+    "name": "glints-jobs-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Glints Jobs & Company Scraper (Southeast Asia)",
+    "description": "Scrape jobs and employers from Glints across Indonesia, Singapore, Vietnam, Malaysia, the Philippines and Taiwan. Keyword search with full filters, job detail with salary and benefits, company profiles with every open vacancy, whole-corpus crawl and market facets. No login needed.",
+    "categories": [
+        "JOBS",
+        "BUSINESS"
+    ],
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json",
+    "defaultRunOptions": {
+        "build": "latest",
+        "memoryMbytes": 512,
+        "timeoutSecs": 3600
+    }
+}

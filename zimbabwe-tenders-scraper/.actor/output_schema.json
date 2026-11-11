@@ -1,0 +1,159 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "PRAZ eGP tender/award record",
+        "description": "Raw-passthrough dataset envelope. Record shape depends on 'mode': 'latest'/'former' rows come from the Live Tenders / Former Opportunities bulletin boards (columns read live from the site's own table headers); 'awards' rows come from the Award Notices board; 'detail' rows are a single on-demand tender or award lookup. Every record carries _input/_source/_scrapedAt (and _error/_errorDetail on failures). List-mode rows optionally carry a merged 'detail' object with every labeled field from the item's own detail page.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "'latest' / 'former' / 'awards' for those modes, or the exact tender/award ID or URL requested in 'detail' mode."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which extraction strategy emitted this record (S1-live-tenders-html, S1-former-tenders-html, S1-award-notices-html, S1-tender-detail-html, S1-award-detail-html, or 'none' on failure)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed/degraded records: http_<code>, unexpected_shape, blocked_or_transient, or invalid_input."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "_id": {
+                "title": "Row ID",
+                "description": "(list modes) The tender or award ID extracted from this row's own detail link."
+            },
+            "_detailUrl": {
+                "title": "Detail page URL",
+                "description": "(list modes) Full URL of this row's detail page on egp.praz.org.zw."
+            },
+            "tenderId": {
+                "title": "Tender ID",
+                "description": "(latest/former mode column, or detail mode) PRAZ's internal numeric tender identifier."
+            },
+            "tenderReferenceNumber": {
+                "title": "Tender reference number",
+                "description": "(latest/former mode) The procuring entity's own reference code, e.g. 'ZETDC/INTER/28/2025'."
+            },
+            "tenderTitle": {
+                "title": "Tender title",
+                "description": "(latest/former mode) Full tender title/description."
+            },
+            "requiredSupplierCategoryCode": {
+                "title": "Required supplier category code",
+                "description": "(latest/former mode) e.g. 'GE001'."
+            },
+            "requiredSupplierCategoryName": {
+                "title": "Required supplier category name",
+                "description": "(latest/former mode) e.g. 'Electrical Products: Cables and Materials, ...'."
+            },
+            "procuringEntity": {
+                "title": "Procuring entity",
+                "description": "(latest/former mode) The government body/parastatal running this tender."
+            },
+            "scope": {
+                "title": "Scope",
+                "description": "(latest mode) e.g. 'Open', 'International'."
+            },
+            "publishDate": {
+                "title": "Publish date",
+                "description": "(latest/former mode) Raw date string as shown on the site, e.g. '13-Dec-2025 06:00 AM'."
+            },
+            "closingDate": {
+                "title": "Closing date",
+                "description": "(latest/former mode) Bid closing date/time, raw site string."
+            },
+            "status": {
+                "title": "Status",
+                "description": "(former mode) e.g. 'Closed', 'Awarded', 'Cancelled'."
+            },
+            "action": {
+                "title": "Action column",
+                "description": "(former mode) Raw text/label of the row's action column (often blank; 'View Summary Report' when summaryReportUrl is present)."
+            },
+            "summaryReportUrl": {
+                "title": "Summary report URL",
+                "description": "(former mode, when present) Link to this tender's award summary report."
+            },
+            "awardNoticeNumber": {
+                "title": "Award notice number",
+                "description": "(awards mode column, or detail mode) PRAZ's internal numeric award notice identifier."
+            },
+            "awardTitle": {
+                "title": "Award title",
+                "description": "(awards mode) Title of the awarded contract."
+            },
+            "awardee": {
+                "title": "Awardee",
+                "description": "(awards mode) Name of the winning supplier/company."
+            },
+            "awardDate": {
+                "title": "Award date",
+                "description": "(awards mode) Raw date string, e.g. '26-Aug-2026'."
+            },
+            "detail": {
+                "title": "Full item detail",
+                "description": "(latest/former/awards mode, when fetchDetails=true) The enriched detail-page object ({fields, rawFields, lineItems}) for this row, present only when its detail page was accessible (see detailError otherwise)."
+            },
+            "detailError": {
+                "title": "Detail fetch error",
+                "description": "(latest/former/awards mode) Set instead of 'detail' when the item's detail page could not be fetched or parsed."
+            },
+            "fields": {
+                "title": "Detail fields",
+                "description": "(detail mode, or nested under 'detail') All detail-page fields as a flat object, keyed by a camelCase version of the site's own field label (e.g. 'procurementMethod', 'bidSecurityAmountDomestic', 'contractAmount'). Field set varies by tender/award type -- this is not a fixed schema."
+            },
+            "rawFields": {
+                "title": "Detail fields (raw label/value pairs)",
+                "description": "(detail mode, or nested under 'detail') The same detail-page fields as an ordered array of {label, value}, preserving the exact on-site label text verbatim."
+            },
+            "lineItems": {
+                "title": "Line item breakdown",
+                "description": "(detail mode, or nested under 'detail', when present) The tender/award's 'Line Item Details' table (item number, UNSPSC code, lot name/description, quantity, unit of measure), as an array of objects keyed from the table's own headers."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across latest/former/awards/detail records.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "_id",
+                    "tenderId",
+                    "awardNoticeNumber",
+                    "tenderTitle",
+                    "awardTitle",
+                    "tenderReferenceNumber",
+                    "procuringEntity",
+                    "awardee",
+                    "publishDate",
+                    "closingDate",
+                    "awardDate",
+                    "status",
+                    "_detailUrl",
+                    "detailError",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

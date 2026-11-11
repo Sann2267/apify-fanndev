@@ -1,0 +1,124 @@
+{
+    "title": "Steam Profile & Achievement Extractor",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "mode": {
+            "title": "What to extract",
+            "type": "string",
+            "description": "profiles = public profile for each Steam user (name, avatar, level, VAC/trade ban flags, member since, location, counts of games/badges/friends/reviews, recent games with hours and achievement progress, showcase stats). userAchievements = every achievement of each user in the games you list (or their recently played games), with unlock time, global rarity and completion stats. gameAchievements = the full achievement list of each game with the global unlock % of every achievement (no user needed). friends = public friends list of each user. badges = all badges of each user with level, XP and unlock date. groupMembers = SteamIDs of the members of Steam groups (optionally with each member's profile).",
+            "editor": "select",
+            "enum": ["profiles", "userAchievements", "gameAchievements", "friends", "badges", "groupMembers"],
+            "enumTitles": [
+                "Profiles",
+                "Player achievements (per user & game)",
+                "Game achievements with global rarity",
+                "Friends lists",
+                "Badges",
+                "Group members"
+            ],
+            "default": "profiles",
+            "prefill": "profiles"
+        },
+        "profiles": {
+            "title": "Steam users (profiles, userAchievements, friends, badges)",
+            "type": "array",
+            "editor": "stringList",
+            "description": "One per line, any format: SteamID64 (76561197960435530), profile URL (steamcommunity.com/id/robinwalker or /profiles/7656...), custom URL name (robinwalker), STEAM_0:0:84901, [U:1:169802] or a 32-bit account id.",
+            "prefill": ["https://steamcommunity.com/id/robinwalker/", "76561198025320595"]
+        },
+        "appIds": {
+            "title": "Games (userAchievements, gameAchievements)",
+            "type": "array",
+            "editor": "stringList",
+            "description": "One per line: a Steam appid (1245620) or a Steam store / community app URL. For userAchievements leave empty to use each user's recently played games instead (Steam no longer shows the full owned-games list without login).",
+            "prefill": ["1245620"]
+        },
+        "groups": {
+            "title": "Steam groups (groupMembers)",
+            "type": "array",
+            "editor": "stringList",
+            "description": "One per line: a group URL (steamcommunity.com/groups/Valve), the group's URL name (Valve) or its 18-digit group id.",
+            "prefill": ["https://steamcommunity.com/groups/Valve"]
+        },
+        "maxItems": {
+            "title": "Max items per user / group",
+            "type": "integer",
+            "description": "Cap on friends (friends), badges (badges) or members (groupMembers) returned for each input.",
+            "default": 1000,
+            "minimum": 1,
+            "maximum": 1000000
+        },
+        "maxGamesPerProfile": {
+            "title": "Max recent games per user (userAchievements)",
+            "type": "integer",
+            "description": "When no games are listed, how many of each user's recently played games to read achievements for.",
+            "default": 10,
+            "minimum": 1,
+            "maximum": 50
+        },
+        "flattenAchievements": {
+            "title": "One row per achievement",
+            "type": "boolean",
+            "description": "userAchievements / gameAchievements: output one dataset row per achievement instead of one row per game with an 'achievements' list. Easier for spreadsheets.",
+            "default": false
+        },
+        "onlyUnlocked": {
+            "title": "Only unlocked achievements (userAchievements)",
+            "type": "boolean",
+            "description": "Keep only the achievements the player has unlocked. Completion stats still count every achievement.",
+            "default": false
+        },
+        "includeProfilePage": {
+            "title": "Add level, counts & recent games (profiles)",
+            "type": "boolean",
+            "description": "profiles: also read each public profile page for Steam level, favourite badge, counts (games, badges, friends, reviews, screenshots...), recent games with hours on record and achievement progress, and showcase stats. Profile pages are rate-limited by Steam per IP, so turn this off for a fast XML-only run over thousands of users.",
+            "default": true
+        },
+        "includeEquippedItems": {
+            "title": "Add equipped profile items (profiles)",
+            "type": "boolean",
+            "description": "profiles: add the equipped profile background, avatar frame, animated avatar and mini-profile background (one extra fast request per user).",
+            "default": false
+        },
+        "enrichProfiles": {
+            "title": "Add each member's / friend's profile (groupMembers, friends)",
+            "type": "boolean",
+            "description": "Add name, privacy, VAC ban flag, member-since date, location and avatar of every friend or group member (one extra request each; not rate-limited).",
+            "default": false
+        },
+        "language": {
+            "title": "Achievement language",
+            "type": "string",
+            "description": "Language for achievement names and descriptions (Steam API language code). Games without a translation fall back to English.",
+            "editor": "select",
+            "enum": ["english", "german", "french", "italian", "spanish", "latam", "portuguese", "brazilian", "russian", "polish", "turkish", "ukrainian", "dutch", "danish", "swedish", "norwegian", "finnish", "czech", "hungarian", "romanian", "bulgarian", "greek", "japanese", "koreana", "schinese", "tchinese", "thai", "vietnamese", "indonesian", "arabic"],
+            "default": "english"
+        },
+        "maxConcurrency": {
+            "title": "Max concurrency",
+            "type": "integer",
+            "description": "Parallel requests. Profile/friends/badges pages are additionally limited to 2 at a time without a proxy, because Steam rate-limits them per IP.",
+            "default": 8,
+            "minimum": 1,
+            "maximum": 20
+        },
+        "maxRetries": {
+            "title": "Max retries per request",
+            "type": "integer",
+            "description": "How many times a rate-limited or failed request is retried before the input is reported as an ERROR row.",
+            "default": 6,
+            "minimum": 1,
+            "maximum": 15
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "editor": "proxy",
+            "description": "Steam has no bot protection, but it rate-limits profile, friends and badges pages per IP (HTTP 429, then a short Akamai block). With a proxy each rate-limit switches to a new IP immediately; without one the run waits the limit out (~45 s each). Residential proxy recommended for large profile runs.",
+            "prefill": {"useApifyProxy": true, "apifyProxyGroups": ["RESIDENTIAL"]},
+            "default": {"useApifyProxy": true, "apifyProxyGroups": ["RESIDENTIAL"]}
+        }
+    },
+    "required": ["mode"]
+}

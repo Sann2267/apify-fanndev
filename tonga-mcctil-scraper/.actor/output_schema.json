@@ -1,0 +1,198 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Tonga Business Registry entity search / profile record",
+        "description": "Raw-passthrough dataset envelope. Every record carries _input/_source/_scrapedAt (and _error/_errorDetail on failures). Search-only records (fetchProfiles off, _source=S1-searchcorp) carry the lightweight SearchCorp fields; enriched records (_source=S1-searchcorp+profile or S2-profile-direct) additionally carry the full GetCorpProfile response spread at top level (Corp, Addresses, Activities, CorpFilings, Directors, Members/shareholders, ShareAllotments, Officers, Secretaries, Owners, BeneficialOwners, ...). Directors/Members/ShareAllotments/Addresses/CorpFilings come back populated for anonymous access on this registry; Officers/Secretaries/Owners/BeneficialOwners were empty on every entity tested.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The search term or CorpId that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "S1-searchcorp (search result only), S1-searchcorp+profile (search result enriched with full profile), S2-profile-direct (profile fetched directly from an input CorpId), or none (error record)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed extractions: not_found (nonexistent CorpId), no_results (search term matched nothing), or blocked_or_transient (network/token issue)."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "CorpId": {
+                "title": "Entity ID",
+                "description": "Tonga Registry internal GUID identifying this entity. Use as input in 'corpIds' for a direct profile lookup in a later run."
+            },
+            "Name": {
+                "title": "Entity name",
+                "description": "Registered name, from the search result."
+            },
+            "AltName": {
+                "title": "Alternate name",
+                "description": "Alternate/trading name, if any (search result)."
+            },
+            "NameMatch": {
+                "title": "Matched name",
+                "description": "The specific name value the search term matched against (may differ from Name on a prior-name match)."
+            },
+            "RegistrationNumber": {
+                "title": "Registration number",
+                "description": "Entity registration number, e.g. \"BL612\", \"OC9000008\"."
+            },
+            "RegistrationNumberFormatted": {
+                "title": "Registration number (formatted)",
+                "description": "Display-formatted registration number (search result)."
+            },
+            "RegistrationDateFormatted": {
+                "title": "Registration date",
+                "description": "Registration date, DD/MM/YYYY (search result)."
+            },
+            "Type": {
+                "title": "Entity type",
+                "description": "e.g. \"Company\", \"Business Licence\", \"Overseas Company\", \"Foreign Certificate - ...\" (search result)."
+            },
+            "TypeId": {
+                "title": "Entity type ID",
+                "description": "Numeric code for Type (search result)."
+            },
+            "Status": {
+                "title": "Status",
+                "description": "e.g. \"Registered\" (search result)."
+            },
+            "StatusId": {
+                "title": "Status ID",
+                "description": "Numeric code for Status (search result)."
+            },
+            "IsPriorRegistered": {
+                "title": "Was prior-registered",
+                "description": "Whether this entity was registered under a prior system (search result)."
+            },
+            "PriorNames": {
+                "title": "Prior names",
+                "description": "List of previous registered names, if any (search result)."
+            },
+            "BusinessActivities": {
+                "title": "Business activities",
+                "description": "List of declared business activity categories (search result)."
+            },
+            "FormatedBusinessActivities": {
+                "title": "Business activities (formatted)",
+                "description": "Comma-joined business activities string (search result; upstream field name spelled as-is)."
+            },
+            "RegisteredOfficerAddress": {
+                "title": "Registered office address",
+                "description": "Single-line registered office address (search result)."
+            },
+            "InactiveDateFormatted": {
+                "title": "Inactive date",
+                "description": "Date the entity became inactive, if applicable (search result)."
+            },
+            "ReportDueDateFormatted": {
+                "title": "Report due date",
+                "description": "Annual report due date at time of search (search result)."
+            },
+            "TypeCode": {
+                "title": "Type code",
+                "description": "Upstream type code field (search result; frequently null)."
+            },
+            "Corp": {
+                "title": "Entity detail",
+                "description": "Full entity detail object from GetCorpProfile: CompanyName, RegistrationNumber, CompanyType, Status, RegistrationDateFormatted, RegisteredOfficeAddress, PostalAddress, TotalShares, TaxId, AnnualReturnDueDateFormatted, and ~40 more raw upstream fields. Only present on enriched/profile records."
+            },
+            "Addresses": {
+                "title": "Addresses",
+                "description": "List of all address records on file (registered office, postal, etc.) -- populated for anonymous access, profile records only."
+            },
+            "Activities": {
+                "title": "Activities",
+                "description": "List of declared business activity objects -- profile records only."
+            },
+            "Directors": {
+                "title": "Directors",
+                "description": "Director list with full name, nationality, appointment date, and residential address -- populated for anonymous access (no login needed), profile records only."
+            },
+            "Members": {
+                "title": "Members / shareholders",
+                "description": "Shareholder/member list with full name, nationality, and address -- populated for anonymous access (no login needed), profile records only."
+            },
+            "ShareAllotments": {
+                "title": "Share allotments",
+                "description": "Share allotment records, each listing the shareholders it covers -- populated for anonymous access, profile records only."
+            },
+            "Officers": {
+                "title": "Officers",
+                "description": "Officer list -- empty on every entity tested for anonymous access; requires an authenticated account (not attempted by this actor)."
+            },
+            "Secretaries": {
+                "title": "Secretaries",
+                "description": "Company secretary list -- empty on every entity tested for anonymous access; requires an authenticated account (not attempted by this actor)."
+            },
+            "Owners": {
+                "title": "Owners",
+                "description": "Owner records (business names/licences) -- empty on every entity tested for anonymous access; requires an authenticated account (not attempted by this actor)."
+            },
+            "BeneficialOwners": {
+                "title": "Beneficial owners",
+                "description": "Beneficial owner records -- empty on every entity tested for anonymous access; requires an authenticated account (not attempted by this actor)."
+            },
+            "Mortgages": {
+                "title": "Mortgages/charges",
+                "description": "Registered mortgage/charge records against this entity, if any -- profile records only."
+            },
+            "Documents": {
+                "title": "Documents",
+                "description": "Filed document metadata list -- profile records only (frequently empty for anonymous access)."
+            },
+            "CorpFilings": {
+                "title": "Filings",
+                "description": "Accepted filing history, with type and date -- populated for anonymous access, profile records only."
+            },
+            "IsAuthorized": {
+                "title": "Is authorized",
+                "description": "Whether the requesting session is authenticated/authorized for full access. Always false for this actor (no-login policy)."
+            },
+            "IsLoggedin": {
+                "title": "Is logged in",
+                "description": "Always false for this actor (no-login policy)."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across search-only and enriched profile records.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "_source",
+                    "_scrapedAt",
+                    "Name",
+                    "RegistrationNumber",
+                    "Type",
+                    "Status",
+                    "RegistrationDateFormatted",
+                    "RegisteredOfficerAddress",
+                    "BusinessActivities",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

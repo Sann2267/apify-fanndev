@@ -1,0 +1,14 @@
+{
+    "actorSpecification": 1,
+    "name": "uganda-tenders-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Uganda Government Tenders Scraper (PPDA e-GP)",
+    "description": "Pull public government tender notices from Uganda's official PPDA e-Government Procurement portal (EGP Uganda) -- open bid notices, archived notices back to 2019, and per-notice detail including bid-opening results (bidder names and amounts). No account needed.",
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

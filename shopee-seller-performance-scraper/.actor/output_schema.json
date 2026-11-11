@@ -1,0 +1,117 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "additionalProperties": true,
+        "title": "Shopee seller record",
+        "description": "One record per shop. recordType SHOP is a parsed seller, NOT_FOUND means Shopee answered but has no such shop (including the HTTP-200-with-invalid_username case), GATED means the anti-bot refused the endpoint, ERROR is a transport or API failure. responseTimeSeconds is Shopee's native unit; responseTimeMinutes is derived for readability.",
+        "properties": {
+            "_input": { "type": ["string", "null"], "title": "Input" },
+            "_query": { "type": ["string", "null"], "title": "Query" },
+            "_source": { "type": ["string", "null"], "title": "Source" },
+            "_country": { "type": ["string", "null"], "title": "Country site" },
+            "_scrapedAt": { "type": ["string", "null"], "format": "date-time", "title": "Scraped at" },
+            "_attempts": { "type": ["integer", "null"], "title": "Attempts" },
+            "_tlsProfile": { "type": ["string", "null"], "title": "TLS profile" },
+            "_lookupKind": {
+                "type": ["string", "null"],
+                "title": "Looked up by",
+                "description": "username | shopid - which route resolved this record."
+            },
+            "_rawFieldCount": {
+                "type": ["integer", "null"],
+                "title": "Raw fields",
+                "description": "How many fields Shopee returned (50-55 observed). A sudden drop signals the API changed."
+            },
+            "recordType": {
+                "type": ["string", "null"],
+                "title": "Record type",
+                "description": "SHOP | NOT_FOUND | GATED | ERROR | SURFACE."
+            },
+            "shopId": { "type": ["integer", "null"], "title": "Shop ID" },
+            "username": { "type": ["string", "null"], "title": "Username" },
+            "shopName": { "type": ["string", "null"], "title": "Shop name" },
+            "shopUrl": { "type": ["string", "null"], "title": "Shop URL" },
+            "country": { "type": ["string", "null"], "title": "Country" },
+            "location": { "type": ["string", "null"], "title": "Location" },
+            "description": { "type": ["string", "null"], "title": "Description" },
+            "isOfficialShop": { "type": ["boolean", "null"], "title": "Official Shop" },
+            "isPreferredPlusSeller": { "type": ["boolean", "null"], "title": "Preferred Plus" },
+            "isShopeeVerified": { "type": ["boolean", "null"], "title": "Verified" },
+            "followerCount": { "type": ["integer", "null"], "title": "Followers" },
+            "followingCount": { "type": ["integer", "null"], "title": "Following" },
+            "itemCount": { "type": ["integer", "null"], "title": "Products" },
+            "ratingStar": { "type": ["number", "null"], "title": "Rating" },
+            "ratingGood": { "type": ["integer", "null"], "title": "Good ratings" },
+            "ratingNormal": { "type": ["integer", "null"], "title": "Normal ratings" },
+            "ratingBad": { "type": ["integer", "null"], "title": "Bad ratings" },
+            "ratingTotal": { "type": ["integer", "null"], "title": "Ratings total" },
+            "positiveRatingPercent": {
+                "type": ["number", "null"],
+                "title": "Positive %",
+                "description": "Good ratings as a share of all rated orders."
+            },
+            "responseRate": {
+                "type": ["integer", "null"],
+                "title": "Chat response rate %",
+                "description": "Share of buyer chats the seller replies to."
+            },
+            "responseTimeSeconds": { "type": ["integer", "null"], "title": "Response time (s)" },
+            "responseTimeMinutes": { "type": ["number", "null"], "title": "Response time (min)" },
+            "createdAt": { "type": ["string", "null"], "format": "date-time", "title": "Shop created" },
+            "shopAgeDays": {
+                "type": ["integer", "null"],
+                "title": "Shop age (days)",
+                "description": "Derived from the creation timestamp. A supplier-qualification signal on its own."
+            },
+            "lastActiveAt": { "type": ["string", "null"], "format": "date-time", "title": "Last active" },
+            "error": { "type": ["string", "null"], "title": "Error" },
+            "apiError": { "type": ["integer", "null"], "title": "Shopee error code" },
+            "message": { "type": ["string", "null"], "title": "Message" },
+            "hint": { "type": ["string", "null"], "title": "Hint" },
+            "lookupKind": { "type": ["string", "null"], "title": "Failed lookup kind" },
+            "lookupValue": { "type": ["string", "null"], "title": "Failed lookup value" }
+        }
+    },
+    "views": {
+        "overview": {
+            "title": "Seller qualification",
+            "transformation": {
+                "fields": [
+                    "shopName",
+                    "username",
+                    "shopId",
+                    "isOfficialShop",
+                    "followerCount",
+                    "itemCount",
+                    "ratingStar",
+                    "positiveRatingPercent",
+                    "responseRate",
+                    "responseTimeMinutes",
+                    "shopAgeDays",
+                    "location",
+                    "shopUrl"
+                ]
+            },
+            "display": {
+                "component": "table",
+                "properties": {
+                    "shopName": { "label": "Shop" },
+                    "username": { "label": "Username" },
+                    "shopId": { "label": "ID" },
+                    "isOfficialShop": { "label": "Official" },
+                    "followerCount": { "label": "Followers" },
+                    "itemCount": { "label": "Products" },
+                    "ratingStar": { "label": "Rating" },
+                    "positiveRatingPercent": { "label": "Positive %" },
+                    "responseRate": { "label": "Reply %" },
+                    "responseTimeMinutes": { "label": "Reply in (min)" },
+                    "shopAgeDays": { "label": "Age (days)" },
+                    "location": { "label": "Location" },
+                    "shopUrl": { "label": "URL" }
+                }
+            }
+        }
+    }
+}

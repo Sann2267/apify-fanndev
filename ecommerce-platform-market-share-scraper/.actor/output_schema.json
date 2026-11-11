@@ -1,0 +1,288 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Ecommerce platform market-share record",
+        "description": "Every record carries _input, _source, _scrapedAt and recordType. recordType discriminates the payload: PLATFORM (headline stats), GROWTH (one quarter of the store-count series), BREAKDOWN (stores by country/app/technology/...), MIGRATION (stores switching between platforms), STORE (a store published in the report's top/new lists), AVAILABLE_REPORT (reference mode) and ERROR. Counts are parsed to integers, with the published row kept under _raw.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The platform slug that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source",
+                "description": "S1-report-html, or 'none' on failure rows."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was emitted."
+            },
+            "recordType": {
+                "type": ["string", "null"],
+                "title": "Record type",
+                "description": "PLATFORM | GROWTH | BREAKDOWN | MIGRATION | STORE | AVAILABLE_REPORT | ERROR."
+            },
+            "platform": {
+                "type": ["string", "null"],
+                "title": "Platform",
+                "description": "Platform slug, e.g. shopify."
+            },
+            "platformName": {
+                "type": ["string", "null"],
+                "title": "Platform name",
+                "description": "Display name of the platform."
+            },
+            "reportUrl": {
+                "type": ["string", "null"],
+                "title": "Report URL",
+                "description": "Public report page this record came from."
+            },
+            "reportTitle": {
+                "type": ["string", "null"],
+                "title": "Report title",
+                "description": "Title of the published report."
+            },
+            "reportUpdated": {
+                "type": ["string", "null"],
+                "title": "Report updated",
+                "description": "Date the publisher last updated the report, YYYY-MM-DD."
+            },
+            "liveStores": {
+                "type": ["integer", "null"],
+                "title": "Live stores",
+                "description": "How many live stores run on the platform right now."
+            },
+            "quarterOverQuarterGrowthPct": {
+                "type": ["number", "null"],
+                "title": "QoQ growth %",
+                "description": "Quarter-over-quarter growth as published."
+            },
+            "quarterOverQuarterQuarter": {
+                "type": ["string", "null"],
+                "title": "QoQ quarter",
+                "description": "Which quarter the QoQ figure refers to."
+            },
+            "yearOverYearGrowthPct": {
+                "type": ["number", "null"],
+                "title": "YoY growth %",
+                "description": "Year-over-year growth as published."
+            },
+            "yearOverYearQuarter": {
+                "type": ["string", "null"],
+                "title": "YoY quarter",
+                "description": "Which quarter the YoY figure refers to."
+            },
+            "latestQuarter": {
+                "type": ["string", "null"],
+                "title": "Latest quarter",
+                "description": "Most recent quarter in the growth series."
+            },
+            "latestQuarterIsPartial": {
+                "type": ["boolean", "null"],
+                "title": "Latest quarter is partial",
+                "description": "True when the newest quarter is still in progress - do not read it as a decline."
+            },
+            "latestQuarterStores": {
+                "type": ["integer", "null"],
+                "title": "Latest quarter stores",
+                "description": "Store count for the most recent quarter."
+            },
+            "quartersOfHistory": {
+                "type": ["integer", "null"],
+                "title": "Quarters of history",
+                "description": "How many quarters the growth series covers."
+            },
+            "sectionsFound": {
+                "title": "Sections found",
+                "description": "Which report sections carried data for this platform. Small platforms publish fewer."
+            },
+            "quarter": {
+                "type": ["string", "null"],
+                "title": "Quarter",
+                "description": "Calendar quarter of a growth row, e.g. '2026 Q2'."
+            },
+            "isPartialQuarter": {
+                "type": ["boolean", "null"],
+                "title": "Partial quarter",
+                "description": "True for the in-progress quarter."
+            },
+            "activeStores": {
+                "type": ["integer", "null"],
+                "title": "Active stores",
+                "description": "Live store count for that quarter."
+            },
+            "dimension": {
+                "type": ["string", "null"],
+                "title": "Dimension",
+                "description": "country | category | app | technology | theme | tld | shipping-carrier | employee-count | product-count | social-media | contact-info."
+            },
+            "label": {
+                "type": ["string", "null"],
+                "title": "Label",
+                "description": "The value within that dimension, e.g. 'United States' or 'Judge.me Product Reviews App'."
+            },
+            "code": {
+                "type": ["string", "null"],
+                "title": "Code",
+                "description": "Machine code for the label where the report publishes one, e.g. 'US' for United States."
+            },
+            "stores": {
+                "type": ["integer", "null"],
+                "title": "Stores",
+                "description": "How many stores fall into this bucket."
+            },
+            "direction": {
+                "type": ["string", "null"],
+                "title": "Direction",
+                "description": "switched-in (stores that moved to this platform) or switched-out (stores that left it)."
+            },
+            "otherPlatform": {
+                "type": ["string", "null"],
+                "title": "Other platform",
+                "description": "The platform stores moved from or to."
+            },
+            "listType": {
+                "type": ["string", "null"],
+                "title": "List type",
+                "description": "top (highest-ranked stores) or new (recently created stores)."
+            },
+            "name": {
+                "type": ["string", "null"],
+                "title": "Store name",
+                "description": "Store name as published in the report."
+            },
+            "domain": {
+                "type": ["string", "null"],
+                "title": "Domain",
+                "description": "Store domain."
+            },
+            "url": {
+                "type": ["string", "null"],
+                "title": "Store URL",
+                "description": "https:// URL built from the domain."
+            },
+            "rank": {
+                "type": ["integer", "null"],
+                "title": "Rank",
+                "description": "Traffic rank the report publishes for the store - lower is bigger."
+            },
+            "created": {
+                "type": ["string", "null"],
+                "title": "Created",
+                "description": "When the store was first seen, as published."
+            },
+            "_raw": {
+                "title": "Raw published row",
+                "description": "The report's own row, exactly as published."
+            },
+            "_error": {
+                "type": ["string", "null"],
+                "title": "Error kind",
+                "description": "not_found | invalid_platform | empty_section | blocked_or_transient."
+            },
+            "_errorDetail": {
+                "type": ["string", "null"],
+                "title": "Error detail",
+                "description": "Human-readable detail for the failure."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across every record type.",
+            "transformation": {
+                "fields": [
+                    "recordType",
+                    "platform",
+                    "liveStores",
+                    "quarterOverQuarterGrowthPct",
+                    "yearOverYearGrowthPct",
+                    "quarter",
+                    "activeStores",
+                    "dimension",
+                    "label",
+                    "stores",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        },
+        "marketShare": {
+            "title": "Market share",
+            "description": "One row per platform - sort by live stores to rank the market.",
+            "transformation": {
+                "fields": [
+                    "platform",
+                    "platformName",
+                    "liveStores",
+                    "quarterOverQuarterGrowthPct",
+                    "yearOverYearGrowthPct",
+                    "latestQuarter",
+                    "quartersOfHistory",
+                    "reportUpdated",
+                    "reportUrl"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        },
+        "growth": {
+            "title": "Growth series",
+            "description": "Quarterly store counts, ready to chart.",
+            "transformation": {
+                "fields": [
+                    "platform",
+                    "quarter",
+                    "activeStores",
+                    "isPartialQuarter"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        },
+        "migration": {
+            "title": "Migration",
+            "description": "Which platforms stores move between.",
+            "transformation": {
+                "fields": [
+                    "platform",
+                    "direction",
+                    "otherPlatform",
+                    "stores"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        },
+        "stores": {
+            "title": "Stores",
+            "description": "Top and newest stores published per platform.",
+            "transformation": {
+                "fields": [
+                    "platform",
+                    "listType",
+                    "name",
+                    "domain",
+                    "url",
+                    "rank",
+                    "created"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

@@ -1,0 +1,40 @@
+{
+    "title": "Botswana Government Tenders Scraper",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "ministry": {
+            "title": "Ministry / source",
+            "type": "string",
+            "editor": "select",
+            "description": "Which ministry's tender publication to scrape. 'all' (default) runs both. 'finance' = Ministry of Finance procurement notices (finance.gov.bw). 'health' = Ministry of Health & Wellness tenders (moh.gov.bw).",
+            "enum": ["all", "finance", "health"],
+            "enumTitles": ["All confirmed-working ministries", "Ministry of Finance only", "Ministry of Health only"],
+            "default": "all",
+            "prefill": "all"
+        },
+        "maxResultsPerMinistry": {
+            "title": "Max results per ministry",
+            "type": "integer",
+            "description": "Maximum number of tender records to return per ministry. Both sources currently carry fewer than 10 records total, so this is mostly a safety cap for future growth.",
+            "default": 100,
+            "minimum": 1,
+            "maximum": 500,
+            "prefill": 100
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "editor": "proxy",
+            "description": "Apify Proxy configuration. Neither ministry site has any anti-bot gate, so a plain datacenter proxy (or no proxy) also works -- residential is offered for consistency with other actors in this collection.",
+            "default": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            },
+            "prefill": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            }
+        }
+    }
+}

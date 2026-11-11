@@ -1,0 +1,15 @@
+{
+    "actorOutputSchemaVersion": 1,
+    "properties": {
+        "datasetOverview": {
+            "type": "string",
+            "title": "Scraped properties",
+            "template": "{{links.apifyConsoleUrl}}/storage/datasets/{{defaultDatasetId}}"
+        },
+        "pricingView": {
+            "type": "string",
+            "title": "Weekday vs weekend pricing",
+            "template": "{{links.apifyConsoleUrl}}/storage/datasets/{{defaultDatasetId}}?view=pricing"
+        }
+    }
+}

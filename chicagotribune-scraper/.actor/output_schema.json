@@ -1,0 +1,114 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Article / latest-headline record",
+        "description": "Raw-passthrough dataset envelope. Every record carries _input/_source/_scrapedAt (failed URLs are not written to the dataset -- they are reported in the ERRORS record of the run's key-value store). Article-mode records (S1-html) spread the upstream ld+json NewsArticle/ReportageNewsArticle/Article node close to verbatim plus a scraped articleBody, so extra schema.org fields beyond those listed here may appear. Latest-mode records (S2-homepage) carry only title/link, scraped from the homepage's top-story links (not a true reverse-chronological feed).",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The exact input value (URL, or 'latest') that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which extraction strategy emitted this record (e.g. S1-html, S2-homepage)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "@type": {
+                "title": "Schema.org type",
+                "description": "Upstream ld+json node type: NewsArticle, ReportageNewsArticle, or Article."
+            },
+            "headline": {
+                "title": "Headline",
+                "description": "Article headline (raw passthrough from ld+json)."
+            },
+            "description": {
+                "title": "Description",
+                "description": "Short article description/dek."
+            },
+            "articleBody": {
+                "title": "Article body",
+                "description": "Full article text, joined from div.article-body > div.body-copy direct-child <p> tags (not present in the ld+json block itself)."
+            },
+            "datePublished": {
+                "title": "Date published",
+                "description": "ISO 8601 publish date."
+            },
+            "dateModified": {
+                "title": "Date modified",
+                "description": "ISO 8601 last-modified date."
+            },
+            "author": {
+                "title": "Author",
+                "description": "Author object(s) as emitted by upstream ld+json (raw passthrough)."
+            },
+            "creator": {
+                "title": "Creator",
+                "description": "Creator/byline array as emitted by upstream ld+json (raw passthrough)."
+            },
+            "publisher": {
+                "title": "Publisher",
+                "description": "Publisher organization object."
+            },
+            "image": {
+                "title": "Image",
+                "description": "Lead image object (raw passthrough)."
+            },
+            "mainEntityOfPage": {
+                "title": "Main entity of page",
+                "description": "Canonical WebPage reference."
+            },
+            "articleSection": {
+                "title": "Section",
+                "description": "Article section/category."
+            },
+            "keywords": {
+                "title": "Keywords",
+                "description": "Comma-separated or array of keywords, as emitted upstream."
+            },
+            "isAccessibleForFree": {
+                "title": "Accessible for free",
+                "description": "Upstream metering flag -- observed to be consistently false even on articles with full text present in the HTML, so not a reliable paywall signal."
+            },
+            "title": {
+                "title": "Title",
+                "description": "Headline text, from the homepage top-story link's title attribute (latest mode)."
+            },
+            "link": {
+                "title": "Link",
+                "description": "Article URL, from the homepage top-story link's href (latest mode)."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across both article and latest-headline records.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "_source",
+                    "_scrapedAt",
+                    "headline",
+                    "title",
+                    "link",
+                    "datePublished",
+                    "author",
+                    "articleSection"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

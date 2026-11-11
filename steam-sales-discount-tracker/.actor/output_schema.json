@@ -1,0 +1,854 @@
+{
+  "actorSpecification": 1,
+  "fields": {
+    "type": "object",
+    "schemaVersion": 1,
+    "title": "Steam sale / discount record",
+    "description": "recordType is DEAL, DAILY_DEAL, SPOTLIGHT, FEATURED_SPECIAL, FREEBIE, APP_PRICE, SALE_PAGE, SALE_ITEM, SALE_EVENT, DEAL_ENDED or ERROR. Fields without a value are null; extra fields may appear.",
+    "additionalProperties": true,
+    "properties": {
+      "_input": {
+        "title": "Input",
+        "description": "The input value (mode:country, game, sale URL) that produced this record.",
+        "type": "string"
+      },
+      "_source": {
+        "title": "Source",
+        "description": "Endpoint that produced the record (S1-store-search-specials, S1-store-search-free, S1-featured-dailydeal, S1-featured-spotlight, S1-featured-specials, S1-store-appdetails, S1-sale-page, S1-sale-page+getitems, S1-steamworks-upcoming-events, S1-snapshot-diff) or 'none' for errors.",
+        "type": "string"
+      },
+      "_scrapedAt": {
+        "title": "Scraped at",
+        "description": "UTC ISO 8601 time the record was produced.",
+        "type": "string",
+        "format": "date-time"
+      },
+      "recordType": {
+        "title": "Record type",
+        "description": "DEAL, DAILY_DEAL, SPOTLIGHT, FEATURED_SPECIAL, FREEBIE, APP_PRICE, SALE_PAGE, SALE_ITEM, SALE_EVENT, DEAL_ENDED or ERROR.",
+        "type": "string"
+      },
+      "_error": {
+        "title": "Error",
+        "description": "Only on ERROR records: invalid_input, not_found, no_results, search_failed, blocked or unexpected_shape."
+      },
+      "_errorDetail": {
+        "title": "Error detail",
+        "description": "Only on ERROR records: what went wrong."
+      },
+      "country": {
+        "title": "Country",
+        "description": "Store country the price is for."
+      },
+      "position": {
+        "title": "Position",
+        "description": "Position in Steam's list (deals, featured)."
+      },
+      "totalDiscounted": {
+        "title": "Total discounted",
+        "description": "DEAL: how many discounted items Steam reports for these filters."
+      },
+      "sortOrder": {
+        "title": "Sort order",
+        "description": "DEAL: order 'position' refers to. A run that reads the whole list walks it by name (the only stable order)."
+      },
+      "itemKey": {
+        "title": "Item key",
+        "description": "Steam item key: App_<appid>, Sub_<packageid> or Bundle_<bundleid>."
+      },
+      "itemType": {
+        "title": "Item type",
+        "description": "app, package or bundle."
+      },
+      "id": {
+        "title": "ID",
+        "description": "appid, packageid or bundleid (see itemType)."
+      },
+      "appid": {
+        "title": "App ID",
+        "description": "Steam appid (null for packages and bundles)."
+      },
+      "packageId": {
+        "title": "Package ID",
+        "description": "Package (sub) id when known."
+      },
+      "isFreeToKeep": {
+        "title": "Free to keep",
+        "description": "Limited-time giveaway: claim it at $0 and keep it."
+      },
+      "priceSource": {
+        "title": "Price source",
+        "description": "search = store search row; store_api = Steam's store API (used when search shows no price)."
+      },
+      "bundleId": {
+        "title": "Bundle ID",
+        "description": "Bundle id when known."
+      },
+      "includedAppids": {
+        "title": "Included appids",
+        "description": "Apps contained in a package row."
+      },
+      "name": {
+        "title": "Name",
+        "description": "Item name."
+      },
+      "storeUrl": {
+        "title": "Store URL",
+        "description": "Steam store page."
+      },
+      "discountPct": {
+        "title": "Discount %",
+        "description": "Current discount percentage (0 = full price)."
+      },
+      "currency": {
+        "title": "Currency",
+        "description": "ISO currency of the price fields."
+      },
+      "finalPrice": {
+        "title": "Price",
+        "description": "Current (discounted) price in currency units."
+      },
+      "originalPrice": {
+        "title": "Original price",
+        "description": "Price before discount in currency units."
+      },
+      "savings": {
+        "title": "Savings",
+        "description": "originalPrice - finalPrice."
+      },
+      "finalPriceCents": {
+        "title": "Price (cents)",
+        "description": "Current price in Steam's integer cents (whole-unit currencies are also x100)."
+      },
+      "originalPriceCents": {
+        "title": "Original price (cents)",
+        "description": "Original price in Steam's integer cents."
+      },
+      "finalPriceFormatted": {
+        "title": "Price (formatted)",
+        "description": "Price as Steam displays it."
+      },
+      "originalPriceFormatted": {
+        "title": "Original price (formatted)",
+        "description": "Original price as Steam displays it."
+      },
+      "finalPriceUsd": {
+        "title": "Price (USD)",
+        "description": "Current price converted to USD with ECB reference rates (null if the currency is not covered)."
+      },
+      "originalPriceUsd": {
+        "title": "Original price (USD)",
+        "description": "Original price in USD."
+      },
+      "fxRateDate": {
+        "title": "FX rate date",
+        "description": "Date of the ECB rates used for USD conversion."
+      },
+      "priceAvailable": {
+        "title": "Price available",
+        "description": "false when Steam lists the item without a purchasable price (free, unreleased, not sold in this country)."
+      },
+      "isBundleDiscount": {
+        "title": "Owner bundle discount",
+        "description": "Row price includes an extra 'complete the set' discount."
+      },
+      "releaseDate": {
+        "title": "Release date",
+        "description": "Release date text from the store."
+      },
+      "reviewSummary": {
+        "title": "Review summary",
+        "description": "Steam review label (Very Positive, Mixed, ...)."
+      },
+      "reviewScoreClass": {
+        "title": "Review class",
+        "description": "positive / mixed / negative."
+      },
+      "reviewPositivePct": {
+        "title": "Positive reviews %",
+        "description": "Share of positive user reviews."
+      },
+      "reviewCount": {
+        "title": "Review count",
+        "description": "Number of user reviews."
+      },
+      "platforms": {
+        "title": "Platforms",
+        "description": "win / mac / linux."
+      },
+      "tagIds": {
+        "title": "Tag IDs",
+        "description": "Steam tag ids of the item."
+      },
+      "capsuleImage": {
+        "title": "Image",
+        "description": "Capsule image URL."
+      },
+      "headerImage": {
+        "title": "Header image",
+        "description": "Header image URL."
+      },
+      "storeItemFound": {
+        "title": "Store item found",
+        "description": "false when the official store API had no record for the item."
+      },
+      "itemName": {
+        "title": "Store API name",
+        "description": "Name from the official store API."
+      },
+      "appType": {
+        "title": "App type",
+        "description": "game, dlc, music, software, demo ..."
+      },
+      "discountEndsAt": {
+        "title": "Discount ends",
+        "description": "UTC time the current discount ends."
+      },
+      "discountEndsAtUnix": {
+        "title": "Discount ends (unix)",
+        "description": "Discount end as a Unix timestamp."
+      },
+      "hoursLeft": {
+        "title": "Hours left",
+        "description": "Hours until the discount or sale ends."
+      },
+      "discountType": {
+        "title": "Deal type",
+        "description": "Steam preset (special, weekend, daily, midweek, launch, prepurchase, ...), free_to_keep, or named_campaign."
+      },
+      "discountLabel": {
+        "title": "Campaign name",
+        "description": "Name of a publisher campaign, e.g. 'Two Point Franchise - Weekend Deal'."
+      },
+      "purchaseOptionName": {
+        "title": "Purchase option",
+        "description": "Name of the cheapest purchase option."
+      },
+      "finalPriceCentsGetItems": {
+        "title": "Price (store API)",
+        "description": "Final price in cents from the store API."
+      },
+      "originalPriceCentsGetItems": {
+        "title": "Original price (store API)",
+        "description": "Original price in cents from the store API."
+      },
+      "discountPctGetItems": {
+        "title": "Discount % (store API)",
+        "description": "Discount from the store API."
+      },
+      "hideDiscountPctForCompliance": {
+        "title": "Discount % hidden",
+        "description": "Steam hides the % for legal reasons in this region."
+      },
+      "includedGameCount": {
+        "title": "Games included",
+        "description": "Games in the purchase option."
+      },
+      "purchaseOptionsCount": {
+        "title": "Purchase options",
+        "description": "Number of ways to buy the item."
+      },
+      "discountedPurchaseOptions": {
+        "title": "Discounted purchase options",
+        "description": "[{name, packageId, bundleId, finalPriceCents, originalPriceCents, discountPct, bundleDiscountPct}]"
+      },
+      "releaseDateGetItems": {
+        "title": "Release date (store API)",
+        "description": "Release date, ISO."
+      },
+      "isEarlyAccess": {
+        "title": "Early Access",
+        "description": "Item is in Early Access."
+      },
+      "developers": {
+        "title": "Developers",
+        "description": "Developer names."
+      },
+      "publishers": {
+        "title": "Publishers",
+        "description": "Publisher names."
+      },
+      "dealCategory": {
+        "title": "Deal category",
+        "description": "daily_deal, weekend_deal, free_weekend, franchise_sale, featured_special, ..."
+      },
+      "spotlightName": {
+        "title": "Spotlight",
+        "description": "Storefront spotlight title (WEEKEND DEAL, Free Weekend, FRANCHISE SALE, ...)."
+      },
+      "spotlightBody": {
+        "title": "Spotlight text",
+        "description": "Spotlight body text (Steam leaves %1$s placeholders unresolved)."
+      },
+      "spotlightUrl": {
+        "title": "Spotlight URL",
+        "description": "Link of the spotlight."
+      },
+      "url": {
+        "title": "URL",
+        "description": "Spotlight target URL."
+      },
+      "targetType": {
+        "title": "Target type",
+        "description": "app, sub, bundle or sale."
+      },
+      "targetId": {
+        "title": "Target",
+        "description": "appid/packageid/bundleid or sale name."
+      },
+      "purchasePackage": {
+        "title": "Package",
+        "description": "DAILY_DEAL: package id on sale."
+      },
+      "discountExpiresAt": {
+        "title": "Discount expires",
+        "description": "FEATURED_SPECIAL: discount expiry from the storefront feed."
+      },
+      "freebieType": {
+        "title": "Freebie type",
+        "description": "free_to_keep or free_weekend."
+      },
+      "saleName": {
+        "title": "Sale",
+        "description": "Sale event name."
+      },
+      "saleUrl": {
+        "title": "Sale URL",
+        "description": "Sale page URL."
+      },
+      "saleGid": {
+        "title": "Sale event id",
+        "description": "Steam event gid."
+      },
+      "clanSteamId": {
+        "title": "Organiser",
+        "description": "Steam group id of the organiser."
+      },
+      "eventType": {
+        "title": "Event type",
+        "description": "SALE_EVENT: seasonal_sale, themed_fest, next_fest. SALE_PAGE: Steam event type number."
+      },
+      "saleStartsAt": {
+        "title": "Sale starts",
+        "description": "UTC start of the sale."
+      },
+      "saleEndsAt": {
+        "title": "Sale ends",
+        "description": "UTC end of the sale."
+      },
+      "saleStartsAtUnix": {
+        "title": "Sale starts (unix)",
+        "description": "Sale start as Unix time."
+      },
+      "saleEndsAtUnix": {
+        "title": "Sale ends (unix)",
+        "description": "Sale end as Unix time."
+      },
+      "saleItemCount": {
+        "title": "Sale items",
+        "description": "SPOTLIGHT: items listed on the sale page."
+      },
+      "sectionCount": {
+        "title": "Sections",
+        "description": "SALE_PAGE: sections on the page."
+      },
+      "dynamicSectionCount": {
+        "title": "Dynamic sections",
+        "description": "SALE_PAGE: sections filled dynamically (not listed)."
+      },
+      "itemCount": {
+        "title": "Items",
+        "description": "SALE_PAGE: unique items listed."
+      },
+      "capsuleType": {
+        "title": "Capsule type",
+        "description": "SALE_ITEM: game, dlc, music, sub, bundle."
+      },
+      "sectionIndex": {
+        "title": "Section",
+        "description": "SALE_ITEM: index of the page section."
+      },
+      "sectionType": {
+        "title": "Section type",
+        "description": "SALE_ITEM: Steam section type."
+      },
+      "note": {
+        "title": "Note",
+        "description": "Extra explanation."
+      },
+      "cheapestCountry": {
+        "title": "Cheapest country",
+        "description": "APP_PRICE: country with the lowest USD price among those requested."
+      },
+      "cheapestPriceUsd": {
+        "title": "Cheapest price (USD)",
+        "description": "APP_PRICE: lowest USD price among the countries."
+      },
+      "usdRank": {
+        "title": "USD rank",
+        "description": "APP_PRICE: 1 = cheapest country."
+      },
+      "vsUsPricePct": {
+        "title": "vs US price %",
+        "description": "APP_PRICE: difference to the US price (US must be in countries)."
+      },
+      "datesText": {
+        "title": "Dates",
+        "description": "SALE_EVENT: dates as published."
+      },
+      "startDate": {
+        "title": "Start date",
+        "description": "SALE_EVENT: first day (YYYY-MM-DD)."
+      },
+      "endDate": {
+        "title": "End date",
+        "description": "SALE_EVENT: last day (YYYY-MM-DD)."
+      },
+      "status": {
+        "title": "Status",
+        "description": "SALE_EVENT: upcoming, live, ended or tbd."
+      },
+      "daysUntilStart": {
+        "title": "Days until start",
+        "description": "SALE_EVENT: negative when live."
+      },
+      "durationDays": {
+        "title": "Duration (days)",
+        "description": "SALE_EVENT length."
+      },
+      "description": {
+        "title": "Description",
+        "description": "SALE_EVENT: eligibility / theme."
+      },
+      "registrationUrl": {
+        "title": "Registration",
+        "description": "SALE_EVENT: developer opt-in page."
+      },
+      "infoUrl": {
+        "title": "More info",
+        "description": "SALE_EVENT: Steamworks documentation."
+      },
+      "startTimeNote": {
+        "title": "Start time",
+        "description": "SALE_EVENT: Steam switches sales at 10:00 Pacific Time."
+      },
+      "calendarUrl": {
+        "title": "Calendar",
+        "description": "SALE_EVENT: source page."
+      },
+      "previousFinalPriceCents": {
+        "title": "Previous price (cents)",
+        "description": "Monitoring: price at the previous run."
+      },
+      "priceChangeCents": {
+        "title": "Price change (cents)",
+        "description": "Monitoring: change since the previous run."
+      },
+      "priceDropPct": {
+        "title": "Price drop %",
+        "description": "Monitoring: drop since the previous run."
+      },
+      "previousDiscountPct": {
+        "title": "Previous discount %",
+        "description": "Monitoring: discount at the previous run."
+      },
+      "isNewDeal": {
+        "title": "New deal",
+        "description": "Monitoring: discounted now, not discounted (or absent) last run."
+      },
+      "firstSeenAt": {
+        "title": "First seen",
+        "description": "Monitoring: first run that saw the item."
+      },
+      "lowestPriceSeenCents": {
+        "title": "Lowest price seen (cents)",
+        "description": "Monitoring: lowest price over all runs of this task."
+      },
+      "lowestPriceSeenAt": {
+        "title": "Lowest seen at",
+        "description": "Monitoring: when the lowest price was observed."
+      },
+      "isLowestPriceSeen": {
+        "title": "At lowest seen",
+        "description": "Monitoring: current price equals the lowest ever seen by this task."
+      },
+      "alert": {
+        "title": "Alert",
+        "description": "Monitoring: new deal or price drop >= threshold."
+      },
+      "lastFinalPriceCents": {
+        "title": "Last price (cents)",
+        "description": "DEAL_ENDED: last discounted price."
+      },
+      "lastOriginalPriceCents": {
+        "title": "Last original price (cents)",
+        "description": "DEAL_ENDED."
+      },
+      "lastDiscountPct": {
+        "title": "Last discount %",
+        "description": "DEAL_ENDED."
+      },
+      "lastSeenAt": {
+        "title": "Last seen",
+        "description": "DEAL_ENDED: last run the deal was live."
+      }
+    }
+  },
+  "views": {
+    "overview": {
+      "title": "Deals",
+      "transformation": {
+        "fields": [
+          "recordType",
+          "name",
+          "discountPct",
+          "finalPrice",
+          "originalPrice",
+          "currency",
+          "finalPriceUsd",
+          "discountEndsAt",
+          "hoursLeft",
+          "discountType",
+          "reviewSummary",
+          "storeUrl",
+          "alert",
+          "_error"
+        ]
+      },
+      "display": {
+        "component": "table",
+        "properties": {
+          "recordType": {
+            "label": "Record type",
+            "format": "text"
+          },
+          "name": {
+            "label": "Name",
+            "format": "text"
+          },
+          "discountPct": {
+            "label": "Discount %",
+            "format": "number"
+          },
+          "finalPrice": {
+            "label": "Price",
+            "format": "number"
+          },
+          "originalPrice": {
+            "label": "Original price",
+            "format": "number"
+          },
+          "currency": {
+            "label": "Currency",
+            "format": "text"
+          },
+          "finalPriceUsd": {
+            "label": "Price (USD)",
+            "format": "number"
+          },
+          "discountEndsAt": {
+            "label": "Discount ends",
+            "format": "text"
+          },
+          "hoursLeft": {
+            "label": "Hours left",
+            "format": "number"
+          },
+          "discountType": {
+            "label": "Deal type",
+            "format": "text"
+          },
+          "reviewSummary": {
+            "label": "Review summary",
+            "format": "text"
+          },
+          "storeUrl": {
+            "label": "Store URL",
+            "format": "link"
+          },
+          "alert": {
+            "label": "Alert",
+            "format": "boolean"
+          },
+          "_error": {
+            "label": "Error",
+            "format": "text"
+          }
+        }
+      }
+    },
+    "featured": {
+      "title": "Featured deal events",
+      "transformation": {
+        "fields": [
+          "recordType",
+          "dealCategory",
+          "spotlightName",
+          "name",
+          "saleName",
+          "discountPct",
+          "finalPrice",
+          "currency",
+          "saleEndsAt",
+          "discountEndsAt",
+          "hoursLeft",
+          "url",
+          "storeUrl"
+        ]
+      },
+      "display": {
+        "component": "table",
+        "properties": {
+          "recordType": {
+            "label": "Record type",
+            "format": "text"
+          },
+          "dealCategory": {
+            "label": "Deal category",
+            "format": "text"
+          },
+          "spotlightName": {
+            "label": "Spotlight",
+            "format": "text"
+          },
+          "name": {
+            "label": "Name",
+            "format": "text"
+          },
+          "saleName": {
+            "label": "Sale",
+            "format": "text"
+          },
+          "discountPct": {
+            "label": "Discount %",
+            "format": "number"
+          },
+          "finalPrice": {
+            "label": "Price",
+            "format": "number"
+          },
+          "currency": {
+            "label": "Currency",
+            "format": "text"
+          },
+          "saleEndsAt": {
+            "label": "Sale ends",
+            "format": "text"
+          },
+          "discountEndsAt": {
+            "label": "Discount ends",
+            "format": "text"
+          },
+          "hoursLeft": {
+            "label": "Hours left",
+            "format": "number"
+          },
+          "url": {
+            "label": "URL",
+            "format": "link"
+          },
+          "storeUrl": {
+            "label": "Store URL",
+            "format": "link"
+          }
+        }
+      }
+    },
+    "regional": {
+      "title": "Regional prices",
+      "transformation": {
+        "fields": [
+          "name",
+          "country",
+          "currency",
+          "finalPrice",
+          "discountPct",
+          "finalPriceUsd",
+          "usdRank",
+          "vsUsPricePct",
+          "cheapestCountry",
+          "discountEndsAt",
+          "_error"
+        ]
+      },
+      "display": {
+        "component": "table",
+        "properties": {
+          "name": {
+            "label": "Name",
+            "format": "text"
+          },
+          "country": {
+            "label": "Country",
+            "format": "text"
+          },
+          "currency": {
+            "label": "Currency",
+            "format": "text"
+          },
+          "finalPrice": {
+            "label": "Price",
+            "format": "number"
+          },
+          "discountPct": {
+            "label": "Discount %",
+            "format": "number"
+          },
+          "finalPriceUsd": {
+            "label": "Price (USD)",
+            "format": "number"
+          },
+          "usdRank": {
+            "label": "USD rank",
+            "format": "number"
+          },
+          "vsUsPricePct": {
+            "label": "vs US price %",
+            "format": "number"
+          },
+          "cheapestCountry": {
+            "label": "Cheapest country",
+            "format": "text"
+          },
+          "discountEndsAt": {
+            "label": "Discount ends",
+            "format": "text"
+          },
+          "_error": {
+            "label": "Error",
+            "format": "text"
+          }
+        }
+      }
+    },
+    "events": {
+      "title": "Sale calendar",
+      "transformation": {
+        "fields": [
+          "eventType",
+          "name",
+          "startDate",
+          "endDate",
+          "status",
+          "daysUntilStart",
+          "durationDays",
+          "description",
+          "infoUrl"
+        ]
+      },
+      "display": {
+        "component": "table",
+        "properties": {
+          "eventType": {
+            "label": "Event type",
+            "format": "text"
+          },
+          "name": {
+            "label": "Name",
+            "format": "text"
+          },
+          "startDate": {
+            "label": "Start date",
+            "format": "text"
+          },
+          "endDate": {
+            "label": "End date",
+            "format": "text"
+          },
+          "status": {
+            "label": "Status",
+            "format": "text"
+          },
+          "daysUntilStart": {
+            "label": "Days until start",
+            "format": "number"
+          },
+          "durationDays": {
+            "label": "Duration (days)",
+            "format": "number"
+          },
+          "description": {
+            "label": "Description",
+            "format": "text"
+          },
+          "infoUrl": {
+            "label": "More info",
+            "format": "link"
+          }
+        }
+      }
+    },
+    "monitoring": {
+      "title": "Changes since last run",
+      "transformation": {
+        "fields": [
+          "recordType",
+          "name",
+          "country",
+          "finalPrice",
+          "previousFinalPriceCents",
+          "priceChangeCents",
+          "priceDropPct",
+          "isNewDeal",
+          "isLowestPriceSeen",
+          "lowestPriceSeenCents",
+          "alert",
+          "storeUrl"
+        ]
+      },
+      "display": {
+        "component": "table",
+        "properties": {
+          "recordType": {
+            "label": "Record type",
+            "format": "text"
+          },
+          "name": {
+            "label": "Name",
+            "format": "text"
+          },
+          "country": {
+            "label": "Country",
+            "format": "text"
+          },
+          "finalPrice": {
+            "label": "Price",
+            "format": "number"
+          },
+          "previousFinalPriceCents": {
+            "label": "Previous price (cents)",
+            "format": "number"
+          },
+          "priceChangeCents": {
+            "label": "Price change (cents)",
+            "format": "number"
+          },
+          "priceDropPct": {
+            "label": "Price drop %",
+            "format": "number"
+          },
+          "isNewDeal": {
+            "label": "New deal",
+            "format": "boolean"
+          },
+          "isLowestPriceSeen": {
+            "label": "At lowest seen",
+            "format": "boolean"
+          },
+          "lowestPriceSeenCents": {
+            "label": "Lowest price seen (cents)",
+            "format": "number"
+          },
+          "alert": {
+            "label": "Alert",
+            "format": "boolean"
+          },
+          "storeUrl": {
+            "label": "Store URL",
+            "format": "link"
+          }
+        }
+      }
+    }
+  }
+}

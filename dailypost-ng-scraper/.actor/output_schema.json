@@ -1,0 +1,138 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Article / latest-headline record",
+        "description": "Raw-passthrough dataset envelope. Every record carries _input/_source/_scrapedAt (and _error/_errorDetail on failures). Article-mode records (S1-jsonld -- a flat ld+json array, not a Yoast @graph, and unlike other Nigerian outlets in this portfolio it carries a complete articleBody directly) carry headline/articleBody-style fields; latest-mode records (S2-rss, dailypost.ng/feed/) carry title/link-style fields.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The exact input value (URL, or 'latest') that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which extraction strategy emitted this record (e.g. S1-jsonld, S2-rss)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed extractions -- the error kind (not_found, not_article, http_<code>, blocked_or_transient)."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "headline": {
+                "title": "Headline",
+                "description": "Article headline, from the ld+json NewsArticle node."
+            },
+            "description": {
+                "title": "Description",
+                "description": "Short article description/summary, from the ld+json NewsArticle node (falls back to <meta name=\"description\"> if ever missing)."
+            },
+            "articleBody": {
+                "title": "Article body",
+                "description": "Full article text, from the ld+json NewsArticle node's own articleBody field (confirmed complete, not truncated)."
+            },
+            "author": {
+                "title": "Author",
+                "description": "Byline name, from the ld+json NewsArticle author field (a single inline Person object on this site)."
+            },
+            "editor": {
+                "title": "Editor",
+                "description": "Editor name, from the ld+json NewsArticle editor field (often the same person as author on this site)."
+            },
+            "publisher": {
+                "title": "Publisher",
+                "description": "Publisher/site name (\"Daily Post Nigeria\"), from the ld+json NewsArticle node's inline publisher Organization object (falls back to <meta property=\"og:site_name\"> if that field is ever missing)."
+            },
+            "articleSection": {
+                "title": "Article section",
+                "description": "Section/category, from the ld+json NewsArticle node (a plain string, e.g. \"News\", \"Sport\")."
+            },
+            "keywords": {
+                "title": "Keywords",
+                "description": "Keyword tags from the ld+json NewsArticle node -- raw passthrough, may include blank/whitespace-padded entries."
+            },
+            "datePublished": {
+                "title": "Date published",
+                "description": "ISO 8601 publish date from ld+json."
+            },
+            "dateModified": {
+                "title": "Date modified",
+                "description": "ISO 8601 last-modified date from ld+json."
+            },
+            "thumbnailUrl": {
+                "title": "Thumbnail URL",
+                "description": "Lead image URL from the ld+json NewsArticle node's thumbnailUrl field."
+            },
+            "image": {
+                "title": "Image",
+                "description": "Raw passthrough of the ld+json NewsArticle node's image field -- a list of ImageObject entries with url/width/height."
+            },
+            "wordCount": {
+                "title": "Word count",
+                "description": "Upstream-computed word count from ld+json."
+            },
+            "timeRequired": {
+                "title": "Time required",
+                "description": "Upstream-computed estimated reading time, ISO 8601 duration (e.g. \"PT28S\"), from ld+json."
+            },
+            "title": {
+                "title": "Title",
+                "description": "Headline text of a latest-mode RSS item."
+            },
+            "link": {
+                "title": "Link",
+                "description": "Article URL from the RSS item's <link>."
+            },
+            "pubDate": {
+                "title": "Publish date",
+                "description": "Publish date from the RSS item's <pubDate>."
+            },
+            "categories": {
+                "title": "Categories",
+                "description": "Section/tag categories from the RSS item's <category> tags (latest mode only)."
+            },
+            "guid": {
+                "title": "GUID",
+                "description": "WordPress post GUID from the RSS item (latest mode only)."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across both article and latest-headline records.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "_source",
+                    "_scrapedAt",
+                    "headline",
+                    "title",
+                    "link",
+                    "datePublished",
+                    "pubDate",
+                    "author",
+                    "articleSection",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

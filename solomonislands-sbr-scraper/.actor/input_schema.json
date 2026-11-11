@@ -1,0 +1,69 @@
+{
+    "title": "Solomon Islands Business Registry Scraper",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "query": {
+            "title": "Company/business name or registration number",
+            "type": "string",
+            "editor": "textfield",
+            "description": "A single company/business name (or partial name) or Solomon Islands Business Registry number (e.g. 20111873 for a company, BN20030195 for a business name) to search for.",
+            "prefill": "Solomon"
+        },
+        "queries": {
+            "title": "Company/business names or registration numbers",
+            "type": "array",
+            "editor": "stringList",
+            "description": "Multiple names/registration numbers to search for in one run. Combined with 'query' if both are set."
+        },
+        "register": {
+            "title": "Register to search",
+            "type": "string",
+            "editor": "select",
+            "description": "Restrict the search to one register. \"Any\" searches Companies, Business Names, and Foreign Investments together.",
+            "enum": ["any", "companies", "businessNames", "investments"],
+            "enumTitles": ["Any register", "Companies", "Business names", "Foreign investments"],
+            "default": "any",
+            "prefill": "any"
+        },
+        "fetchDetails": {
+            "title": "Fetch full entity profile",
+            "type": "boolean",
+            "description": "When on (default), each matched entity is opened to pull its full public profile -- addresses, directors, shareholders, and filing history. When off, only the search-result summary (name, registration number, status, incorporation date, sector) is returned, which is faster for a broad name search.",
+            "default": true,
+            "prefill": true
+        },
+        "maxResultsPerQuery": {
+            "title": "Max matches per query",
+            "type": "integer",
+            "description": "Maximum number of matched entities to return (and, if enabled, fetch full profiles for) per search query. The register only returns a single results page per search (no pagination), so a very broad query may not surface every match.",
+            "default": 20,
+            "minimum": 1,
+            "maximum": 200,
+            "prefill": 20
+        },
+        "maxConcurrency": {
+            "title": "Max concurrent workers",
+            "type": "integer",
+            "description": "How many search sessions to run in parallel.",
+            "default": 4,
+            "minimum": 1,
+            "maximum": 16,
+            "prefill": 4
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "editor": "proxy",
+            "description": "Apify Proxy configuration. Residential is on by default.",
+            "default": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            },
+            "prefill": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            }
+        }
+    }
+}

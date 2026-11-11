@@ -1,0 +1,139 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Article / video / latest-headline record",
+        "description": "Raw-passthrough dataset envelope. Every record carries _input/_source/_scrapedAt (and _error/_errorDetail on failures). All page templates (plain article, video, programme/show) carry a NewsArticle JSON-LD block, spread near-verbatim as S1-jsonld -- on video/programme pages that node has no articleBody, only a short description. S1b-jsonld-video (a VideoObject spread) is a defensive fallback only, not observed to trigger on any sampled page. Latest-mode records (S2-rss) carry title/link-style fields from the site-wide RSS feed. Extra schema.org fields beyond those listed here may appear.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The exact input value (URL, or 'latest') that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which extraction strategy emitted this record (S1-jsonld, S1b-jsonld-video, or S2-rss)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed extractions -- the error kind."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "headline": {
+                "title": "Headline",
+                "description": "Article headline (article-mode, from NewsArticle JSON-LD)."
+            },
+            "name": {
+                "title": "Name",
+                "description": "Video title (video-mode, from VideoObject JSON-LD -- duplicates headline)."
+            },
+            "description": {
+                "title": "Description",
+                "description": "Short article summary (article-mode from NewsArticle) or the full prose recap used in place of articleBody (video-mode from VideoObject), or the raw HTML-wrapped RSS item description (latest-mode)."
+            },
+            "articleBody": {
+                "title": "Article body",
+                "description": "Full plain-text article content, when present (article-mode only; video-mode records have no articleBody, see description instead). Contains an appended '- Ends / Published By: ... / Published On: ...' CMS boilerplate tail."
+            },
+            "articleSection": {
+                "title": "Section",
+                "description": "Article vertical/section name (article-mode)."
+            },
+            "datePublished": {
+                "title": "Date published",
+                "description": "ISO 8601 publish date with +05:30 IST offset."
+            },
+            "dateModified": {
+                "title": "Date modified",
+                "description": "ISO 8601 last-modified date with +05:30 IST offset."
+            },
+            "uploadDate": {
+                "title": "Upload date",
+                "description": "ISO 8601 upload date (video-mode, from VideoObject)."
+            },
+            "author": {
+                "title": "Author",
+                "description": "Byline as a single Person object (raw passthrough) -- usually a desk credit like 'India Today Business Desk' rather than an individual reporter."
+            },
+            "publisher": {
+                "title": "Publisher",
+                "description": "Publisher Organization object, including logo."
+            },
+            "image": {
+                "title": "Image",
+                "description": "Lead image ImageObject (article-mode)."
+            },
+            "thumbnailUrl": {
+                "title": "Thumbnail URL",
+                "description": "Video thumbnail image(s) (video-mode, from VideoObject)."
+            },
+            "contentUrl": {
+                "title": "Content URL",
+                "description": "Direct video file/stream URL (video-mode, from VideoObject)."
+            },
+            "duration": {
+                "title": "Duration",
+                "description": "ISO 8601 video duration (video-mode, from VideoObject)."
+            },
+            "mainEntityOfPage": {
+                "title": "Main entity of page",
+                "description": "Canonical page URL reference."
+            },
+            "keywords": {
+                "title": "Keywords",
+                "description": "Comma-separated topic tags, as emitted upstream (article-mode). Sometimes joined with '&nbsp;' instead of a comma -- an upstream CMS quirk, passed through as-is."
+            },
+            "title": {
+                "title": "Title",
+                "description": "Headline from the RSS item (latest-mode)."
+            },
+            "link": {
+                "title": "Link",
+                "description": "Article URL with a trailing '?utm_source=rss' query param (latest-mode). The query param is inert -- the underlying article page loads the same with or without it."
+            },
+            "pubDate": {
+                "title": "Publish date",
+                "description": "RSS pubDate string with +05:30 IST offset (latest-mode)."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across article, video, and latest-headline records.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "_source",
+                    "_scrapedAt",
+                    "headline",
+                    "name",
+                    "title",
+                    "link",
+                    "datePublished",
+                    "uploadDate",
+                    "pubDate",
+                    "author",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

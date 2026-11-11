@@ -1,0 +1,110 @@
+{
+    "title": "LinkedIn Top Voice & Competitor Activity Monitor",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "profileUrls": {
+            "title": "Member profiles",
+            "type": "array",
+            "description": "People to profile - industry influencers, competitors' founders, your own team. A full /in/ URL or just the handle both work.",
+            "editor": "stringList",
+            "prefill": [
+                "satyanadella"
+            ]
+        },
+        "companyUrls": {
+            "title": "Company pages",
+            "type": "array",
+            "description": "Company or showcase pages to profile. A full /company/ URL or just the slug both work. Note that LinkedIn blocks /school/ pages entirely for logged-out visitors, so universities cannot be monitored this way.",
+            "editor": "stringList",
+            "prefill": [
+                "anthropicresearch"
+            ]
+        },
+        "startUrls": {
+            "title": "Company pages (request list)",
+            "type": "array",
+            "description": "The same company links in the request-list format, for callers that already keep one.",
+            "editor": "requestListSources"
+        },
+        "maxPostsPerAccount": {
+            "title": "Maximum posts per account",
+            "type": "integer",
+            "description": "Cap on posts analysed per account. LinkedIn embeds roughly the last 6-10 posts on a logged-out page regardless of what you ask for, so values above that change nothing - the ceiling is LinkedIn's, not this actor's.",
+            "default": 25,
+            "minimum": 1,
+            "maximum": 50,
+            "unit": "posts"
+        },
+        "minReactions": {
+            "title": "Ignore posts below this many reactions",
+            "type": "integer",
+            "description": "Drop low-performing posts before the metrics are computed. Useful for asking 'what does their good content look like' rather than 'what is their average'.",
+            "default": 0,
+            "minimum": 0,
+            "unit": "reactions"
+        },
+        "fetchPostEngagement": {
+            "title": "Fetch real engagement for company posts",
+            "type": "boolean",
+            "description": "Company pages embed their posts WITHOUT any engagement data, while member profiles embed it. Turn this on to open each company post's own permalink and read its true reaction and comment counts - one extra request per post. Leave it off and company engagement metrics stay null rather than being reported as zero.",
+            "default": false
+        },
+        "emitPostRecords": {
+            "title": "Also emit one row per post",
+            "type": "boolean",
+            "description": "Write each analysed post as its own POST row: text, publish date, reactions, hashtags, media type and length.",
+            "default": true
+        },
+        "minDelaySeconds": {
+            "title": "Minimum delay between requests",
+            "type": "integer",
+            "description": "LinkedIn answers request bursts with HTTP 999 and a near-empty page - three back-to-back requests were enough to trip it in testing. A randomised gap is what keeps a run under that gate.",
+            "default": 3,
+            "minimum": 0,
+            "maximum": 60,
+            "unit": "seconds"
+        },
+        "maxDelaySeconds": {
+            "title": "Maximum delay between requests",
+            "type": "integer",
+            "description": "The ceiling of the randomised gap. Raise both bounds if the log shows rate-gate warnings.",
+            "default": 8,
+            "minimum": 0,
+            "maximum": 120,
+            "unit": "seconds"
+        },
+        "exportFormats": {
+            "title": "Extra export files",
+            "type": "array",
+            "description": "Besides the dataset, write ready-made files into this run's key-value store.",
+            "editor": "select",
+            "items": {
+                "type": "string",
+                "enum": [
+                    "json",
+                    "ndjson",
+                    "csv",
+                    "excel"
+                ],
+                "enumTitles": [
+                    "JSON",
+                    "NDJSON",
+                    "CSV",
+                    "Excel (XLSX)"
+                ]
+            },
+            "default": []
+        },
+        "proxyConfiguration": {
+            "title": "Proxy",
+            "type": "object",
+            "description": "Optional. These pages carry no WAF and Apify's datacenter range reaches them, but LinkedIn's per-IP rate gate is real - a proxy helps most when you are monitoring many accounts in one run.",
+            "editor": "proxy",
+            "default": {
+                "useApifyProxy": false
+            }
+        }
+    },
+    "required": []
+}

@@ -1,0 +1,14 @@
+{
+    "actorSpecification": 1,
+    "name": "vietnam-tenders-scraper",
+    "version": "0.1",
+    "buildTag": "latest",
+    "title": "Vietnam Government Tenders Scraper (VNEPS)",
+    "description": "Scrapes Vietnam's official National E-Procurement System (VNEPS, run by the Ministry of Planning and Investment) for public procurement plans, tender notices, and award results -- with winner names, prices, and decision documents. No account or login needed.",
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

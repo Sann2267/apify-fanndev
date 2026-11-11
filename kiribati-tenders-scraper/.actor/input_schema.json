@@ -1,0 +1,30 @@
+{
+    "title": "Kiribati Government Tenders Scraper (Central Procurement Unit)",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "maxResults": {
+            "title": "Max results",
+            "type": "integer",
+            "description": "Caps how many records are kept in the output for this run. The site publishes one continuous chronological list (not split into current/closed views) going back to at least 2021 -- newest tenders first, so a small value returns the most recent/currently-open ones.",
+            "default": 200,
+            "minimum": 1,
+            "maximum": 10000,
+            "prefill": 200
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "editor": "proxy",
+            "description": "Apify Proxy configuration.",
+            "default": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            },
+            "prefill": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            }
+        }
+    }
+}

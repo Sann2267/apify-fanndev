@@ -1,0 +1,60 @@
+{
+    "title": "Papua New Guinea Government Tenders Scraper",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "mode": {
+            "title": "What to scrape",
+            "type": "string",
+            "editor": "select",
+            "description": "'All' pulls open tenders, disposal-of-state-assets notices, and awarded contracts in one run. Pick a single type to run just that section.",
+            "enum": ["all", "tenders", "disposals", "contracts"],
+            "enumTitles": [
+                "All (tenders + disposals + contracts)",
+                "Open tenders only",
+                "Disposal of state assets notices only",
+                "Awarded contracts only"
+            ],
+            "default": "all",
+            "prefill": "all"
+        },
+        "maxResultsPerType": {
+            "title": "Max results per type",
+            "type": "integer",
+            "description": "Applies to disposals and contracts (both fully paginated on the source site). Open tenders are unaffected -- the source page only ever shows the current handful of open tenders, with no further pages available (see README).",
+            "default": 100,
+            "minimum": 1,
+            "maximum": 500,
+            "prefill": 100
+        },
+        "fetchDetails": {
+            "title": "Fetch full detail pages",
+            "type": "boolean",
+            "description": "For disposals and contracts, fetch each record's own page to pull agency, dates, contract value, supplier, and PDF link. Turn off for a faster run that only returns title/link/date.",
+            "default": true
+        },
+        "maxConcurrency": {
+            "title": "Max concurrent detail-page fetches",
+            "type": "integer",
+            "description": "How many detail pages to fetch in parallel per type.",
+            "default": 5,
+            "minimum": 1,
+            "maximum": 16,
+            "prefill": 5
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "editor": "proxy",
+            "description": "Apify Proxy configuration. Residential is on by default.",
+            "default": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            },
+            "prefill": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            }
+        }
+    }
+}

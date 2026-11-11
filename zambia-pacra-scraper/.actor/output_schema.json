@@ -1,0 +1,146 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "PACRA registry search result",
+        "description": "Raw-passthrough dataset envelope. Every record carries _input/_source/_scrapedAt (and _error/_errorDetail on failures, _matchCount on successful searches). One record per matching entity found for a query; a search with zero matches emits one summary record with _matchCount: 0 and no entity fields (a valid outcome, not an error). Entity fields (entityID, entityName, ...) are passed through verbatim from PACRA's own registrysearch API.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The exact search query string that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which extraction strategy emitted this record (S1-registrysearch-api, or \"none\" on failure)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_matchCount": {
+                "type": "integer",
+                "title": "Match count",
+                "description": "Total number of entities the query matched (present on successful searches, including zero-match ones -- capped at 50 by the upstream API, which exposes no pagination parameter)."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed searches -- the error kind (http_<code>, invalid_json, unexpected_shape, blocked_or_transient, empty_query)."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "entityID": {
+                "title": "Entity ID",
+                "description": "PACRA's internal GUID for this entity (used as the identifier when previewing/printing a certificate on portal.pacra.org.zm -- not the public registration number)."
+            },
+            "entityTypeId": {
+                "title": "Entity type ID",
+                "description": "Raw upstream entity type code: 1 = Local Company, 2 = Business Name, 4 = Foreign Company (per the site's own frontend; type 3 was never observed live)."
+            },
+            "entityTypeLabel": {
+                "title": "Entity type",
+                "description": "Human-readable label derived from entityTypeId by this actor (not an upstream field) -- \"Local Company\", \"Business Name\", \"Foreign Company\", or \"Unknown Type <id>\"."
+            },
+            "entityName": {
+                "title": "Registered name",
+                "description": "The entity's registered business/company name."
+            },
+            "entityNumber": {
+                "title": "Registration number",
+                "description": "PACRA registration/incorporation number. Note: searching BY this number does not reliably return the entity (see README known limits) -- this field is only useful as an output/lookup key, not a working search input."
+            },
+            "registrationDate": {
+                "title": "Registration date",
+                "description": "Date the entity was registered/incorporated, as returned by PACRA (dd/mm/yyyy string, passed through unparsed)."
+            },
+            "entityStatus": {
+                "title": "Status",
+                "description": "Current registry status, e.g. \"Active\", \"Inactive\", \"Inactive (Duplicate)\"."
+            },
+            "companyType": {
+                "title": "Company type",
+                "description": "Upstream legal-form description, e.g. \"Local Company - Limited by Shares\", \"Business Name - Individual/Partnership\"."
+            },
+            "entityLimit": {
+                "title": "Entity limit",
+                "description": "Upstream classification of company limitation, e.g. \"Ordinary Company\" (blank for business names)."
+            },
+            "natureofBusiness": {
+                "title": "Nature of business",
+                "description": "Free-text description of the entity's business activity, when PACRA has one on file (often blank)."
+            },
+            "isicClasification": {
+                "title": "ISIC classification",
+                "description": "International Standard Industrial Classification code + short label, e.g. \"6419. Other monetary intermediation\" (often blank)."
+            },
+            "isicDescription": {
+                "title": "ISIC description",
+                "description": "Full ISIC classification description text (often blank)."
+            },
+            "annualReturnStatus": {
+                "title": "Annual return status",
+                "description": "Upstream compliance flag for annual return filing (0/1)."
+            },
+            "annualReturnReason": {
+                "title": "Annual return reason",
+                "description": "Human-readable explanation of the annual return compliance status, including the last-filed date where applicable."
+            },
+            "nominalCapitalStatus": {
+                "title": "Nominal capital status",
+                "description": "Upstream compliance flag for nominal capital (0/1)."
+            },
+            "nominalCapitalReason": {
+                "title": "Nominal capital reason",
+                "description": "Human-readable explanation of the nominal capital compliance status."
+            },
+            "parValueStatus": {
+                "title": "Par value status",
+                "description": "Upstream compliance flag for share par value (upstream sends this as a string \"0\"/\"1\", unlike the other *Status flags which are integers -- passed through as-is)."
+            },
+            "parValueReason": {
+                "title": "Par value reason",
+                "description": "Human-readable explanation of the par value compliance status."
+            },
+            "beneficialOwnerStatus": {
+                "title": "Beneficial owner status",
+                "description": "Upstream compliance flag for beneficial-ownership disclosure (0/1)."
+            },
+            "beneficialOwnerReason": {
+                "title": "Beneficial owner reason",
+                "description": "Human-readable explanation of the beneficial-ownership compliance status."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns for a PACRA registry search result.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "_matchCount",
+                    "entityName",
+                    "entityNumber",
+                    "entityTypeLabel",
+                    "entityStatus",
+                    "companyType",
+                    "registrationDate",
+                    "natureofBusiness",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

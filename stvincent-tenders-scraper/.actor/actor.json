@@ -1,0 +1,14 @@
+{
+    "actorSpecification": 1,
+    "name": "stvincent-tenders-scraper",
+    "version": "0.1",
+    "buildTag": "latest",
+    "title": "Saint Vincent and the Grenadines Government Tenders Scraper",
+    "description": "Scrapes the Central Procurement Board's official eProcurement portal (procurement.gov.vc) for Saint Vincent and the Grenadines: currently open bids, the historical archive of recently closed bids, and yearly contract award notice documents. No account or login needed.",
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

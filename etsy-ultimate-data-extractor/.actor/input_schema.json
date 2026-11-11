@@ -1,0 +1,221 @@
+{
+    "title": "Etsy Ultimate Data Extractor",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "mode": {
+            "title": "Mode",
+            "type": "string",
+            "description": "Which extraction to run. 'search' discovers products and shops, 'shop' profiles a seller and its catalogue, 'product' pulls one listing in full, 'reviews' pulls reviews and sentiment, and 'deepCrawl' chains search into product and reviews in one pass.",
+            "editor": "select",
+            "default": "search",
+            "enum": [
+                "search",
+                "shop",
+                "product",
+                "reviews",
+                "deepCrawl"
+            ],
+            "enumTitles": [
+                "Search - products from category pages, shops from keywords",
+                "Shop Analyzer - seller metrics plus the full active catalogue",
+                "Deep Product & SEO - description, variants, stock, taxonomy",
+                "Review & Sentiment - reviews, ratings, buyer photos, AI tags",
+                "Deep Crawl - search, then every product it finds, with reviews"
+            ]
+        },
+        "searchKeywords": {
+            "title": "Search keywords",
+            "type": "array",
+            "description": "Keywords for search and deepCrawl. IMPORTANT: Etsy's robots.txt disallows /search?q= product search for every crawler, so this actor uses the surface Etsy explicitly allows instead - /search/shops - and then searches each matched shop's own catalogue for the keyword. You get keyword-matched products and the shops behind them, without a disallowed request. Nonsense keywords correctly return nothing.",
+            "editor": "stringList",
+            "prefill": [
+                "vintage ring"
+            ]
+        },
+        "startUrls": {
+            "title": "Start URLs",
+            "type": "array",
+            "description": "Etsy URLs to process. Category pages (https://www.etsy.com/c/jewelry/rings), shop pages (https://www.etsy.com/shop/PBJewelryGift), product pages (https://www.etsy.com/listing/4306368113/birth-flower-ring-925-sterling-silver) and shop searches (https://www.etsy.com/search/shops?q=candle) all work; the actor routes each by shape. A product URL must include its exact slug - see productUrls for why.",
+            "editor": "requestListSources",
+            "prefill": [
+                {
+                    "url": "https://www.etsy.com/c/jewelry/rings"
+                }
+            ]
+        },
+        "productUrls": {
+            "title": "Product URLs",
+            "type": "array",
+            "description": "Full Etsy listing URLs for product and reviews modes, as an alternative to startUrls. The exact slug is required: Etsy answers /listing/<id> and any wrong slug with a redirect, and DataDome blocks the redirect, so a bare listing ID cannot be resolved. Paste the url field of any search_result record.",
+            "editor": "stringList"
+        },
+        "shopNames": {
+            "title": "Shop names",
+            "type": "array",
+            "description": "Shop names (e.g. PBJewelryGift) or shop URLs for shop and reviews modes. Bare names are fine - the actor builds the URL itself, including the locale prefix that Etsy's bot protection requires on shop pages.",
+            "editor": "stringList"
+        },
+        "maxItems": {
+            "title": "Max items",
+            "type": "integer",
+            "description": "Hard ceiling on dataset records for the whole run, shared across every stage of a chained crawl. 0 means no limit. This is the main control over compute cost.",
+            "editor": "number",
+            "default": 200,
+            "minimum": 0
+        },
+        "maxPagesPerTarget": {
+            "title": "Max pages per target",
+            "type": "integer",
+            "description": "How many result pages to walk per category, shop or keyword. A category page holds 64 products, a shop search page 12 shops, a shop reviews page 14 reviews. Category grids stop at page 250 no matter what you set here.",
+            "editor": "number",
+            "default": 5,
+            "minimum": 1,
+            "maximum": 250
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "description": "Etsy is behind DataDome. Residential proxies are strongly recommended: during recon, datacentre addresses were challenged on every surface tested, including the category grid that residential cleared. Without a proxy, request rate from one address degrades results after roughly 30 requests.",
+            "editor": "proxy",
+            "default": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": [
+                    "RESIDENTIAL"
+                ]
+            }
+        },
+        "locale": {
+            "title": "Locale (pins the currency)",
+            "type": "string",
+            "description": "Etsy's locale path prefix. Prices otherwise follow the proxy's exit country - the same ring came back in IDR, EUR, GBP, AUD and CAD purely by changing the exit - so set this if you need a stable currency. Leave empty for Etsy's default US site (USD from a US exit). Shop pages always get a prefix regardless, because the unprefixed shop path is blocked.",
+            "editor": "select",
+            "default": "uk",
+            "enum": [
+                "",
+                "uk",
+                "de-en",
+                "ie",
+                "au",
+                "ca",
+                "nz",
+                "in-en",
+                "sg-en",
+                "hk-en",
+                "il-en",
+                "dk-en",
+                "fi-en",
+                "no-en",
+                "se-en"
+            ],
+            "enumTitles": [
+                "Site default - currency follows the exit IP",
+                "United Kingdom - GBP",
+                "Germany (English) - EUR",
+                "Ireland - EUR",
+                "Australia - AUD",
+                "Canada - CAD",
+                "New Zealand - NZD",
+                "India (English) - INR",
+                "Singapore (English) - SGD",
+                "Hong Kong (English) - HKD",
+                "Israel (English) - ILS",
+                "Denmark (English) - DKK",
+                "Finland (English) - EUR",
+                "Norway (English) - NOK",
+                "Sweden (English) - SEK"
+            ]
+        },
+        "extractReviews": {
+            "title": "Also extract reviews",
+            "type": "boolean",
+            "description": "In shop and product modes, also emit review records. A product page carries only the handful of reviews Etsy renders inline; the deep set comes from the shop's reviews pages, 14 per page.",
+            "editor": "checkbox",
+            "default": false
+        },
+        "deepReviews": {
+            "title": "Reviews: walk the whole shop",
+            "type": "boolean",
+            "description": "In reviews mode, after reading a product's inline reviews, also walk its shop's reviews pages and keep every review left for that product. Costs one request per 14 reviews.",
+            "editor": "checkbox",
+            "default": false
+        },
+        "maxReviewPages": {
+            "title": "Max review pages per shop",
+            "type": "integer",
+            "description": "How many shop reviews pages to walk (14 reviews each). Defaults to maxPagesPerTarget when unset.",
+            "editor": "number",
+            "minimum": 1
+        },
+        "deepCrawlProducts": {
+            "title": "Deep crawl: products to follow",
+            "type": "integer",
+            "description": "In deepCrawl, how many of the discovered products to open in full. Each one is a separate page request, so this is the setting that decides the run's cost.",
+            "editor": "number",
+            "default": 10,
+            "minimum": 1
+        },
+        "shopsPerKeyword": {
+            "title": "Shops to search per keyword",
+            "type": "integer",
+            "description": "How many of the shops matched by a keyword to search for products. Each shop costs one request and returns up to 36 keyword-matched listings.",
+            "editor": "number",
+            "default": 12,
+            "minimum": 1
+        },
+        "bestsellerOnly": {
+            "title": "Bestseller / Star Seller badge only",
+            "type": "boolean",
+            "description": "Keep only products carrying a Bestseller or Star Seller badge. READ THIS FIRST: Etsy currently does not render these badges into server-side HTML on grid pages at all - the page's own config reports badges_disabled and the bestseller experiment is off - so this filter returns almost nothing today. It is kept because it starts working the moment Etsy re-enables the badge. For popularity filtering that works now, use minReviewCount and minRating.",
+            "editor": "checkbox",
+            "default": false
+        },
+        "minReviewCount": {
+            "title": "Minimum review count",
+            "type": "integer",
+            "description": "Keep only products whose seller has at least this many reviews. Grid cards publish the SHOP's review count, not the item's (Etsy renders the seller's stars on every card), so this is a seller-quality filter - and it is the popularity signal that actually works here, unlike bestsellerOnly. For per-item review counts, run product mode.",
+            "editor": "number",
+            "minimum": 0
+        },
+        "minRating": {
+            "title": "Minimum rating",
+            "type": "integer",
+            "description": "Keep only products whose seller is rated at least this many stars (1-5). Like minReviewCount this reads the shop's rating, because that is what a grid card carries.",
+            "editor": "number",
+            "minimum": 0,
+            "maximum": 5
+        },
+        "includeAds": {
+            "title": "Include promoted listings",
+            "type": "boolean",
+            "description": "Category and shop grids mix in promoted listings, which Etsy renders without a shop name. They are dropped by default; turn this on to keep them, flagged with isAd.",
+            "editor": "checkbox",
+            "default": false
+        },
+        "requestDelaySecs": {
+            "title": "Delay between requests (seconds)",
+            "type": "integer",
+            "description": "Floor between requests. DataDome scores request rate per address, so lowering this raises the block rate on long runs.",
+            "editor": "number",
+            "default": 2,
+            "minimum": 0
+        },
+        "maxRetries": {
+            "title": "Max retries per URL",
+            "type": "integer",
+            "description": "Attempts per URL before giving up. Each retry rotates to a different TLS fingerprint, which is what actually clears a DataDome challenge, so this is at least the number of profiles in the ladder.",
+            "editor": "number",
+            "default": 6,
+            "minimum": 1
+        },
+        "requestTimeoutSecs": {
+            "title": "Request timeout (seconds)",
+            "type": "integer",
+            "description": "Per-request timeout. Etsy pages run from 200 KB to 1 MB, so keep this generous on residential proxies.",
+            "editor": "number",
+            "default": 60,
+            "minimum": 10
+        }
+    },
+    "required": []
+}

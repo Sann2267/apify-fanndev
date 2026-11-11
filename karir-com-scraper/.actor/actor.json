@@ -1,0 +1,14 @@
+{
+    "actorSpecification": 1,
+    "name": "karir-com-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Karir.com Scraper",
+    "description": "Search Indonesian job listings on Karir.com by keyword and pull full job details (requirements, responsibilities, salary range, company info) -- no account or API key needed.",
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

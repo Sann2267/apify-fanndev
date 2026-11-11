@@ -1,0 +1,266 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Spotify podcast episode record",
+        "description": "Dataset envelope (_input / _source / _scrapedAt / recordType) on top of Spotify's podcast data, plus fields mined from each episode description. One EPISODE row per episode, one SHOW row per podcast, ERROR rows on failure. Spotify adds and removes fields without notice, so unlisted fields pass through rather than failing the run.",
+        "additionalProperties": true,
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The URL or name that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "pathfinder-queryShowMetadataV2, pathfinder-queryPodcastEpisodes, pathfinder-getEpisodeOrChapter, pathfinder-searchSuggestions, or none on failure rows."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was emitted."
+            },
+            "recordType": {
+                "type": "string",
+                "title": "Record type",
+                "description": "EPISODE, SHOW or ERROR."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Failure rows only: not_found, unsupported_entity or fetch_failed."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic accompanying _error."
+            },
+            "episodeName": {
+                "title": "Episode title",
+                "description": "Episode title exactly as Spotify shows it."
+            },
+            "description": {
+                "title": "Description",
+                "description": "Full episode description with HTML stripped. This is where guests, chapter timestamps and sponsors are listed."
+            },
+            "descriptionLength": {
+                "title": "Description length",
+                "description": "Characters in the description. A very short one usually means the publisher left it empty."
+            },
+            "releaseDate": {
+                "title": "Release date",
+                "description": "Publication date, YYYY-MM-DD."
+            },
+            "releasedAt": {
+                "title": "Released at",
+                "description": "Full publication timestamp; Spotify publishes these to the minute."
+            },
+            "duration": {
+                "title": "Duration",
+                "description": "Episode length as m:ss, or h:mm:ss for long episodes."
+            },
+            "durationMs": {
+                "title": "Duration (ms)",
+                "description": "Episode length in milliseconds."
+            },
+            "durationMinutes": {
+                "title": "Duration (minutes)",
+                "description": "Episode length rounded to whole minutes, for sorting and charting."
+            },
+            "guestHints": {
+                "title": "Guest hints",
+                "description": "Names the title probably contains, derived by splitting on the separators podcast titles conventionally use. A heuristic, not a Spotify field - it can miss a guest or propose a segment name, which is why it is named hints."
+            },
+            "episodeNumberHint": {
+                "title": "Episode number hint",
+                "description": "Episode number read out of the title when one is present. Also a heuristic."
+            },
+            "chapters": {
+                "title": "Chapters",
+                "description": "Timestamps found in the description, each with its display time, offset in seconds and label. Timestamps past the episode's own duration are discarded as false positives."
+            },
+            "chapterCount": {
+                "title": "Chapter count",
+                "description": "How many chapter timestamps were found."
+            },
+            "links": {
+                "title": "Links",
+                "description": "Every URL in the description, de-duplicated and stripped of trailing punctuation."
+            },
+            "linkCount": {
+                "title": "Link count",
+                "description": "How many distinct URLs the description holds."
+            },
+            "sponsorDomains": {
+                "title": "Sponsor domains",
+                "description": "Domains from the description links after removing the show's own distribution and social platforms. In an ad-supported podcast these are usually the advertisers."
+            },
+            "mentionedHandles": {
+                "title": "Mentioned handles",
+                "description": "@handles named in the description, up to forty."
+            },
+            "hasVideo": {
+                "title": "Has video",
+                "description": "True when Spotify carries a video version of the episode."
+            },
+            "mediaTypes": {
+                "title": "Media types",
+                "description": "AUDIO, VIDEO or both, as Spotify reports them."
+            },
+            "hasTranscript": {
+                "title": "Has transcript",
+                "description": "True when Spotify lists a transcript for the episode. The transcript text itself is not public and is not fetched."
+            },
+            "isPaywalled": {
+                "title": "Paywalled",
+                "description": "True for subscriber-only episodes."
+            },
+            "explicit": {
+                "title": "Explicit",
+                "description": "True when Spotify labels the episode explicit."
+            },
+            "playable": {
+                "title": "Playable",
+                "description": "Whether Spotify reports the episode as playable."
+            },
+            "episodeId": {
+                "title": "Episode id",
+                "description": "Spotify episode id."
+            },
+            "episodeUri": {
+                "title": "Episode URI",
+                "description": "spotify:episode: URI."
+            },
+            "episodeUrl": {
+                "title": "Episode URL",
+                "description": "open.spotify.com link to the episode."
+            },
+            "shareUrl": {
+                "title": "Share URL",
+                "description": "Spotify's own share link, including its si tracking parameter."
+            },
+            "audioPreviewUrl": {
+                "title": "Audio preview",
+                "description": "Preview clip URL, when Spotify publishes one."
+            },
+            "coverArt": {
+                "title": "Cover art",
+                "description": "Largest episode artwork Spotify offers."
+            },
+            "showName": {
+                "title": "Podcast",
+                "description": "Name of the show this episode belongs to."
+            },
+            "showId": {
+                "title": "Show id",
+                "description": "Spotify show id."
+            },
+            "showUrl": {
+                "title": "Show URL",
+                "description": "open.spotify.com link to the podcast."
+            },
+            "publisher": {
+                "title": "Publisher",
+                "description": "Who publishes the podcast."
+            },
+            "showDescription": {
+                "title": "Show description",
+                "description": "SHOW rows: the podcast's own description, HTML stripped."
+            },
+            "episodeCount": {
+                "title": "Episode count",
+                "description": "SHOW rows: total episodes in the catalogue, which can far exceed the number scraped."
+            },
+            "averageRating": {
+                "title": "Average rating",
+                "description": "SHOW rows: listener rating out of 5."
+            },
+            "totalRatings": {
+                "title": "Total ratings",
+                "description": "SHOW rows: how many listeners rated the show."
+            },
+            "topics": {
+                "title": "Topics",
+                "description": "SHOW rows: the categories Spotify files the podcast under."
+            },
+            "contentType": {
+                "title": "Content type",
+                "description": "SHOW rows: podcast or audiobook."
+            },
+            "mediaType": {
+                "title": "Show media type",
+                "description": "SHOW rows: AUDIO, VIDEO or MIXED across the catalogue."
+            },
+            "consumptionOrder": {
+                "title": "Consumption order",
+                "description": "SHOW rows: EPISODIC, SERIAL or RECENT - how the publisher intends the show to be listened to."
+            }
+        }
+    },
+    "views": {
+        "overview": {
+            "title": "Episodes",
+            "transformation": {
+                "fields": [
+                    "episodeName",
+                    "showName",
+                    "releaseDate",
+                    "duration",
+                    "guestHints",
+                    "chapterCount",
+                    "sponsorDomains",
+                    "hasVideo",
+                    "hasTranscript",
+                    "explicit",
+                    "episodeUrl"
+                ]
+            },
+            "display": {
+                "component": "table",
+                "properties": {
+                    "episodeName": { "label": "Episode" },
+                    "showName": { "label": "Podcast" },
+                    "releaseDate": { "label": "Released" },
+                    "duration": { "label": "Length" },
+                    "guestHints": { "label": "Guest (hint)" },
+                    "chapterCount": { "label": "Chapters" },
+                    "sponsorDomains": { "label": "Sponsors" },
+                    "hasVideo": { "label": "Video" },
+                    "hasTranscript": { "label": "Transcript" },
+                    "explicit": { "label": "Explicit" },
+                    "episodeUrl": { "label": "Link" }
+                }
+            }
+        },
+        "shows": {
+            "title": "Podcasts",
+            "transformation": {
+                "fields": [
+                    "showName",
+                    "publisher",
+                    "episodeCount",
+                    "averageRating",
+                    "totalRatings",
+                    "mediaType",
+                    "consumptionOrder",
+                    "showUrl"
+                ]
+            },
+            "display": {
+                "component": "table",
+                "properties": {
+                    "showName": { "label": "Podcast" },
+                    "publisher": { "label": "Publisher" },
+                    "episodeCount": { "label": "Episodes" },
+                    "averageRating": { "label": "Rating" },
+                    "totalRatings": { "label": "Ratings" },
+                    "mediaType": { "label": "Media" },
+                    "consumptionOrder": { "label": "Order" },
+                    "showUrl": { "label": "Link" }
+                }
+            }
+        }
+    }
+}

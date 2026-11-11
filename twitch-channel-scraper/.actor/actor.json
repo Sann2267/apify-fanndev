@@ -1,0 +1,14 @@
+{
+    "actorSpecification": 1,
+    "name": "twitch-channel-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Twitch Channel Scraper",
+    "description": "Extract Twitch channel profiles, live stream status, VODs, clips, and stream schedules -- no account or API key needed.",
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

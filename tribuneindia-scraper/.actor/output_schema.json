@@ -1,0 +1,150 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Article / latest-headline record",
+        "description": "Raw-passthrough dataset envelope. Every record carries _input/_source/_scrapedAt (and _error/_errorDetail on failures). Article-mode records (S1-jsonld) are a near-verbatim spread of the article page's bare NewsArticle JSON-LD block, so extra schema.org fields beyond those listed here may appear. Latest-mode records (S2-sitemap, tribuneindia.com/recent-sitemap.xml) carry title/link/lastmod fields since this site exposes no RSS feed.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The exact input value (URL, or 'latest') that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which extraction strategy emitted this record (S1-jsonld or S2-sitemap)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed extractions -- the error kind (not_found, http_<code>, blocked_or_transient)."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "headline": {
+                "title": "Headline",
+                "description": "Article headline, raw passthrough from JSON-LD. Carries a \" - The Tribune\" SEO title-tail suffix as authored by the CMS."
+            },
+            "description": {
+                "title": "Description",
+                "description": "Short article description/dek, from JSON-LD."
+            },
+            "articleBody": {
+                "title": "Article body",
+                "description": "Full plain-text article content, from the JSON-LD NewsArticle node (present on every sampled article)."
+            },
+            "author": {
+                "title": "Author",
+                "description": "Byline object as emitted by upstream JSON-LD (raw passthrough -- a single Person dict on this site, e.g. {\"@type\": \"Person\", \"name\": \"PTI\", \"url\": \"...\"})."
+            },
+            "publisher": {
+                "title": "Publisher",
+                "description": "Publisher NewsMediaOrganization object (name, logo)."
+            },
+            "image": {
+                "title": "Image",
+                "description": "Lead image object (url, width, height)."
+            },
+            "thumbnailUrl": {
+                "title": "Thumbnail URL",
+                "description": "Lead image URL, duplicated as a flat string."
+            },
+            "datePublished": {
+                "title": "Date published",
+                "description": "ISO 8601 publish date."
+            },
+            "dateModified": {
+                "title": "Date modified",
+                "description": "ISO 8601 last-modified date."
+            },
+            "articleSection": {
+                "title": "Section",
+                "description": "Article section/category (e.g. \"India\")."
+            },
+            "keywords": {
+                "title": "Keywords",
+                "description": "Array of topic/keyword tags from JSON-LD. On some articles this is a single-item array duplicating the headline instead of real tags -- a CMS quirk, passed through as-is."
+            },
+            "isAccessibleForFree": {
+                "title": "Accessible for free",
+                "description": "Upstream paywall metering flag. Observed true on every sampled article -- this site does not appear to gate news content behind a paywall."
+            },
+            "mainEntityOfPage": {
+                "title": "Main entity of page",
+                "description": "Canonical article URL."
+            },
+            "sameAs": {
+                "title": "Same as",
+                "description": "The Tribune's own social media profile links (Facebook/Instagram/WhatsApp/X/YouTube) -- not article-specific, present on every article's JSON-LD."
+            },
+            "genre": {
+                "title": "Genre",
+                "description": "Upstream content genre, e.g. \"News\"."
+            },
+            "inLanguage": {
+                "title": "Language",
+                "description": "Article language code, e.g. \"en\"."
+            },
+            "speakable": {
+                "title": "Speakable specification",
+                "description": "Schema.org SpeakableSpecification CSS-selector hint for voice assistants."
+            },
+            "isPartOf": {
+                "title": "Is part of",
+                "description": "Parent section WebPage reference (name, url)."
+            },
+            "url": {
+                "title": "Canonical URL",
+                "description": "Canonical article URL, from JSON-LD."
+            },
+            "title": {
+                "title": "Title",
+                "description": "Headline text of a latest-mode sitemap item, from the sitemap's image:title."
+            },
+            "link": {
+                "title": "Link",
+                "description": "Article URL (latest-mode), from the sitemap item's loc."
+            },
+            "lastmod": {
+                "title": "Last modified",
+                "description": "ISO 8601 timestamp (latest-mode), from the sitemap item's lastmod."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across both article and latest-headline records.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "_source",
+                    "_scrapedAt",
+                    "headline",
+                    "title",
+                    "link",
+                    "datePublished",
+                    "lastmod",
+                    "author",
+                    "articleSection",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

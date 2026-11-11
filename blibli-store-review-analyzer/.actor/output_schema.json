@@ -1,0 +1,199 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Blibli review / store summary record",
+        "description": "Two record shapes, discriminated by `recordType`. REVIEW carries one buyer review with Blibli's own fields passed through verbatim plus flattened fields for AI pipelines. STORE_SUMMARY carries one aggregate per target: rating histogram, negative/positive share, and Blibli's topic counts across the store's entire review base. ERROR carries a diagnostic row when a target fails. Every type is declared nullable because which fields are populated depends on the record type.",
+        "properties": {
+            "_input": {
+                "type": ["string", "null"],
+                "title": "Input",
+                "description": "The store/product/brand identifier that produced this record."
+            },
+            "_source": {
+                "type": ["string", "null"],
+                "title": "Source strategy",
+                "description": "S1-public-reviews, S2-review-summary, or none on failure."
+            },
+            "_scrapedAt": {
+                "type": ["string", "null"],
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": ["string", "null"],
+                "title": "Error",
+                "description": "Present only on failure rows (INVALID_TARGET, BLOCKED_AFTER_RETRIES, UPSTREAM_SHAPE_CHANGED, INVALID_INPUT, EMPTY_RESULT)."
+            },
+            "_errorDetail": {
+                "type": ["string", "null"],
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "recordType": {
+                "type": ["string", "null"],
+                "title": "Record type",
+                "description": "REVIEW, STORE_SUMMARY, or ERROR."
+            },
+            "targetType": {
+                "type": ["string", "null"],
+                "title": "Target type",
+                "description": "merchantCode, productSku, or principalBrandCode."
+            },
+            "targetValue": {
+                "type": ["string", "null"],
+                "title": "Target value",
+                "description": "The resolved store code, product SKU, or brand name."
+            },
+            "merchantName": {
+                "type": ["string", "null"],
+                "title": "Store name",
+                "description": "Display name of the store, resolved from its catalogue listing."
+            },
+            "id": {
+                "type": ["string", "null"],
+                "title": "Review ID",
+                "description": "Blibli's review identifier, used to deduplicate across coverage sweeps."
+            },
+            "name": {
+                "type": ["string", "null"],
+                "title": "Reviewer name",
+                "description": "Reviewer display name. Blibli returns it already masked (e.g. 'M***a'); this actor never attempts to unmask it."
+            },
+            "rating": {
+                "type": ["number", "null"],
+                "title": "Rating",
+                "description": "Star rating, 1-5."
+            },
+            "content": {
+                "type": ["string", "null"],
+                "title": "Review content",
+                "description": "The review text exactly as Blibli returns it."
+            },
+            "reviewText": {
+                "type": ["string", "null"],
+                "title": "Review text",
+                "description": "Same as `content`, surfaced at a stable top-level name for LLM/embedding pipelines."
+            },
+            "reviewLength": {
+                "type": ["number", "null"],
+                "title": "Review length",
+                "description": "Character count of the review text - useful for filtering out one-word reviews before an AI pass."
+            },
+            "hasText": {
+                "type": ["boolean", "null"],
+                "title": "Has text",
+                "description": "False for star-only reviews with no written content."
+            },
+            "ratingPolarity": {
+                "type": ["string", "null"],
+                "title": "Rating polarity",
+                "description": "negative (1-2 stars), neutral (3), or positive (4-5). Derived directly from the star rating - this is NOT natural-language sentiment analysis, it is a cheap pre-filter so an LLM pass can be spent only on the reviews that matter."
+            },
+            "verifiedBuyer": {
+                "type": ["boolean", "null"],
+                "title": "Verified buyer",
+                "description": "Whether Blibli marks the reviewer as having actually purchased the item."
+            },
+            "likes": {
+                "type": ["number", "null"],
+                "title": "Likes",
+                "description": "How many shoppers marked this review helpful."
+            },
+            "edited": {
+                "type": ["boolean", "null"],
+                "title": "Edited",
+                "description": "Whether the reviewer edited the review after posting."
+            },
+            "productSku": {
+                "type": ["string", "null"],
+                "title": "Product SKU",
+                "description": "Which product the review is about - present even on store-wide sweeps, so reviews can be grouped by product."
+            },
+            "imageCount": {
+                "type": ["number", "null"],
+                "title": "Image count",
+                "description": "Number of buyer photos attached."
+            },
+            "videoCount": {
+                "type": ["number", "null"],
+                "title": "Video count",
+                "description": "Number of buyer videos attached."
+            },
+            "hasMedia": {
+                "type": ["boolean", "null"],
+                "title": "Has media",
+                "description": "Whether the review carries any photo or video."
+            },
+            "createdAtIso": {
+                "type": ["string", "null"],
+                "format": "date-time",
+                "title": "Created at",
+                "description": "UTC ISO 8601 time the review was posted."
+            },
+            "updatedAtIso": {
+                "type": ["string", "null"],
+                "format": "date-time",
+                "title": "Updated at",
+                "description": "UTC ISO 8601 time the review was last edited."
+            },
+            "matchedTopic": {
+                "type": ["string", "null"],
+                "title": "Matched topic",
+                "description": "Set when the review was surfaced by a topic sweep (coverage 'maximum'), meaning Blibli classifies it under that topic: QUALITY, PRICE, SHIPMENT, PACKAGING, SERVICE, ORIGINALITY or GENERIC."
+            },
+            "matchedRatingFilter": {
+                "type": ["string", "null"],
+                "title": "Matched rating filter",
+                "description": "Set when the review was surfaced by a per-rating sweep, recording which rating slice found it."
+            },
+            "totalReviews": {
+                "type": ["number", "null"],
+                "title": "Total reviews",
+                "description": "STORE_SUMMARY. Total public reviews Blibli holds for the target - typically far more than any single run can page through."
+            },
+            "averageRating": {
+                "type": ["number", "null"],
+                "title": "Average rating",
+                "description": "STORE_SUMMARY. Mean star rating across the entire review base."
+            },
+            "maxRating": {
+                "type": ["number", "null"],
+                "title": "Max rating",
+                "description": "STORE_SUMMARY. Top of the rating scale (5)."
+            },
+            "ratingCounts": {
+                "type": ["object", "null"],
+                "title": "Rating histogram",
+                "description": "STORE_SUMMARY. Review count per star level, keyed '1' to '5', across the entire review base."
+            },
+            "negativeSharePercent": {
+                "type": ["number", "null"],
+                "title": "Negative share %",
+                "description": "STORE_SUMMARY. Percentage of all rated reviews that are 1-2 star. The headline number for tracking whether a store's sentiment is deteriorating."
+            },
+            "positiveSharePercent": {
+                "type": ["number", "null"],
+                "title": "Positive share %",
+                "description": "STORE_SUMMARY. Percentage of all rated reviews that are 4-5 star."
+            },
+            "commentCount": {
+                "type": ["number", "null"],
+                "title": "Comment count",
+                "description": "STORE_SUMMARY. Number of reviews carrying written text."
+            },
+            "topicCounts": {
+                "type": ["object", "null"],
+                "title": "Topic counts",
+                "description": "STORE_SUMMARY. Blibli's own classification of what reviewers talk about, counted across the entire review base: QUALITY, PRICE, SHIPMENT, PACKAGING, SERVICE, ORIGINALITY, GENERIC. This is the 'what do customers keep bringing up' signal without needing an AI pass."
+            },
+            "topicLabels": {
+                "type": ["object", "null"],
+                "title": "Topic labels",
+                "description": "STORE_SUMMARY. Human-readable label for each topic code, so consumers need not hardcode the translation."
+            }
+        }
+    }
+}

@@ -1,0 +1,66 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Search-result / listing-detail record",
+        "description": "Raw-passthrough dataset envelope on top of Point2Homes' own schema.org JSON-LD (`RentAction`) shape. Every record carries _input/_source/_scrapedAt (and _error/_errorDetail on failures). \"search\" mode with fetchDetails=false emits a lighter summary card per listing (price range, address, one image, url); fetchDetails=true (default) and \"listing\" mode both emit the full detail-page record (description, bed/bath/floor-plan breakdown, agent name, photo gallery, geo-coordinates).",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "search mode: \"<propertyType>:<location>\" that produced this record. listing mode: the exact listing URL requested."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "S1-search-summary (lightweight search-result card), S2-detail (full listing/apartment-complex detail page), or none on failure."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed extractions (e.g. location_not_found, listing_not_found, http_5xx, blocked_or_transient)."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "_gridTotal": { "title": "Grid total", "description": "S1-search-summary only -- Point2Homes' own reported total match count for this location/propertyType." },
+            "position": { "title": "Position", "description": "S1-search-summary only -- 1-based rank within the search-results grid." },
+
+            "@type": { "title": "JSON-LD type", "description": "Always \"RentAction\" -- the schema.org action wrapping the rentable property/complex." },
+            "agent": { "title": "Listing agent/broker", "description": "S2-detail only -- {\"@type\": \"RealEstateAgent\", \"name\": \"...\"}, the property manager/broker/agent name Point2Homes attributes the listing to." },
+            "priceSpecification": { "title": "Price", "description": "{\"minPrice\", \"maxPrice\" (omitted if a single flat price), \"priceCurrency\"} -- the overall asking rent range for the property/complex." },
+            "object": { "title": "Property", "description": "The rentable entity itself -- @type is \"SingleFamilyResidence\" (house/townhome/condo unit) or \"ApartmentComplex\" (multi-unit building). Carries name, image, url (canonical listing URL), address (PostalAddress), and on S2-detail records also description, numberOfRooms, numberOfBathroomsTotal, floorSize, petsAllowed, and accommodationFloorPlan (array of per-floor-plan FloorPlan objects, each with numberOfBedrooms/numberOfBathroomsTotal/floorSize/price -- an ApartmentComplex typically lists several)." },
+
+            "geoId": { "title": "Geo ID", "description": "S2-detail only -- Point2Homes' internal numeric location/neighborhood ID. Not present in JSON-LD; parsed from an HTML data attribute." },
+            "latitude": { "title": "Latitude", "description": "S2-detail only -- parsed from an HTML data attribute, not present in JSON-LD." },
+            "longitude": { "title": "Longitude", "description": "S2-detail only -- parsed from an HTML data attribute, not present in JSON-LD." },
+            "internalId": { "title": "Internal listing ID", "description": "S2-detail only -- Point2Homes' internal numeric property ID." },
+            "companyId": { "title": "Company ID", "description": "S2-detail only -- Point2Homes' internal numeric ID for the listing/management company." },
+            "propertyShortName": { "title": "Property short name", "description": "S2-detail only -- the URL-slug form of the property name." },
+            "city": { "title": "City", "description": "S2-detail only -- from the same HTML data attribute as geoId/latitude/longitude (redundant with object.address.addressLocality, kept for convenience)." },
+            "state": { "title": "State", "description": "S2-detail only." },
+            "country": { "title": "Country", "description": "S2-detail only." },
+            "photos": { "title": "Photos", "description": "S2-detail only -- full photo-gallery image URLs (placeholder \"no-image.png\" slots are filtered out; some listings genuinely have only 1 real photo)." }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across search-summary and listing-detail records.",
+            "transformation": {
+                "fields": ["_input", "_source", "agent", "priceSpecification", "object", "position", "_gridTotal", "_error"]
+            },
+            "display": {"component": "table"}
+        }
+    }
+}

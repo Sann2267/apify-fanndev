@@ -1,0 +1,291 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "National research portal record",
+        "description": "Every record carries _input, _source, _scrapedAt, recordType, portal and portalName. recordType discriminates the payload: ARTICLE (a paper from any of the three portals, mapped onto one vocabulary), JOURNAL (Garuda journal directory), AUTHOR (Garuda researcher directory), SOURCE (reference mode) and ERROR. Portal-specific extras stay under _raw.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The query that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source",
+                "description": "S1-garuda, S1-cinii or S1-kci."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was emitted."
+            },
+            "recordType": {
+                "type": ["string", "null"],
+                "title": "Record type",
+                "description": "ARTICLE | JOURNAL | AUTHOR | SOURCE | ERROR."
+            },
+            "portal": {
+                "type": ["string", "null"],
+                "title": "Portal",
+                "description": "garuda | cinii | kci."
+            },
+            "portalName": {
+                "type": ["string", "null"],
+                "title": "Portal name",
+                "description": "Full name of the national portal the record came from."
+            },
+            "title": {
+                "type": ["string", "null"],
+                "title": "Title",
+                "description": "Title of the paper or journal, in the language it was published in."
+            },
+            "url": {
+                "type": ["string", "null"],
+                "title": "URL",
+                "description": "Public page for this record on its portal."
+            },
+            "documentId": {
+                "type": ["string", "null"],
+                "title": "Document ID",
+                "description": "The portal's own identifier for the paper."
+            },
+            "authors": {
+                "title": "Authors",
+                "description": "List of {name, authorId}. Garuda gives its internal author ID, KCI gives the author's ORCID where they registered one."
+            },
+            "authorNames": {
+                "type": ["string", "null"],
+                "title": "Authors (joined)",
+                "description": "Author names joined with '; ', for spreadsheets."
+            },
+            "source": {
+                "type": ["string", "null"],
+                "title": "Published in",
+                "description": "Journal, proceedings or series the paper appeared in, including volume and issue where the portal prints them together."
+            },
+            "publisher": {
+                "type": ["string", "null"],
+                "title": "Publisher",
+                "description": "Publishing institution or learned society."
+            },
+            "year": {
+                "type": ["integer", "null"],
+                "title": "Year",
+                "description": "Publication year."
+            },
+            "publicationDate": {
+                "type": ["string", "null"],
+                "title": "Publication date",
+                "description": "Fuller date where the portal publishes one, e.g. 2026-09."
+            },
+            "volume": {
+                "type": ["string", "null"],
+                "title": "Volume",
+                "description": "Journal volume (KCI)."
+            },
+            "issue": {
+                "type": ["string", "null"],
+                "title": "Issue",
+                "description": "Journal issue (KCI)."
+            },
+            "pages": {
+                "type": ["string", "null"],
+                "title": "Pages",
+                "description": "Page range as published (KCI)."
+            },
+            "citationCount": {
+                "type": ["integer", "null"],
+                "title": "Citations",
+                "description": "How many times KCI records the paper as cited."
+            },
+            "indexTier": {
+                "type": ["string", "null"],
+                "title": "Index tier",
+                "description": "KCI's indexing tier for the journal, e.g. accredited or candidate."
+            },
+            "doi": {
+                "type": ["string", "null"],
+                "title": "DOI",
+                "description": "Digital Object Identifier where the portal publishes one."
+            },
+            "description": {
+                "type": ["string", "null"],
+                "title": "Description",
+                "description": "Abstract or summary line where the portal publishes one."
+            },
+            "downloadUrl": {
+                "type": ["string", "null"],
+                "title": "Full-text download",
+                "description": "Direct link to the publisher's PDF, when the portal links one (Garuda)."
+            },
+            "sourceUrl": {
+                "type": ["string", "null"],
+                "title": "Original source",
+                "description": "Link to the article on the publisher's own site (Garuda)."
+            },
+            "dataUrl": {
+                "type": ["string", "null"],
+                "title": "Machine-readable record",
+                "description": "JSON representation of the record on the portal (CiNii)."
+            },
+            "journalId": {
+                "type": ["string", "null"],
+                "title": "Journal ID",
+                "description": "Portal identifier for a journal."
+            },
+            "issn": {
+                "type": ["string", "null"],
+                "title": "ISSN",
+                "description": "Print ISSN, where registered."
+            },
+            "eissn": {
+                "type": ["string", "null"],
+                "title": "E-ISSN",
+                "description": "Electronic ISSN, where registered."
+            },
+            "coverImageUrl": {
+                "type": ["string", "null"],
+                "title": "Cover image",
+                "description": "Journal cover image published by the portal."
+            },
+            "name": {
+                "type": ["string", "null"],
+                "title": "Author name",
+                "description": "Researcher name (AUTHOR records)."
+            },
+            "authorId": {
+                "type": ["string", "null"],
+                "title": "Author ID",
+                "description": "Portal identifier for the researcher."
+            },
+            "affiliation": {
+                "type": ["string", "null"],
+                "title": "Affiliation",
+                "description": "Institution the researcher is registered under."
+            },
+            "documentCount": {
+                "type": ["integer", "null"],
+                "title": "Documents",
+                "description": "How many documents the portal attributes to the researcher."
+            },
+            "page": {
+                "type": ["integer", "null"],
+                "title": "Result page",
+                "description": "Which page of results this record came from."
+            },
+            "totalResults": {
+                "type": ["integer", "null"],
+                "title": "Total results",
+                "description": "How many records the portal says match the query in total."
+            },
+            "isAvailable": {
+                "type": ["boolean", "null"],
+                "title": "Available",
+                "description": "Whether the portal answered with usable data (reference mode)."
+            },
+            "detail": {
+                "type": ["string", "null"],
+                "title": "Detail",
+                "description": "Human-readable probe result (reference mode)."
+            },
+            "sample": {
+                "title": "Sample",
+                "description": "Evidence measured during the probe, including which modes that portal supports."
+            },
+            "_raw": {
+                "title": "Raw published values",
+                "description": "The portal's own row or object, kept because these run-on citation strings change format without notice."
+            },
+            "_error": {
+                "type": ["string", "null"],
+                "title": "Error kind",
+                "description": "no_results | unsupported_mode | not_found | service_unavailable | blocked_or_transient."
+            },
+            "_errorDetail": {
+                "type": ["string", "null"],
+                "title": "Error detail",
+                "description": "Human-readable detail, naming the portals that do support the request where relevant."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across every record type.",
+            "transformation": {
+                "fields": [
+                    "recordType",
+                    "portal",
+                    "title",
+                    "authorNames",
+                    "source",
+                    "year",
+                    "url",
+                    "totalResults",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        },
+        "articles": {
+            "title": "Articles",
+            "description": "Papers across all three portals in one vocabulary.",
+            "transformation": {
+                "fields": [
+                    "portal",
+                    "title",
+                    "authorNames",
+                    "source",
+                    "publisher",
+                    "year",
+                    "citationCount",
+                    "doi",
+                    "url",
+                    "downloadUrl"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        },
+        "journals": {
+            "title": "Journals",
+            "description": "Journal directory rows.",
+            "transformation": {
+                "fields": [
+                    "title",
+                    "publisher",
+                    "issn",
+                    "eissn",
+                    "journalId",
+                    "url"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        },
+        "authors": {
+            "title": "Researchers",
+            "description": "Researcher directory rows.",
+            "transformation": {
+                "fields": [
+                    "name",
+                    "affiliation",
+                    "documentCount",
+                    "authorId",
+                    "url"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

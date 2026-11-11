@@ -1,0 +1,173 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "VNEPS tender/plan/award record",
+        "description": "One record per VNEPS ('contractor selection') search hit, produced by mode=list, or one full award/contract detail record produced by mode=detail (fetched by inputResultId). List records blend several record types (procurement plans, tender notices, award results, and signed contracts) -- fields not applicable to a given record's type are simply null. A single _error record is emitted instead of payload fields when a record can't be fetched.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "For list records: the search parameters that produced this page. For detail records: the inputResultId that was requested."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which strategy emitted this record (S1-smart-search, S1-contractor-input-result-detail, or 'none' on error)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed records (blocked_or_transient, not_found)."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "titleDisplay": {
+                "title": "Title",
+                "description": "(list only) The bid/plan name, pulled up from the upstream array field for readability."
+            },
+            "recordType": {
+                "title": "Record type",
+                "description": "(list only) Upstream 'type': es-plan-project-p (procurement plan), es-notify-contractor (tender notice / award result), etc."
+            },
+            "stepCode": {
+                "title": "Step code",
+                "description": "(list only) The record's lifecycle stage, e.g. plan-step-1, notify-contractor-step-4-kqlcnt (award-result stage)."
+            },
+            "notifyNo": {
+                "title": "Notify number",
+                "description": "The tender notice's own reference number, when applicable."
+            },
+            "planNo": {
+                "title": "Plan number",
+                "description": "The procurement plan's own reference number, when applicable."
+            },
+            "procuringEntityName": {
+                "title": "Procuring entity name",
+                "description": "The government/state body running this procurement."
+            },
+            "investorName": {
+                "title": "Investor name",
+                "description": "The investor/owner named on the record (often the same as procuringEntityName)."
+            },
+            "provinceNames": {
+                "title": "Province names",
+                "description": "(list only) Vietnamese province/city name(s) associated with the record's location."
+            },
+            "publicDate": {
+                "title": "Public date",
+                "description": "When this record was published on VNEPS (local Vietnam time, no timezone suffix)."
+            },
+            "bidCloseDate": {
+                "title": "Bid close date",
+                "description": "Bid submission deadline, when applicable."
+            },
+            "decisionDate": {
+                "title": "Decision date",
+                "description": "Date of the underlying approval/decision document."
+            },
+            "status": {
+                "title": "Status",
+                "description": "Upstream status code, e.g. IS_PUBLISH."
+            },
+            "investField": {
+                "title": "Investment field",
+                "description": "Upstream category code(s), e.g. TV (consulting), HH (goods), XL (construction)."
+            },
+            "investTotal": {
+                "title": "Investment total",
+                "description": "(list only) Total estimated investment value, in VND, when applicable."
+            },
+            "bidPriceDisplay": {
+                "title": "Bid price",
+                "description": "(list only) Estimated bid/package price, in VND."
+            },
+            "winningContractorDisplay": {
+                "title": "Winning contractor",
+                "description": "(list only) Winning contractor's legal name, when the record has reached the award stage."
+            },
+            "bidWinningPriceDisplay": {
+                "title": "Winning price",
+                "description": "(list only) Winning bid price, in VND, when the record has reached the award stage."
+            },
+            "inputResultId": {
+                "title": "Input result ID",
+                "description": "Present when this record has a contractor-selection-result stage -- pass this into a 'detail' mode run for the full award/contract detail (winner org/tax code, decision documents, lot-by-lot results)."
+            },
+            "raw": {
+                "title": "Raw search hit",
+                "description": "(list only) The complete upstream search-hit object verbatim -- field set varies by recordType; passed through as-is rather than enumerated field-by-field."
+            },
+            "bidNo": {
+                "title": "Bid number",
+                "description": "(detail only) The package's own bid reference number."
+            },
+            "bidName": {
+                "title": "Bid name",
+                "description": "(detail only) The package's title."
+            },
+            "decisionNo": {
+                "title": "Decision number",
+                "description": "(detail only) The award decision document's reference number."
+            },
+            "decisionAgency": {
+                "title": "Decision agency",
+                "description": "(detail only) The body that issued the award decision."
+            },
+            "lotCount": {
+                "title": "Lot count",
+                "description": "(detail only) Number of lots on this award result."
+            },
+            "winningContractorOrgCodes": {
+                "title": "Winning contractor org codes",
+                "description": "(detail only) System org code(s) of the winning contractor(s) -- this endpoint does not carry the plain legal name; see a matching 'list' record's winningContractorDisplay for that."
+            },
+            "winningContractorTaxCodes": {
+                "title": "Winning contractor tax codes",
+                "description": "(detail only) Vietnamese tax code(s) of the winning contractor(s)."
+            },
+            "winningPrices": {
+                "title": "Winning prices",
+                "description": "(detail only) Winning bid price(s) per lot, in VND."
+            },
+            "fullDetail": {
+                "title": "Full detail (raw)",
+                "description": "(detail only) The complete upstream detail response verbatim -- decision documents, per-lot contractor results, contact emails, contract periods, and more."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across list and detail records -- rows missing a given column render blank.",
+            "transformation": {
+                "fields": [
+                    "titleDisplay",
+                    "recordType",
+                    "procuringEntityName",
+                    "publicDate",
+                    "bidCloseDate",
+                    "winningContractorDisplay",
+                    "bidWinningPriceDisplay",
+                    "inputResultId",
+                    "_error",
+                    "_scrapedAt"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

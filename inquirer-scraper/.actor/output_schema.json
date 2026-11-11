@@ -1,0 +1,109 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Article / latest-headline record",
+        "description": "Every record carries _input/_source/_scrapedAt (and _error/_errorDetail on failures). Article-mode records (S1-jsonld+html) carry explicit fields extracted from the page's NewsArticle JSON-LD block plus a body reconstructed from <p> tags after double HTML-entity-unescaping the WordPress Gutenberg markup. Latest-mode records (S2-rss) carry title/link-style fields from the site-wide /fullfeed RSS.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The exact input value (URL, or 'latest') that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which extraction strategy emitted this record (S1-jsonld or S2-rss)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed extractions -- the error kind."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "headline": {
+                "title": "Headline",
+                "description": "Article headline (article-mode)."
+            },
+            "description": {
+                "title": "Description",
+                "description": "Short article description/dek (article-mode)."
+            },
+            "articleBody": {
+                "title": "Article body",
+                "description": "Full article text, reconstructed by joining <p> paragraphs from the double-unescaped articleBody Gutenberg markup (article-mode)."
+            },
+            "datePublished": {
+                "title": "Date published",
+                "description": "ISO 8601 publish date (article-mode)."
+            },
+            "dateModified": {
+                "title": "Date modified",
+                "description": "ISO 8601 last-modified date (article-mode)."
+            },
+            "author": {
+                "title": "Author",
+                "description": "Byline name, flattened from the JSON-LD author dict (article-mode)."
+            },
+            "image": {
+                "title": "Image URL",
+                "description": "Lead image URL, flattened from the JSON-LD image object/string (article-mode)."
+            },
+            "title": {
+                "title": "Title",
+                "description": "Headline from the RSS item (latest-mode)."
+            },
+            "link": {
+                "title": "Link",
+                "description": "Article URL (latest-mode)."
+            },
+            "guid": {
+                "title": "GUID",
+                "description": "RSS item guid (latest-mode)."
+            },
+            "pubDate": {
+                "title": "Publish date",
+                "description": "RSS pubDate string (latest-mode)."
+            },
+            "imageUrl": {
+                "title": "Image URL (RSS)",
+                "description": "media:content url from the RSS item, when present (latest-mode)."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across both article and latest-headline records.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "_source",
+                    "_scrapedAt",
+                    "headline",
+                    "title",
+                    "link",
+                    "datePublished",
+                    "pubDate",
+                    "author",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

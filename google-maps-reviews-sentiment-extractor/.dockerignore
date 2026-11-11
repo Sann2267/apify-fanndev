@@ -1,0 +1,12 @@
+.git
+storage
+__pycache__
+*.pyc
+.venv
+test_*.py
+.call-input.json
+_input.json
+.push.log
+.call-*.json
+.call-*.log
+.cloud-items.json

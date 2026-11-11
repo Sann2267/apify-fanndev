@@ -1,0 +1,14 @@
+{
+    "actorSpecification": 1,
+    "name": "huggingface-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Hugging Face Scraper",
+    "description": "Search and extract Hugging Face model, dataset, and Space listings, full repo details (files, config, card metadata), and user/organization profiles -- no account or API key needed.",
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

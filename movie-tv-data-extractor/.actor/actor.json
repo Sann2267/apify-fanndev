@@ -1,0 +1,24 @@
+{
+    "actorSpecification": 1,
+    "name": "movie-tv-data-extractor",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Movie & TV Data Extractor (All-in-One)",
+    "description": "Nine movie and TV extractors in one, on TMDB's official API. Paste IMDb ids, TMDB links or just names. Cast, crew, budget and revenue; full filmographies; every episode with its own rating; reviews with scores; genre and year search; charts. Optional Markdown output for RAG.",
+    "categories": [
+        "VIDEOS",
+        "AGENTS",
+        "OTHER"
+    ],
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json",
+    "defaultRunOptions": {
+        "build": "latest",
+        "memoryMbytes": 512,
+        "timeoutSecs": 3600
+    }
+}

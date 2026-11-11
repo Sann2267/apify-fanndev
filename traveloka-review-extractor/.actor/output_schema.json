@@ -1,0 +1,316 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+            "recordType": {
+                "type": "string"
+            },
+            "objectId": {
+                "type": [
+                    "string",
+                    "null"
+                ]
+            },
+            "objectName": {
+                "type": [
+                    "string",
+                    "null"
+                ]
+            },
+            "product": {
+                "type": [
+                    "string",
+                    "null"
+                ]
+            },
+            "productType": {
+                "type": [
+                    "string",
+                    "null"
+                ]
+            },
+            "sourceUrl": {
+                "type": [
+                    "string",
+                    "null"
+                ]
+            },
+            "rating": {
+                "type": [
+                    "number",
+                    "integer",
+                    "null"
+                ]
+            },
+            "ratingScale": {
+                "type": [
+                    "number",
+                    "integer",
+                    "null"
+                ]
+            },
+            "ratingLabel": {
+                "type": [
+                    "string",
+                    "null"
+                ]
+            },
+            "totalReviewCount": {
+                "type": [
+                    "number",
+                    "integer",
+                    "null"
+                ]
+            },
+            "matchingReviewCount": {
+                "type": [
+                    "number",
+                    "integer",
+                    "null"
+                ]
+            },
+            "reviewsCollected": {
+                "type": [
+                    "integer",
+                    "null"
+                ]
+            },
+            "ratingTags": {
+                "type": [
+                    "array",
+                    "null"
+                ]
+            },
+            "distributions": {
+                "type": [
+                    "array",
+                    "object",
+                    "null"
+                ]
+            },
+            "reviewId": {
+                "type": [
+                    "string",
+                    "null"
+                ]
+            },
+            "reviewedAt": {
+                "type": [
+                    "string",
+                    "null"
+                ]
+            },
+            "reviewTimestampMs": {
+                "type": [
+                    "number",
+                    "integer",
+                    "null"
+                ]
+            },
+            "score": {
+                "type": [
+                    "number",
+                    "integer",
+                    "null"
+                ]
+            },
+            "scoreScale": {
+                "type": [
+                    "number",
+                    "integer",
+                    "null"
+                ]
+            },
+            "text": {
+                "type": [
+                    "string",
+                    "null"
+                ]
+            },
+            "originalText": {
+                "type": [
+                    "string",
+                    "null"
+                ]
+            },
+            "isMachineTranslated": {
+                "type": [
+                    "boolean",
+                    "null"
+                ]
+            },
+            "reviewerName": {
+                "type": [
+                    "string",
+                    "null"
+                ]
+            },
+            "reviewerStatus": {
+                "type": [
+                    "string",
+                    "null"
+                ]
+            },
+            "reviewerPhotoUrl": {
+                "type": [
+                    "string",
+                    "null"
+                ]
+            },
+            "subRatings": {
+                "type": [
+                    "object",
+                    "null"
+                ]
+            },
+            "photoUrls": {
+                "type": [
+                    "array",
+                    "null"
+                ]
+            },
+            "videoUrls": {
+                "type": [
+                    "array",
+                    "null"
+                ]
+            },
+            "mediaCount": {
+                "type": [
+                    "integer",
+                    "null"
+                ]
+            },
+            "helpfulCount": {
+                "type": [
+                    "number",
+                    "integer",
+                    "null"
+                ]
+            },
+            "propertyReplyText": {
+                "type": [
+                    "string",
+                    "null"
+                ]
+            },
+            "reviewSource": {
+                "type": [
+                    "string",
+                    "null"
+                ]
+            },
+            "warnings": {
+                "type": [
+                    "array",
+                    "null"
+                ]
+            },
+            "error": {
+                "type": [
+                    "string",
+                    "null"
+                ]
+            },
+            "scrapedAt": {
+                "type": "string"
+            }
+        },
+        "required": [
+            "recordType",
+            "scrapedAt"
+        ]
+    },
+    "views": {
+        "reviews": {
+            "title": "Reviews",
+            "transformation": {
+                "fields": [
+                    "objectName",
+                    "reviewedAt",
+                    "score",
+                    "text",
+                    "reviewerName",
+                    "photoUrls",
+                    "helpfulCount",
+                    "recordType"
+                ]
+            },
+            "display": {
+                "component": "table",
+                "properties": {
+                    "objectName": {
+                        "label": "Object"
+                    },
+                    "reviewedAt": {
+                        "label": "Date"
+                    },
+                    "score": {
+                        "label": "Score"
+                    },
+                    "text": {
+                        "label": "Review"
+                    },
+                    "reviewerName": {
+                        "label": "Reviewer"
+                    },
+                    "photoUrls": {
+                        "label": "Photos"
+                    },
+                    "helpfulCount": {
+                        "label": "Helpful"
+                    },
+                    "recordType": {
+                        "label": "Type"
+                    }
+                }
+            }
+        },
+        "summaries": {
+            "title": "Object summaries",
+            "transformation": {
+                "fields": [
+                    "objectName",
+                    "product",
+                    "rating",
+                    "ratingLabel",
+                    "totalReviewCount",
+                    "reviewsCollected",
+                    "ratingTags",
+                    "recordType"
+                ]
+            },
+            "display": {
+                "component": "table",
+                "properties": {
+                    "objectName": {
+                        "label": "Object"
+                    },
+                    "product": {
+                        "label": "Product"
+                    },
+                    "rating": {
+                        "label": "Rating"
+                    },
+                    "ratingLabel": {
+                        "label": "Label"
+                    },
+                    "totalReviewCount": {
+                        "label": "Total reviews"
+                    },
+                    "reviewsCollected": {
+                        "label": "Collected"
+                    },
+                    "ratingTags": {
+                        "label": "Aspect tags"
+                    },
+                    "recordType": {
+                        "label": "Type"
+                    }
+                }
+            }
+        }
+    }
+}

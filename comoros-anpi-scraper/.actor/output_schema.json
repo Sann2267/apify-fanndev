@@ -1,0 +1,122 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "ANPI company directory record",
+        "description": "Raw-passthrough dataset envelope. Every record carries _input/_source/_scrapedAt (and _error/_errorDetail on failures). Successful records (_source: S1-anpi-rest) are the exact JSON row ANPI's own REST API returns for a company, field names verbatim.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The search term you gave (if any), or a description of the island/year/city/sector/RCCM filters used, or \"(all companies)\" for an unfiltered browse."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "S1-anpi-rest (successful record from ANPI's own REST API), or none (error record)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed jobs -- no_results (filters/search matched nothing) or blocked_or_transient (network issue)."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "_warning": {
+                "type": "string",
+                "title": "Warning",
+                "description": "pagination_truncated_by_page_cap if this job had more matches on file than this actor's safety page-depth cap allowed it to fetch."
+            },
+            "id": {
+                "title": "Internal ID",
+                "description": "ANPI's internal numeric record ID."
+            },
+            "nom": {
+                "title": "Company name",
+                "description": "Registered company/business name."
+            },
+            "rccm": {
+                "title": "RCCM number",
+                "description": "Registre du Commerce et du Crédit Mobilier number on file. Empty for every record as of this actor's last verification -- an upstream data-entry gap, not a scraping gap (see README)."
+            },
+            "ile": {
+                "title": "Island",
+                "description": "grande_comore, anjouan, or moheli."
+            },
+            "secteur": {
+                "title": "Business sector",
+                "description": "Business sector code on file. Empty for every record as of this actor's last verification -- an upstream data-entry gap, not a scraping gap (see README)."
+            },
+            "annee": {
+                "title": "Registration year",
+                "description": "Year the company was registered/created, as recorded by ANPI."
+            },
+            "siege": {
+                "title": "Headquarters",
+                "description": "Free-text registered headquarters address, as recorded by ANPI."
+            },
+            "ville": {
+                "title": "City",
+                "description": "City on file. Empty for every record as of this actor's last verification -- an upstream data-entry gap, not a scraping gap (see README)."
+            },
+            "dirigeant": {
+                "title": "Manager/director",
+                "description": "Name of the company's manager/director on file. Empty for every record as of this actor's last verification -- an upstream data-entry gap, not a scraping gap (see README)."
+            },
+            "capital": {
+                "title": "Share capital",
+                "description": "Declared share capital (in Comorian francs) on file. Empty for every record as of this actor's last verification -- an upstream data-entry gap, not a scraping gap (see README)."
+            },
+            "forme_juridique": {
+                "title": "Legal form",
+                "description": "Legal form code, e.g. SARL, SARLU, EI, SAS, PP."
+            },
+            "description": {
+                "title": "Description",
+                "description": "Free-text description of the company's activity, where present. Null for most/all records observed."
+            },
+            "date_creation": {
+                "title": "Record created",
+                "description": "Timestamp this row was created in ANPI's own database (a data-entry/import timestamp, not the company's own registration date -- see 'annee' for that)."
+            },
+            "date_maj": {
+                "title": "Record last updated",
+                "description": "Timestamp this row was last updated in ANPI's own database."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns for every company record.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "_source",
+                    "_scrapedAt",
+                    "nom",
+                    "forme_juridique",
+                    "ile",
+                    "siege",
+                    "annee",
+                    "rccm",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

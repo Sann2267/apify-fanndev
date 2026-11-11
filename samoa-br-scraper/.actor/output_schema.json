@@ -1,0 +1,153 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Samoa company profile / search-result record",
+        "description": "Raw-passthrough dataset envelope. Every record carries _input/_source/_scrapedAt (and _error/_errorDetail on failures). Detail-mode records (_source: S1-catalyst-detail, the default) carry the full company profile, with field names taken VERBATIM from the labels MCIL's own 'View Company Details' page displays (e.g. 'Company Status', 'Incorporation Date') -- this is deliberate: the register exposes no JSON REST API, only server-rendered HTML, so the label text IS upstream's own field vocabulary. Summary-mode records (_source: S1-catalyst-searchresult, when 'Fetch full company profile' is off) carry only the search-result row.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The exact query (name or registration number) that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "S1-catalyst-detail (full profile), S1-catalyst-searchresult (summary row only), or none (error record)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed extractions -- not_found (search matched nothing), detail_fetch_failed / blocked_or_transient (network or session issue)."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "name": {
+                "title": "Company name",
+                "description": "The company's current registered name."
+            },
+            "registrationNumber": {
+                "title": "Registration number",
+                "description": "MCIL company registration number (e.g. 0456, or a longer numeric id for newer registrations)."
+            },
+            "entityTypeLabel": {
+                "title": "Entity type",
+                "description": "Register category shown on the search result badge, e.g. 'Companies' (only category observed during recon -- this register did not surface a separate sole-trader/business-name category)."
+            },
+            "Company Name": {
+                "title": "Company name (detail tab)",
+                "description": "Detail-mode only: registered name as shown on the General Details tab, sometimes with the entity type appended."
+            },
+            "Company Type": {
+                "title": "Company type",
+                "description": "e.g. Private Company, Public Company."
+            },
+            "Company Status": {
+                "title": "Company status",
+                "description": "e.g. Registered, Removed."
+            },
+            "Incorporation Date": {
+                "title": "Incorporation date",
+                "description": "Original registration date, as displayed by MCIL (free-text date, not normalized)."
+            },
+            "Re-Registration Date": {
+                "title": "Re-registration date",
+                "description": "Date the company was re-registered under the current Companies Act 2001 system, if applicable."
+            },
+            "Company Rules": {
+                "title": "Company rules",
+                "description": "Whether the company uses the Act's model rules or its own custom rules."
+            },
+            "Trading As": {
+                "title": "Trading as",
+                "description": "Trading/business name, if different from the registered name."
+            },
+            "Business Activity": {
+                "title": "Business activity",
+                "description": "Industry sector and sub-sector, MCIL's own classification text."
+            },
+            "Annual Return Filing Month": {
+                "title": "Annual return filing month",
+                "description": "Month the company's annual return is due."
+            },
+            "Annual Return Last Filed on": {
+                "title": "Annual return last filed on",
+                "description": "Date the most recent annual return was filed."
+            },
+            "Contact Name": { "title": "Contact name" },
+            "Telephone": { "title": "Telephone" },
+            "Fax": { "title": "Fax" },
+            "Email": { "title": "Email" },
+            "Previous Name": {
+                "title": "Previous name",
+                "description": "A prior registered name on file, if the company has been renamed."
+            },
+            "addresses": {
+                "title": "Addresses",
+                "description": "Detail-mode only: list of address records (Registered Office Address, Postal Address, Address for Service), each with Start Date and, if superseded, End Date."
+            },
+            "directors": {
+                "title": "Directors",
+                "description": "Detail-mode only: list of directors, each with Name, Residential Address, Postal Address, Director Consent date, and Ceased date if no longer a director. Includes historical (ceased) directors, not just current ones."
+            },
+            "shareholders": {
+                "title": "Shareholders",
+                "description": "Detail-mode only: list of shareholders -- individuals (Name, Citizenship) or corporate shareholders (Entity Name, Place of Incorporation), each with Registered Office Address, Appointed date, Ceased date if applicable, and whether the shareholder is also a director."
+            },
+            "shareParcels": {
+                "title": "Share parcels",
+                "description": "Detail-mode only: list of {Number of shares, Name or Entity Name} -- per-shareholder share counts."
+            },
+            "filings": {
+                "title": "Filing history",
+                "description": "Detail-mode only: list of {filingType, submittedAt, filedAt} -- every filing lodged against this company (annual returns, notices of change of directors/shareholders, rule amendments, etc.). The filing DOCUMENT itself is not downloaded, only this metadata."
+            },
+            "entityTypeAbbrev": {
+                "title": "Entity type abbreviation",
+                "description": "Summary-mode only: the search result's badge abbreviation (e.g. 'COM')."
+            },
+            "address": {
+                "title": "Address (search result)",
+                "description": "Summary-mode only: the single address line shown on the search-result row."
+            },
+            "previousNames": {
+                "title": "Previous names (search result)",
+                "description": "Summary-mode only: list of prior registered names shown on the search-result row."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across both full-profile and search-summary records.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "_source",
+                    "_scrapedAt",
+                    "name",
+                    "registrationNumber",
+                    "entityTypeLabel",
+                    "Company Status",
+                    "Incorporation Date",
+                    "Business Activity",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

@@ -1,0 +1,14 @@
+{
+    "actorSpecification": 1,
+    "name": "sierraleone-tenders-scraper",
+    "version": "0.1",
+    "buildTag": "latest",
+    "title": "Sierra Leone Government Tenders Scraper",
+    "description": "Scrapes Sierra Leone's official National Public Procurement Authority (NPPA) Bids/Tenders board for current and recent government tender notices -- procuring entity, dates, description, and the tender document link. No account or login needed.",
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

@@ -1,0 +1,14 @@
+{
+    "actorSpecification": 1,
+    "name": "botswana-cipa-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Botswana CIPA Business Registry Scraper",
+    "description": "Search Botswana's official company register (CIPA) by name or registration number and pull full public profiles: registration details, addresses, directors, secretary, shareholders, auditor, and beneficial owners. No account or API key needed.",
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

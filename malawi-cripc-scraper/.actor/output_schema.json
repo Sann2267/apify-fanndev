@@ -1,0 +1,107 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "CRIPC/MBRS registry search-result record",
+        "description": "Raw-passthrough dataset envelope. Every record carries _input/_source/_scrapedAt/searchType (and _error/_errorDetail on failures, or _warning on partial degradation). Each successful record is one matched entity (searchType=entity) or owner (searchType=individual) from CRIPC/MBRS's public search, parsed from the site's own server-rendered HTML.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The exact query (name) that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "S1-html-search (search-result row only), S1-html-search+owner-detail (individual row enriched with the owner-detail page), or none (error record)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed searches -- not_found (search matched nothing) or blocked_or_transient (network issue)."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "_warning": {
+                "type": "string",
+                "title": "Warning",
+                "description": "pagination_truncated_by_page_cap if the safety page-depth cap was hit before maxResultsPerQuery, or owner_detail_fetch_partially_failed if one or more owner-detail lookups failed (base search fields are still included either way)."
+            },
+            "searchType": {
+                "title": "Search type",
+                "description": "'entity' (company/business-name search) or 'individual' (owner-name search), matching the run's input."
+            },
+            "registrationNumber": {
+                "title": "Registration number",
+                "description": "CRIPC's public registration number -- prefixed COY- for incorporated companies, BRN- for registered business names/sole traders. Present on entity records and on the businesses[] entries of enriched individual records."
+            },
+            "name": {
+                "title": "Name",
+                "description": "Registered company/business name (entity records) or the owner's own name (individual records)."
+            },
+            "registeredDate": {
+                "title": "Registered date",
+                "description": "ISO date (YYYY-MM-DD) the entity was registered, where shown by the register."
+            },
+            "status": {
+                "title": "Status",
+                "description": "Current register status, e.g. \"active\"."
+            },
+            "ownerId": {
+                "title": "Owner ID",
+                "description": "CRIPC's internal UUID for this individual (individual records only) -- used to fetch the owner-detail page."
+            },
+            "ownerDetailUrl": {
+                "title": "Owner detail URL",
+                "description": "The public detail page for this owner (individual records only)."
+            },
+            "ownerIdType": {
+                "title": "Owner ID type",
+                "description": "e.g. \"citizen\" -- present on individual records only when includeOwnerDetails was enabled."
+            },
+            "businesses": {
+                "title": "Businesses",
+                "description": "Every business this owner is a registered proprietor/owner of -- present on individual records only when includeOwnerDetails was enabled. Each entry has registrationNumber, name, registeredDate, status, and ownerType (e.g. \"Proprietor\")."
+            },
+            "_ownerDetailError": {
+                "title": "Owner detail error",
+                "description": "Present only when the owner-detail fetch for this specific individual failed -- the base search-result fields above are still populated."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across entity and individual records, and error rows.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "searchType",
+                    "_source",
+                    "_scrapedAt",
+                    "name",
+                    "registrationNumber",
+                    "status",
+                    "registeredDate",
+                    "ownerIdType",
+                    "_warning",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

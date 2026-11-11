@@ -1,0 +1,71 @@
+{
+    "title": "Shopee Seller Profile & Performance Scraper",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "mode": {
+            "title": "Mode",
+            "type": "string",
+            "description": "shop = one record per seller. reference = probe the endpoint and report what it yielded, including the 200-with-error-body case.",
+            "editor": "select",
+            "enum": ["shop", "reference"],
+            "enumTitles": [
+                "shop - profile per seller",
+                "reference - measure the surface"
+            ],
+            "default": "shop"
+        },
+        "shops": {
+            "title": "Shops",
+            "type": "array",
+            "description": "Any of: a username (samsung.official), a numeric shop ID (52635036), a shop URL (/shop/52635036), a storefront URL (/samsung.official), or a PRODUCT URL (…-i.<shopId>.<itemId>) - the shop ID is read straight out of it, so output from the Shopee Flash Sale Monitor can be fed in directly.",
+            "editor": "stringList",
+            "prefill": ["samsung.official", "shopee_id"]
+        },
+        "country": {
+            "title": "Country site",
+            "type": "string",
+            "description": "Which Shopee site to query. A shop only exists on its own country site.",
+            "editor": "select",
+            "enum": ["ID", "SG", "MY", "PH", "VN", "TH", "BR", "TW", "MX", "CO", "CL"],
+            "enumTitles": [
+                "Indonesia (shopee.co.id)",
+                "Singapore (shopee.sg)",
+                "Malaysia (shopee.com.my)",
+                "Philippines (shopee.ph)",
+                "Vietnam (shopee.vn)",
+                "Thailand (shopee.co.th)",
+                "Brazil (shopee.com.br)",
+                "Taiwan (shopee.tw)",
+                "Mexico (shopee.com.mx)",
+                "Colombia (shopee.com.co)",
+                "Chile (shopee.cl)"
+            ],
+            "default": "ID"
+        },
+        "concurrency": {
+            "title": "Concurrent lookups",
+            "type": "integer",
+            "description": "One request per shop.",
+            "default": 4,
+            "minimum": 1,
+            "maximum": 10
+        },
+        "tlsProfile": {
+            "title": "Preferred TLS profile",
+            "type": "string",
+            "description": "Optional. Tried first, then the rest of the ladder. All four answered 200 during recon; this is a tuning knob, not a requirement.",
+            "editor": "select",
+            "enum": ["chrome124", "chrome120", "safari17_0", "firefox133"],
+            "default": "chrome124"
+        },
+        "proxyConfiguration": {
+            "title": "Proxy",
+            "type": "object",
+            "description": "Recommended for larger runs. Shopee gates most of its API at the load balancer; if GATED records appear, a residential exit IP is the first thing to try.",
+            "editor": "proxy",
+            "prefill": { "useApifyProxy": true }
+        }
+    },
+    "required": ["mode"]
+}

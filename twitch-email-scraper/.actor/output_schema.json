@@ -1,0 +1,63 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Channel email-lookup record",
+        "description": "One record per checked channel. Every record carries _input/_source/_scrapedAt (and _error/_errorDetail on failures). Emails are extracted only from text the channel owner has already published publicly on their own profile (bio + About panels) -- never inferred, never guessed, never obtained from a private/authenticated source.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The channel login that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "S1-gql, or none on failure."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed lookups (e.g. channel_not_found)."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "login": { "title": "Login", "description": "The channel's login name." },
+            "displayName": { "title": "Display name" },
+            "emails": { "title": "Emails found", "description": "Deduplicated list of every email address found across the bio and About panels. Null if none were found." },
+            "emailFound": { "type": "boolean", "title": "Email found", "description": "True if at least one email was found anywhere." },
+            "emailSources": { "title": "Email sources", "description": "Which field(s) each email was found in (description, or a specific panel), for traceability. Null if no emails were found." },
+            "description": { "title": "Channel bio", "description": "The full raw channel description/bio text, for manual review." }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns for reviewing lookup results.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "login",
+                    "displayName",
+                    "emailFound",
+                    "emails",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

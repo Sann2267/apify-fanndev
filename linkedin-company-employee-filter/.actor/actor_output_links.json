@@ -1,0 +1,12 @@
+{
+    "actorOutputSchemaVersion": 1,
+    "title": "LinkedIn Company Employee Results",
+    "properties": {
+        "results": {
+            "type": "string",
+            "title": "Dataset results",
+            "template": "{{links.apiDefaultDatasetUrl}}/items",
+            "description": "One COMPANY row per company (always), one EMPLOYEE row per matching person (cookie only), plus NOTICE and ERROR rows explaining any gaps."
+        }
+    }
+}

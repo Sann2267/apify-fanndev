@@ -1,0 +1,185 @@
+{
+    "title": "Traveloka Flight Price Tracker",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "routes": {
+            "title": "Routes",
+            "type": "array",
+            "description": "One route per line as ORIGIN-DESTINATION. IATA codes are fastest (CGK-DPS), but city names work too (Jakarta-Denpasar). Accepted separators: -, ->, >, or the word 'to'.",
+            "editor": "stringList",
+            "prefill": [
+                "CGK-DPS"
+            ]
+        },
+        "origin": {
+            "title": "Origin",
+            "type": "string",
+            "description": "Single-route alternative to the Routes list: origin IATA code or city name.",
+            "editor": "textfield"
+        },
+        "destination": {
+            "title": "Destination",
+            "type": "string",
+            "description": "Single-route alternative to the Routes list: destination IATA code or city name.",
+            "editor": "textfield"
+        },
+        "roundTrip": {
+            "title": "Round trip",
+            "type": "boolean",
+            "description": "Price a return journey. Turn off to price one way; note that the date grid is inherently a depart-by-return matrix and is most useful for round trips.",
+            "default": true
+        },
+        "departDate": {
+            "title": "First departure date",
+            "type": "string",
+            "description": "Start of the departure window in YYYY-MM-DD. Defaults to 30 days from today.",
+            "editor": "datepicker"
+        },
+        "departWindowDays": {
+            "title": "Departure window (days)",
+            "type": "integer",
+            "description": "How many consecutive departure dates to price from the first departure date.",
+            "default": 10,
+            "minimum": 1,
+            "maximum": 60
+        },
+        "returnDate": {
+            "title": "First return date",
+            "type": "string",
+            "description": "Start of the return window in YYYY-MM-DD. Defaults to 37 days from today.",
+            "editor": "datepicker"
+        },
+        "returnWindowDays": {
+            "title": "Return window (days)",
+            "type": "integer",
+            "description": "How many consecutive return dates to price. Departure days multiplied by return days is capped at 100 per request; larger windows are split automatically.",
+            "default": 10,
+            "minimum": 1,
+            "maximum": 60
+        },
+        "includeMonthlyCurve": {
+            "title": "Include 12-month cheapest curve",
+            "type": "boolean",
+            "description": "Pull the cheapest fare for each of the next 12 months on this route. One request per route, and the best signal for seasonality.",
+            "default": true,
+            "groupCaption": "What to collect",
+            "groupDescription": "Both surfaces are cheap; the monthly curve is one request per route."
+        },
+        "includeDateGrid": {
+            "title": "Include departure-by-return date grid",
+            "type": "boolean",
+            "description": "Pull the cheapest fare for each departure and return date pair in the chosen windows.",
+            "default": true
+        },
+        "seatClass": {
+            "title": "Cabin class",
+            "type": "string",
+            "description": "Cabin class to price.",
+            "editor": "select",
+            "enum": [
+                "ECONOMY",
+                "PREMIUM_ECONOMY",
+                "BUSINESS",
+                "FIRST"
+            ],
+            "default": "ECONOMY"
+        },
+        "adults": {
+            "title": "Adults",
+            "type": "integer",
+            "description": "Adult passengers. Fares are per booking, so this changes the quoted totals.",
+            "default": 1,
+            "minimum": 1,
+            "maximum": 9
+        },
+        "children": {
+            "title": "Children",
+            "type": "integer",
+            "description": "Child passengers aged 2 to 11.",
+            "default": 0,
+            "minimum": 0,
+            "maximum": 8
+        },
+        "infants": {
+            "title": "Infants",
+            "type": "integer",
+            "description": "Infant passengers under 2.",
+            "default": 0,
+            "minimum": 0,
+            "maximum": 4
+        },
+        "priceThreshold": {
+            "title": "Price alert threshold",
+            "type": "string",
+            "description": "Optional fare threshold in the selected currency. Any route whose lowest fare falls to or below this value is flagged with summary.belowThreshold, which is what you hook a Slack or Telegram webhook to.",
+            "editor": "textfield"
+        },
+        "locale": {
+            "title": "Locale",
+            "type": "string",
+            "description": "Traveloka locale, which affects labels in the response.",
+            "editor": "select",
+            "enum": [
+                "en-id",
+                "id-id",
+                "en-sg",
+                "en-my",
+                "th-th",
+                "vi-vn"
+            ],
+            "enumTitles": [
+                "English (Indonesia)",
+                "Bahasa Indonesia",
+                "English (Singapore)",
+                "English (Malaysia)",
+                "Thai",
+                "Vietnamese"
+            ],
+            "default": "en-id"
+        },
+        "currency": {
+            "title": "Currency",
+            "type": "string",
+            "description": "Currency for all fares in the output.",
+            "editor": "select",
+            "enum": [
+                "IDR",
+                "USD",
+                "SGD",
+                "MYR",
+                "THB",
+                "VND",
+                "AUD",
+                "EUR"
+            ],
+            "default": "IDR"
+        },
+        "requestDelaySeconds": {
+            "title": "Delay between requests",
+            "type": "string",
+            "description": "Seconds to pause between API calls. Raise it if you see repeated 429 or 5xx responses.",
+            "editor": "textfield",
+            "default": "0.4"
+        },
+        "proxyConfiguration": {
+            "title": "Proxy",
+            "type": "object",
+            "description": "Proxy settings. Residential is the default: Traveloka's AWS WAF answers a captcha to the session bootstrap on most Apify datacenter IPs. If you pick a datacenter group, the actor tries it first and falls back to residential sessions when it is challenged.",
+            "editor": "proxy",
+            "default": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": [
+                    "RESIDENTIAL"
+                ]
+            },
+            "prefill": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": [
+                    "RESIDENTIAL"
+                ]
+            }
+        }
+    },
+    "required": []
+}

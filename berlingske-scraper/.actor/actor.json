@@ -1,0 +1,16 @@
+{
+    "actorSpecification": 1,
+    "name": "berlingske-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Berlingske Scraper",
+    "description": "Extract article metadata and headlines from berlingske.dk, Denmark's oldest and one of its largest newspapers -- no account or API key needed.",
+    "dockerfile": "./Dockerfile",
+    "minMemoryMbytes": 256,
+    "maxMemoryMbytes": 1024,
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

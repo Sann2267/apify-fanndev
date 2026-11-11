@@ -1,0 +1,14 @@
+{
+    "actorSpecification": 1,
+    "name": "samoa-tenders-scraper",
+    "version": "0.1",
+    "buildTag": "latest",
+    "title": "Samoa Government Tenders Scraper (Ministry of Finance)",
+    "description": "Scrapes Samoa's Ministry of Finance tender pages for public procurement: currently open tenders with document links, and the archive of contract award records with winning bidders and amounts. No account or login needed.",
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

@@ -1,0 +1,15 @@
+{
+    "actorOutputSchemaVersion": 1,
+    "properties": {
+        "reviewsView": {
+            "type": "string",
+            "title": "Reviews",
+            "template": "{{links.apifyConsoleUrl}}/storage/datasets/{{defaultDatasetId}}?view=reviews"
+        },
+        "summariesView": {
+            "type": "string",
+            "title": "Object summaries",
+            "template": "{{links.apifyConsoleUrl}}/storage/datasets/{{defaultDatasetId}}?view=summaries"
+        }
+    }
+}

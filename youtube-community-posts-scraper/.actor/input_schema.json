@@ -1,0 +1,57 @@
+{
+    "title": "YouTube Community Post & Poll Scraper",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "mode": {
+            "title": "Mode",
+            "type": "string",
+            "description": "channel = every community post listed for each handle. reference = probe the surface and report what it yielded, including what it cannot give you.",
+            "editor": "select",
+            "enum": ["channel", "reference"],
+            "enumTitles": [
+                "channel - posts per handle",
+                "reference - measure the surface"
+            ],
+            "default": "channel"
+        },
+        "channels": {
+            "title": "Channels",
+            "type": "array",
+            "description": "Channel handles such as @MrBeast, or full channel URLs.",
+            "editor": "stringList",
+            "prefill": ["@MrBeast", "@veritasium"]
+        },
+        "postsPerChannel": {
+            "title": "Posts per channel",
+            "type": "integer",
+            "description": "Capped at 10 because that is what one posts page lists. Older posts sit behind a continuation this Actor does not follow - see the README.",
+            "default": 10,
+            "minimum": 1,
+            "maximum": 10
+        },
+        "concurrency": {
+            "title": "Concurrent requests",
+            "type": "integer",
+            "description": "Parallel channel fetches. One request per channel.",
+            "default": 3,
+            "minimum": 1,
+            "maximum": 10
+        },
+        "tlsProfile": {
+            "title": "Preferred TLS profile",
+            "type": "string",
+            "description": "Optional. All four answered 200 during recon; this is a tuning knob.",
+            "editor": "select",
+            "enum": ["chrome124", "chrome120", "safari17_0", "firefox133"],
+            "default": "chrome124"
+        },
+        "proxyConfiguration": {
+            "title": "Proxy",
+            "type": "object",
+            "description": "Optional. Useful if pages start coming back as REDUCED.",
+            "editor": "proxy"
+        }
+    },
+    "required": ["mode"]
+}

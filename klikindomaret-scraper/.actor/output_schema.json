@@ -1,0 +1,161 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Klikindomaret record",
+        "description": "Raw passthrough of klikindomaret's own internal API JSON wrapped in this portfolio's dataset envelope. Upstream fields are preserved verbatim, so extra fields may appear beyond those listed here; fields prefixed with `_` are added by this actor. The `recordType` field discriminates the shape: PRODUCT (productSearch mode), CATEGORY (categoryTree), BANNER and PROMO_FILTERS (promoBanners), SUGGESTIONS (searchSuggestions), STORE (stores). Everything is store-scoped -- prices, stock and promos differ per Indomaret Xpress store.",
+        "properties": {
+            "_input": {"type": "string", "title": "Input", "description": "The exact input value that produced this record: the search term, `category:<id>`, the store code, or the district ID."},
+            "_source": {"type": "string", "title": "Source strategy", "description": "Which extraction strategy emitted this record: 'S1-api' for real records, 'none' on a failure/empty record."},
+            "_scrapedAt": {"type": "string", "format": "date-time", "title": "Scraped at", "description": "UTC ISO 8601 timestamp when this record was scraped."},
+            "_error": {"type": "string", "title": "Error", "description": "Present only on failed or empty runs: BLOCKED_AFTER_RETRIES, UPSTREAM_SHAPE_CHANGED, WAF_BOOTSTRAP_FAILED, INVALID_INPUT or EMPTY_RESULT."},
+            "_errorDetail": {"type": "string", "title": "Error detail", "description": "Free-form diagnostic detail, present only alongside _error."},
+
+            "recordType": {"title": "Record type", "description": "PRODUCT, CATEGORY, BANNER, PROMO_FILTERS, SUGGESTIONS or STORE -- tells you which field set this row carries."},
+            "_query": {"title": "Query", "description": "productSearch mode. The keyword or category label that produced this product record."},
+            "_queryType": {"title": "Query type", "description": "productSearch mode. 'keyword' or 'category'."},
+            "_categoryPath": {"title": "Category path", "description": "categoryTree mode. Breadcrumb path of this node, e.g. 'Produk Supermarket > Susu & Olahannya'."},
+            "_childCount": {"title": "Child count", "description": "categoryTree mode. Number of immediate sub-categories under this node."},
+
+            "productId": {"title": "Product ID", "description": "PRODUCT. Klikindomaret internal product id."},
+            "plu": {"title": "PLU", "description": "PRODUCT. Indomaret article/PLU code -- the stable SKU used across stores and on in-store receipts."},
+            "parentProductId": {"title": "Parent product ID", "description": "PRODUCT. Parent id for variant products, 0 for standalone products."},
+            "productName": {"title": "Product name", "description": "PRODUCT. Display name of the product."},
+            "permalink": {"title": "Permalink", "description": "PRODUCT / CATEGORY. URL slug on klikindomaret.com."},
+            "imageUrl": {"title": "Image URL", "description": "PRODUCT / CATEGORY / BANNER. Full-size image on the klikindomaret CDN."},
+            "thumbnail": {"title": "Thumbnail", "description": "PRODUCT. Thumbnail image URL."},
+            "images": {"title": "Images", "description": "PRODUCT. Additional image URLs (often empty in listings)."},
+            "price": {"title": "List price (IDR)", "description": "PRODUCT. Pre-discount price in rupiah."},
+            "finalPrice": {"title": "Final price (IDR)", "description": "PRODUCT. Price actually charged after discount, in rupiah."},
+            "bulkPrice": {"title": "Bulk list price (IDR)", "description": "PRODUCT. Pre-discount price of the bulk/multi-pack unit, when the product has one."},
+            "bulkFinalPrice": {"title": "Bulk final price (IDR)", "description": "PRODUCT. Discounted bulk price."},
+            "discountValue": {"title": "Discount value (IDR)", "description": "PRODUCT. Absolute discount amount in rupiah."},
+            "discountText": {"title": "Discount text", "description": "PRODUCT. Discount as advertised on the card, e.g. '50%'."},
+            "isVariant": {"title": "Is variant", "description": "PRODUCT. True when the product is one variant of a parent product."},
+            "promo": {"title": "Promo", "description": "PRODUCT. Raw promo object attached to the product, when any."},
+            "promoType": {"title": "Promo type", "description": "PRODUCT. Promo mechanism code (discount, gift, bundle, ...)."},
+            "promoText": {"title": "Promo text", "description": "PRODUCT. Promo label shown on the product card."},
+            "promoCode": {"title": "Promo code", "description": "PRODUCT. Internal promo code."},
+            "promoInfo": {"title": "Promo info", "description": "PRODUCT. Extra promo detail payload."},
+            "promoTagList": {"title": "Promo tags", "description": "PRODUCT. Promo tags/badges applied to the product."},
+            "listPromoDisplay": {"title": "Promo display list", "description": "PRODUCT. Promo badges as rendered on the listing card."},
+            "badge": {"title": "Badge", "description": "PRODUCT. Marketing badge object (e.g. new, best seller)."},
+            "minQty": {"title": "Min quantity", "description": "PRODUCT. Minimum order quantity."},
+            "bulkQty": {"title": "Bulk quantity", "description": "PRODUCT. Units per bulk pack, 0 when not sold in bulk."},
+            "minStrukQty": {"title": "Min receipt quantity", "description": "PRODUCT. Minimum quantity per receipt (struk) for promo-limited items."},
+            "maxStrukQty": {"title": "Max receipt quantity", "description": "PRODUCT. Purchase cap per receipt (struk) -- the usual promo quantity limit."},
+            "availableQtyStruk": {"title": "Available receipt quantity", "description": "PRODUCT. Remaining quantity buyable on this receipt under the promo cap."},
+            "descriptionList": {"title": "Description blocks", "description": "PRODUCT. List of {title, content} description sections from the product detail."},
+            "height": {"title": "Height (cm)", "description": "PRODUCT. Package height."},
+            "length": {"title": "Length (cm)", "description": "PRODUCT. Package length."},
+            "width": {"title": "Width (cm)", "description": "PRODUCT. Package width."},
+            "weight": {"title": "Weight (g)", "description": "PRODUCT. Package weight."},
+            "shippingOptions": {"title": "Shipping options", "description": "PRODUCT. Fulfilment options available, e.g. ['REGULAR']."},
+            "productSource": {"title": "Product source", "description": "PRODUCT. Where stock is served from, e.g. 'warehouse' or 'store'."},
+            "brandId": {"title": "Brand ID", "description": "PRODUCT. Brand identifier, formatted '<id>::<name>'."},
+            "brandName": {"title": "Brand name", "description": "PRODUCT. Brand name."},
+            "size": {"title": "Size", "description": "PRODUCT. Pack size as printed, e.g. '80g'."},
+            "flavour": {"title": "Flavour", "description": "PRODUCT. Flavour/variant attribute, when the catalog carries one."},
+            "uom": {"title": "Unit of measure", "description": "PRODUCT. Selling unit, e.g. 'PCH (1 pcs)'."},
+            "bulkUom": {"title": "Bulk unit of measure", "description": "PRODUCT. Selling unit of the bulk pack."},
+            "restricted": {"title": "Restricted", "description": "PRODUCT. True for age/regulation-restricted items."},
+            "blacklist": {"title": "Blacklisted", "description": "PRODUCT. True when the item is blocked from sale in this context."},
+            "selling": {"title": "Selling", "description": "PRODUCT. True when the item is currently sellable at this store -- the closest thing to a stock flag."},
+            "storeMatchFlag": {"title": "Store match flag", "description": "PRODUCT. Whether the item matched the resolved store's assortment."},
+            "packagePlu": {"title": "Package PLU", "description": "PRODUCT. PLU of the bundling package, when the item is sold as part of one."},
+            "packages": {"title": "Packages", "description": "PRODUCT. Raw package/bundle object (package PLU, quantities)."},
+            "pairProducts": {"title": "Paired products", "description": "PRODUCT. Products bundled with or suggested alongside this one."},
+
+            "id": {"title": "ID", "description": "CATEGORY / BANNER. Node or banner identifier. Category ids can be fed straight back into the actor's Category IDs input."},
+            "name": {"title": "Name", "description": "CATEGORY. Category name."},
+            "level": {"title": "Level", "description": "CATEGORY. Depth in the tree (1 = top-level meta category)."},
+            "position": {"title": "Position", "description": "CATEGORY. Display order among its siblings."},
+            "hasRestricted": {"title": "Has restricted", "description": "CATEGORY. True when the branch contains age/regulation-restricted products."},
+            "hasBlacklisted": {"title": "Has blacklisted", "description": "CATEGORY. True when the branch contains blacklisted products."},
+            "subCategories": {"title": "Sub-categories", "description": "CATEGORY. Raw sub-category payload on nodes that use this key instead of `categories`; children are also emitted as their own rows."},
+
+            "title": {"title": "Title", "description": "BANNER. Banner headline."},
+            "url": {"title": "URL", "description": "BANNER. Target deep link (klikindomaret:// app scheme)."},
+            "webUrl": {"title": "Web URL", "description": "BANNER. Target link used on the web front-end."},
+            "webView": {"title": "Web view", "description": "BANNER. Whether the target opens in an in-app web view."},
+            "type": {"title": "Type", "description": "BANNER. Channel the banner belongs to, e.g. 'xpress'."},
+            "status": {"title": "Status", "description": "BANNER. Publication status of the banner."},
+            "startDate": {"title": "Start date", "description": "BANNER. ISO 8601 start of the promo period."},
+            "endDate": {"title": "End date", "description": "BANNER. ISO 8601 end of the promo period -- how long the campaign still runs."},
+            "promoKindId": {"title": "Promo kind ID", "description": "BANNER. Promo mechanism id; joins to promoTypeOptions in the PROMO_FILTERS record."},
+            "eventPageId": {"title": "Event page ID", "description": "BANNER. Campaign landing-page id."},
+            "productPageCode": {"title": "Product page code", "description": "BANNER. Slug of the promo product page the banner points to."},
+            "tncCode": {"title": "T&C code", "description": "BANNER. Terms-and-conditions identifier."},
+            "tncContent": {"title": "T&C content", "description": "BANNER. Terms-and-conditions text (HTML)."},
+            "tncPermalink": {"title": "T&C permalink", "description": "BANNER. Terms-and-conditions page slug."},
+
+            "promoTypeOptions": {"title": "Promo type options", "description": "PROMO_FILTERS. Every promo mechanism currently running, as {promoId, promoName, parentId, hasChild}."},
+            "promoTypeSubFilterOptions": {"title": "Promo sub-filter options", "description": "PROMO_FILTERS. Sub-filters available under the selected promo type."},
+            "metaCategoryOptions": {"title": "Meta category options", "description": "PROMO_FILTERS. Top-level categories usable as promo filters."},
+            "selectedMetaCategoryId": {"title": "Selected meta category ID", "description": "PROMO_FILTERS. Meta category the listing was filtered by (0 = none)."},
+            "selectedPromoTypeId": {"title": "Selected promo type ID", "description": "PROMO_FILTERS. Promo type the listing was filtered by (0 = none)."},
+            "selectedPromoTypeIds": {"title": "Selected promo type IDs", "description": "PROMO_FILTERS. Promo types applied to the request."},
+            "selectedPromoTypeSubFilterIds": {"title": "Selected promo sub-filter IDs", "description": "PROMO_FILTERS. Promo sub-filters applied to the request."},
+            "selectAll": {"title": "Select all", "description": "PROMO_FILTERS. Whether the 'all promos' filter was active."},
+            "sort": {"title": "Sort", "description": "PROMO_FILTERS. Sort order the banner list was returned in, e.g. 'period,asc'."},
+
+            "popularKeywords": {"title": "Popular keywords", "description": "SUGGESTIONS. Trending search keywords -- useful seeds for a productSearch run."},
+            "categoryRecommendation": {"title": "Category recommendations", "description": "SUGGESTIONS. Recommended categories with ids, names and permalinks."},
+            "lastSeen": {"title": "Last seen", "description": "SUGGESTIONS. Recently viewed items (empty for anonymous sessions)."},
+            "lastSearch": {"title": "Last search", "description": "SUGGESTIONS. Recent searches (empty for anonymous sessions)."},
+
+            "storeCode": {"title": "Store code", "description": "STORE. Indomaret Xpress store code serving the district, e.g. 'TJKT'. Feed it back as the actor's Store code input."},
+            "storeName": {"title": "Store name", "description": "STORE. Human-readable store name."},
+            "areaName": {"title": "Area name", "description": "STORE. Delivery cluster / area label."},
+            "areaCoverageId": {"title": "Area coverage ID", "description": "STORE. Internal coverage-area id for the district."},
+            "clusterGroupCode": {"title": "Cluster group code", "description": "STORE. Cluster group the store belongs to."},
+            "storeList": {"title": "Store list", "description": "STORE. Additional stores covering the district, when the API returns more than one."},
+            "latitude": {"title": "Latitude", "description": "STORE. Store latitude -- reusable as the actor's Latitude input."},
+            "longitude": {"title": "Longitude", "description": "STORE. Store longitude -- reusable as the actor's Longitude input."}
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across every record type -- rows render blank for columns that do not apply to their shape.",
+            "transformation": {
+                "fields": ["recordType", "_input", "productName", "name", "title", "storeName", "finalPrice", "price", "discountText", "brandName", "_categoryPath", "endDate", "_scrapedAt", "_error"]
+            },
+            "display": {"component": "table"}
+        },
+        "products": {
+            "title": "Products",
+            "description": "Pricing and promo columns for productSearch runs.",
+            "transformation": {
+                "fields": ["_query", "productId", "plu", "productName", "brandName", "size", "uom", "price", "finalPrice", "discountValue", "discountText", "promoText", "maxStrukQty", "selling", "productSource", "permalink", "imageUrl", "_scrapedAt"]
+            },
+            "display": {"component": "table"}
+        },
+        "categories": {
+            "title": "Category tree",
+            "description": "Flattened category hierarchy from categoryTree runs.",
+            "transformation": {
+                "fields": ["id", "name", "level", "_categoryPath", "_childCount", "position", "permalink", "hasRestricted", "hasBlacklisted", "imageUrl"]
+            },
+            "display": {"component": "table"}
+        },
+        "promos": {
+            "title": "Promo banners",
+            "description": "Running campaigns and their periods from promoBanners runs.",
+            "transformation": {
+                "fields": ["id", "title", "type", "status", "startDate", "endDate", "promoKindId", "productPageCode", "webUrl", "imageUrl", "tncPermalink"]
+            },
+            "display": {"component": "table"}
+        },
+        "stores": {
+            "title": "Stores",
+            "description": "Store/area resolution from stores runs.",
+            "transformation": {
+                "fields": ["_input", "storeCode", "storeName", "areaName", "clusterGroupCode", "areaCoverageId", "latitude", "longitude"]
+            },
+            "display": {"component": "table"}
+        }
+    }
+}

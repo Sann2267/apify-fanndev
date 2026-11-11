@@ -1,0 +1,212 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Bluesky record",
+        "description": "Raw-passthrough dataset envelope on top of Bluesky's own AT Protocol XRPC shapes. Every record carries _input / _source / _scrapedAt / recordType (and _error / _errorDetail on failures). Upstream field names are preserved verbatim, so a post record is an app.bsky.feed.defs#postView, a profile record is an app.bsky.actor.defs#profileViewDetailed, and so on -- consult the AT Protocol lexicons for the full nested shape. Use recordType to split the run's mixed output into tables.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The exact account, post URL, query or feed URL that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "S1-xrpc for the public AppView (public.api.bsky.app), S2-xrpc-search for the separate search host (api.bsky.app), none on failure."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was emitted."
+            },
+            "recordType": {
+                "type": "string",
+                "title": "Record type",
+                "description": "PROFILE, POST, REPLY, QUOTE, LIKE, FOLLOWER, FOLLOWING, REPOSTED_BY, LIST, STARTER_PACK, FEED_GENERATOR, TREND, or ERROR."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failure rows: not_found, auth_required, rate_limited, invalid_request, bad_input_or_shape, or exception."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic, present only alongside _error."
+            },
+            "uri": {
+                "title": "AT URI",
+                "description": "at:// identifier of the post, list, starter pack or feed generator."
+            },
+            "cid": {
+                "title": "CID",
+                "description": "Content hash of the record's current version."
+            },
+            "webUrl": {
+                "title": "Web URL",
+                "description": "Added by this actor for convenience -- the human-facing bsky.app permalink for a post record."
+            },
+            "did": {
+                "title": "DID",
+                "description": "Decentralised identifier of an account (profile / follower / like actor records)."
+            },
+            "handle": {
+                "title": "Handle",
+                "description": "The account's handle, e.g. bsky.app."
+            },
+            "displayName": {
+                "title": "Display name",
+                "description": "The account's chosen display name."
+            },
+            "description": {
+                "title": "Bio",
+                "description": "Profile biography text."
+            },
+            "followersCount": {
+                "title": "Followers",
+                "description": "Profile modes -- follower count at scrape time."
+            },
+            "followsCount": {
+                "title": "Following",
+                "description": "Profile modes -- how many accounts this account follows."
+            },
+            "postsCount": {
+                "title": "Posts",
+                "description": "Profile modes -- lifetime post count."
+            },
+            "author": {
+                "title": "Author",
+                "description": "Post records -- the posting account, nested verbatim."
+            },
+            "record": {
+                "title": "Record",
+                "description": "Post records -- the raw app.bsky.feed.post value: text, createdAt, langs, facets (links/mentions/tags), reply refs, embeds."
+            },
+            "embed": {
+                "title": "Embed",
+                "description": "Post records -- hydrated images, video, external link card, or quoted post."
+            },
+            "replyCount": {
+                "title": "Replies",
+                "description": "Post records -- reply count at scrape time."
+            },
+            "repostCount": {
+                "title": "Reposts",
+                "description": "Post records -- repost count at scrape time."
+            },
+            "likeCount": {
+                "title": "Likes",
+                "description": "Post records -- like count at scrape time."
+            },
+            "quoteCount": {
+                "title": "Quotes",
+                "description": "Post records -- quote count at scrape time."
+            },
+            "indexedAt": {
+                "title": "Indexed at",
+                "description": "When the AppView indexed this record."
+            },
+            "replyDepth": {
+                "title": "Reply depth",
+                "description": "REPLY records only -- how many levels below the root post this reply sits, so the flat rows can be rebuilt into a tree."
+            },
+            "feedReason": {
+                "title": "Feed reason",
+                "description": "POST records from a feed -- why the item appeared, e.g. a repost wrapper naming the reposting account."
+            },
+            "feedReplyContext": {
+                "title": "Feed reply context",
+                "description": "POST records from a feed -- the root/parent the post was replying to."
+            },
+            "name": {
+                "title": "Name",
+                "description": "LIST / FEED_GENERATOR records -- the list or feed name."
+            },
+            "purpose": {
+                "title": "List purpose",
+                "description": "LIST records -- curatelist, modlist, or referencelist."
+            },
+            "listItemCount": {
+                "title": "List size",
+                "description": "LIST records -- how many accounts the list holds."
+            },
+            "creator": {
+                "title": "Creator",
+                "description": "LIST / STARTER_PACK / FEED_GENERATOR records -- the account that made it."
+            },
+            "likeCountFeed": {
+                "title": "Feed likes",
+                "description": "FEED_GENERATOR records -- how many accounts liked this custom feed."
+            },
+            "topic": {
+                "title": "Trend topic",
+                "description": "TREND records -- the trend's topic slug."
+            },
+            "postCount": {
+                "title": "Trend post count",
+                "description": "TREND records -- how many posts drove the trend."
+            },
+            "category": {
+                "title": "Trend category",
+                "description": "TREND records -- e.g. politics, sports, pop-culture."
+            },
+            "startedAt": {
+                "title": "Trend started at",
+                "description": "TREND records -- when the trend began."
+            },
+            "actors": {
+                "title": "Trend actors",
+                "description": "TREND records -- sample accounts driving the trend."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across every record type this actor emits.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "recordType",
+                    "_scrapedAt",
+                    "handle",
+                    "displayName",
+                    "webUrl",
+                    "likeCount",
+                    "repostCount",
+                    "replyCount",
+                    "followersCount",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        },
+        "posts": {
+            "title": "Posts",
+            "description": "Post-shaped records only, with engagement counts.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "recordType",
+                    "webUrl",
+                    "author",
+                    "record",
+                    "replyCount",
+                    "repostCount",
+                    "likeCount",
+                    "quoteCount",
+                    "indexedAt"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

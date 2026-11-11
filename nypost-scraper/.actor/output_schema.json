@@ -1,0 +1,120 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "Article / latest-headline record",
+        "description": "Raw-passthrough dataset envelope. Every record carries _input/_source/_scrapedAt (failed URLs are not written to the dataset -- they are reported in the ERRORS record of the run's key-value store). Article-mode records (S1-html) carry a JSON-LD NewsArticle dict spread verbatim plus an HTML-scraped articleBody; latest-mode records (S2-rss) carry RSS item fields. Upstream JSON-LD/RSS is passed through close to verbatim, so extra fields beyond those listed here may also appear.",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The exact input value (article URL, or 'latest') that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "Which extraction strategy emitted this record (S1-html for articles, S2-rss for latest headlines, or 'none' on error)."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "headline": {
+                "title": "Headline",
+                "description": "Article headline, from the JSON-LD NewsArticle block."
+            },
+            "datePublished": {
+                "title": "Date published",
+                "description": "ISO 8601 publish date, from JSON-LD."
+            },
+            "dateCreated": {
+                "title": "Date created",
+                "description": "ISO 8601 creation date, from JSON-LD (WordPress theme also emits this alongside datePublished)."
+            },
+            "articleSection": {
+                "title": "Section",
+                "description": "Article section/category, e.g. 'us-news', 'business'."
+            },
+            "author": {
+                "title": "Author",
+                "description": "Array of Person object(s) as emitted by JSON-LD (raw passthrough) -- name + URL to author page only, no email/jobTitle."
+            },
+            "publisher": {
+                "title": "Publisher",
+                "description": "Publisher organization object. Some /us-news/ and /business/ articles emit a regional sub-brand name (e.g. 'California Post') with a parentOrganization pointing back to 'New York Post' -- passed through verbatim, not normalized."
+            },
+            "image": {
+                "title": "Image",
+                "description": "Lead image object, from JSON-LD."
+            },
+            "keywords": {
+                "title": "Keywords",
+                "description": "Comma-separated or array of keywords, as emitted upstream in JSON-LD."
+            },
+            "video": {
+                "title": "Video",
+                "description": "Embedded video object, present on JSON-LD when the article has a video component."
+            },
+            "isAccessibleForFree": {
+                "title": "Accessible for free",
+                "description": "Upstream paywall metering flag -- not observed in initial recon (no sampled article was paywalled), but the theme's 'single--exclusive-article-disabled' CSS class implies a paywall feature exists and may surface this field on NYP+ content."
+            },
+            "articleBody": {
+                "title": "Article body",
+                "description": "Full article text, joined from bare (unclassed) <p> tags of div.single__content.entry-content up to the first <hr>. Not present in the JSON-LD block on this site -- merged in from HTML."
+            },
+            "title": {
+                "title": "Title",
+                "description": "Headline from the RSS item (latest mode)."
+            },
+            "link": {
+                "title": "Link",
+                "description": "Article URL, from the RSS item."
+            },
+            "guid": {
+                "title": "GUID",
+                "description": "RSS item GUID."
+            },
+            "pubDate": {
+                "title": "Publish date",
+                "description": "RSS pubDate string."
+            },
+            "description": {
+                "title": "Description",
+                "description": "RSS item description/summary."
+            },
+            "creator": {
+                "title": "Creator",
+                "description": "Byline name, from the RSS item's WordPress dc:creator extension."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns across both article and latest-headline records.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "_source",
+                    "_scrapedAt",
+                    "headline",
+                    "title",
+                    "link",
+                    "datePublished",
+                    "pubDate",
+                    "author",
+                    "creator",
+                    "articleSection"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

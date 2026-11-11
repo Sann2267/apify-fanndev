@@ -1,0 +1,110 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "OCR company record / error record",
+        "description": "Raw-passthrough dataset envelope. Every record carries _input/_source/_scrapedAt (and _error/_errorDetail on failures). Company fields are OCR's own basic registration record verbatim -- OCR's public search only exposes this summary information (no director/shareholder detail page is publicly reachable, unlike some other registries in this collection).",
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The exact query (name or registration number) that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source strategy",
+                "description": "S1-camis-search-company-details on success, absent on an error record."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was scraped."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Present only on failed extractions -- not_found (search matched nothing) or blocked_or_transient (network issue after retries)."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic detail, present only alongside _error."
+            },
+            "companyNameEnglish": {
+                "title": "Company name (English)",
+                "description": "Registered company name, English rendering, as held by OCR."
+            },
+            "companyNameNepali": {
+                "title": "Company name (Nepali)",
+                "description": "Registered company name in Nepali (Devanagari script), as held by OCR."
+            },
+            "companyRegistrationNumberEn": {
+                "title": "Registration number",
+                "description": "OCR registration number, Arabic numerals."
+            },
+            "companyRegistrationNumberNp": {
+                "title": "Registration number (Nepali numerals)",
+                "description": "The same registration number rendered in Devanagari numerals."
+            },
+            "registrationDateBSEn": {
+                "title": "Registration date (Bikram Sambat)",
+                "description": "Registration date in the Bikram Sambat calendar used by the Nepali government, Arabic-numeral format (YYYY-MM-DD BS, not Gregorian -- passed through unconverted)."
+            },
+            "registrationDateBSNp": {
+                "title": "Registration date (BS, Nepali numerals)",
+                "description": "The same Bikram Sambat registration date rendered in Devanagari numerals."
+            },
+            "companyType": {
+                "title": "Company type (structured)",
+                "description": "Object with key (internal enum), valueEnglish, valueNepali, and baseValue (e.g. PRIVATE, PUBLIC) as classified by OCR."
+            },
+            "companyTypeEn": {
+                "title": "Company type (English, short)",
+                "description": "Short English label for the company's ownership/type classification."
+            },
+            "companyTypeNp": {
+                "title": "Company type (Nepali, short)",
+                "description": "Short Nepali label for the company's ownership/type classification."
+            },
+            "companyAddressEn": {
+                "title": "Registered address (English)",
+                "description": "Registered office address (municipality/ward, district), English rendering."
+            },
+            "companyAddressNp": {
+                "title": "Registered address (Nepali)",
+                "description": "Registered office address in Nepali."
+            },
+            "isRokka": {
+                "title": "Under legal hold (Rokka)",
+                "type": "boolean",
+                "description": "Whether the company is currently under a \"Rokka\" order -- a legal freeze/injunction recorded by OCR (e.g. due to litigation or a dispute), as shown on the public register."
+            }
+        },
+        "additionalProperties": true
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "description": "Key columns for company records.",
+            "transformation": {
+                "fields": [
+                    "_input",
+                    "_source",
+                    "_scrapedAt",
+                    "companyNameEnglish",
+                    "companyRegistrationNumberEn",
+                    "companyTypeEn",
+                    "registrationDateBSEn",
+                    "companyAddressEn",
+                    "isRokka",
+                    "_error"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        }
+    }
+}

@@ -1,0 +1,22 @@
+{
+    "actorSpecification": 1,
+    "name": "instagram-content-scraper",
+    "version": "0.1",
+    "buildTag": "latest",
+    "title": "Instagram Scraper: Profiles, Posts, Reels, Comments, Locations",
+    "description": "Scrape public Instagram data without a login: account profiles and bio links, the profile grid, the reels tab with play counts, single posts with engagement and comments, and location pages with the media posted there. HTTP-only, no browser.",
+    "categories": ["SOCIAL_MEDIA", "MARKETING"],
+    "minMemoryMbytes": 256,
+    "maxMemoryMbytes": 4096,
+    "defaultRunOptions": {
+        "build": "latest",
+        "memoryMbytes": 1024,
+        "timeoutSecs": 3600
+    },
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

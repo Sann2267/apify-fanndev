@@ -1,0 +1,176 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "schemaVersion": 1,
+        "title": "LinkedIn post engager record",
+        "description": "Dataset envelope (_input / _source / _scrapedAt / recordType) on top of the people who engaged with a post. One ENGAGER row per person, one POST row per post, NOTICE rows where LinkedIn published nothing and ERROR rows on failure. LinkedIn changes its markup without notice, so unlisted fields pass through rather than failing the run.",
+        "additionalProperties": true,
+        "properties": {
+            "_input": {
+                "type": "string",
+                "title": "Input",
+                "description": "The post URL that produced this record."
+            },
+            "_source": {
+                "type": "string",
+                "title": "Source surface",
+                "description": "guest-post-page, guest-profile-page, voyager-reactions, or none on NOTICE and ERROR rows."
+            },
+            "_scrapedAt": {
+                "type": "string",
+                "title": "Scraped at",
+                "description": "UTC ISO 8601 timestamp when this record was emitted."
+            },
+            "recordType": {
+                "type": "string",
+                "title": "Record type",
+                "description": "ENGAGER, POST, NOTICE or ERROR."
+            },
+            "_error": {
+                "type": "string",
+                "title": "Error",
+                "description": "Failure rows only: fetch_failed, auth_required or reactors_failed."
+            },
+            "_errorDetail": {
+                "type": "string",
+                "title": "Error detail",
+                "description": "Free-form diagnostic accompanying _error."
+            },
+            "_notice": {
+                "type": "string",
+                "title": "Notice",
+                "description": "Explains an empty result that is not a failure, such as no_public_engagers."
+            },
+            "_noticeDetail": {
+                "type": "string",
+                "title": "Notice detail",
+                "description": "What the notice means and what to change."
+            },
+            "fullName": {
+                "title": "Full name",
+                "description": "The engager's display name exactly as LinkedIn renders it, credentials and all."
+            },
+            "firstName": {
+                "title": "First name",
+                "description": "Split from the display name with pronouns, emoji hiring frames and credential suffixes (PhD, MBA, CFA) removed, so a mail merge does not greet someone as 'Hi Dr, PhD'."
+            },
+            "lastName": {
+                "title": "Last name",
+                "description": "Last remaining name part after the same cleanup. Null for mononyms."
+            },
+            "headline": {
+                "title": "Headline",
+                "description": "The engager's LinkedIn headline. LinkedIn only renders this for some commenters on the public page - expect it to be null more often than not unless profile enrichment is on."
+            },
+            "profileUrl": {
+                "title": "Profile URL",
+                "description": "Canonical profile link with tracking parameters stripped and country subdomains (in.linkedin.com, id.linkedin.com) folded onto www, so a CRM de-duplicates correctly."
+            },
+            "profileSlug": {
+                "title": "Profile slug",
+                "description": "The handle out of the profile URL - the stable key to join on."
+            },
+            "engagementType": {
+                "title": "Engagement type",
+                "description": "COMMENT or REACTION. REACTION rows only appear when a session cookie was supplied."
+            },
+            "reactionType": {
+                "title": "Reaction type",
+                "description": "LIKE, PRAISE, EMPATHY, INTEREST, APPRECIATION or ENTERTAINMENT, on REACTION rows."
+            },
+            "commentText": {
+                "title": "Comment",
+                "description": "What the person actually wrote. The highest-signal field here: it is the difference between a name and a reason to reach out."
+            },
+            "commentedAgo": {
+                "title": "Commented",
+                "description": "LinkedIn's relative timestamp for the comment, such as '6d' or '16m'. It publishes no absolute time for comments."
+            },
+            "currentTitle": {
+                "title": "Current title",
+                "description": "Profile enrichment only: the person's current job title."
+            },
+            "currentCompany": {
+                "title": "Current company",
+                "description": "Profile enrichment only: the employer on the person's current role."
+            },
+            "currentCompanyUrl": {
+                "title": "Current company URL",
+                "description": "Profile enrichment only: that employer's LinkedIn page."
+            },
+            "locality": {
+                "title": "Location",
+                "description": "Profile enrichment only: the city and region on the profile."
+            },
+            "country": {
+                "title": "Country",
+                "description": "Profile enrichment only: two-letter country code."
+            },
+            "followers": {
+                "title": "Followers",
+                "description": "Profile enrichment only: follower count, a rough proxy for reach."
+            },
+            "postUrl": {
+                "title": "Post URL",
+                "description": "The post this engagement belongs to."
+            },
+            "postAuthorName": {
+                "title": "Post author",
+                "description": "Who published the post."
+            },
+            "postReactions": {
+                "title": "Post reactions",
+                "description": "Total reactions on the post. Note this is usually far larger than the number of ENGAGER rows: reactor identities are cookie-only, so the gap between this number and your row count is the part LinkedIn withheld."
+            },
+            "postComments": {
+                "title": "Post comments",
+                "description": "Total comments on the post. The public page carries only the first handful, so this too is usually larger than the rows returned."
+            },
+            "postText": {
+                "title": "Post text",
+                "description": "POST rows: the post body as published."
+            },
+            "publishedAt": {
+                "title": "Published at",
+                "description": "POST rows: ISO 8601 publish timestamp."
+            },
+            "reactionTypes": {
+                "title": "Reaction mix",
+                "description": "POST rows: which reaction types appear on the post, as a hint at how the audience received it."
+            },
+            "hashtags": {
+                "title": "Hashtags",
+                "description": "POST rows: hashtags used in the post body, lowercased."
+            },
+            "activityId": {
+                "title": "Activity id",
+                "description": "LinkedIn's numeric id for the post - the stable key across URL formats."
+            }
+        }
+    },
+    "views": {
+        "engagers": {
+            "title": "Engagers",
+            "transformation": {
+                "fields": [
+                    "fullName", "firstName", "lastName", "headline", "profileUrl",
+                    "engagementType", "commentText", "currentTitle", "currentCompany",
+                    "locality", "postUrl", "postAuthorName"
+                ]
+            },
+            "display": {
+                "component": "table",
+                "properties": {
+                    "fullName": { "label": "Name" },
+                    "headline": { "label": "Headline" },
+                    "profileUrl": { "label": "Profile" },
+                    "engagementType": { "label": "Type" },
+                    "commentText": { "label": "Comment" },
+                    "currentCompany": { "label": "Company" },
+                    "postUrl": { "label": "Post" }
+                }
+            }
+        }
+    }
+}

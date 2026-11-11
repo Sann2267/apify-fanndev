@@ -1,0 +1,14 @@
+{
+    "actorSpecification": 1,
+    "name": "stvincent-cipo-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "St Vincent and the Grenadines CIPO Business Registry Scraper",
+    "description": "Search Saint Vincent and the Grenadines' official company and business register (CIPO -- Commerce and Intellectual Property Office) by name or registration number. Free public name search -- no account or API key needed.",
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}

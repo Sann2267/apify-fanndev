@@ -1,0 +1,104 @@
+{
+    "title": "Amazon Customer Insights & Aspect Sentiment",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "asins": {
+            "title": "ASINs",
+            "type": "array",
+            "description": "Amazon ASINs to analyse. Full product URLs are accepted too — the ASIN is extracted from them.",
+            "editor": "stringList",
+            "prefill": [
+                "B00XIKPUK4",
+                "B087F16GKW",
+                "B07ZPKN6YR"
+            ],
+            "default": [
+                "B00XIKPUK4",
+                "B087F16GKW",
+                "B07ZPKN6YR"
+            ]
+        },
+        "marketplace": {
+            "title": "Marketplace",
+            "type": "string",
+            "description": "Amazon domain to query. Only amazon.com and amazon.ca were verified during development; other domains need a residential proxy in that country and may return localized aspect names.",
+            "editor": "select",
+            "enum": [
+                "com",
+                "ca",
+                "co.uk",
+                "de",
+                "fr",
+                "it",
+                "es",
+                "com.au",
+                "in"
+            ],
+            "enumTitles": [
+                "amazon.com (US, verified)",
+                "amazon.ca (verified)",
+                "amazon.co.uk",
+                "amazon.de",
+                "amazon.fr",
+                "amazon.it",
+                "amazon.es",
+                "amazon.com.au",
+                "amazon.in"
+            ],
+            "default": "com"
+        },
+        "emitAspectRows": {
+            "title": "Emit one row per aspect",
+            "type": "boolean",
+            "description": "Adds a row per aspect (sentiment, mentions, rank, share) alongside the product summary row, so the dataset can be sorted and filtered by sentiment directly.",
+            "default": true
+        },
+        "contentGapsOnly": {
+            "title": "Content gaps only",
+            "type": "boolean",
+            "description": "Return only the negative and mixed aspects — the complaints and split opinions a listing has not addressed. This is the shortlist for FAQ and SEO copy.",
+            "default": false
+        },
+        "minMentions": {
+            "title": "Minimum mentions",
+            "type": "integer",
+            "description": "Drop aspects mentioned fewer than this many times. Aspects whose count Amazon did not publish are always kept.",
+            "minimum": 0,
+            "maximum": 10000,
+            "default": 0
+        },
+        "emptyInsightRetries": {
+            "title": "Retries when the insight widget is missing",
+            "type": "integer",
+            "description": "Amazon withholds the \"Customers say\" widget from some proxy exit IPs and serves an otherwise complete product page. When a product with at least 100 ratings comes back with no widget, the actor rotates to a fresh exit IP and looks again, up to this many times. Set to 0 to accept the first answer and keep the request count down. Products with few ratings are never retried — for them, no widget is the true answer.",
+            "default": 2,
+            "minimum": 0,
+            "maximum": 5,
+            "editor": "number"
+        },
+        "delaySeconds": {
+            "title": "Delay between products (seconds)",
+            "type": "integer",
+            "description": "Pacing between product pages. Amazon bot-walls fast anonymous crawling.",
+            "minimum": 0,
+            "maximum": 30,
+            "default": 2
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "description": "Residential proxy is strongly recommended — Amazon blocks datacentre IPs on product pages within a few requests.",
+            "editor": "proxy",
+            "default": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": [
+                    "RESIDENTIAL"
+                ]
+            }
+        }
+    },
+    "required": [
+        "asins"
+    ]
+}

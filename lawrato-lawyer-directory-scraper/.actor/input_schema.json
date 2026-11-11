@@ -1,0 +1,110 @@
+{
+    "title": "India Lawyer Directory Scraper (LawRato)",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "mode": {
+            "title": "Mode",
+            "type": "string",
+            "editor": "select",
+            "description": "\"directory\" lists lawyers (all India, or filtered to one city or one practice area). \"profile\" fetches the full profile for specific lawyer pages. \"reference\" lists the cities and practice areas available upstream.",
+            "enum": ["directory", "profile", "reference"],
+            "enumTitles": [
+                "Directory listing (browse lawyers)",
+                "Lawyer profile (by URL or slug)",
+                "Reference (cities + practice areas)"
+            ],
+            "default": "directory",
+            "prefill": "directory"
+        },
+        "city": {
+            "title": "City",
+            "type": "string",
+            "editor": "select",
+            "description": "\"directory\" mode: restrict the listing to one city. Leave blank for all India.",
+            "enum": [
+                "", "ahmedabad", "bangalore", "chandigarh", "chennai", "delhi", "faridabad",
+                "ghaziabad", "gurgaon", "hyderabad", "jaipur", "kolkata", "lucknow",
+                "mumbai", "nagpur", "noida", "pune"
+            ],
+            "enumTitles": [
+                "(all India)", "Ahmedabad", "Bangalore", "Chandigarh", "Chennai", "Delhi", "Faridabad",
+                "Ghaziabad", "Gurgaon", "Hyderabad", "Jaipur", "Kolkata", "Lucknow",
+                "Mumbai", "Nagpur", "Noida", "Pune"
+            ],
+            "default": "",
+            "prefill": "delhi"
+        },
+        "practiceArea": {
+            "title": "Practice area",
+            "type": "string",
+            "editor": "select",
+            "description": "\"directory\" mode: restrict the listing to one practice area. City and practice area are separate listings upstream -- if you set both, the city wins.",
+            "enum": [
+                "", "arbitration", "armed-forces-tribunal", "banking-finance", "cheque-bounce",
+                "child-custody", "civil", "consumer-court", "copyright-patent-trademark",
+                "corporate", "criminal", "customs-central-excise", "cyber-crime", "divorce",
+                "documentation", "family", "gst", "immigration", "insurance",
+                "international-law", "labour-service", "landlordtenant", "medical-negligence",
+                "motor-accident", "muslim-law", "property", "recovery", "startup",
+                "supreme-court", "tax", "wills-trusts"
+            ],
+            "default": ""
+        },
+        "enrichProfiles": {
+            "title": "Also fetch full profiles",
+            "type": "boolean",
+            "editor": "checkbox",
+            "description": "\"directory\" mode: after listing, fetch each lawyer's full profile too (bar council, courts, languages, specializations). Costs one extra request per lawyer.",
+            "default": false
+        },
+        "profileUrl": {
+            "title": "Lawyer profile URL or slug",
+            "type": "string",
+            "editor": "textfield",
+            "description": "\"profile\" mode: a full lawrato.com profile address, or just the slug (e.g. \"advocate-sunil-kumar-bakshi\").",
+            "prefill": "https://lawrato.com/advocate-sunil-kumar-bakshi"
+        },
+        "profileUrls": {
+            "title": "Lawyer profile URLs",
+            "type": "array",
+            "editor": "stringList",
+            "description": "\"profile\" mode: several profiles to fetch in one run."
+        },
+        "maxItems": {
+            "title": "Max items",
+            "type": "integer",
+            "editor": "number",
+            "description": "\"directory\" mode: max lawyers to list. Pages hold 20 each and are followed automatically until this cap or the end of the listing.",
+            "default": 100,
+            "minimum": 1,
+            "maximum": 10000,
+            "prefill": 100
+        },
+        "maxConcurrency": {
+            "title": "Max concurrent workers",
+            "type": "integer",
+            "editor": "number",
+            "description": "How many profile pages to fetch in parallel (\"profile\" mode, and \"directory\" mode when full profiles are enabled).",
+            "default": 4,
+            "minimum": 1,
+            "maximum": 16,
+            "prefill": 4
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "editor": "proxy",
+            "description": "Apify Proxy configuration. Residential is on by default and recommended -- listing pages are fetched in sequence, and a stable Indian or global residential exit keeps results consistent.",
+            "default": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            },
+            "prefill": {
+                "useApifyProxy": true,
+                "apifyProxyGroups": ["RESIDENTIAL"]
+            }
+        }
+    },
+    "required": ["mode"]
+}

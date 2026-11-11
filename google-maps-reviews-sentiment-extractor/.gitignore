@@ -1,0 +1,10 @@
+storage/
+__pycache__/
+*.pyc
+.venv/
+.call-input.json
+_input.json
+.push.log
+.call-*.json
+.call-*.log
+.cloud-items.json

@@ -1,0 +1,14 @@
+{
+    "actorSpecification": 1,
+    "name": "kazinform-scraper",
+    "version": "0.0",
+    "buildTag": "latest",
+    "title": "Kazinform Scraper",
+    "description": "Extract full article text or the newest headlines from Kazinform (qazinform.com), Kazakhstan's state news agency, English edition -- no account or API key needed.",
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": "./output_schema.json"
+    },
+    "output": "./actor_output_links.json"
+}
