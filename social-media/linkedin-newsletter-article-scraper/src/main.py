@@ -24,7 +24,14 @@ from collections import Counter
 from apify import Actor
 
 from src import exporters
-from src.linkedin import AuthRequired, LinkedInClient, LinkedInError, proxy_url_from
+from src.linkedin import (
+    AuthRequired,
+    LinkedInClient,
+    LinkedInError,
+    OutOfTime,
+    RateGated,
+    proxy_url_from,
+)
 from src.parse import clean_url, parse_article, parse_comments, parse_person
 from src.runtime import (
     article_url,
@@ -49,6 +56,10 @@ COLUMNS = [
 ]
 
 _PULSE_LINK = re.compile(r'https://www\.linkedin\.com/pulse/[a-zA-Z0-9\-%_]+')
+
+# This many articles in a row lost to the rate gate means the exit IP is
+# blocked for now; carrying on only burns the run's time for nothing.
+MAX_CONSECUTIVE_GATED = 3
 
 
 async def discover_articles(
@@ -119,6 +130,15 @@ async def main() -> None:
         )
 
         records: list[dict] = []
+        pushed = 0
+
+        async def flush() -> None:
+            """Push rows as they are produced, so a run that is cut short
+            still delivers (and is charged for) everything it read."""
+            nonlocal pushed
+            if pushed < len(records):
+                await Actor.push_data(records[pushed:])
+                pushed = len(records)
 
         if string_list(actor_input.get("newsletterUrls")):
             records.append(
@@ -137,6 +157,8 @@ async def main() -> None:
                 "links in articleUrls instead."
             )
 
+        stop_reason: tuple[str, str] | None = None
+
         targets: list[tuple[str, str]] = [(url, url) for url in direct]
         for author in authors:
             try:
@@ -144,9 +166,13 @@ async def main() -> None:
                     client, author, per_author, log
                 )
                 targets.extend((url, author) for url in found)
+            except OutOfTime as exc:
+                stop_reason = ("stopped_before_timeout", str(exc))
+                break
             except LinkedInError as exc:
                 records.append(error_record(author, "discovery_failed", str(exc)))
                 log.warning(f"{author}: {exc}")
+        await flush()
 
         seen: set[str] = set()
         unique_targets = []
@@ -160,9 +186,29 @@ async def main() -> None:
         log.info(f"{len(unique_targets)} article(s) to read.")
 
         kept: list[dict] = []
-        for url, origin in unique_targets:
+        gated_in_a_row = 0
+        for done, (url, origin) in enumerate(unique_targets):
+            if stop_reason:
+                break
+            await flush()
             try:
                 page = await client.fetch(url)
+                gated_in_a_row = 0
+            except OutOfTime as exc:
+                stop_reason = ("stopped_before_timeout", str(exc))
+                break
+            except RateGated as exc:
+                records.append(error_record(origin, "rate_gated", str(exc)))
+                gated_in_a_row += 1
+                if gated_in_a_row >= MAX_CONSECUTIVE_GATED:
+                    stop_reason = (
+                        "rate_gated_stopped",
+                        f"LinkedIn rate-gated {gated_in_a_row} articles in a row, "
+                        "so the exit IP is blocked for now. Enable a RESIDENTIAL "
+                        "proxy or raise the delay range, then rerun the "
+                        f"{len(unique_targets) - done - 1} remaining article(s).",
+                    )
+                continue
             except LinkedInError as exc:
                 code = (
                     "auth_required" if isinstance(exc, AuthRequired) else "fetch_failed"
@@ -207,6 +253,11 @@ async def main() -> None:
             records.append(record)
             kept.append(article)
 
+        if stop_reason:
+            code, detail = stop_reason
+            log.warning(detail)
+            records.append(notice_record("run", code, detail))
+
         if kept:
             reactions = [
                 a["reactions"] for a in kept if isinstance(a.get("reactions"), int)
@@ -242,7 +293,7 @@ async def main() -> None:
             f"{client.stats['rateGateHits']} rate-gate retries."
         )
 
-        await Actor.push_data(records)
+        await flush()
         exporters.configure(
             preferred=COLUMNS,
             skip={"articleText"} if len(records) > 200 else set(),

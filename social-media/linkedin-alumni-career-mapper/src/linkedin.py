@@ -25,7 +25,10 @@ from __future__ import annotations
 
 import asyncio
 import json
+import os
 import random
+import time
+from datetime import datetime
 from typing import Any
 
 from curl_cffi import requests
@@ -70,6 +73,26 @@ class NotFound(LinkedInError):
     """Slug, id or URL does not resolve."""
 
 
+class OutOfTime(LinkedInError):
+    """The run's own timeout is too close to start another request."""
+
+
+# Stop issuing requests this long before the platform kills the run, so the
+# caller still has time to push what it has and write its exports.
+DEADLINE_MARGIN_SECS = 90
+
+
+def run_deadline() -> float | None:
+    """Epoch seconds at which the platform will kill this run, if known."""
+    raw = os.environ.get("ACTOR_TIMEOUT_AT") or os.environ.get("APIFY_TIMEOUT_AT")
+    if not raw:
+        return None
+    try:
+        return datetime.fromisoformat(raw.replace("Z", "+00:00")).timestamp()
+    except ValueError:
+        return None
+
+
 def _session_id() -> str:
     """A JSESSIONID value; the csrf-token header must repeat it exactly."""
     return "ajax:" + "".join(random.choices("0123456789", k=19))
@@ -101,6 +124,21 @@ class LinkedInClient:
         self._requests = 0
         self._gate_hits = 0
         self._first = True
+        self.deadline = run_deadline()
+
+    def seconds_left(self) -> float | None:
+        """Seconds until the run is killed, minus the safety margin."""
+        if self.deadline is None:
+            return None
+        return self.deadline - DEADLINE_MARGIN_SECS - time.time()
+
+    def _check_time(self, needed: float) -> None:
+        left = self.seconds_left()
+        if left is not None and left < needed:
+            raise OutOfTime(
+                "Stopped before the run timeout so the results gathered so far "
+                "are saved. Raise the run timeout or lower maxArticles to read more."
+            )
 
     # -- bookkeeping the actors surface in their run log ------------------
 
@@ -161,6 +199,8 @@ class LinkedInClient:
             )
         last: Exception | None = None
         for attempt in range(1, self.max_retries + 1):
+            # Room for the pause plus one full request timeout.
+            self._check_time(self.max_delay + self.timeout)
             await self._pause()
             try:
                 response = requests.get(
@@ -194,7 +234,12 @@ class LinkedInClient:
             if gated:
                 self._gate_hits += 1
                 last = RateGated(f"HTTP {status} rate gate on {url}")
+                if attempt == self.max_retries:
+                    break  # no point sleeping when no retry follows
                 backoff = min(60.0, self.max_delay * (2**attempt))
+                left = self.seconds_left()
+                if left is not None:
+                    backoff = max(0.0, min(backoff, left))
                 self.log.warning(
                     f"LinkedIn rate gate hit (attempt {attempt}/{self.max_retries}) "
                     f"-- backing off {backoff:.0f}s. Raising the delay range or "
